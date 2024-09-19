@@ -19,8 +19,9 @@
 }
 
 #footer {
-	border: 2px solid blue;
-	height: 150px;
+	border-top: 2px solid #343a40;
+
+	height: 100px;
 	margin: 10px;
 	padding: 10px;
 	text-align: center;
