@@ -24,10 +24,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">전체글</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">쇼핑정보</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">구매후기</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">데일리룩</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">자유게시판</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">질문답변</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">요금제비교</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">중고장터</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">플리마켓</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">서비스</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">운영관리</a></li>
