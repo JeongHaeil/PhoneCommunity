@@ -2,8 +2,11 @@ package xyz.itwill.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import xyz.itwill.dto.User;
 
+@Service
 public interface UserService {
     void addUser(User user); // 회원가입
     void modifyUser(User user); // 회원 정보 수정

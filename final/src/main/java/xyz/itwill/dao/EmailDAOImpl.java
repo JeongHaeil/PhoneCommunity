@@ -13,16 +13,16 @@ public class EmailDAOImpl implements EmailDAO {
 
     @Override
     public void insertEmail(Email email) {
-        sqlSession.insert("xyz.itwill09.mapper.EmailMapper.insertEmail", email);
+        sqlSession.insert("xyz.itwill.mapper.EmailMapper.insertEmail", email);
     }
 
     @Override
     public Email selectEmailByCode(int emailCode) {
-        return sqlSession.selectOne("xyz.itwill09.mapper.EmailMapper.selectEmailByCode", emailCode);
+        return sqlSession.selectOne("xyz.itwill.mapper.EmailMapper.selectEmailByCode", emailCode);
     }
 
     @Override
     public void updateEmail(Email email) {
-        sqlSession.update("xyz.itwill09.mapper.EmailMapper.updateEmail", email);  // 이메일 인증 정보 업데이트
+        sqlSession.update("xyz.itwill.mapper.EmailMapper.updateEmail", email);  // 이메일 인증 정보 업데이트
     }
 }

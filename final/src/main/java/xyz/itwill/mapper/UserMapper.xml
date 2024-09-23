@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="xyz.itwill09.mapper.UserMapper">
+<mapper namespace="xyz.itwill.mapper.UserMapper">
     
     <!-- Insert User -->
     <insert id="insertUser">
@@ -30,12 +30,12 @@
     </delete>
 
     <!-- Select a User by userId -->
-    <select id="selectUser" parameterType="String" resultType="xyz.itwill09.dto.User">
+    <select id="selectUser" parameterType="String" resultType="xyz.itwill.dto.User">
         SELECT * FROM USERS WHERE USER_ID = #{userId}
     </select>
 
     <!-- Select all Users -->
-    <select id="selectUserList" resultType="xyz.itwill09.dto.User">
+    <select id="selectUserList" resultType="xyz.itwill.dto.User">
         SELECT * FROM USERS
     </select>
     
@@ -46,7 +46,7 @@
 	</update>
 	
 	
- <select id="selectUserByNickname" parameterType="String" resultType="xyz.itwill09.dto.User">
+ <select id="selectUserByNickname" parameterType="String" resultType="xyz.itwill.dto.User">
     SELECT * FROM USERS WHERE USER_NICKNAME = #{userNickName}
 </select>
 

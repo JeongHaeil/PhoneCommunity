@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -27,13 +28,13 @@
                     <li class="nav-item"><a class="nav-link" href="#">자유게시판</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">질문답변</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">요금제비교</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">중고장터</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<c:url value='/product/product'/>">중고장터</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">플리마켓</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">서비스</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">운영관리</a></li>
                 </ul>
                 <div class="login-container" id="loginContainer">
-                    <button class="btn btn-login" type="button" id="loginButton">
+                    <button class="btn btn-login" type="button" id="loginButton" >
                         로그인
                     </button>
                     <div class="login-form" id="loginForm">
