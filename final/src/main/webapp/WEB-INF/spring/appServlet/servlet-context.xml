@@ -21,7 +21,8 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
-	<context:component-scan base-package="xyz.itwill.template" />
+	
+	<context:component-scan base-package="xyz.itwill.controller" />
 	
 		<resources mapping="/images/**" location="/resources/images/" />
 	<resources mapping="/css/**" location="/resources/css/" />
@@ -40,11 +41,6 @@
 		<beans:property name="order" value="2"/>
 	</beans:bean>
 	
-	
-	<beans:bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
-		<beans:property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView"/>
-		<beans:property name="order" value="2"/>
-	</beans:bean>
 	
 	<beans:bean class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
 		<beans:property name="definitions">
