@@ -1,8 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!-- root-context.xml : 모든 Front Controller에게 객체를 제공할 수 있도록 클래스를 Spring
+	Bean으로 등록하기 위한 Spring Bean Configuration File -->
+	<!-- => DAO 클래스 작성에 필요한 객체를 제공하기 위한 클래스를 Spring Bean으로 등록 -->
+	<!-- => DataSource, SqlSessionFactory, SqlSession, TransactionManager 등 -->	
+
+	<!-- DataSource 관련 클래스(DriverManagerDataSource 클래스)를 Spring Bean으로 등록 -->
+	<!-- => 필드에 Connection 객체 생성에 필요한 값이 저장되도록 값 주입 - Setter Injection -->
+	<!--  
+	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+		<property name="username" value="scott"/>
+		<property name="password" value="tiger"/>
+	</bean>
+	-->
+	
+	<!-- Mybatis 프레임워크에서 발생되는 로그 이벤트를 전달받아 Spring 프레임워크의 로그 구현체로
+	기록되도록 driverClassName 필드값과 url 필드값을 log4jdbc-log4j2-jdbc4 라이브러리에서 제공
+	되는 값으로 변경 -->
+	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
+		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"/>
+		<property name="url" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:xe"/>
+		<property name="username" value="scott"/>
+		<property name="password" value="tiger"/>
+	</bean>
+	
+	<!-- SqlSessionFactory 관련 클래스(SqlSessionFactoryBean 클래스)를 Spring Bean으로 등록 -->
+	<!-- => 필드에 SqlSessionFactory 객체 생성에 필요한 값 또는 객체가 저장되도록 값 주입하거나 
+	의존성 주입 - Setter Injection -->
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactoryBean">
+		<!-- configLocation 필드에 Mybatis 프레임워크의 환경설정파일에 경로가 저장되도록 값 주입 -->
+		<!-- [src/main/java] 또는 [src/main/resources] 폴더에 환경설정파일을 작성한 경우
+		classpath 접두사를 사용해 환경설정파일의 경로로 값 주입 -->
+		<!-- <property name="configLocation" value="classpath:xyz/itwill/config/mybatis-config.xml"/> -->
+		<!-- [src/main/webapp] 폴더에 환경설정파일을 작성한 경우 환경설정파일을 웹자원의 경로가 저장되도록 값 주입 -->
+		<property name="configLocation" value="/WEB-INF/spring/mybatis-config.xml"/> 
 		
+		<!-- dataSource 필드에는 DataSource 관련 클래스의 Spring Bean에 식별자(beanName)을 사용해
+		객체가 저장되도록 의존성 주입 -->
+		<!-- => Mybatis 프레임워크의 환경설정파일에서 environment 엘리먼트와 유사한 기능 제공 -->
+		<property name="dataSource" ref="dataSource"/>
+		
+		<!-- typeAliasesPackage 필드에는 DTO 클래스를 작성한 패키지가 저장되도록 값 주입 -->
+		<!-- => XML 기반의 매퍼 파일에서 Java 자료형 대신 사용할 별칭을 제공하기 위해 설정 -->
+		<!-- => Mybatis 프레임워크의 환경설정파일에서 typeAlias 엘리먼트의 package 엘리먼트와 
+		유사한 기능 제공 -->
+		<property name="typeAliasesPackage" value="xyz.itwill09.dto"/>
+		
+		<!-- mapperLocations 필드에 List 객체를 생성하여 저장되도록 의존성 주입 -->
+		<!-- => List 객체의 요소에는 XML 기반의 매퍼 파일의 경로를 요소값으로 저장 - 매퍼 등록 -->
+		<!-- => Mybatis 프레임워크의 환경설정파일에서 mapper 엘리먼트와 유사한 기능 제공 -->
+		<property name="mapperLocations">
+			<list>
+				<!-- [src/main/java] 폴더에 작성된 모든 XML 기반의 매퍼 파일을 매퍼로 등록 -->
+				<!-- => [src/main/java] 폴더에 작성된 XML 기반의 매퍼 파일을 사용하기 위해 
+				classpath 접두사를 사용해 파일 경로 제공 -->
+				<value>classpath:xyz/itwill09/mapper/*.xml</value>
+			</list>
+		</property>
+	</bean>	
+	
+	<!-- SqlSession 관련 클래스(SqlSessionTemplate 클래스)를 Spring Bean으로 등록 -->
+	<!-- => 필드에 SqlSession 객체를 제공하는 SqlSessionFactory 객체가 저장되도록 의존성 주입 
+	- Constructor Injection : 기본 생성자가 없으므로 Setter Injection 대신 Constructor Injection 사용 -->
+	<!-- => destroy-method 속성을 사용해 SqlSessionTemplate 객체가 소멸되기 전에 clearCache 
+	메소드가 자동 호출되도록 설정 - SqlSession 객체 사용 후 close() 메소드 호출 생략 가능 -->
+	<bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession" destroy-method="clearCache">
+		<constructor-arg ref="sqlSessionFactoryBean"/>
+	</bean>
+
+	<!-- TransactionManager 관련 클래스(DataSourceTransactionManager 클래스)를 Spring Bean으로 등록 -->
+	<!-- => Spring Bean의 식별자(beanName)를 반드시 [transactionManager]로 설정 -->
+	<!-- => dataSource 필드에 TransactionManager 객체에 의해 트렌젝션이 관리될 DataSource 객체가 
+	저장 되도록 의존성 주입 - Setter Injection -->
+	<bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<!-- annotation-driven : @Transcational 어노테이션을 사용해 TransactionManager 객체로
+	트렌젝션 관리 기능을 제공하는 엘리먼트 -->
+	<tx:annotation-driven/>
+
+	<!-- JavaMailSender 설정 추가 -->
+	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com"/>
+		<property name="port" value="587"/>
+		<property name="username" value="tosmreo@gmail.com"/>
+		<property name="password" value="shtp apfk mfcx fjun"/>
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.debug">true</prop>
+			</props>
+		</property>
+	</bean>
+
 </beans>
