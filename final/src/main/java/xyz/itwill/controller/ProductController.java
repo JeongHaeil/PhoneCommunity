@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/product")
-public class UsedController {
+public class ProductController {
 	
 	@RequestMapping("/product")
 	public String used() {
