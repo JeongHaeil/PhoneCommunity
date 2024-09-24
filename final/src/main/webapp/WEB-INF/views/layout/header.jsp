@@ -34,9 +34,9 @@
                     <li class="nav-item"><a class="nav-link" href="#">운영관리</a></li>
                 </ul>
                 <div class="login-container" id="loginContainer">
-                    <button class="btn btn-login" type="button" id="loginButton" >
+                    <a class="btn btn-login" id="loginButton" href ="<c:url value='/user/login'/>" >
                         로그인
-                    </button>
+                    </a>
                     <div class="login-form" id="loginForm">
                         <form class="px-4 py-3">
                             <div class="form-group">
