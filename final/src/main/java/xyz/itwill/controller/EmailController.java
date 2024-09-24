@@ -21,6 +21,7 @@ public class EmailController {
     private final UserService userService;
     private final EmailService emailService;
 
+    
     // 회원가입 후 이메일 인증을 위한 로직
     @RequestMapping(value = "/sendVerification", method = RequestMethod.GET)
     public String sendVerificationEmail(HttpSession session, Model model) {
