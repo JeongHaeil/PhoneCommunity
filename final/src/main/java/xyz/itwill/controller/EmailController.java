@@ -18,8 +18,9 @@ import xyz.itwill.service.UserService;
 @RequestMapping("/email")
 @RequiredArgsConstructor
 public class EmailController {
-    private final UserService userService;
+    private final UserService userService; 
     private final EmailService emailService;
+    
 
     
     // 회원가입 후 이메일 인증을 위한 로직
