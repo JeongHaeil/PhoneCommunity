@@ -7,7 +7,7 @@
     
     <!-- Insert User -->
     <insert id="insertUser">
-    INSERT INTO USERS (USER_NUM, USER_ID, USER_PASSWORD, USER_EMAIL, USER_PHONE_NUMBER, USER_NAME, USER_REGISTER_DATE, USER_AUTH, USER_LEVEL, USER_STATUS, USER_NICKNAME)
+    INSERT INTO USERS (USER_NUM, USER_ID, USER_PASSWORD, USER_EMAIL, USER_PHONE_NUM, USER_NAME, USER_REGISTER_DATE, USER_AUTH, USER_LEVEL, USER_STATUS, USER_NICKNAME)
     VALUES (USER_SEQ.NEXTVAL, #{userId}, #{userPassword}, #{userEmail}, #{userPhoneNumber}, #{userName}, SYSDATE, #{userAuth}, #{userLevel}, #{userStatus}, #{userNickName})
 	</insert>
 
