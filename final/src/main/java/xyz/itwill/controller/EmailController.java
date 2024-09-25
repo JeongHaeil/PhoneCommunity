@@ -40,7 +40,7 @@ public class EmailController {
         Email emailVerification = new Email();
         emailVerification.setEmailUserNum(user.getUserNum());
         emailVerification.setEmailCode(emailCode);
-        emailVerification.setEmailExpirationDate(emailService.calculateExpirationDate()); // 만료 시간 설정
+        emailVerification.setEmailExpiration(emailService.calculateExpirationDate()); // 만료 시간 설정
         emailService.addEmail(emailVerification);
 
         model.addAttribute("message", "인증 이메일이 발송되었습니다.");
