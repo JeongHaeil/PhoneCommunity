@@ -38,36 +38,11 @@
                 </ul>
                 <div class="login-container position-relative" id="loginContainer">
                     <a class="btn btn-login" id="loginButton" href ="<c:url value='/user/login'/>">로그인</a>
-                    <div class="login-form position-absolute bg-light p-3 shadow" id="loginForm" style="display: none;">
-                        <form>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">이메일 주소</label>
-                                <input type="email" class="form-control" id="email" placeholder="email@example.com">
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">비밀번호</label>
-                                <input type="password" class="form-control" id="password" placeholder="비밀번호">
-                            </div>
-                            <div class="form-check mb-3">
-                                <input type="checkbox" class="form-check-input" id="dropdownCheck">
-                                <label class="form-check-label" for="dropdownCheck">로그인 상태 유지</label>
-                            </div>
-                            <button type="submit" class="btn btn-primary">로그인</button>
-                        </form>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">새 계정 만들기</a>
-                        <a class="dropdown-item" href="#">비밀번호를 잊으셨나요?</a>
-                    </div>
-                </div>
-            </div>
+                
+                </div>    
+          </div>          
         </div>
     </nav>
-
-    <style>
-        .login-container:hover .login-form {
-            display: block !important;
-        }
-    </style>
 
     <!-- 부트스트랩 5.3 JS 링크 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
