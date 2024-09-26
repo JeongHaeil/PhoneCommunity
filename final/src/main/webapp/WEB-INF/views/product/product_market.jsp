@@ -1,6 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<style>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>쇼핑 정보</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
     body {
       background-color: #f8f9fa;
     }
@@ -140,6 +145,7 @@
       font-size: 12px;
       color: #6c757d;
     }
+    
 
     @media (max-width: 768px) {
       .product-card {
@@ -186,9 +192,10 @@
   
    
     
-  </style>    
-    
-    
+  </style>
+</head>
+<body>
+
 <div class="container my-4">
   <!-- 상단 네비게이션 탭 -->
   <ul class="nav nav-tabs">
@@ -254,17 +261,17 @@
       <div class="row product-list">
         <!-- 반복되는 상품 카드 -->
         <div class="col-md-3 col-sm-6 mb-4">
-          <a href="product1.html" class="text-decoration-none">
+          <a href="used_market_detail.html" class="text-decoration-none">
             <div class="product-card">
               <img src="https://via.placeholder.com/150" alt="상품 이미지" class="img-fluid" >
               <div class="product-meta">
                 <span class="text-muted">판매</span>, <span>24.09.22</span>
               </div>
-              <p class="product-title">꼼데가르송 가디건 L</p>
+              <p class="product-title">애플 아이폰 13미니 핑크 128기가</p>
               <div class="product-details">
-                <p>· 사이즈: L</p>
-                <p>· 제품 상태: 새상품</p>
-                <p>· 판매 가격: ₩ 280,000</p>
+                
+                <p>· 제품 상태: 중고</p>
+                <p>· 판매 가격: ₩ 300,000원</p>
               </div>
               <div class="product-footer d-flex align-items-center justify-content-between">
                 <div class="profile-info">
@@ -579,7 +586,7 @@
         </div>
 
         <div class="col-md-3 col-sm-6 mb-4">
-          <a href="product2.html" class="text-decoration-none">
+          <a href="used_market_detail.html" class="text-decoration-none">
             <div class="product-card">
               <img src="https://via.placeholder.com/150" alt="상품 이미지" class="img-fluid">
               <div class="product-meta">
@@ -855,3 +862,4 @@
   });
 </script>
 </body>
+</html>

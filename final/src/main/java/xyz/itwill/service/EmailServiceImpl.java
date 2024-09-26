@@ -20,7 +20,7 @@ public class EmailServiceImpl implements EmailService {
     @Transactional
     @Override
     public void addEmail(Email email) {
-        email.setEmailExpirationDate(calculateExpirationDate());  // 이메일 만료 시간 설정
+        email.setEmailExpiration(calculateExpirationDate());  // 이메일 만료 시간 설정
         emailDAO.insertEmail(email);  // 이메일 인증 정보 저장
     }
 

@@ -18,8 +18,9 @@ import xyz.itwill.service.UserService;
 @RequestMapping("/email")
 @RequiredArgsConstructor
 public class EmailController {
-    private final UserService userService;
+    private final UserService userService; 
     private final EmailService emailService;
+    
 
     
     // 회원가입 후 이메일 인증을 위한 로직
@@ -40,7 +41,7 @@ public class EmailController {
         Email emailVerification = new Email();
         emailVerification.setEmailUserNum(user.getUserNum());
         emailVerification.setEmailCode(emailCode);
-        emailVerification.setEmailExpirationDate(emailService.calculateExpirationDate()); // 만료 시간 설정
+        emailVerification.setEmailExpiration(emailService.calculateExpirationDate()); // 만료 시간 설정
         emailService.addEmail(emailVerification);
 
         model.addAttribute("message", "인증 이메일이 발송되었습니다.");

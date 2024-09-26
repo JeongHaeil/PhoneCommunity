@@ -46,7 +46,7 @@ public class UserController {
             Email emailVerification = new Email();
             emailVerification.setEmailUserNum(user.getUserNum());
             emailVerification.setEmailCode(emailCode);
-            emailVerification.setEmailExpirationDate(emailService.calculateExpirationDate());
+            emailVerification.setEmailExpiration(emailService.calculateExpirationDate());
             emailService.addEmail(emailVerification);
 
             // 이메일 인증 페이지로 리다이렉트

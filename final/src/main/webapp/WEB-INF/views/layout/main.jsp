@@ -56,7 +56,7 @@ body{
                             <li class="list-group-item main_list_item">5. 5</li>
                         </ul>
                     </div>
-                     
+                    
                 </div>
             </div>
             <div class="col-md-4 main_notice">
