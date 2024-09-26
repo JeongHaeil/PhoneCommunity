@@ -376,23 +376,19 @@
 		var boardCode = Codetag.value;
 		var boardPostIdx = PostIdxtag.value;
 	
-		var cocopageNum =1;
-		
-
+		var cocopageNum =1;	
 		commentsListDisplay(boardCode, boardPostIdx,1);
 		function commentsListDisplay(boardCode, boardPostIdx,cocopageNum) {
-			$
-					.ajax({
-						type : "get",
-						url : "<c:url value='/rest/commentsList'/>/" + boardCode
-								+ "/" + boardPostIdx,
-						data : {
-							"boardCode" : boardCode,
-							"boardPostIdx" : boardPostIdx,
-							"pageNum": cocopageNum
-						},
-						dataType : "json",
-						success : function(result) {
+			$.ajax({
+				type : "get",
+				url : "<c:url value='/rest/commentsList'/>/" + boardCode+ "/" + boardPostIdx,
+				data : {
+					"boardCode" : boardCode,
+					"boardPostIdx" : boardPostIdx,
+					"pageNum": cocopageNum
+				},
+				dataType : "json",
+				success : function(result) {
 							if (result.commentList.length == 0) {
 								var html = "<p>검색된 댓글이 없습니다.</p>";
 								$("#commentsListDiv").html(html);
