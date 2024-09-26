@@ -27,6 +27,7 @@ public class EmailController {
     public String sendVerificationEmail(HttpSession session, Model model) {
         User user = (User) session.getAttribute("pendingUser");
         
+        
         if (user == null) {
             return "redirect:/user/register"; // 회원가입 정보가 없으면 다시 회원가입 페이지로 이동
         }

@@ -11,21 +11,9 @@
 <style type="text/css">
 
 
-#content {
-	border: 2px solid green;
-	min-height: 550px;
-	margin: 10px;
-	padding: 10px;
-}
 
-#footer {
-	border-top: 2px solid #343a40;
 
-	height: 100px;
-	margin: 10px;
-	padding: 10px;
-	text-align: center;
-}
+
 </style>
 </head>
 <body>
