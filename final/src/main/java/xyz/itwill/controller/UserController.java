@@ -23,13 +23,37 @@ public class UserController {
     private final UserService userService;
     private final EmailService emailService;
 
-    // 회원가입 페이지를 보여주는 메서드 추가 (GET 요청)
-    @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public String showRegisterPage() {
-        return "user/join";  // 회원가입 페이지로 이동
+    // 이용약관 페이지로 이동 (GET 요청)
+    @RequestMapping(value = "/terms", method = RequestMethod.GET)
+    public String showTermsPage() {
+        return "user/tern"; // 이용약관 페이지로 이동
     }
 
-    // 회원가입 처리 (POST 요청) - 이메일 인증 코드 발송
+    // 회원가입 페이지를 보여주는 메서드 (GET 요청)
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    public String showRegisterPage(HttpSession session) {
+        Boolean agreedTerms = (Boolean) session.getAttribute("agreedTerms");
+
+        if (agreedTerms == null || !agreedTerms) {
+            return "redirect:/user/terms"; // 이용약관 동의를 하지 않았다면 이용약관 페이지로 리다이렉트
+        }
+
+        return "user/join"; // 이용약관 동의 후 회원가입 페이지로 이동
+    }
+
+    // 이용약관 동의 처리 (POST 요청)
+    @RequestMapping(value = "/agreeTerms", method = RequestMethod.POST)
+    public String agreeTerms(HttpSession session, @RequestParam("agreeTerms") boolean agreeTerms, @RequestParam("agreePrivacy") boolean agreePrivacy) {
+        if (agreeTerms && agreePrivacy) {
+            session.setAttribute("agreedTerms", true);
+            return "redirect:/user/register"; // 동의 후 회원가입 페이지로 이동
+        } else {
+            session.setAttribute("agreedTerms", false);
+            return "redirect:/user/terms"; // 동의하지 않으면 다시 이용약관 페이지로 이동
+        }
+    }
+
+    // 회원가입 처리 (POST 요청)
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String registerUser(@ModelAttribute User user, Model model) {
         // 회원 정보 임시 저장
@@ -64,7 +88,7 @@ public class UserController {
         return "user/email";  // 이메일 인증 페이지로 이동 (email.jsp)
     }
 
-    // 로그인 페이지로 이동 (JSP 파일명: login.jsp)
+    // 로그인 페이지로 이동 (GET 요청)
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login() {
         return "user/login";  // login.jsp 경로 유지
