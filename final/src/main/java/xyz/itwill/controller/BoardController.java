@@ -135,7 +135,6 @@ public class BoardController {
 				board.setBoardImage(filenameList.toString());
 			}
 		}
-		
 		boardService.updateFreeboard(board);	
 		return "redirect:/board/boarddetail/"+boardCode+"/"+boardPostIdx;
 	}

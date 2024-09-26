@@ -48,7 +48,7 @@
             <input type="file" class="form-control-file" name=uploaderFileList accept="image/*" value="${board.boardImage }" multiple="multiple">
         </div>
         
-		<button type="button" class="btn btn-dark" onclick="window.location.href='<c:url value='/board/boardlist/${freeCode }'/>'">목록</button>
+		<button type="button" class="btn btn-dark" onclick="window.location.href='<c:url value='/board/boardlist/${boardCode }'/>'">목록</button>
 		<c:choose>
 		<c:when test="${empty board }">
 			<button type="submit" class="btn btn-dark">글쓰기</button>		
