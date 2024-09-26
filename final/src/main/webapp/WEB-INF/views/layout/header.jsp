@@ -27,8 +27,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">자유게시판</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">질문답변</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<c:url value='/board/boardlist/10'/>">자유게시판</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<c:url value='/board/boardlist/11'/>">질문답변</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">요금제비교</a></li>
                     <li class="nav-item"><a class="nav-link" href="<c:url value='/product/product'/>">중고장터</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">플리마켓</a></li>
