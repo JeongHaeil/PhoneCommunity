@@ -1,0 +1,21 @@
+package xyz.itwill.mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import xyz.itwill.dto.Comments;
+
+public interface CommentsMapper {
+	int selectCommentsCounts(Map<String, Object> map);//
+	List<Comments> selectCommentsList(Map<String, Object> map);//
+	int insertComment(Comments comments);
+	int updateCommentRestep(Comments comments);	
+	int updateComment(Comments comments);
+	int deleteComment(int commentIdx);
+	int deleterrComment(int commentIdx);
+	int selectCommentNextNum();
+	Comments selectCommentByNum(int commentIdx);
+	int selectCommentCountByRef(int commentRef);
+	int commentUpStar(int commentIdx);
+	int commentSpam(int commentIdx);
+}
