@@ -55,10 +55,6 @@
 		<beans:property name="order" value="1"/>
 	</beans:bean>
 	
-	<!-- 파일 업로드 기능  -->
-	<beans:bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
-		<beans:property name="maxUploadSizePerFile" value="20971520"></beans:property>
-		<beans:property name="defaultEncoding" value="utf-8"></beans:property>
-	</beans:bean>
+	
 	
 </beans:beans>
