@@ -14,6 +14,7 @@ import xyz.itwill.mapper.UserMapper;
 public class UserDAOImpl implements UserDAO {
     private final SqlSession sqlSession;
     
+    
     @Override
     public int insertUser(User user) {
         return sqlSession.getMapper(UserMapper.class).insertUser(user);
@@ -43,5 +44,9 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User selectUserByNickname(String nickname) {
         return sqlSession.selectOne("UserMapper.selectUserByNickname", nickname);
+    }
+    @Override
+    public User selectUserByUserId(String userId) {
+        return sqlSession.getMapper(UserMapper.class).selectUserByUserId(userId);
     }
 }

@@ -10,4 +10,5 @@ public interface UserMapper {
     User selectUser(String userId);
     List<User> selectUserList();
     User selectUserByNickname(String nickname);
+    User selectUserByUserId(String userId);
 }
