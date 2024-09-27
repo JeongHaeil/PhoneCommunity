@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -62,7 +61,7 @@
 
 <div class="signup-container">
     <h4>회원가입</h4>
-    <form id="signupForm" action="${pageContext.request.contextPath}/user/register" method="post" >
+    <form id="signupForm" action="${pageContext.request.contextPath}/user/register" method="post">
         <div class="mb-3">
             <label for="user_id" class="form-label">아이디</label>
             <input type="text" class="form-control" id="user_id" name="userId" placeholder="아이디를 입력하세요" required>
