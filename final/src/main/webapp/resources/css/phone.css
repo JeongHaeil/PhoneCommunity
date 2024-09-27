@@ -1,0 +1,180 @@
+/* 기본 스타일 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+h3{
+    font-size: 16px;
+    margin: 20px;
+}
+.plans-header {
+    background-color: #ff9800;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.plans-filter {
+    margin: 20px auto;
+    max-width: 1200px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 15px;
+    border: 1px solid #ddd;
+}
+
+.plans-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.plans-table th, .plans-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.plans-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    align-items: flex-start;
+}
+
+.plans-list li {
+    margin-bottom: 5px;
+}
+
+.plans-filter-btn {
+    background-color: transparent; /* 버튼 배경색 제거 */
+    border: none; /* 테두리 제거 */
+    padding: 8px 12px;
+    text-align: center;
+    cursor: pointer;
+    display: block;
+    width: 100%; /* 버튼들이 전체 폭을 차지하도록 */
+    font-size: 14px;
+    color: black; /* 기본 글자색 */
+    
+}
+
+
+
+.plans-filter-btn.active {
+    color: #0408ebf9; /* 활성화된 버튼의 글자색을 파란색으로 변경 */
+}
+
+.plans-product-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.plans-product-name {
+    flex: 1;
+}
+
+.plans-product-price {
+    text-align: right;
+    width: 100px;
+}
+
+.plans-product-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+   
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.plans-product-list li {
+    display: none;
+    padding: 8px;
+    
+    display: flex;
+    justify-content: space-between;
+}
+
+.plans-product-list li.show {
+    display: block;
+}
+
+.plans-summary {
+    margin: 20px auto;
+    max-width: 1200px;
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.plans-summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+.plans-summary-table th, .plans-summary-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+    font-size: 12px;
+}
+
+.plans-btn-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.plans-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    width: 48%;
+    font-size: 12px;
+    text-align: center;
+}
+
+.plans-btn:hover {
+    background-color: #0056b3;
+}
+
+.plans-calculate-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 8px;
+    width: 100%;
+    font-size: 12px;
+}
+
+.plans-option-group {
+    display: flex;
+   
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.plans-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.plans-select, .plans-input {
+    
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 18px;
+}

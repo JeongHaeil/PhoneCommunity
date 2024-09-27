@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="xyz.itwill.mapper.ProductsMapper">
+ 	<select id="selectProductById" parameterType="int" resultType="Products">
+        select product_id, product_name , manufacturer_id  from products WHERE product_id = #{productId}
+    </select>
+ </mapper>
