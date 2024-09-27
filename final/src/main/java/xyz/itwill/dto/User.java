@@ -13,8 +13,7 @@ public class User {
     private String userUpdateDate;
     private String userLastLogin;
     private String userRegisterDate;
-    private int userAuth;
-    private int userLevel;
-    private int userStatus;
+    private int userLevel =1;
+    private int userStatus =1;
     private String userNickName;
 }

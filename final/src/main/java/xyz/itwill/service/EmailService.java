@@ -9,4 +9,5 @@ public interface EmailService {
     void sendVerificationEmail(String email, int emailCode);  // 인증 이메일 전송
     void updateEmail(Email email);  // 이메일 인증 정보 업데이트
     Date calculateExpirationDate();  // 이메일 인증 만료 시간 계산
+    
 }

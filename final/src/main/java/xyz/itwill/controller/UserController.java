@@ -1,7 +1,6 @@
 package xyz.itwill.controller;
 
 import javax.servlet.http.HttpSession;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -9,12 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import lombok.RequiredArgsConstructor;
-import xyz.itwill.dto.User;
 import xyz.itwill.dto.Email;
-import xyz.itwill.service.UserService;
+import xyz.itwill.dto.User;
 import xyz.itwill.service.EmailService;
+import xyz.itwill.service.UserService;
 
 @Controller
 @RequestMapping("/user")
@@ -55,20 +53,20 @@ public class UserController {
 
     // 회원가입 처리 (POST 요청)
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String registerUser(@ModelAttribute User user, Model model) {
-        // 회원 정보 임시 저장
-        userService.addUser(user);
-
-        // 인증 코드 생성
-        int emailCode = (int) (Math.random() * 1000000); // 6자리 코드
-
+    public String registerUser(@ModelAttribute User user, Model model, HttpSession session) {
         try {
+            // 회원 정보를 세션에 임시 저장
+            session.setAttribute("tempUser", user);
+
+            // 인증 코드 생성
+            int emailCode = (int) (Math.random() * 1000000); // 6자리 코드
+
             // 이메일 발송
             emailService.sendVerificationEmail(user.getUserEmail(), emailCode);
 
             // 이메일 인증 정보 저장
             Email emailVerification = new Email();
-            emailVerification.setEmailUserNum(user.getUserNum());
+            emailVerification.setEmailUserNum(0); // 아직 저장되지 않은 사용자
             emailVerification.setEmailCode(emailCode);
             emailVerification.setEmailExpiration(emailService.calculateExpirationDate());
             emailService.addEmail(emailVerification);
@@ -82,10 +80,39 @@ public class UserController {
         }
     }
 
-    // 이메일 인증 페이지로 이동 (GET 요청)
     @RequestMapping(value = "/email", method = RequestMethod.GET)
     public String showEmailVerificationPage() {
         return "user/email";  // 이메일 인증 페이지로 이동 (email.jsp)
+    }
+
+    // 이메일 인증 코드 검증 및 회원가입 완료 처리
+    @RequestMapping(value = "/verify", method = RequestMethod.POST)
+    public String verifyEmail(@RequestParam("emailCode") int emailCode, HttpSession session, Model model) {
+        User user = (User) session.getAttribute("tempUser");
+
+        if (user == null) {
+            return "redirect:/user/register";
+        }
+
+        Email emailVerification = emailService.getEmailByCode(emailCode);
+
+        if (emailVerification == null || emailVerification.isExpired()) {
+            model.addAttribute("error", "유효하지 않은 인증 코드입니다. 다시 시도하세요.");
+            return "user/email";
+        }
+
+        // 이메일 인증이 성공했으므로 회원 정보를 데이터베이스에 저장
+        userService.addUser(user);
+
+        // 이제 저장된 사용자의 user_num을 가져와 이메일 인증 정보를 업데이트
+        User savedUser = userService.getUser(user.getUserId());
+        emailVerification.setEmailUserNum(savedUser.getUserNum());
+        emailVerification.setEmailAuth(true);
+        emailService.updateEmail(emailVerification);
+
+        session.removeAttribute("tempUser");
+
+        return "redirect:/user/login";
     }
 
     // 로그인 페이지로 이동 (GET 요청)
@@ -120,82 +147,6 @@ public class UserController {
         return "user/mypage";  // 프로필 페이지 경로를 mypage.jsp로 변경
     }
 
-    // 회원 목록 조회 (관리자용, JSP 파일명: list.jsp로 추가 필요)
-    @RequestMapping("/list")
-    public String list(Model model) {
-        model.addAttribute("userList", userService.getUserList());
-        return "user/list";  // 관리자용 회원 목록 페이지 추가 필요
-    }
-
-    // 회원정보 수정 페이지 이동 (JSP 파일명: update.jsp)
-    @RequestMapping(value = "/modify", method = RequestMethod.GET)
-    public String modifyForm(@RequestParam String userId, Model model) {
-        model.addAttribute("user", userService.getUser(userId));
-        return "user/update";  // 수정 페이지 경로를 update.jsp로 변경
-    }
-
-    // 회원정보 수정 처리
-    @RequestMapping(value = "/modify", method = RequestMethod.POST)
-    public String modify(@ModelAttribute User user, HttpSession session) {
-        userService.modifyUser(user);
-        
-        User loginUser = (User) session.getAttribute("loginUser");
-        if (loginUser != null && loginUser.getUserId().equals(user.getUserId())) {
-            session.setAttribute("loginUser", userService.getUser(user.getUserId()));
-        }
-
-        return "redirect:user/profile";  // 수정 후 프로필 페이지로 이동
-    }
-
-    // 회원 삭제 처리
-    @RequestMapping("/remove")
-    public String remove(@RequestParam String userId, HttpSession session) {
-        userService.removeUser(userId);
-        
-        User loginUser = (User) session.getAttribute("loginUser");
-        if (loginUser != null && loginUser.getUserId().equals(userId)) {
-            return "redirect:/user/logout";  // 삭제 후 로그아웃 처리
-        }
-
-        return "redirect:/user/list";  // 관리자용 회원 목록으로 이동
-    }
-
-    // 이메일 인증 코드 검증 및 회원가입 완료 처리
-    @RequestMapping(value = "/verify", method = RequestMethod.POST)
-    public String verifyEmail(@RequestParam("emailCode") int emailCode, HttpSession session, Model model) {
-        User user = (User) session.getAttribute("tempUser");
-
-        if (user == null) {
-            return "redirect:/user/register";
-        }
-
-        Email emailVerification = emailService.getEmailByCode(emailCode);
-
-        if (emailVerification == null || emailVerification.isExpired()) {
-            model.addAttribute("error", "유효하지 않은 인증 코드입니다. 다시 시도하세요.");
-            return "user/email";
-        }
-
-        user.setUserAuth(1); // 인증된 사용자로 설정
-        userService.updateUserAuth(user);
-
-        session.removeAttribute("tempUser");
-
-        return "redirect:/user/login";
-    }
-
-    // 아이디 찾기 페이지로 이동 (GET 요청)
-    @RequestMapping(value = "/findId", method = RequestMethod.GET)
-    public String showFindIdPage() {
-        return "user/idfind";  // 아이디 찾기 페이지로 이동 (idfind.jsp)
-    }
-
-    // 비밀번호 찾기 페이지로 이동 (GET 요청)
-    @RequestMapping(value = "/findPassword", method = RequestMethod.GET)
-    public String showFindPasswordPage() {
-        return "user/passwordfind";  // 비밀번호 찾기 페이지로 이동 (passwordfind.jsp)
-    }
-    
     // 아이디 중복 확인
     @RequestMapping(value = "/checkUserId", method = RequestMethod.GET)
     @ResponseBody

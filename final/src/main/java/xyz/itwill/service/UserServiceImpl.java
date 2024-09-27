@@ -64,11 +64,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserAuth(User user) {
-        userDAO.updateUserAuth(user);
-    }
-
-    @Override
     public boolean isUserIdAvailable(String userId) {
         return userDAO.selectUser(userId) == null;
     }

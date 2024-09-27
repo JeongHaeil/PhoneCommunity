@@ -41,11 +41,6 @@ public class UserDAOImpl implements UserDAO {
         return sqlSession.getMapper(UserMapper.class).selectUserList();
     }
     @Override
-    public int updateUserAuth(User user) {
-        return sqlSession.getMapper(UserMapper.class).updateUserAuth(user);
-    }
-    
-    @Override
     public User selectUserByNickname(String nickname) {
         return sqlSession.selectOne("UserMapper.selectUserByNickname", nickname);
     }

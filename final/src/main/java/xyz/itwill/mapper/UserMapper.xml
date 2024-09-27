@@ -7,9 +7,9 @@
     
     <!-- Insert User -->
     <insert id="insertUser">
-    INSERT INTO USERS (USER_NUM, USER_ID, USER_PASSWORD, USER_EMAIL, USER_PHONE_NUM, USER_NAME, USER_REGISTER_DATE, USER_AUTH, USER_LEVEL, USER_STATUS, USER_NICKNAME)
-    VALUES (USER_SEQ.NEXTVAL, #{userId}, #{userPassword}, #{userEmail}, #{userPhoneNumber}, #{userName}, SYSDATE, #{userAuth}, #{userLevel}, #{userStatus}, #{userNickName})
-	</insert>
+    INSERT INTO USERS (USER_NUM, USER_ID, USER_PASSWORD, USER_EMAIL, USER_PHONE_NUM, USER_NAME, USER_REGISTER_DATE, USER_LEVEL, USER_STATUS, USER_NICKNAME)
+    VALUES (USER_SEQ.NEXTVAL, #{userId}, #{userPassword}, #{userEmail}, #{userPhoneNumber}, #{userName}, SYSDATE, #{userLevel}, #{userStatus}, #{userNickName})
+    </insert>
 
     <!-- Update User -->
     <update id="updateUser">
@@ -38,20 +38,10 @@
     <select id="selectUserList" resultType="xyz.itwill.dto.User">
         SELECT * FROM USERS
     </select>
-    
-	<update id="updateUserAuth">
-	    UPDATE USERS
-	    SET USER_AUTH = #{userAuth}
-	    WHERE USER_ID = #{userId}
-	</update>
-	
-	
- <select id="selectUserByNickname" parameterType="String" resultType="xyz.itwill.dto.User">
-    SELECT * FROM USERS WHERE USER_NICKNAME = #{userNickName}
-</select>
 
+    <!-- Select a User by Nickname -->
+    <select id="selectUserByNickname" parameterType="String" resultType="xyz.itwill.dto.User">
+        SELECT * FROM USERS WHERE USER_NICKNAME = #{userNickName}
+    </select>
 
-
-
-	
 </mapper>

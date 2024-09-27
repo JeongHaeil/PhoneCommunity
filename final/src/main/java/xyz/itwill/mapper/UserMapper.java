@@ -9,6 +9,5 @@ public interface UserMapper {
     int deleteUser(String userId);
     User selectUser(String userId);
     List<User> selectUserList();
-    int updateUserAuth(User user);
     User selectUserByNickname(String nickname);
 }
