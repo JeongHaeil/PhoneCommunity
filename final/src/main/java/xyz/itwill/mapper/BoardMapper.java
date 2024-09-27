@@ -16,4 +16,5 @@ public interface BoardMapper {
 	int boardstarup(int boardPostIdx);
 	int boardstardown(int boardPostIdx);
 	int boardspam(int boardPostIdx);
+	
 }
