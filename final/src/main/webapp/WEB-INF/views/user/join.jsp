@@ -1,4 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -57,7 +62,7 @@
 
 <div class="signup-container">
     <h4>회원가입</h4>
-    <form id="signupForm" action="${pageContext.request.contextPath}/user/register" method="post">
+    <form id="signupForm" action="${pageContext.request.contextPath}/user/register" method="post" >
         <div class="mb-3">
             <label for="user_id" class="form-label">아이디</label>
             <input type="text" class="form-control" id="user_id" name="userId" placeholder="아이디를 입력하세요" required>
