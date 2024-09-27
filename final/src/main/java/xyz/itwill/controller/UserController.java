@@ -99,14 +99,14 @@ public class UserController {
     public String login(@ModelAttribute User user, Model model, HttpSession session) {
         User authUser = userService.loginAuth(user);
         session.setAttribute("loginUser", authUser);
-        return "redirect:/spring/user/profile"; // 로그인 성공 후 프로필 페이지로 이동
+        return "redirect:/user/profile"; // 로그인 성공 후 프로필 페이지로 이동
     }
 
     // 로그아웃 처리
     @RequestMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/spring/user/login";  // 로그아웃 후 로그인 페이지로 이동
+        return "redirect:/user/login";  // 로그아웃 후 로그인 페이지로 이동
     }
 
     // 회원 프로필 조회 (JSP 파일명: mypage.jsp)
@@ -114,7 +114,7 @@ public class UserController {
     public String profile(HttpSession session, Model model) {
         User loginUser = (User) session.getAttribute("loginUser");
         if (loginUser == null) {
-            return "redirect:/spring/user/login";
+            return "redirect:/user/login";
         }
         model.addAttribute("user", loginUser);
         return "user/mypage";  // 프로필 페이지 경로를 mypage.jsp로 변경
@@ -144,7 +144,7 @@ public class UserController {
             session.setAttribute("loginUser", userService.getUser(user.getUserId()));
         }
 
-        return "redirect:/spring/user/profile";  // 수정 후 프로필 페이지로 이동
+        return "redirect:user/profile";  // 수정 후 프로필 페이지로 이동
     }
 
     // 회원 삭제 처리
@@ -154,10 +154,10 @@ public class UserController {
         
         User loginUser = (User) session.getAttribute("loginUser");
         if (loginUser != null && loginUser.getUserId().equals(userId)) {
-            return "redirect:/spring/user/logout";  // 삭제 후 로그아웃 처리
+            return "redirect:/user/logout";  // 삭제 후 로그아웃 처리
         }
 
-        return "redirect:/spring/user/list";  // 관리자용 회원 목록으로 이동
+        return "redirect:/user/list";  // 관리자용 회원 목록으로 이동
     }
 
     // 이메일 인증 코드 검증 및 회원가입 완료 처리
