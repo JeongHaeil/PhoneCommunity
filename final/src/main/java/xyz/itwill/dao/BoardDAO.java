@@ -15,5 +15,5 @@ public interface BoardDAO {
 	int updateboard(Board board);
 	int boardstarup(int boardPostIdx);
 	int boardstardown(int boardPostIdx);
-	int boardspam(int boardPostIdx);
+	int boardspam(int boardPostIdx); 
 }
