@@ -1,10 +1,11 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>제품 페이지</title>
+    <title>ì í íì´ì§</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         * {
@@ -78,7 +79,7 @@
             margin-left: 40px;
         }
 
-        /* 테이블 스타일 */
+        /* íì´ë¸ ì¤íì¼ */
         .info-table {
             width: 100%;
             border: 1px solid #e1e1e1;
@@ -111,8 +112,8 @@
             border-left: 1px solid #e1e1e1;
         }
 
-        /* 두 번째 테이블 */
-        /* 두 번째 테이블 간격 조정 */
+        /* ë ë²ì§¸ íì´ë¸ */
+        /* ë ë²ì§¸ íì´ë¸ ê°ê²© ì¡°ì  */
 .info-table-2 {
     width: 100%;
     border: 1px solid #e1e1e1;
@@ -122,12 +123,12 @@
     border-collapse: separate;
     border-spacing: 0;
     margin-top: 30px;
-    table-layout: fixed; /* 각 열의 크기를 고정 */
+    table-layout: fixed; /* ê° ì´ì í¬ê¸°ë¥¼ ê³ ì  */
 }
 
 .info-table-2 th,
 .info-table-2 td {
-    padding: 1px; /* 크기 및 간격 동일하게 설정 */
+    padding: 1px; /* í¬ê¸° ë° ê°ê²© ëì¼íê² ì¤ì  */
     color: #555;
 }
 
@@ -148,7 +149,7 @@
 }
 
 
-        /* 추가 정보 */
+        /* ì¶ê° ì ë³´ */
         .extra-info {
             font-size: 0.9rem;
             color: #333;
@@ -199,7 +200,7 @@
             background-color: #333;
         }
 
-        /* 상품 정보 및 가게 정보 */
+        /* ìí ì ë³´ ë° ê°ê² ì ë³´ */
         .product-store-info {
             display: flex;
             justify-content: space-between;
@@ -216,7 +217,7 @@
             margin-left: 40px;
         }
 
-        /* 가게 정보 스타일 수정 */
+        /* ê°ê² ì ë³´ ì¤íì¼ ìì  */
       .store-info-right .store-name-container {
       
        display: flex;
@@ -226,7 +227,7 @@
 }
 
 .store-info-right .store-name-container img {
-    margin-right: 10px; /* 이름과 프로필 사진 간격 조정 */
+    margin-right: 10px; /* ì´ë¦ê³¼ íë¡í ì¬ì§ ê°ê²© ì¡°ì  */
     border-radius: 50%;
 }
 
@@ -262,7 +263,7 @@
             left: 0;
         }
 
-        /* 하단 정보 */
+        /* íë¨ ì ë³´ */
         .posted-product {
             display: flex;
             gap: 15px;
@@ -287,7 +288,7 @@
     object-fit: cover;
 }
 
-        /* 반응형 디자인 */
+        /* ë°ìí ëìì¸ */
         @media (max-width: 768px) {
             .product-details {
                 flex-direction: column;
@@ -318,103 +319,103 @@
 <body>
 
     <div class="container">
-        <!-- 상단 정보 -->
-        <div class="product-header">홈 > 모바일/태블릿 > 스마트폰 > 애플</div>
+        <!-- ìë¨ ì ë³´ -->
+        <div class="product-header">í > ëª¨ë°ì¼/íë¸ë¦¿ > ì¤ë§í¸í° > ì í</div>
 
-        <!-- 제품명 -->
-        <div class="product-title">아이폰 13미니 핑크 128기가</div>
+        <!-- ì íëª -->
+        <div class="product-title">ìì´í° 13ë¯¸ë íí¬ 128ê¸°ê°</div>
 
-        <!-- 가격 -->
+        <!-- ê°ê²© -->
         <div class="price">
-            300,000원
+            300,000ì
             <span>Pay</span>
         </div>
 
-        <!-- 시간 정보 -->
-        <div class="time-info">1시간 전 · 조회 13 · 채팅 1 · 찜 0</div>
+        <!-- ìê° ì ë³´ -->
+        <div class="time-info">1ìê° ì  Â· ì¡°í 13 Â· ì±í 1 Â· ì° 0</div>
 
-        <!-- 제품 이미지와 정보 -->
+        <!-- ì í ì´ë¯¸ì§ì ì ë³´ -->
         <div class="product-details">
-            <!-- 이미지 -->
+            <!-- ì´ë¯¸ì§ -->
             <div class="product-image">
-                <img src="https://via.placeholder.com/150" alt="상품 이미지" class="img-fluid">
+                <img src="https://via.placeholder.com/150" alt="ìí ì´ë¯¸ì§" class="img-fluid">
             </div>
 
-            <!-- 정보 -->
+            <!-- ì ë³´ -->
             <div class="product-info">
-                <!-- 첫 번째 테이블 -->
+                <!-- ì²« ë²ì§¸ íì´ë¸ -->
                 <table class="info-table">
                     <thead>
                         <tr>
-                            <th>제품상태</th>
-                            <th>거래방식</th>
-                            <th>배송비</th>
-                            <th>안전거래</th>
+                            <th>ì íìí</th>
+                            <th>ê±°ëë°©ì</th>
+                            <th>ë°°ì¡ë¹</th>
+                            <th>ìì ê±°ë</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>중고</td>
-                            <td>직거래, 택배</td>
-                            <td>별도</td>
-                            <td>사용</td>
+                            <td>ì¤ê³ </td>
+                            <td>ì§ê±°ë, íë°°</td>
+                            <td>ë³ë</td>
+                            <td>ì¬ì©</td>
                         </tr>
                     </tbody>
                 </table>
 
-                <!-- 추가 정보 -->
+                <!-- ì¶ê° ì ë³´ -->
                 <div class="extra-info">
                     <ul>
-                        <li><b>거래희망지역:</b> 고산1동</li>
-                        <li><b>결제혜택:</b> 페이코 최대 4만원 즉시할인, KB국민카드 18개월 6% 특별 할부 수수료</li>
-                        <li><b>무이자혜택:</b> 1만원 이상 무이자 할부</li>
+                        <li><b>ê±°ëí¬ë§ì§ì­:</b> ê³ ì°1ë</li>
+                        <li><b>ê²°ì íí:</b> íì´ì½ ìµë 4ë§ì ì¦ìí ì¸, KBêµ­ë¯¼ì¹´ë 18ê°ì 6% í¹ë³ í ë¶ ììë£</li>
+                        <li><b>ë¬´ì´ìíí:</b> 1ë§ì ì´ì ë¬´ì´ì í ë¶</li>
                     </ul>
                 </div>
 
-                <!-- 버튼 -->
+                <!-- ë²í¼ -->
                 <div class="buttons">
-                    <button class="btn btn-chat">채팅하기</button>
-                    <button class="btn btn-safe">안전거래</button>
+                    <button class="btn btn-chat">ì±ííê¸°</button>
+                    <button class="btn btn-safe">ìì ê±°ë</button>
                 </div>
             </div>
         </div>
 
-        <!-- 상품 정보 및 가게 정보 -->
+        <!-- ìí ì ë³´ ë° ê°ê² ì ë³´ -->
         <div class="product-store-info">
-            <!-- 상품 정보 -->
+            <!-- ìí ì ë³´ -->
             <div class="product-info-left">
                
-                <h4 style="font-weight: bold;">상품 정보</h4>
+                <h4 style="font-weight: bold;">ìí ì ë³´</h4>
                 <div class="left-wrap" style="border-top: 1px solid #e1e1e1; margin-top: 25px;">
                 <ul style="margin-top: 25px;">
-                    <li>- 상품명: 애플 아이폰 13미니 핑크 128기가</li>
-                    <li>- 가격: 300,000원</li>
-                    <li>- 구매시기: 2022년 12월</li>
-                    <li>- 배터리 성능: 83퍼</li>
-                    <li>- 특이사항: 휴대폰 단품이고, 액정과 후면에는 기스, 파손은 없지만 측면에 잔기스와 찍힘 하나 있습니다. 사진 참고해주세요.</li>
+                    <li>- ìíëª: ì í ìì´í° 13ë¯¸ë íí¬ 128ê¸°ê°</li>
+                    <li>- ê°ê²©: 300,000ì</li>
+                    <li>- êµ¬ë§¤ìê¸°: 2022ë 12ì</li>
+                    <li>- ë°°í°ë¦¬ ì±ë¥: 83í¼</li>
+                    <li>- í¹ì´ì¬í­: í´ëí° ë¨íì´ê³ , ì¡ì ê³¼ íë©´ìë ê¸°ì¤, íìì ìì§ë§ ì¸¡ë©´ì ìê¸°ì¤ì ì°í íë ììµëë¤. ì¬ì§ ì°¸ê³ í´ì£¼ì¸ì.</li>
                 </ul>
             </div>
             </div>
 
-            <!-- 가게 정보 -->
+            <!-- ê°ê² ì ë³´ -->
             <div class="store-info-right">
-                <h4 style="font-weight: bold;">프로필 정보</h4>
+                <h4 style="font-weight: bold;">íë¡í ì ë³´</h4>
                 <div class="left-wrap" style="border-top: 1px solid #e1e1e1; margin-top: 25px;">
                     <div class="store-name-container" style="margin-top: 30px;">
                         <div class="store-name">woody0226</div>
-                        <img src="https://via.placeholder.com/50" alt="프로필 사진" width="70px;">
+                        <img src="https://via.placeholder.com/50" alt="íë¡í ì¬ì§" width="70px;">
                     </div>                  
-                <div class="trust-score" style="margin-top: 30px;">신뢰지수 <span>272</span></div>
+                <div class="trust-score" style="margin-top: 30px;">ì ë¢°ì§ì <span>272</span></div>
                 <div class="trust-bar">
                     <div class="trust-bar-fill"></div>
                 </div>
-                <!-- 두 번째 테이블 -->
+                <!-- ë ë²ì§¸ íì´ë¸ -->
                 <table class="info-table-2">
                     <thead>
                         <tr>
-                            <th>안전거래</th>
-                            <th>거래후기</th>
-                            <th>단골</th>
+                            <th>ìì ê±°ë</th>
+                            <th>ê±°ëíê¸°</th>
+                            <th>ë¨ê³¨</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -427,10 +428,10 @@
                 </table>
 
                 <div class="posted-product">
-                    <img src="https://via.placeholder.com/60" alt="아이폰 13미니">
+                    <img src="https://via.placeholder.com/60" alt="ìì´í° 13ë¯¸ë">
                     <div class="posted-product-info">
-                        아이폰 13미니 핑크 128기가<br>
-                        300,000원
+                        ìì´í° 13ë¯¸ë íí¬ 128ê¸°ê°<br>
+                        300,000ì
                     </div>
                 </div>
             </div>

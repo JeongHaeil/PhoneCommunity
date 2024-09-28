@@ -38,11 +38,34 @@ public class UserController {
         return "main_page"; // 메인 페이지로 이동
     }
 
-    // 로그인 페이지로 이동 (GET 요청)
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(Model model) {
-        model.addAttribute("userid", "");
-        return "user/login";  // login.jsp 경로 유지
+    // 게스트 페이지 요청을 처리하는 메서드
+    @RequestMapping(value = "/guest/", method = RequestMethod.GET)
+    public String guestPage() {
+        return "guest_page";
+    }
+
+    // 일반 사용자 페이지 요청을 처리하는 메서드
+    @RequestMapping(value = "/user/", method = RequestMethod.GET)
+    public String userPage() {
+        return "user_page";
+    }
+
+    // 게시판 관리자 페이지 요청을 처리하는 메서드
+    @RequestMapping(value = "/board_admin/", method = RequestMethod.GET)
+    public String boardAdminPage() {
+        return "board_admin_page";
+    }
+
+    // 최고 관리자 페이지 요청을 처리하는 메서드
+    @RequestMapping(value = "/super_admin/", method = RequestMethod.GET)
+    public String superAdminPage() {
+        return "super_admin_page";
+    }
+
+    // 이용약관 페이지로 이동 (GET 요청)
+    @RequestMapping(value = "/terms", method = RequestMethod.GET)
+    public String showTermsPage() {
+        return "user/tern"; // 이용약관 페이지로 이동
     }
 
     // 회원가입 페이지를 보여주는 메서드 (GET 요청)
@@ -55,12 +78,6 @@ public class UserController {
         }
 
         return "user/join"; // 이용약관 동의 후 회원가입 페이지로 이동
-    }
-
-    // 이용약관 페이지로 이동 (GET 요청)
-    @RequestMapping(value = "/terms", method = RequestMethod.GET)
-    public String showTermsPage() {
-        return "user/tern"; // 이용약관 페이지로 이동
     }
 
     // 이용약관 동의 처리 (POST 요청)
@@ -131,6 +148,26 @@ public class UserController {
         return "redirect:/user/login";
     }
 
+    // 로그인 페이지로 이동 (GET 요청)
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String login() {
+        return "user/login";  // login.jsp 경로 유지
+    }
+
+ // 로그인 처리
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String login(@ModelAttribute User user, Model model, HttpSession session) {
+        User authUser = userService.loginAuth(user);
+        if (authUser != null) {
+            session.setAttribute("loginUser", authUser);
+            log.info("로그인 성공: ID = " + authUser.getUserId() + ", 이름 = " + authUser.getUserName());
+        } else {
+            log.info("로그인 실패: 유효하지 않은 사용자 정보");
+        }
+        return "redirect:/"; // 로그인 성공 후 메인 페이지로 이동
+    }
+
+
     // 로그아웃 처리
     @RequestMapping("/logout")
     public String logout(HttpSession session) {
@@ -164,4 +201,4 @@ public class UserController {
         User user = userService.getUserByNickname(nickname);
         return (user == null) ? "AVAILABLE" : "EXISTS";
     }
-}
+}  

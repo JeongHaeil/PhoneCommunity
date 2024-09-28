@@ -151,12 +151,12 @@
         <form action="${pageContext.request.contextPath}/user/login" method="post">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <div class="form-floating-custom">
-        <input type="text" class="form-control" id="userId" name="userId" placeholder=" ">
+        <input type="text" class="form-control" id="userId" name="userid" placeholder=" ">
         <label for="userId">아이디</label>
         <div class="underline-effect-custom"></div>
     </div>
     <div class="form-floating-custom">
-        <input type="password" class="form-control" id="password" name="userPassword" placeholder=" ">
+        <input type="password" class="form-control" id="password" name="passwd" placeholder=" ">
         <label for="password">비밀번호</label>
         <div class="underline-effect-custom"></div>
     </div>

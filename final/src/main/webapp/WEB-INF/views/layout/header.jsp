@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -37,29 +37,20 @@
                     <li class="nav-item"><a class="nav-link" href="#">서비스</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">운영관리</a></li>
                 </ul>
-                <div class="login-container position-relative" id="loginContainer">
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.loginUser}">
-                            <span>회원님 반갑습니다, ${sessionScope.loginUser.userName}</span>
-                            <a class="btn btn-link" href="<c:url value='/user/logout'/>">로그아웃</a>
-                        </c:when>
-                        <c:otherwise>
-                            <a class="btn btn-login" id="loginButton" href ="<c:url value='/user/login'/>">로그인</a>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
+				<div class="login-container position-relative" id="loginContainer">
+				    <c:choose>
+				        <c:when test="${not empty pageContext.request.userPrincipal}">
+				            <span> <security:authentication property="principal.nickname"/> 님</span>
+				            <a class="btn btn-link" href="<c:url value='/user/logout'/>">로그아웃</a>
+				        </c:when>
+				        <c:otherwise>
+				            <a class="btn btn-login" id="loginButton" href ="<c:url value='/user/login'/>">로그인</a>
+				        </c:otherwise>
+				    </c:choose>
+				</div>
+
             </div>
         </div>
     </nav>
-
-    <style>
-        .login-container:hover .login-form {
-            display: block !important;
-        }
-    </style>
-
-    <!-- 부트스트랩 5.3 JS 링크 -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-     
 </body>
 </html>

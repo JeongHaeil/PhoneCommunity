@@ -21,6 +21,7 @@ public class CustomUserDetails implements UserDetails {
     private String userPassword;
     private String userName;
     private String userEmail;
+    private String nickname; // 닉네임 필드 추가
     private int userStatus;
 
     // 인증된 사용자의 모든 권한 정보가 저장될 필드
@@ -32,6 +33,7 @@ public class CustomUserDetails implements UserDetails {
         this.userPassword = user.getUserPassword();
         this.userName = user.getUserName();
         this.userEmail = user.getUserEmail();
+        this.nickname = user.getUserNickName(); // 닉네임 초기화
         this.userStatus = user.getUserStatus();
 
         this.authorities = new ArrayList<>();
@@ -61,6 +63,10 @@ public class CustomUserDetails implements UserDetails {
     // 추가적으로 사용자 이름을 반환하는 메서드
     public String getName() {
         return userName;
+    }
+    // 추가적으로 닉네임을 반환하는 메서드
+    public String getNickname() {
+        return nickname;
     }
     
     // 인증된 사용자의 유효기간 상태를 반환하는 메소드
