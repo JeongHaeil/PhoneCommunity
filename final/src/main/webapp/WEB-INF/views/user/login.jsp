@@ -149,28 +149,29 @@
     <div class="login-box-custom">
         <h4 class="text-center">로그인</h4>
         <form action="${pageContext.request.contextPath}/user/login" method="post">
-            <div class="form-floating-custom">
-                <input type="text" class="form-control" id="userId" name="userId" placeholder=" ">
-                <label for="userId">아이디</label>
-                <div class="underline-effect-custom"></div>
-            </div>
-            <div class="form-floating-custom">
-                <input type="password" class="form-control" id="password" name="userPassword" placeholder=" ">
-                <label for="password">비밀번호</label>
-                <div class="underline-effect-custom"></div>
-            </div>
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="rememberMe">
-                    <label class="form-check-label remember-me-custom" for="rememberMe">로그인 상태 유지</label>
-                </div>
-            </div>
-            <div class="find-links-custom">
-                <a href="${pageContext.request.contextPath}/user/findId">아이디 찾기</a>
-                <a href="${pageContext.request.contextPath}/user/findPassword">비밀번호 찾기</a>
-            </div>
-            <button type="submit" class="btn btn-login-custom">로그인</button>
-        </form>
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    <div class="form-floating-custom">
+        <input type="text" class="form-control" id="userId" name="userId" placeholder=" ">
+        <label for="userId">아이디</label>
+        <div class="underline-effect-custom"></div>
+    </div>
+    <div class="form-floating-custom">
+        <input type="password" class="form-control" id="password" name="userPassword" placeholder=" ">
+        <label for="password">비밀번호</label>
+        <div class="underline-effect-custom"></div>
+    </div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="rememberMe">
+            <label class="form-check-label remember-me-custom" for="rememberMe">로그인 상태 유지</label>
+        </div>
+    </div>
+    <div class="find-links-custom">
+        <a href="${pageContext.request.contextPath}/user/findId">아이디 찾기</a>
+        <a href="${pageContext.request.contextPath}/user/findPassword">비밀번호 찾기</a>
+    </div>
+    <button type="submit" class="btn btn-login-custom">로그인</button>
+	</form>
         <div class="text-center mt-3">
             <p>아직 회원이 아니신가요? <a href="${pageContext.request.contextPath}/user/terms" class="register-link-custom">회원가입 하기</a></p>
         </div>

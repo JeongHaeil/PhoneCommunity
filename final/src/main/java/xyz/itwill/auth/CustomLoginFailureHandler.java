@@ -24,7 +24,7 @@ public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHan
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
 		request.getSession().setAttribute("userid", request.getParameter("userid"));
-		setDefaultFailureUrl("/user_login");
+		setDefaultFailureUrl("/user/login");
 		super.onAuthenticationFailure(request, response, exception);
 	}
 }

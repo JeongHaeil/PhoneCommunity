@@ -62,11 +62,12 @@
 <div class="signup-container">
     <h4>회원가입</h4>
     <form id="signupForm" action="${pageContext.request.contextPath}/user/register" method="post">
-        <div class="mb-3">
-            <label for="user_id" class="form-label">아이디</label>
-            <input type="text" class="form-control" id="user_id" name="userId" placeholder="아이디를 입력하세요" required>
-            <div id="userIdCheck" class="validation-message"></div>
-        </div>
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    <div class="mb-3">
+        <label for="user_id" class="form-label">아이디</label>
+        <input type="text" class="form-control" id="user_id" name="userId" placeholder="아이디를 입력하세요" required>
+        <div id="userIdCheck" class="validation-message"></div>
+    </div>
         <div class="mb-3">
             <label for="user_password" class="form-label">비밀번호</label>
             <input type="password" class="form-control" id="user_password" name="userPassword" placeholder="비밀번호를 입력하세요" required>
@@ -97,7 +98,7 @@
             <input type="text" class="form-control" id="nickname" name="userNickName" placeholder="닉네임을 입력하세요" required>
             <div id="nicknameCheck" class="validation-message"></div>
         </div>
-        <button type="submit" class="btn btn-signup">가입하기</button>
+       <button type="submit" class="btn btn-signup">가입하기</button>
     </form>
 
     <div class="alert alert-info" role="alert" style="display: none;" id="email-verification-message">

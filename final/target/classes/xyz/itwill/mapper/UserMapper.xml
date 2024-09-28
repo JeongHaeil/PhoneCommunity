@@ -8,7 +8,7 @@
     <!-- Insert User -->
     <insert id="insertUser">
     INSERT INTO USERS (USER_NUM, USER_ID, USER_PASSWORD, USER_EMAIL, USER_PHONE_NUM, USER_NAME, USER_REGISTER_DATE, USER_LEVEL, USER_STATUS, USER_NICKNAME)
-    VALUES (USER_SEQ.NEXTVAL, #{userId}, #{userPassword}, #{userEmail}, #{userPhoneNumber}, #{userName}, SYSDATE, #{userLevel}, #{userStatus}, #{userNickName})
+    VALUES (USER_SEQ.NEXTVAL, #{userId}, #{userPassword}, #{userEmail}, #{userPhoneNum}, #{userName}, SYSDATE, #{userLevel}, #{userStatus}, #{userNickName})
     </insert>
 
     <!-- Update User -->
@@ -17,7 +17,7 @@
         SET 
             USER_PASSWORD = #{userPassword}, 
             USER_EMAIL = #{userEmail}, 
-            USER_PHONE_NUMBER = #{userPhoneNumber}, 
+            USER_PHONE_NUM  = #{userPhoneNum}, 
             USER_NAME = #{userName},
             USER_UPDATE_DATE = SYSDATE,
             USER_NICKNAME = #{userNickName}
@@ -44,12 +44,13 @@
         SELECT * FROM USERS WHERE USER_NICKNAME = #{userNickName}
     </select>
     
-      <select id="selectUserByUserId" parameterType="string" resultType="xyz.itwill.dto.User">
+    <!-- Select a User by userId with explicit column mappings -->
+    <select id="selectUserByUserId" parameterType="string" resultType="xyz.itwill.dto.User">
         SELECT user_num AS userNum,
                user_id AS userId,
                user_password AS userPassword,
                user_email AS userEmail,
-               user_phone_number AS userPhoneNumber,
+               user_phone_num AS userPhoneNum,
                user_name AS userName,
                user_update_date AS userUpdateDate,
                user_last_login AS userLastLogin,

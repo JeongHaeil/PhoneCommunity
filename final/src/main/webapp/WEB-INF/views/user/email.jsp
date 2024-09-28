@@ -48,12 +48,14 @@
 <div class="verification-container">
     <h4>이메일 인증</h4>
     <form action="${pageContext.request.contextPath}/email/verify" method="post">
-        <div class="mb-3">
-            <label for="verification_code" class="form-label">인증 코드</label>
-            <input type="text" class="form-control" id="verification_code" name="emailCode" placeholder="이메일로 받은 인증 코드를 입력하세요" required pattern="\d*">
-        </div>
-        <button type="submit" class="btn btn-verify">인증하기</button>
-    </form>
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    <div class="mb-3">
+        <label for="verification_code" class="form-label">인증 코드</label>
+        <input type="text" class="form-control" id="verification_code" name="emailCode" placeholder="이메일로 받은 인증 코드를 입력하세요" required pattern="\d*">
+    </div>
+    <button type="submit" class="btn btn-verify">인증하기</button>
+</form>
+
 
     <div class="mt-4 text-center">
         <p>이메일을 받지 못하셨나요?</p>

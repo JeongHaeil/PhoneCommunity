@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -37,27 +38,15 @@
                     <li class="nav-item"><a class="nav-link" href="#">운영관리</a></li>
                 </ul>
                 <div class="login-container position-relative" id="loginContainer">
-                    <a class="btn btn-login" id="loginButton" href ="<c:url value='/user/login'/>">로그인</a>
-                    <div class="login-form position-absolute bg-light p-3 shadow" id="loginForm" style="display: none;">
-                        <form>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">이메일 주소</label>
-                                <input type="email" class="form-control" id="email" placeholder="email@example.com">
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">비밀번호</label>
-                                <input type="password" class="form-control" id="password" placeholder="비밀번호">
-                            </div>
-                            <div class="form-check mb-3">
-                                <input type="checkbox" class="form-check-input" id="dropdownCheck">
-                                <label class="form-check-label" for="dropdownCheck">로그인 상태 유지</label>
-                            </div>
-                            <button type="submit" class="btn btn-primary">로그인</button>
-                        </form>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">새 계정 만들기</a>
-                        <a class="dropdown-item" href="#">비밀번호를 잊으셨나요?</a>
-                    </div>
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.loginUser}">
+                            <span>회원님 반갑습니다, ${sessionScope.loginUser.userName}</span>
+                            <a class="btn btn-link" href="<c:url value='/user/logout'/>">로그아웃</a>
+                        </c:when>
+                        <c:otherwise>
+                            <a class="btn btn-login" id="loginButton" href ="<c:url value='/user/login'/>">로그인</a>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
         </div>
