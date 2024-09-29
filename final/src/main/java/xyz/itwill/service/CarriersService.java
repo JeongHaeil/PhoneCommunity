@@ -1,5 +1,9 @@
 package xyz.itwill.service;
 
+import java.util.List;
+
+import xyz.itwill.dto.Carriers;
+
 public interface CarriersService {
-	int getCarriersById(int carrierId);
+	List<Carriers> getCarriersById();
 }

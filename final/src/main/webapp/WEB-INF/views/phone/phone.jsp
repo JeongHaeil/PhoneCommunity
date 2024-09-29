@@ -1,16 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>요금 계산기</title>
-    <link rel="stylesheet" href="<c:url value="/resources/css/phone.css"/>">
-    <link rel="js" href="<c:url value="/resources/js/phone.js"/>">
-    
-    <script type="text/javascript" src="<c:url value="/js/jquery-3.7.1.min.js"/>"></script>
+    <link rel="stylesheet" href="<c:url value='/resources/css/phone.css'/>">
+    <script type="text/javascript" src="<c:url value='/js/jquery-3.7.1.min.js'/>"></script>
 </head>
 <body>
 
@@ -19,6 +17,7 @@
     </header>
 
     <!-- 필터 테이블 -->
+    <form action="<c:url value='/phone/phone'/>" method="post">
     <section class="plans-filter">
         <table class="plans-table">
             <thead>
@@ -29,7 +28,6 @@
                         <input type="text" id="product-search" placeholder="제품 검색" class="plans-search">
                     </th>
                     <th>구분</th>
-                    <th>분류</th>
                     <th>기타</th>
                 </tr>
             </thead>
@@ -37,38 +35,28 @@
                 <tr>
                     <td>
                         <ul class="plans-list">
-                      
-                            <li><button class="plans-filter-btn active" data-carrier="skt">SKT</button></li>
-                            <li><button class="plans-filter-btn" data-carrier="kt">KT</button></li>
-                            <li><button class="plans-filter-btn" data-carrier="lg">LG</button></li>
-                            
+                            <c:forEach var="carrier" items="${carriersList}">
+                                <li><button type="button" class="plans-filter-btn" data-carrier="${carrier.carrierId}">
+                                    ${carrier.carrierName}</button></li>
+                            </c:forEach>
                         </ul>
                     </td>
                     <td>
                         <ul class="plans-list">
-                        
-                            <li><button class="plans-filter-btn" data-manufacturer="samsung">삼성</button></li>
-                            <li><button class="plans-filter-btn" data-manufacturer="apple">애플</button></li>
-                            
+                            <c:forEach var="manufacturer" items="${manufacturersList}">
+                                <li><button type="button" class="plans-filter-btn" data-manufacturer="${manufacturer.manufacturerId}">
+                                    ${manufacturer.manufacturerName}</button></li>
+                            </c:forEach>
                         </ul>
                     </td>
                     <td>
-                        <div class="plans-product-wrapper">
-                            <ul class="plans-product-list">
-                              <c:forEach var="plan" items="${plansList}">
+                        <ul class="plans-product-list">
+                            <c:forEach var="product" items="${productsList}">
                                 <li style="display: none;">
-                                    <span class="plans-product-name" data-manufacturer="samsung">${plan.plansname}</span>
-                                    <span class="plans-product-price" data-manufacturer="samsung">1,200,000원</span>
+                                    <span class="plans-product-name" data-manufacturer="${product.manufacturerId}">${product.productName}</span>
                                 </li>
-                                </c:forEach>
-                                 <c:forEach var="plan" items="${plansList}">
-                                <li style="display: none;">
-                                    <span class="plans-product-name" data-manufacturer="apple">${plan.plansname}</span>
-                                    <span class="plans-product-price" data-manufacturer="apple">1,500,000원</span>
-                                </li>
-                                </c:forEach>
-                            </ul>
-                        </div>
+                            </c:forEach>
+                        </ul>
                     </td>
                     <td>
                         <ul class="plans-list">
@@ -77,141 +65,188 @@
                         </ul>
                     </td>
                     <td>
-                        <ul class="plans-list">
-                            <li><button class="plans-filter-btn" data-category="direct-youth">청년 다이렉트</button></li>
-                            <li><button class="plans-filter-btn" data-category="direct-5g">다이렉트5G</button></li>
-                            <li><button class="plans-filter-btn" data-category="5gx-plan">5GX 플랜</button></li>
-                        </ul>
-                    </td>
-                    <td>
+                        <!-- 가입 구분, 할부 개월 및 추가 지원금 -->
                         <div class="plans-option-group">
                             <h3>가입 구분</h3>
                             <div class="plans-btn-group">
-                                <button class="plans-btn active">번호이동</button>
-                                <button class="plans-btn">신규/기변</button>
+                                <button class="plans-btn active">신규</button>
+                                <button class="plans-btn">기변</button>
                             </div>
                         </div>
-                        
                         <div class="plans-option-group">
                             <h3>할부 개월</h3>
                             <div class="plans-btn-group">
                                 <button class="plans-btn active">자급제</button>
-                                <button class="plans-btn">할부</button>
+                                <button class="plans-btn" id="installmentBtn">할부</button>
+                            </div>
+                            <div class="dropdown">
+                                <button class="dropdown-toggle" onclick="toggleDropdown()">개월 선택</button>
+                                <div id="dropdown-menu" class="dropdown-menu" style="display: none;">
+                                    <button class="dropdown-item" onclick="selectMonth(12)">12개월</button>
+                                    <button class="dropdown-item" onclick="selectMonth(24)">24개월</button>
+                                </div>
                             </div>
                         </div>
-
-                            <div class="plans-option-group">
-                                <h3>추가 지원금</h3>
-                                <select id="extra-support" class="plans-select">
-                                    <option value="추가지원금 15%">추가지원금 15%</option>
-                                    <option value="추가지원금 10%">추가지원금 10%</option>
-                                    <option value="추가지원금 20%">추가지원금 20%</option>
-                                </select>
-                            </div>
-
-                            <div class="plans-option-group">
-                                <h3>출고가</h3>
-                                <input type="text" id="final-price" class="plans-input" placeholder="출고가 입력" />
-                            </div>
-
-                            <button class="plans-calculate-btn">요금 계산</button>
+                        <div class="plans-option-group">
+                            <h3>추가 지원금</h3>
+                            <select id="extra-support" class="plans-select">
+                                <option value="추가지원금 15%">추가지원금 15%</option>
+                                <option value="추가지원금 10%">추가지원금 10%</option>
+                                <option value="추가지원금 20%">추가지원금 20%</option>
+                            </select>
                         </div>
+
+                        <!-- 숨겨진 필드들 -->
+                        <input type="hidden" name="carrierId" id="carrierId" value="0">
+                        <input type="hidden" name="productId" id="productId" value="0">
+                        <input type="hidden" name="planProductType" id="planProductType">
+                        <input type="hidden" name="planType" id="planType">
+                        <input type="hidden" name="planMonths" id="planMonths">
+                        <input type="hidden" name="planOption" id="planOption">
+                        <input type="hidden" name="planAdditional" id="planAdditional">
+                        <button type="submit" class="plans-calculate-btn">요금제 조회</button>
                     </td>
                 </tr>
             </tbody>
         </table>
     </section>
+    </form>
 
     <!-- 요금제 구분 테이블 -->
     <section class="plans-summary">
-        <table class="plans-summary-table">
-            <thead>
+        <c:if test="${not empty planDetails}">
+            <table class="plans-summary-table">
                 <tr>
-                    <th>요금제</th>
+                    <th>요금제 이름</th>
+                    <td>${planDetails.planName}</td>
+                </tr>
+                <tr>
                     <th>약정 구분</th>
-                    <th>공시지원금</th>
-                    <th>추가지원금</th>
-                    <th>월할부금</th>
-                    <th>할부이자</th>
-                    <th>총 월요금</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>5GX 레귤러</td>
-                    <td>선택약정</td>
-                    <td>0원</td>
-                    <td>0원</td>
-                    <td>69,000원</td>
-                    <td>0원</td>
-                    <td>69,000원</td>
+                    <td>${planDetails.planContractType}</td>
                 </tr>
                 <tr>
-                    <td>5GX 프라임</td>
-                    <td>선택약정</td>
-                    <td>0원</td>
-                    <td>0원</td>
-                    <td>89,000원</td>
-                    <td>0원</td>
-                    <td>89,000원</td>
+                    <th>데이터 용량</th>
+                    <td>${planDetails.planData}</td>
                 </tr>
-            </tbody>
-        </table>
+                <tr>
+                    <th>추가 지원금</th>
+                    <td>${planDetails.additionalSupport}원</td>
+                </tr>
+                <tr>
+                    <th>월 할부금</th>
+                    <td>${planDetails.monthlyInstallmentFee}원</td>
+                </tr>
+                <tr>
+                    <th>할부 이자</th>
+                    <td>${planDetails.installmentInterest}원</td>
+                </tr>
+                <tr>
+                    <th>총 월 요금</th>
+                    <td>${planDetails.totalMonthlyFee}원</td>
+                </tr>
+            </table>
+        </c:if>
     </section>
-</body>
 
 <script type="text/javascript">
+// 자바스크립트 부분
 document.addEventListener('DOMContentLoaded', function () {
-    const manufacturerLinks = document.querySelectorAll('[data-manufacturer]');
-    const carrierLinks = document.querySelectorAll('[data-carrier]');
-    const divisionLinks = document.querySelectorAll('[data-division]');
-    const categoryLinks = document.querySelectorAll('[data-category]');
+    const carrierButtons = document.querySelectorAll('[data-carrier]');
+    const manufacturerButtons = document.querySelectorAll('[data-manufacturer]');
     const productListItems = document.querySelectorAll('.plans-product-list li');
-    const productSearchInput = document.getElementById('product-search');
+    const filterButtons = document.querySelectorAll('.plans-filter-btn');
+    const planButtons = document.querySelectorAll('.plans-btn');
+    const extraSupportSelect = document.getElementById('extra-support');
+    const planMonthsHidden = document.getElementById('planMonths');
+    const form = document.querySelector('form');
+    let isInstallment = false;
 
-    // 처음에는 모든 제품 숨김
-    productListItems.forEach(product => product.style.display = 'none');
+    // 폼 제출 시 처리
+    form.addEventListener('submit', function(event) {
+        const carrierId = document.getElementById('carrierId').value || "0";
+        const productId = document.getElementById('productId').value || "0";
+        const planOption = document.getElementById('planOption').value;
 
-    // 공통된 필터 처리 함수
-    function applyFilter(linkGroup, activeClass = 'active') {
-        linkGroup.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                // 같은 그룹 내의 다른 항목에서 active 클래스 제거
-                linkGroup.forEach(link => link.classList.remove(activeClass));
-                // 선택된 항목에 active 클래스 추가
-                this.classList.add(activeClass);
-            });
-        });
-    }
+        // 자급제일 경우 planMonths를 초기화
+        if (planOption === '자급제') {
+            planMonthsHidden.value = '';  
+        }
 
-    // 각 필터 그룹에 독립적인 이벤트 리스너 적용
-    applyFilter(manufacturerLinks);
-    applyFilter(carrierLinks);
-    applyFilter(divisionLinks);
-    applyFilter(categoryLinks);
-
-    // 제조사 클릭 시 해당 제품만 표시
-    manufacturerLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const selectedManufacturer = this.dataset.manufacturer;
-            productListItems.forEach(product => {
-                product.style.display = 'none'; // 모든 제품 숨김
-                if (product.querySelector('.plans-product-name').getAttribute('data-manufacturer') === selectedManufacturer) {
-                    product.style.display = 'flex'; // 선택된 제조사의 제품만 표시
-                }
-            });
-        });
-    });
-
-    // 제품 클릭 시 제품 이름을 검색창에 입력
-    document.querySelector('.plans-product-list').addEventListener('click', function(e) {
-        if (e.target.classList.contains('plans-product-name')) {
-            productSearchInput.value = e.target.innerText;
+        // 할부 선택 시 개월 수가 없으면 경고
+        if (planOption === '할부' && !planMonthsHidden.value) {
+            alert("할부 개월 수를 선택하세요.");
+            event.preventDefault();
         }
     });
-});
 
+    // 통신사 버튼 클릭 시 처리
+    carrierButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const carrierId = this.getAttribute('data-carrier');
+            document.getElementById('carrierId').value = carrierId;
+        });
+    });
+
+    // 제조사 버튼 클릭 시 처리
+    manufacturerButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const manufacturerId = this.getAttribute('data-manufacturer');
+            document.getElementById('productId').value = manufacturerId;
+            
+            // 해당 제조사에 맞는 제품 목록만 표시
+            productListItems.forEach(item => {
+                const productManufacturerId = item.querySelector('.plans-product-name').getAttribute('data-manufacturer');
+                item.style.display = productManufacturerId === manufacturerId ? 'block' : 'none';
+            });
+        });
+    });
+
+    // 구분(5G, LTE) 버튼 클릭 시 처리
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const planProductType = this.getAttribute('data-division');
+            document.getElementById('planProductType').value = planProductType;
+        });
+    });
+
+    // 가입 구분 처리(신규, 기변, 자급제, 할부)
+    planButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const planOption = this.textContent.trim();
+            document.getElementById('planOption').value = planOption;
+            if (planOption === '할부') {
+                isInstallment = true; 
+            } else {
+                planMonthsHidden.value = ''; // 자급제일 경우 할부 개월 비움
+            }
+        });
+    });
+
+    // 추가 지원금 선택 처리
+    extraSupportSelect.addEventListener('change', function() {
+        const additionalSupport = this.value.replace('추가지원금 ', '').replace('%', '');
+        document.getElementById('planAdditional').value = additionalSupport;
+    });
+
+    // 할부 개월 선택 처리
+    const dropdown = document.getElementById("dropdown-menu");
+    document.getElementById("installmentBtn").addEventListener('click', function(e) {
+        e.preventDefault();
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    });
+
+    document.querySelectorAll('.dropdown-item').forEach(button => {
+        button.addEventListener('click', function() {
+            const months = this.textContent.replace("개월", "").trim();
+            planMonthsHidden.value = months;
+            document.getElementById("installmentBtn").textContent = months + "개월 할부";
+            dropdown.style.display = "none"; 
+        });
+    });
+});
 </script>
 </html>

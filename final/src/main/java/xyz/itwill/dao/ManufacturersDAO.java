@@ -1,7 +1,11 @@
 package xyz.itwill.dao;
 
+import java.util.List;
+
 import xyz.itwill.dto.Manufacturers;
 
 public interface ManufacturersDAO {
-	int selectManufacturerById(int manufacturersId);
+
+
+	List<Manufacturers> selectManufacturerById();
 }

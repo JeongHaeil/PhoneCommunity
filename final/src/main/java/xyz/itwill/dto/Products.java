@@ -7,5 +7,6 @@ import lombok.Data;
 public class Products {
 	 private int productId;     
 	    private String productName; 
-	    private int manufacturerId; 
+	    private int manufacturerId;
+	    private String manufacturerName; 
 }

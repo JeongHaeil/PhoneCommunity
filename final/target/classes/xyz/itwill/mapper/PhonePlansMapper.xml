@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="xyz.itwill.mapper.PhonePlansMapper">
+
+    <select id="selectPhonePlans" parameterType="map" resultType="PhonePlans">
+        SELECT 
+        phone_plans.plan_id, 
+        phone_plans.carrier_id, 
+        phone_plans.product_id, 
+        phone_plans.plan_product_type, 
+        phone_plans.plan_type, 
+        phone_plans.plan_months, 
+        phone_plans.plan_option, 
+        phone_plans.plan_additional,
+        carriers.carrier_name,             -- 통신사 이름
+        products.product_name,             -- 제품 이름
+        plan_details.plan_name,            -- 요금제 이름
+        plan_details.plan_contract_type,   -- 약정 구분
+        plan_details.plan_data,            -- 데이터 용량
+        plan_details.additional_support,   -- 추가 지원금
+        plan_details.monthly_installment_fee, -- 월 할부금
+        plan_details.installment_interest, -- 할부 이자
+        plan_details.total_monthly_fee     -- 총 월 요금
+    FROM 
+        phone_plans
+    JOIN 
+        carriers ON phone_plans.carrier_id = carriers.carrier_id
+    JOIN 
+        products ON phone_plans.product_id = products.product_id
+    JOIN 
+        plan_details ON phone_plans.plan_id = plan_details.plan_id
+    WHERE 
+        phone_plans.carrier_id = #{carrierId}
+    AND 
+        phone_plans.product_id = #{productId}
+    AND 
+        phone_plans.plan_product_type = #{planProductType}
+    AND 
+        phone_plans.plan_type = #{planType}
+    </select>
+</mapper>
