@@ -1,5 +1,7 @@
 package xyz.itwill.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -12,9 +14,9 @@ import xyz.itwill.mapper.ManufacturersMapper;
 public class ManufacturersDAOImpl implements ManufacturersDAO{
 	private final SqlSession sqlSession;
 	@Override
-	public int selectManufacturerById(int manufacturersId) {
+	public List<Manufacturers> selectManufacturerById() {
 		
-		return sqlSession.getMapper(ManufacturersMapper.class).selectManufacturerById(manufacturersId);
+		return sqlSession.getMapper(ManufacturersMapper.class).selectManufacturerById();
 	}
 
 }

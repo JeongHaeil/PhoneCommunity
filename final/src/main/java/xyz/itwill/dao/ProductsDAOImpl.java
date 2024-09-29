@@ -1,5 +1,7 @@
 package xyz.itwill.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -14,9 +16,9 @@ public class ProductsDAOImpl implements ProductsDAO{
 	private final SqlSession sqlSession;
 
 	@Override
-	public int selectProductById(int productId) {
+	public List<Products> selectProductById() {
 		
-		return sqlSession.getMapper(ProductsMapper.class).selectProductById(productId);
+		return sqlSession.getMapper(ProductsMapper.class).selectProductById();
 	}
 	
 	

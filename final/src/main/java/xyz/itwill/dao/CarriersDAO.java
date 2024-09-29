@@ -1,5 +1,9 @@
 package xyz.itwill.dao;
 
+import java.util.List;
+
+import xyz.itwill.dto.Carriers;
+
 public interface CarriersDAO {
-	int selectCarriersById(int carrierId);
+	List<Carriers> selectCarriersById();
 }

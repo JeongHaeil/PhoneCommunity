@@ -64,7 +64,7 @@ h3{
 
 
 .plans-filter-btn.active {
-    color: #0408ebf9; /* 활성화된 버튼의 글자색을 파란색으로 변경 */
+    color: blue; /* 활성화된 버튼의 글자색을 파란색으로 변경 */
 }
 
 .plans-product-wrapper {
@@ -177,4 +177,30 @@ h3{
     border: 1px solid #ddd;
     border-radius: 4px;
     margin: 18px;
+}
+
+.dropdown-toggle {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 10px;
+    cursor: pointer;
+    width: 150px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+    display: block;
+}
+
+.dropdown-item:hover {
+    background-color: #f1f1f1;
 }
