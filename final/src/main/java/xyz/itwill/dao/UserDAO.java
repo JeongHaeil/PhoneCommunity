@@ -12,4 +12,5 @@ public interface UserDAO {
     List<User> selectUserList();
     User selectUserByNickname(String nickname);
     User selectUserByUserId(String userId);
+    User selectUserByEmail(String email);
 }

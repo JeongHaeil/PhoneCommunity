@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping("/super")
+@RequestMapping("/Super_Admin")
 public class AdminController {
 
     @RequestMapping(value = "/admin", method = RequestMethod.GET)

@@ -17,7 +17,6 @@
         .btn-login { background-color: #f05d5e !important; color: #fff !important; }
         .card { margin-bottom: 20px; }
         .card-header { background-color: #f8f9fa; }
-        
     </style>
 </head>
 <body>
@@ -40,15 +39,18 @@
 				<div class="login-container position-relative" id="loginContainer">
 				    <c:choose>
 				        <c:when test="${not empty pageContext.request.userPrincipal}">
-				            <span> <security:authentication property="principal.nickname"/> 님</span>
-				            <a class="btn btn-link" href="<c:url value='/user/logout'/>">로그아웃</a>
+				            <span style="color: white;"> <security:authentication property="principal.nickname"/> 님</span>
+				            <!-- 로그아웃을 POST 방식으로 처리 -->
+				            <form action="<c:url value='/logout'/>" method="post" style="display:inline;">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                <button type="submit" class="btn btn-link">로그아웃</button>
+                            </form>
 				        </c:when>
 				        <c:otherwise>
 				            <a class="btn btn-login" id="loginButton" href ="<c:url value='/user/login'/>">로그인</a>
 				        </c:otherwise>
 				    </c:choose>
 				</div>
-
             </div>
         </div>
     </nav>

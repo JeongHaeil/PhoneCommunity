@@ -154,26 +154,7 @@ public class UserController {
         return "user/login";  // login.jsp 경로 유지
     }
 
- // 로그인 처리
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(@ModelAttribute User user, Model model, HttpSession session) {
-        User authUser = userService.loginAuth(user);
-        if (authUser != null) {
-            session.setAttribute("loginUser", authUser);
-            log.info("로그인 성공: ID = " + authUser.getUserId() + ", 이름 = " + authUser.getUserName());
-        } else {
-            log.info("로그인 실패: 유효하지 않은 사용자 정보");
-        }
-        return "redirect:/"; // 로그인 성공 후 메인 페이지로 이동
-    }
-
-
-    // 로그아웃 처리
-    @RequestMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/user/login";  // 로그아웃 후 로그인 페이지로 이동
-    }
+ 
 
     // 회원 프로필 조회 (JSP 파일명: mypage.jsp)
     @RequestMapping("/profile")

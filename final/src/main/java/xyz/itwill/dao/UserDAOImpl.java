@@ -19,7 +19,7 @@ public class UserDAOImpl implements UserDAO {
     public int insertUser(User user) {
         return sqlSession.getMapper(UserMapper.class).insertUser(user);
     }
-
+ 
     @Override
     public int updateUser(User user) {
         return sqlSession.getMapper(UserMapper.class).updateUser(user);
@@ -48,5 +48,9 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User selectUserByUserId(String userId) {
         return sqlSession.getMapper(UserMapper.class).selectUserByUserId(userId);
+    }
+    @Override
+    public User selectUserByEmail(String email) {
+        return sqlSession.selectOne("UserMapper.selectUserByEmail", email);
     }
 }

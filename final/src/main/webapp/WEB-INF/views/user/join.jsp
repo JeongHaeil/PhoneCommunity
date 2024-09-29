@@ -31,6 +31,7 @@
             display: flex;
             justify-content: space-between;
         }
+        .phone-number-container select, 
         .phone-number-container input {
             width: 32%;
         }
@@ -54,6 +55,7 @@
         .validation-message {
             margin-top: 5px;
             font-size: 0.9em;
+            color: red;
         }
     </style>
 </head>
@@ -62,102 +64,140 @@
 <div class="signup-container">
     <h4>회원가입</h4>
     <form id="signupForm" action="${pageContext.request.contextPath}/user/register" method="post">
-    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-    <div class="mb-3">
-        <label for="user_id" class="form-label">아이디</label>
-        <input type="text" class="form-control" id="user_id" name="userId" placeholder="아이디를 입력하세요" required>
-        <div id="userIdCheck" class="validation-message"></div>
-    </div>
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        <div class="mb-3">
+            <label for="user_id" class="form-label">아이디</label>
+            <input type="text" class="form-control" id="user_id" name="userId" placeholder="아이디를 입력하세요" required>
+            <div id="userIdCheck" class="validation-message"></div>
+        </div>
         <div class="mb-3">
             <label for="user_password" class="form-label">비밀번호</label>
             <input type="password" class="form-control" id="user_password" name="userPassword" placeholder="비밀번호를 입력하세요" required>
+            <div id="passwordValidation" class="validation-message"></div>
         </div>
         <div class="mb-3">
             <label for="user_password_confirm" class="form-label">비밀번호 확인</label>
             <input type="password" class="form-control" id="user_password_confirm" placeholder="비밀번호를 다시 입력하세요" required>
+            <div id="passwordConfirmValidation" class="validation-message"></div>
         </div>
         <div class="mb-3">
             <label for="user_email" class="form-label">이메일</label>
-            <input type="email" class="form-control" id="user_email" name="userEmail" placeholder="이메일 주소를 입력하세요" required>
+            <input type="text" class="form-control" id="user_email" name="userEmail" placeholder="이메일 주소를 입력하세요" required>
+            <div id="emailCheck" class="validation-message"></div>
         </div>
         <div class="mb-3">
             <label for="user_phone_number" class="form-label">핸드폰 번호</label>
             <div class="phone-number-container">
-                <input type="text" class="form-control" id="phone_first" maxlength="3" placeholder="010" required>
+                <select class="form-control" id="phone_first" required>
+                    <option value="010" selected>010</option>
+                    <option value="011">011</option>
+                    <option value="016">016</option>
+                    <option value="017">017</option>
+                    <option value="018">018</option>
+                    <option value="019">019</option>
+                </select>
                 <input type="text" class="form-control" id="phone_middle" maxlength="4" placeholder="0000" required>
                 <input type="text" class="form-control" id="phone_last" maxlength="4" placeholder="0000" required>
             </div>
             <input type="hidden" id="user_phone_number" name="userPhoneNumber">
+            <div id="phoneValidation" class="validation-message"></div>
         </div>
         <div class="mb-3">
-            <label for="user_name" class="form-label">이름</label>
-            <input type="text" class="form-control" id="user_name" name="userName" placeholder="이름을 입력하세요" required>
-        </div>
-        <div class="mb-3">
-            <label for="nickname" class="form-label">닉네임</label>
-            <input type="text" class="form-control" id="nickname" name="userNickName" placeholder="닉네임을 입력하세요" required>
+            <label for="user_nickname" class="form-label">닉네임</label>
+            <input type="text" class="form-control" id="user_nickname" name="userNickName" placeholder="닉네임을 입력하세요" required>
             <div id="nicknameCheck" class="validation-message"></div>
         </div>
-       <button type="submit" class="btn btn-signup">가입하기</button>
+        <button type="submit" class="btn btn-signup">가입하기</button>
     </form>
-
-    <div class="alert alert-info" role="alert" style="display: none;" id="email-verification-message">
-        회원가입이 완료되었습니다. 계정을 활성화하려면 이메일을 확인하고 인증 링크를 클릭하세요.
-    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.getElementById('signupForm').addEventListener('submit', function(e) {
-        var phoneFirst = document.getElementById('phone_first').value;
-        var phoneMiddle = document.getElementById('phone_middle').value;
-        var phoneLast = document.getElementById('phone_last').value;
-        document.getElementById('user_phone_number').value = phoneFirst + '-' + phoneMiddle + '-' + phoneLast;
-    });
+$(document).ready(function() {
+    // 아이디 중복 체크 및 정규식 검사
+    $("#user_id").on("keyup", function() {
+        var userId = $(this).val();
+        var idReg = /^[a-zA-Z]\w{5,19}$/g;
 
-    document.getElementById('signupForm').addEventListener('submit', function(e) {
-        var password = document.getElementById('user_password').value;
-        var confirmPassword = document.getElementById('user_password_confirm').value;
-        if (password !== confirmPassword) {
-            alert("비밀번호가 일치하지 않습니다.");
-            e.preventDefault();
+        if (!idReg.test(userId)) {
+            $("#userIdCheck").text("아이디는 영문자로 시작하는 6~20자의 영문자, 숫자, 밑줄(_)만 사용할 수 있습니다.").css("color", "red");
+            return;
+        } else {
+            $("#userIdCheck").text("");
         }
-    });
 
-    $(document).ready(function() {
-        $("#user_id").on("keyup", function() {
-            var userId = $(this).val();
-            $.ajax({
-                url: "${pageContext.request.contextPath}/user/checkUserId",
-                type: "GET",
-                data: { userId: userId },
-                success: function(response) {
-                    if (response === "AVAILABLE") {
-                        $("#userIdCheck").text("사용 가능한 아이디입니다.").css("color", "green");
-                    } else {
-                        $("#userIdCheck").text("이미 존재하는 아이디입니다.").css("color", "red");
-                    }
+        $.ajax({
+            url: "${pageContext.request.contextPath}/user/checkUserId",
+            type: "GET",
+            data: { userId: userId },
+            success: function(response) {
+                if (response === "AVAILABLE") {
+                    $("#userIdCheck").text("사용 가능한 아이디입니다.").css("color", "green");
+                } else {
+                    $("#userIdCheck").text("이미 존재하는 아이디입니다.").css("color", "red");
                 }
-            });
-        });
-
-        $("#nickname").on("keyup", function() {
-            var userNickName = $(this).val();
-            $.ajax({
-                url: "${pageContext.request.contextPath}/user/checkNickname",
-                type: "GET",
-                data: { userNickName: userNickName },
-                success: function(response) {
-                    if (response === "AVAILABLE") {
-                        $("#nicknameCheck").text("사용 가능한 닉네임입니다.").css("color", "green");
-                    } else {
-                        $("#nicknameCheck").text("이미 존재하는 닉네임입니다.").css("color", "red");
-                    }
-                }
-            });
+            },
+            error: function() {
+                $("#userIdCheck").text("아이디 확인 중 오류가 발생했습니다.").css("color", "red");
+            }
         });
     });
+
+    // 이메일 중복 체크 및 정규식 검사
+    $("#user_email").on("keyup", function() {
+        var userEmail = $(this).val();
+        var emailReg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailReg.test(userEmail)) {
+            $("#emailCheck").text("유효하지 않은 이메일 형식입니다.").css("color", "red");
+            return;
+        }
+
+        $.ajax({
+            url: "${pageContext.request.contextPath}/user/checkEmail",
+            type: "GET",
+            data: { userEmail: userEmail },
+            success: function(response) {
+                if (response === "AVAILABLE") {
+                    $("#emailCheck").text("사용 가능한 이메일입니다.").css("color", "green");
+                } else {
+                    $("#emailCheck").text("이미 존재하는 이메일입니다.").css("color", "red");
+                }
+            },
+            error: function() {
+                $("#emailCheck").text("이메일 확인 중 오류가 발생했습니다.").css("color", "red");
+            }
+        });
+    });
+
+    // 닉네임 중복 체크 및 정규식 검사 (한글, 영어, 숫자, 특수문자 허용, ㅁㄴㅇㄹ 금지)
+    var restrictedNicknames = ["ㅁㄴㅇㄹ", "ㄱㄴㄷㄹ", "ㅇㄹㅁㄴ"];
+    $("#user_nickname").on("keyup", function() {
+        var userNickName = $(this).val();
+        var nicknameReg = /^[a-zA-Z가-힣0-9!@#$%^&*()_+-=]{2,20}$/;
+
+        if (!nicknameReg.test(userNickName) || restrictedNicknames.includes(userNickName)) {
+            $("#nicknameCheck").text("유효하지 않은 닉네임입니다.").css("color", "red");
+            return;
+        }
+
+        $.ajax({
+            url: "${pageContext.request.contextPath}/user/checkNickname",
+            type: "GET",
+            data: { userNickName: userNickName },
+            success: function(response) {
+                if (response === "AVAILABLE") {
+                    $("#nicknameCheck").text("사용 가능한 닉네임입니다.").css("color", "green");
+                } else {
+                    $("#nicknameCheck").text("이미 존재하는 닉네임입니다.").css("color", "red");
+                }
+            },
+            error: function() {
+                $("#nicknameCheck").text("닉네임 확인 중 오류가 발생했습니다.").css("color", "red");
+            }
+        });
+    });
+});
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

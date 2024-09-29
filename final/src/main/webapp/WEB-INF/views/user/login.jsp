@@ -162,16 +162,19 @@
     </div>
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="rememberMe">
-            <label class="form-check-label remember-me-custom" for="rememberMe">로그인 상태 유지</label>
-        </div>
+    <input class="form-check-input" type="checkbox" id="rememberMe" name="remember-me">
+    <label class="form-check-label remember-me-custom" for="rememberMe" >로그인 상태 유지</label>
+    
+</div>
+
     </div>
     <div class="find-links-custom">
         <a href="${pageContext.request.contextPath}/user/findId">아이디 찾기</a>
         <a href="${pageContext.request.contextPath}/user/findPassword">비밀번호 찾기</a>
     </div>
     <button type="submit" class="btn btn-login-custom">로그인</button>
-	</form>
+</form>
+
         <div class="text-center mt-3">
             <p>아직 회원이 아니신가요? <a href="${pageContext.request.contextPath}/user/terms" class="register-link-custom">회원가입 하기</a></p>
         </div>

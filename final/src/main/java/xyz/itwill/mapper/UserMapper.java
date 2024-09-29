@@ -11,4 +11,6 @@ public interface UserMapper {
     List<User> selectUserList();
     User selectUserByNickname(String nickname);
     User selectUserByUserId(String userId);
+    User selectUserByEmail(String userEmail);
+
 }
