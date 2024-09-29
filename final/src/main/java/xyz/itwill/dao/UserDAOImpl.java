@@ -1,6 +1,8 @@
 package xyz.itwill.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
@@ -53,4 +55,14 @@ public class UserDAOImpl implements UserDAO {
     public User selectUserByEmail(String email) {
         return sqlSession.selectOne("UserMapper.selectUserByEmail", email);
     }
+    
+    @Override
+    public String selectUserIdByEmailAndName(String email, String name) {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("name", name);
+        
+        return sqlSession.selectOne("xyz.itwill.mapper.UserMapper.selectUserIdByEmailAndName", params);
+    }
+
 }

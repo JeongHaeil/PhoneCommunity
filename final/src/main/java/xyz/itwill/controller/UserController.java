@@ -182,4 +182,41 @@ public class UserController {
         User user = userService.getUserByNickname(nickname);
         return (user == null) ? "AVAILABLE" : "EXISTS";
     }
+    // 아이디 찾기 페이지 요청 (GET 요청)
+    @RequestMapping(value = "/idfind", method = RequestMethod.GET)
+    public String showIdFindPage() {
+        return "user/idfind"; // idfind.jsp 파일로 이동
+    }
+
+    // 아이디 찾기 요청 처리
+    @RequestMapping(value = "/displayUserId", method = RequestMethod.POST)
+    public String displayUserId(@RequestParam("email") String email, 
+                                 @RequestParam("name") String name, Model model) {
+        log.info("아이디 찾기 요청: 이메일={}, 이름={}", email, name); // 로그 추가
+        String userId = userService.findUserIdByEmailAndName(email, name);
+        
+        if (userId != null) {
+            model.addAttribute("userId", userId);
+        } else {
+            model.addAttribute("error", "해당 정보로 등록된 아이디가 없습니다.");
+        }
+        
+        return "user/displayUserId"; // 결과를 보여줄 JSP 페이지로 이동
+    }
+
+    // GET 요청 처리
+    @RequestMapping(value = "/displayUserId", method = RequestMethod.GET)
+    public String showUserId(@RequestParam("email") String email, 
+                              @RequestParam("name") String name, Model model) {
+        String userId = userService.findUserIdByEmailAndName(email, name);
+        
+        if (userId != null) {
+            model.addAttribute("userId", userId);
+        } else {
+            model.addAttribute("error", "일치하는 회원이 없습니다.");
+        }
+        
+        return "user/displayUserId"; // displayUserId.jsp 경로로 이동
+    }
+    
 }  

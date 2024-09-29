@@ -169,8 +169,8 @@
 
     </div>
     <div class="find-links-custom">
-        <a href="${pageContext.request.contextPath}/user/findId">아이디 찾기</a>
-        <a href="${pageContext.request.contextPath}/user/findPassword">비밀번호 찾기</a>
+        <a href="${pageContext.request.contextPath}/user/idfind">아이디 찾기</a>
+        <a href="${pageContext.request.contextPath}/user/passwordfind">비밀번호 찾기</a>
     </div>
     <button type="submit" class="btn btn-login-custom">로그인</button>
 </form>

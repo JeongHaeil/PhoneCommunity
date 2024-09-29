@@ -18,6 +18,7 @@ public interface UserService {
     boolean isUserIdAvailable(String userId); // 아이디 중복 확인
     boolean isNicknameAvailable(String nickname); // 닉네임 중복 확인
     User getUserByEmail(String email);
+    String findUserIdByEmailAndName(String email, String name);
 
     
 }

@@ -13,4 +13,5 @@ public interface UserDAO {
     User selectUserByNickname(String nickname);
     User selectUserByUserId(String userId);
     User selectUserByEmail(String email);
+    String selectUserIdByEmailAndName(String email, String name); // 추가
 }

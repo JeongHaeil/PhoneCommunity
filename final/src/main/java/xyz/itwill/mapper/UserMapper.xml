@@ -93,5 +93,12 @@
     </select>
     
    
+	
+    <select id="selectUserIdByEmailAndName" parameterType="map" resultType="String">
+        SELECT user_id
+        FROM users
+        WHERE user_email = #{email}
+        AND user_name = #{name}
+    </select>
     
 </mapper>

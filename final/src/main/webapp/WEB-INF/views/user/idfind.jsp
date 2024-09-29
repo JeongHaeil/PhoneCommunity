@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -13,7 +15,7 @@
             background-color: #f8f9fa;
             font-family: 'Noto Sans KR', sans-serif;
         }
-        .id-recovery-container { /* 컨테이너 스타일 변경 */
+        .id-recovery-container {
             max-width: 400px;
             margin: 100px auto;
             padding: 20px;
@@ -26,7 +28,7 @@
             margin-bottom: 20px;
             text-align: center;
         }
-        .btn-id-recovery { /* 버튼 스타일 변경 */
+        .btn-id-recovery {
             background-color: #f86d6d;
             color: white;
             border-radius: 20px;
@@ -40,15 +42,23 @@
 </head>
 <body>
 
-<div class="id-recovery-container"> <!-- 컨테이너 클래스명 변경 -->
+<div class="id-recovery-container">
     <h3>아이디 찾기</h3>
 
-    <form action="/find-id" method="post">
+    <form action="/final/user/displayUserId" method="post">
+
+        <!-- CSRF 토큰 추가 -->
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        
         <div class="mb-3">
             <label for="email" class="form-label">가입 시 사용한 이메일</label>
             <input type="email" class="form-control" id="email" name="email" placeholder="이메일을 입력하세요" required>
         </div>
-        <button type="submit" class="btn btn-id-recovery">아이디 찾기</button> <!-- 버튼 클래스명 변경 -->
+        <div class="mb-3">
+            <label for="name" class="form-label">이름</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="이름을 입력하세요" required>
+        </div>
+        <button type="submit" class="btn btn-id-recovery">아이디 찾기</button>
     </form>
 </div>
 
