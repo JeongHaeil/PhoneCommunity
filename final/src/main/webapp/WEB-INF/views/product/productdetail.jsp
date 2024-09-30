@@ -22,12 +22,6 @@
             margin: 0 auto;
         }
 
-        .product-header {
-            font-size: 0.9rem;
-            color: #888;
-            margin-bottom: 20px;
-        }
-
         .product-title {
             font-size: 2.2rem;
             font-weight: bold;
@@ -112,41 +106,39 @@
         }
 
         /* 두 번째 테이블 */
-        /* 두 번째 테이블 간격 조정 */
-.info-table-2 {
-    width: 100%;
-    border: 1px solid #e1e1e1;
-    border-radius: 8px;
-    text-align: center;
-    margin-bottom: 30px;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin-top: 30px;
-    table-layout: fixed; /* 각 열의 크기를 고정 */
-}
+        .info-table-2 {
+            width: 100%;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 30px;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 30px;
+            table-layout: fixed;
+        }
 
-.info-table-2 th,
-.info-table-2 td {
-    padding: 1px; /* 크기 및 간격 동일하게 설정 */
-    color: #555;
-}
+        .info-table-2 th,
+        .info-table-2 td {
+            padding: 1px;
+            color: #555;
+        }
 
-.info-table-2 th {
-    font-weight: normal;
-    font-size: 0.9rem;
-    color: #999;
-}
+        .info-table-2 th {
+            font-weight: normal;
+            font-size: 0.9rem;
+            color: #999;
+        }
 
-.info-table-2 td {
-    font-weight: bold;
-    font-size: 1.1rem;
-    color: #333;
-}
+        .info-table-2 td {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #333;
+        }
 
-.info-table-2 td+td {
-    border-left: 1px solid #e1e1e1;
-}
-
+        .info-table-2 td+td {
+            border-left: 1px solid #e1e1e1;
+        }
 
         /* 추가 정보 */
         .extra-info {
@@ -217,18 +209,17 @@
         }
 
         /* 가게 정보 스타일 수정 */
-      .store-info-right .store-name-container {
-      
-       display: flex;
-       align-items: center;
-       justify-content: space-between;
-       margin-bottom: 15px;
-}
+        .store-info-right .store-name-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
 
-.store-info-right .store-name-container img {
-    margin-right: 10px; /* 이름과 프로필 사진 간격 조정 */
-    border-radius: 50%;
-}
+        .store-info-right .store-name-container img {
+            margin-right: 10px;
+            border-radius: 50%;
+        }
 
         .store-info-right .store-name {
             font-size: 1.4rem;
@@ -281,11 +272,11 @@
         }
 
         .profile-img {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    object-fit: cover;
-}
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
 
         /* 반응형 디자인 */
         @media (max-width: 768px) {
@@ -318,9 +309,6 @@
 <body>
 
     <div class="container">
-        <!-- 상단 정보 -->
-        <div class="product-header">홈 > 모바일/태블릿 > 스마트폰 > 애플</div>
-
         <!-- 제품명 -->
         <div class="product-title">아이폰 13미니 핑크 128기가</div>
 
@@ -349,7 +337,7 @@
                             <th>제품상태</th>
                             <th>거래방식</th>
                             <th>배송비</th>
-                            <th>안전거래</th>
+                            <th>카테고리</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -357,7 +345,7 @@
                             <td>중고</td>
                             <td>직거래, 택배</td>
                             <td>별도</td>
-                            <td>사용</td>
+                            <td>휴대폰</td> <!-- 여기서 동적으로 카테고리 값 출력 -->
                         </tr>
                     </tbody>
                 </table>
@@ -383,17 +371,16 @@
         <div class="product-store-info">
             <!-- 상품 정보 -->
             <div class="product-info-left">
-               
                 <h4 style="font-weight: bold;">상품 정보</h4>
                 <div class="left-wrap" style="border-top: 1px solid #e1e1e1; margin-top: 25px;">
-                <ul style="margin-top: 25px;">
-                    <li>- 상품명: 애플 아이폰 13미니 핑크 128기가</li>
-                    <li>- 가격: 300,000원</li>
-                    <li>- 구매시기: 2022년 12월</li>
-                    <li>- 배터리 성능: 83퍼</li>
-                    <li>- 특이사항: 휴대폰 단품이고, 액정과 후면에는 기스, 파손은 없지만 측면에 잔기스와 찍힘 하나 있습니다. 사진 참고해주세요.</li>
-                </ul>
-            </div>
+                    <ul style="margin-top: 25px;">
+                        <li>- 상품명: 애플 아이폰 13미니 핑크 128기가</li>
+                        <li>- 가격: 300,000원</li>
+                        <li>- 구매시기: 2022년 12월</li>
+                        <li>- 배터리 성능: 83퍼</li>
+                        <li>- 특이사항: 휴대폰 단품이고, 액정과 후면에는 기스, 파손은 없지만 측면에 잔기스와 찍힘 하나 있습니다. 사진 참고해주세요.</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- 가게 정보 -->
@@ -404,33 +391,35 @@
                         <div class="store-name">woody0226</div>
                         <img src="https://via.placeholder.com/50" alt="프로필 사진" width="70px;">
                     </div>                  
-                <div class="trust-score" style="margin-top: 30px;">신뢰지수 <span>272</span></div>
-                <div class="trust-bar">
-                    <div class="trust-bar-fill"></div>
-                </div>
-                <!-- 두 번째 테이블 -->
-                <table class="info-table-2">
-                    <thead>
-                        <tr>
-                            <th>안전거래</th>
-                            <th>거래후기</th>
-                            <th>단골</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>0</td>
-                            <td>2</td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <div class="trust-score" style="margin-top: 30px;">신뢰지수 <span>272</span></div>
+                    <div class="trust-bar">
+                        <div class="trust-bar-fill"></div>
+                    </div>
 
-                <div class="posted-product">
-                    <img src="https://via.placeholder.com/60" alt="아이폰 13미니">
-                    <div class="posted-product-info">
-                        아이폰 13미니 핑크 128기가<br>
-                        300,000원
+                    <!-- 두 번째 테이블 -->
+                    <table class="info-table-2">
+                        <thead>
+                            <tr>
+                                <th>안전거래</th>
+                                <th>거래후기</th>
+                                <th>단골</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="posted-product">
+                        <img src="https://via.placeholder.com/60" alt="아이폰 13미니">
+                        <div class="posted-product-info">
+                            아이폰 13미니 핑크 128기가<br>
+                            300,000원
+                        </div>
                     </div>
                 </div>
             </div>
