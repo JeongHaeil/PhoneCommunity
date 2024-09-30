@@ -80,6 +80,13 @@ public class UserController {
         return "user/join"; // 이용약관 동의 후 회원가입 페이지로 이동
     }
 
+    @RequestMapping("/logout")
+    public String logout(HttpSession session ) {
+    	session.invalidate();
+    	return "redirect:/user/register";
+    }
+   
+    
     // 이용약관 동의 처리 (POST 요청)
     @RequestMapping(value = "/agreeTerms", method = RequestMethod.POST)
     public String agreeTerms(HttpSession session, @RequestParam("agreeTerms") boolean agreeTerms, @RequestParam("agreePrivacy") boolean agreePrivacy) {

@@ -82,4 +82,10 @@ public class UserServiceImpl implements UserService {
     public User getUserByEmail(String email) {
         return userDAO.selectUserByEmail(email);
     }
+    
+    @Override
+    public String findUserIdByEmailAndName(String email, String name) {
+        return userDAO.selectUserIdByEmailAndName(email, name);
+    }
+
 }

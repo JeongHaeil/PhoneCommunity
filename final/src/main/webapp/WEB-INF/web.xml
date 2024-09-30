@@ -56,10 +56,6 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
     
-	<session-config>
-    <session-timeout>30</session-timeout> <!-- 30분 후에 세션 만료 -->
-	</session-config>
-	
     <servlet-mapping>
         <servlet-name>appServlet</servlet-name>
         <url-pattern>/</url-pattern>

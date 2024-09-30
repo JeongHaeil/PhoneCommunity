@@ -31,13 +31,6 @@
 	
 	
 	
-	<logger name="org.springframework.security" level="DEBUG" additivity="false">
-    <appender-ref ref="console"/>
-	</logger>
-
-	<logger name="org.mybatis" level="DEBUG" additivity="false">
-    <appender-ref ref="console"/>
-	</logger>
 	
 	
 	
@@ -91,7 +84,7 @@
 	
 	<root>
 	
-		<priority value="debug" />
+		<priority value="warn" />
 	
 		<appender-ref ref="console" />
 	</root>

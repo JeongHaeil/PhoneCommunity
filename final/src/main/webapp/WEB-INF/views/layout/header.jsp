@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -39,12 +39,17 @@
 				<div class="login-container position-relative" id="loginContainer">
 				    <c:choose>
 				        <c:when test="${not empty pageContext.request.userPrincipal}">
-				            <span style="color: white;"> <security:authentication property="principal.nickname"/> 님</span>
+				            <span style="color: white;"> <sec:authentication property="principal.nickname"/> 님</span>
 				            <!-- 로그아웃을 POST 방식으로 처리 -->
-				            <form action="<c:url value='/logout'/>" method="post" style="display:inline;">
-                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+				           	 <sec:authorize access="isAuthenticated()">
+				            <form action="<c:url value='/user/logout'/>" method="post" style="display:inline;">
+                                
+                                <sec:csrfInput/>
+                              <!-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/-->
                                 <button type="submit" class="btn btn-link">로그아웃</button>
+                            
                             </form>
+                            </sec:authorize>
 				        </c:when>
 				        <c:otherwise>
 				            <a class="btn btn-login" id="loginButton" href ="<c:url value='/user/login'/>">로그인</a>

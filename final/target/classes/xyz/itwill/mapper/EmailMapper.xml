@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="xyz.itwill.mapper.EmailMapper">
+    <!-- 이메일 인증 정보를 삽입하는 쿼리 -->
+    <insert id="insertEmail">
+        INSERT INTO Email 
+        (EMAIL_VERIFICATION, EMAIL_USER_NUM, EMAIL_EXPIRATION, EMAIL_AUTH, EMAIL_REQUEST_DATE, EMAIL_CODE)
+        VALUES 
+        (EMAIL_VERIFICATION_SEQ.NEXTVAL, #{emailUserNum}, #{emailExpiration}, #{emailAuth}, SYSDATE, #{emailCode})
+    </insert>
+
+    <!-- 이메일 인증 정보를 업데이트하는 쿼리 -->
+    <update id="updateEmail">
+        UPDATE Email
+        SET EMAIL_AUTH = #{emailAuth}
+        WHERE EMAIL_CODE = #{emailCode} AND EMAIL_VERIFICATION = #{emailVerification}
+    </update>
+
+    <!-- 이메일 인증 정보를 인증 코드로 조회하는 쿼리 -->
+    <select id="selectEmailByCode" resultType="xyz.itwill.dto.Email">
+        SELECT * FROM Email 
+        WHERE EMAIL_CODE = #{emailCode}
+    </select>
+    
+    <update id="updateEmailUserNum">
+    UPDATE Email
+    SET email_user_num = #{userNum}
+    WHERE email_verification = #{emailVerification}
+</update>
+</mapper>
