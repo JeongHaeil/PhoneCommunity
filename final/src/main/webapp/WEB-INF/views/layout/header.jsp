@@ -42,7 +42,7 @@
 				            <span style="color: white;"> <sec:authentication property="principal.nickname"/> 님</span>
 				            <!-- 로그아웃을 POST 방식으로 처리 -->
 				           	 <sec:authorize access="isAuthenticated()">
-				            <form action="<c:url value='/user/logout'/>" method="post" style="display:inline;">
+				            <form action="<c:url value='/logout'/>" method="post" style="display:inline;">
                                 
                                 <sec:csrfInput/>
                               <!-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/-->

@@ -81,27 +81,32 @@
             <div id="passwordConfirmValidation" class="validation-message"></div>
         </div>
         <div class="mb-3">
+    <label for="user_name" class="form-label">이름</label>
+    <input type="text" class="form-control" id="user_name" name="userName" placeholder="이름을 입력하세요" required>
+    <div id="nameValidation" class="validation-message"></div>
+	</div>
+        <div class="mb-3">
             <label for="user_email" class="form-label">이메일</label>
             <input type="text" class="form-control" id="user_email" name="userEmail" placeholder="이메일 주소를 입력하세요" required>
             <div id="emailCheck" class="validation-message"></div>
         </div>
         <div class="mb-3">
-            <label for="user_phone_number" class="form-label">핸드폰 번호</label>
-            <div class="phone-number-container">
-                <select class="form-control" id="phone_first" required>
-                    <option value="010" selected>010</option>
-                    <option value="011">011</option>
-                    <option value="016">016</option>
-                    <option value="017">017</option>
-                    <option value="018">018</option>
-                    <option value="019">019</option>
-                </select>
-                <input type="text" class="form-control" id="phone_middle" maxlength="4" placeholder="0000" required>
-                <input type="text" class="form-control" id="phone_last" maxlength="4" placeholder="0000" required>
-            </div>
-            <input type="hidden" id="user_phone_number" name="userPhoneNumber">
-            <div id="phoneValidation" class="validation-message"></div>
-        </div>
+    <label for="user_phone_number" class="form-label">핸드폰 번호</label>
+    <div class="phone-number-container">
+        <select class="form-control" id="phone_first" required>
+            <option value="010" selected>010</option>
+            <option value="011">011</option>
+            <option value="016">016</option>
+            <option value="017">017</option>
+            <option value="018">018</option>
+            <option value="019">019</option>
+        </select>
+        <input type="text" class="form-control" id="phone_middle" maxlength="4" placeholder="0000" required>
+        <input type="text" class="form-control" id="phone_last" maxlength="4" placeholder="0000" required>
+    </div>
+    <input type="hidden" id="user_phone_number" name="userPhoneNumber">
+    <div id="phoneValidation" class="validation-message"></div>
+	</div>
         <div class="mb-3">
             <label for="user_nickname" class="form-label">닉네임</label>
             <input type="text" class="form-control" id="user_nickname" name="userNickName" placeholder="닉네임을 입력하세요" required>
@@ -167,6 +172,19 @@ $(document).ready(function() {
             error: function() {
                 $("#emailCheck").text("이메일 확인 중 오류가 발생했습니다.").css("color", "red");
             }
+        });
+    });
+
+    $(document).ready(function() {
+        // 폼이 제출되기 전에 전화번호 필드를 합쳐서 hidden 필드에 넣음
+        $("#signupForm").on("submit", function() {
+            var phoneFirst = $("#phone_first").val();
+            var phoneMiddle = $("#phone_middle").val();
+            var phoneLast = $("#phone_last").val();
+            var fullPhoneNumber = phoneFirst + phoneMiddle + phoneLast;
+            
+            // hidden 필드에 병합된 전화번호 저장
+            $("#user_phone_number").val(fullPhoneNumber);
         });
     });
 

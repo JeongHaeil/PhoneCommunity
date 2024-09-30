@@ -85,12 +85,6 @@ public class UserController {
         return "user/join"; // 이용약관 동의 후 회원가입 페이지로 이동
     }
 
-    @RequestMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/user/register";
-    }
-
     // 이용약관 동의 처리 (POST 요청)
     @RequestMapping(value = "/agreeTerms", method = RequestMethod.POST)
     public String agreeTerms(HttpSession session, @RequestParam("agreeTerms") boolean agreeTerms, @RequestParam("agreePrivacy") boolean agreePrivacy) {
@@ -103,16 +97,27 @@ public class UserController {
         }
     }
 
-    // 회원가입 처리 (POST 요청)
+ // 회원가입 처리 (POST 요청)
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String registerUser(@ModelAttribute User user, Model model, HttpSession session) {
+    public String registerUser(
+            @ModelAttribute User user, 
+            @RequestParam("phone_first") String phoneFirst,
+            @RequestParam("phone_middle") String phoneMiddle, 
+            @RequestParam("phone_last") String phoneLast,
+            Model model, HttpSession session) {
+        
         try {
+            // 핸드폰 번호 합치기
+            String fullPhoneNumber = phoneFirst + phoneMiddle + phoneLast;
+            user.setUserPhoneNum(fullPhoneNumber);  // User 객체에 핸드폰 번호 설정
+            
             session.setAttribute("tempUser", user);
 
+            // 이메일 인증 코드 생성 및 전송
             int emailCode = (int) (Math.random() * 1000000); // 6자리 코드
-
             emailService.sendVerificationEmail(user.getUserEmail(), emailCode);
 
+            // 이메일 인증 정보 저장
             Email emailVerification = new Email();
             emailVerification.setEmailUserNum(0); // 아직 저장되지 않은 사용자
             emailVerification.setEmailCode(emailCode);
@@ -125,7 +130,6 @@ public class UserController {
             return "user/join";
         }
     }
-
     @RequestMapping(value = "/email", method = RequestMethod.GET)
     public String showEmailVerificationPage() {
         return "user/email";  // 이메일 인증 페이지로 이동 (email.jsp)
@@ -260,7 +264,7 @@ public class UserController {
     // 임시 비밀번호 생성 메서드
     private String generateTempPassword() {
         // 임시 비밀번호는 영숫자 조합으로 8자리 생성
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    	String chars = "0123456789";
         StringBuilder tempPassword = new StringBuilder();
         Random rnd = new Random();
         while (tempPassword.length() < 8) {  // 비밀번호 길이

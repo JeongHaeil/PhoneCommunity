@@ -45,7 +45,7 @@
         <!-- 세션 관리 설정 -->
         <session-management>
             <concurrency-control max-sessions="1" expired-url="/session_error" 
-            error-if-maximum-exceeded="true"/>
+            error-if-maximum-exceeded="false"/>
         </session-management>
     </http>
 
