@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import xyz.itwill.dao.CommentsDAO;
+import xyz.itwill.dto.CBallot;
 import xyz.itwill.dto.Comments;
 import xyz.itwill.util.Pager;
 
@@ -97,6 +98,23 @@ public class CommentsServiceImpl implements CommentsService{
 	public void updatrCommentSpam(int commentIdx) {
 		commentsDAO.commentSpam(commentIdx);	
 	}
+
+	@Override
+	public void CBinsert(CBallot cBallot) {
+		commentsDAO.CBinsert(cBallot);
+	}
+
+	@Override
+	public void CBupdate(CBallot cBallot) {
+		commentsDAO.CBupdate(cBallot);
+	}
+
+	@Override
+	public CBallot selectCBallotByIdx(Map<String, Object> map) {
+		return commentsDAO.selectCBallotByIdx(map);
+	}
+
+	
 
 	
 

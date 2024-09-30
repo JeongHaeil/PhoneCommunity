@@ -10,6 +10,8 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,6 +23,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import xyz.itwill.auth.CustomUserDetails;
 import xyz.itwill.dto.Board;
 import xyz.itwill.service.BoardService;
 import xyz.itwill.service.CommentsService;
@@ -72,52 +75,70 @@ public class BoardController {
 		return "board/boarddetail";
 	}
 	
+	
+	
 	@RequestMapping(value ="/boardwrite/{boardCode}", method = RequestMethod.GET)
-	public String boardwrite(@PathVariable int boardCode, Model model) {
-		//로그인 해야만 접근가능
+	public String boardwrite(@PathVariable int boardCode, Model model,Authentication authentication) {
+		if(authentication == null) {
+			return "redirect:/user/login";	
+		}
 		model.addAttribute("boardCode", boardCode);				
 		return "board/boardwrite";
 	}
 	
+	@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_SUPER_ADMIN')")
 	@RequestMapping(value ="/boardwrite/{boardCode}", method = RequestMethod.POST)
-	public String boardwrite(@PathVariable int boardCode, @ModelAttribute Board board, List<MultipartFile> uploaderFileList,HttpServletRequest request) throws IllegalStateException, IOException {
-		//로그인 해야만 접근 가능
-		//{임시}임시
-		board.setBoardUserId("abc123");
-		
-		String uploadDirectory=context.getServletContext().getRealPath("/resources/uploadFile/freeboard_image");
-		List<String> filenameList=new ArrayList<String>();
-		for(MultipartFile multipartFile : uploaderFileList) {
-			if(!multipartFile.isEmpty()) {
-				String uploadFilename=UUID.randomUUID().toString()+"_"+multipartFile.getOriginalFilename();
-				File file=new File(uploadDirectory,uploadFilename);
-				multipartFile.transferTo(file);
-				filenameList.add(uploadFilename);
-			}			
+	public String boardwrite(@PathVariable int boardCode, @ModelAttribute Board board, List<MultipartFile> uploaderFileList,HttpServletRequest request,Authentication authentication) throws IllegalStateException, IOException {
+		if(authentication != null) {			
+			CustomUserDetails user=(CustomUserDetails)authentication.getPrincipal();
+			board.setBoardUserId(user.getUserId());
+			
+			String uploadDirectory=context.getServletContext().getRealPath("/resources/uploadFile/freeboard_image");
+			List<String> filenameList=new ArrayList<String>();
+			for(MultipartFile multipartFile : uploaderFileList) {
+				if(!multipartFile.isEmpty()) {
+					String uploadFilename=UUID.randomUUID().toString()+"_"+multipartFile.getOriginalFilename();
+					File file=new File(uploadDirectory,uploadFilename);
+					multipartFile.transferTo(file);
+					filenameList.add(uploadFilename);
+				}			
+			}
+			if(!filenameList.isEmpty()) {			
+				board.setBoardImage(filenameList.toString());
+			}
+			board.setBoardIp(request.getRemoteAddr());
+			board.setBoardCode(boardCode);
+			board.setBoardContent(board.getBoardContent().replace("<","&lt;").replace(">","&gt;").replace("\n", "<br>"));
+			board.setBoardTitle(board.getBoardTitle().replace("<","&lt;").replace(">","&gt;"));
+			boardService.addFreeboard(board);			
+		}else {
+			return "redirect:/user/login";	
 		}
-		if(!filenameList.isEmpty()) {			
-			board.setBoardImage(filenameList.toString());
-		}
-		board.setBoardIp(request.getRemoteAddr());
-		board.setBoardCode(boardCode);
-		board.setBoardContent(board.getBoardContent().replace("<","&lt;").replace(">","&gt;").replace("\n", "<br>"));
-		board.setBoardTitle(board.getBoardTitle().replace("<","&lt;").replace(">","&gt;"));
-		boardService.addFreeboard(board);		
 		return "redirect:/board/boardlist/"+boardCode;
 	}
 	
+	//@PreAuthorize("hasRole('ROLE_USER') or principal.userid eq #map['writer'] ")
 	@RequestMapping(value ="/boardModify/{boardCode}/{boardPostIdx}", method = RequestMethod.GET)
-	public String boardModify(@PathVariable int boardCode, @PathVariable int boardPostIdx, Model model) {
-		//로그안 사용자만 접근 가능
-		Board board=boardService.getboard(boardPostIdx);	
-		model.addAttribute("board", board);				
-		model.addAttribute("boardCode", boardCode);							
+	public String boardModify(@PathVariable int boardCode, @PathVariable int boardPostIdx, Model model,Authentication authentication) {	
+		if(authentication != null) {
+			CustomUserDetails user=(CustomUserDetails)authentication.getPrincipal();
+			Board board=boardService.getboard(boardPostIdx);
+			if(board.getBoardUserId().equals(user.getUserId().toString())) {
+				model.addAttribute("board", board);				
+				model.addAttribute("boardCode", boardCode);											
+			}else {
+				return "redirect:/user/login";
+			}
+		}else {
+			return "redirect:/user/login";			
+		}
+					
 		return "board/boardwrite";
 	}
 	
+	@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_SUPER_ADMIN')")
 	@RequestMapping(value ="/boardModify/{boardCode}/{boardPostIdx}", method = RequestMethod.POST)
 	public String boardModify(@PathVariable int boardCode, @PathVariable int boardPostIdx,@ModelAttribute Board board,List<MultipartFile> uploaderFileList,HttpServletRequest request) throws IllegalStateException, IOException {
-		//로그안 사용자만 접근 가능
 		Board oldboard=boardService.getboard(boardPostIdx);	
 		String uploadDirectory=context.getServletContext().getRealPath("/resources/uploadFile/freeboard_image");
 	
@@ -140,9 +161,18 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value = "/boardDeleteBoard/{boardCode}/{boardPostIdx}")
-	public String boardDelete(@PathVariable int boardCode,@PathVariable int boardPostIdx) {
-		//로그인 해야 접근 가능
-		boardService.deleteFreeboard(boardPostIdx);		
+	public String boardDelete(@PathVariable int boardCode,@PathVariable int boardPostIdx,Authentication authentication) {
+		if(authentication != null) {
+			CustomUserDetails user=(CustomUserDetails)authentication.getPrincipal();
+			Board board=boardService.getboard(boardPostIdx);
+			if(board.getBoardUserId().toString().equals(user.getUserId().toString())) {
+				boardService.deleteFreeboard(boardPostIdx);						
+			}else {
+				//관리자 일때 처리										
+			}
+		}else {
+			return "redirect:/user/login";		
+		}
 		return "redirect:/board/boardlist/"+boardCode;
 	}
 }
