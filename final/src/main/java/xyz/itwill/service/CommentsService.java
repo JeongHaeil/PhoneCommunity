@@ -2,6 +2,7 @@ package xyz.itwill.service;
 
 import java.util.Map;
 
+import xyz.itwill.dto.CBallot;
 import xyz.itwill.dto.Comments;
 
 public interface CommentsService {
@@ -16,4 +17,7 @@ public interface CommentsService {
 	int gerCommentCountByRef(int commentRef);
 	void updateCommentStar(int commentIdx);
 	void updatrCommentSpam(int commentIdx);
+	void CBinsert(CBallot cBallot);
+	void CBupdate(CBallot cBallot);
+	CBallot selectCBallotByIdx(Map<String, Object> map);
 }

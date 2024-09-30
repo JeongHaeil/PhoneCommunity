@@ -11,8 +11,8 @@ create sequence board_ballot_seq;
 public class BBallot {
 	private int boBaIdx;
 	private int ballotBoardIdx;
-	private int ballotBoardUserId;
-	private int ballotBoardStar;
+	private String ballotBoardUserId;
+	private String ballotBoardStar;
 	private int ballotBoardSpam;
 	
 }

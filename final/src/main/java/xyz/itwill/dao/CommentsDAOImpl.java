@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
+import xyz.itwill.dto.CBallot;
 import xyz.itwill.dto.Comments;
 import xyz.itwill.mapper.CommentsMapper;
 
@@ -73,6 +74,21 @@ public class CommentsDAOImpl implements CommentsDAO{
 	@Override
 	public int commentSpam(int commentIdx) {
 		return sqlSession.getMapper(CommentsMapper.class).commentSpam(commentIdx);
+	}
+
+	@Override
+	public int CBinsert(CBallot cBallot) {
+		return sqlSession.getMapper(CommentsMapper.class).CBinsert(cBallot);
+	}
+
+	@Override
+	public int CBupdate(CBallot cBallot) {
+		return sqlSession.getMapper(CommentsMapper.class).CBupdate(cBallot);
+	}
+
+	@Override
+	public CBallot selectCBallotByIdx(Map<String, Object> map) {
+		return sqlSession.getMapper(CommentsMapper.class).selectCBallotByIdx(map);
 	}
 
 	

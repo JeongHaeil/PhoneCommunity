@@ -12,7 +12,7 @@ create sequence comment_ballot_seq;
 public class CBallot {
 	private int coBaIdx;
 	private int ballotCommentIdx;
-	private int ballotCommentUserId;
-	private int ballotCommentStar;
+	private String ballotCommentUserId;
+	private String ballotCommentStar;
 	private int ballotCommentSpam;
 }

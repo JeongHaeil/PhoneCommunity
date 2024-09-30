@@ -5,7 +5,7 @@
 <mapper namespace="xyz.itwill.mapper.CommentsMapper">
 	<select id="selectCommentsList" resultType="Comments">
 		select * from (select rownum rn, coco.* from(select comment_idx, comment_board_idx, comment_user_id, content, comment_image,comment_reg_date, comment_up_date, comment_user_ip, comment_ref
-		, comment_restep, comment_level, comment_status, comment_starup, comment_stardown, comment_spam, comment_reuserid, user_nickname from comments join users on comment_user_id=user_id where comment_board_idx=#{commentBoardIdx} and comment_status&gt;=1 order by comment_ref desc,comment_restep) coco) where rn between #{startRow} and #{endRow}
+		, comment_restep, comment_level, comment_status, comment_starup, comment_stardown, comment_spam, comment_reuser, user_nickname from comments join users on comment_user_id=user_id where comment_board_idx=#{commentBoardIdx} and comment_status&gt;=1 order by comment_ref desc,comment_restep) coco) where rn between #{startRow} and #{endRow}
 	</select>
 	<select id="selectCommentsCounts" resultType="int">
 		select count(*) from comments where comment_board_idx=#{commentBoardIdx} and comment_status&gt;=1 	
@@ -15,7 +15,7 @@
 	</select>
 	<insert id="insertComment">
 		insert into comments values(#{commentIdx},#{commentBoardIdx},#{commentUserId},#{content},#{commentImage},sysdate,null,#{commentUserIp},#{commentRef}
-		 ,#{commentRestep},#{commentLevel},1,0,0,0,#{commentReuserid})
+		 ,#{commentRestep},#{commentLevel},1,0,0,0,#{commentReuser})
 	</insert>
 	<update id="updateCommentRestep">
 		update comments set comment_restep=comment_restep+1 where comment_ref=#{commentRef} and comment_restep &gt; #{commentRestep}
@@ -35,7 +35,7 @@
 	
 	<select id="selectCommentByNum" resultType="Comments">
 		select comment_idx, comment_board_idx, comment_user_id, content, comment_image,comment_reg_date, comment_up_date, comment_user_ip, comment_ref
-		, comment_restep, comment_level, comment_status, comment_starup, comment_stardown, comment_spam, comment_reuserid from comments where comment_idx=#{commentIdx}
+		, comment_restep, comment_level, comment_status, comment_starup, comment_stardown, comment_spam, comment_reuser, user_nickname from comments join users on comment_user_id=user_id where comment_idx=#{commentIdx}
 	</select>
 	<select id="selectCommentCountByRef" resultType="int">
 		select count(*) from comments where comment_ref=#{commentRef}
@@ -48,4 +48,16 @@
 	<update id="commentSpam">
 		update comments set comment_spam=comment_spam+1 where comment_idx=#{commentIdx}
 	</update>
+	
+	<insert id="CBinsert">
+		insert into comment_ballot values(comment_ballot_seq.nextval, #{ballotCommentIdx}, #{ballotCommentUserId}, #{ballotCommentStar}, #{ballotCommentSpam} )
+	</insert>
+	
+	<update id="CBupdate">
+		update comment_ballot set ballot_comment_star=#{ballotCommentStar}, ballot_comment_spam=#{ballotCommentSpam} where ballot_comment_idx=#{ballotCommentIdx}
+	</update>
+	
+	<select id="selectCBallotByIdx" resultType="CBallot">
+		select co_ba_idx, ballot_comment_idx, ballot_comment_user_id, ballot_comment_star, ballot_comment_spam from  comment_ballot where ballot_comment_idx=#{ballotCommentIdx} and  ballot_comment_user_id=#{ballotCommentUserId}
+	</select>
 </mapper>

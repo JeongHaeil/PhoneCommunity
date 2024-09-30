@@ -2,6 +2,7 @@ package xyz.itwill.service;
 
 import java.util.Map;
 
+import xyz.itwill.dto.BBallot;
 import xyz.itwill.dto.Board;
 
 public interface BoardService {
@@ -14,4 +15,7 @@ public interface BoardService {
 	void boardStarUp(int boardPostIdx);
 	void boardStarDown(int boardPostIdx);
 	void boardSpam(int boardPostIdx);
+	void BBinsert(BBallot bBallot);
+	void BBupdate(BBallot bBallot);
+	BBallot selectBBallotByIdx(Map<String, Object> map);
 }
