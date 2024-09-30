@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>비밀번호 찾기</title>
+    <title>임시 비밀번호 발급 완료</title>
     <!-- 부트스트랩 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -12,7 +12,7 @@
             background-color: #f8f9fa;
             font-family: 'Noto Sans KR', sans-serif;
         }
-        .password-reset-container {
+        .pw-reset-complete-container {
             max-width: 400px;
             margin: 100px auto;
             padding: 20px;
@@ -20,46 +20,39 @@
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        .password-reset-container h3 {
+        .pw-reset-complete-container h3 {
             font-weight: bold;
             margin-bottom: 20px;
             text-align: center;
         }
-        .password-reset-container .btn-custom {
+        .pw-reset-complete-container .btn-custom {
             background-color: #f86d6d;
             color: white;
             border-radius: 20px;
             width: 100%;
             padding: 10px;
         }
-        .password-reset-container .btn-custom:hover {
+        .pw-reset-complete-container .btn-custom:hover {
             background-color: #f75c5c;
+        }
+        .pw-reset-complete-container p {
+            text-align: center;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
 
-<div class="password-reset-container">
-    <h3>비밀번호 찾기</h3>
+<div class="pw-reset-complete-container">
+    <h3>비밀번호 찾기 완료</h3>
+    <p>해당 이메일로 임시 비밀번호가 발급되었습니다.</p>
 
-    <form action="/final/user/findPassword" method="post">
-    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-    <div class="mb-3">
-        <label for="userId" class="form-label">아이디</label>
-        <input type="text" class="form-control" id="userId" name="userId" placeholder="아이디를 입력하세요" required>
-    </div>
-    <div class="mb-3">
-        <label for="userName" class="form-label">이름</label>
-        <input type="text" class="form-control" id="userName" name="userName" placeholder="이름을 입력하세요" required>
-    </div>
-    <div class="mb-3">
-        <label for="userEmail" class="form-label">이메일</label>
-        <input type="email" class="form-control" id="userEmail" name="userEmail" placeholder="이메일을 입력하세요" required>
-    </div>
-    <button type="submit" class="btn btn-custom">비밀번호 찾기</button>
-</form>
+    <form action="/user/login" method="get">
+        <!-- CSRF 토큰 추가 -->
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
-
+        <button type="submit" class="btn btn-custom">로그인창으로 돌아가기</button>
+    </form>
 </div>
 
 <!-- 부트스트랩 JS -->

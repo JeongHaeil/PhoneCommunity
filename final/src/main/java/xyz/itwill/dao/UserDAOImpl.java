@@ -51,11 +51,7 @@ public class UserDAOImpl implements UserDAO {
     public User selectUserByUserId(String userId) {
         return sqlSession.getMapper(UserMapper.class).selectUserByUserId(userId);
     }
-    @Override
-    public User selectUserByEmail(String email) {
-        return sqlSession.selectOne("UserMapper.selectUserByEmail", email);
-    }
-    
+ 
     @Override
     public String selectUserIdByEmailAndName(String email, String name) {
         Map<String, String> params = new HashMap<>();
@@ -63,6 +59,17 @@ public class UserDAOImpl implements UserDAO {
         params.put("name", name);
         
         return sqlSession.selectOne("xyz.itwill.mapper.UserMapper.selectUserIdByEmailAndName", params);
+    }
+    
+ // 새로 추가된 메서드: 아이디, 이름, 이메일로 사용자 조회
+    @Override
+    public User selectUserByIdNameAndEmail(String userId, String userName, String userEmail) {
+        Map<String, String> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("userName", userName);
+        params.put("userEmail", userEmail);
+        
+        return sqlSession.selectOne("xyz.itwill.mapper.UserMapper.selectUserByIdNameAndEmail", params);
     }
 
 }

@@ -1,7 +1,11 @@
 package xyz.itwill.controller;
 
+import java.util.Random;
+
 import javax.servlet.http.HttpSession;
+
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -9,13 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import xyz.itwill.auth.CustomUserDetails;
 import xyz.itwill.dto.Email;
 import xyz.itwill.dto.User;
 import xyz.itwill.service.EmailService;
 import xyz.itwill.service.UserService;
-import xyz.itwill.auth.CustomUserDetails;
 
 @Slf4j
 @Controller
@@ -81,12 +86,11 @@ public class UserController {
     }
 
     @RequestMapping("/logout")
-    public String logout(HttpSession session ) {
-    	session.invalidate();
-    	return "redirect:/user/register";
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/user/register";
     }
-   
-    
+
     // 이용약관 동의 처리 (POST 요청)
     @RequestMapping(value = "/agreeTerms", method = RequestMethod.POST)
     public String agreeTerms(HttpSession session, @RequestParam("agreeTerms") boolean agreeTerms, @RequestParam("agreePrivacy") boolean agreePrivacy) {
@@ -161,8 +165,6 @@ public class UserController {
         return "user/login";  // login.jsp 경로 유지
     }
 
- 
-
     // 회원 프로필 조회 (JSP 파일명: mypage.jsp)
     @RequestMapping("/profile")
     public String profile(HttpSession session, Model model) {
@@ -182,13 +184,7 @@ public class UserController {
         return (user == null) ? "AVAILABLE" : "EXISTS";
     }
 
-    // 닉네임 중복 확인
-    @RequestMapping(value = "/checkNickname", method = RequestMethod.GET)
-    @ResponseBody
-    public String checkNickname(@RequestParam("userNickName") String nickname) {
-        User user = userService.getUserByNickname(nickname);
-        return (user == null) ? "AVAILABLE" : "EXISTS";
-    }
+    
     // 아이디 찾기 페이지 요청 (GET 요청)
     @RequestMapping(value = "/idfind", method = RequestMethod.GET)
     public String showIdFindPage() {
@@ -197,33 +193,80 @@ public class UserController {
 
     // 아이디 찾기 요청 처리
     @RequestMapping(value = "/displayUserId", method = RequestMethod.POST)
-    public String displayUserId(@RequestParam("email") String email, 
-                                 @RequestParam("name") String name, Model model) {
+    public String displayUserId(@RequestParam("email") String email,
+                                @RequestParam("name") String name, Model model) {
         log.info("아이디 찾기 요청: 이메일={}, 이름={}", email, name); // 로그 추가
         String userId = userService.findUserIdByEmailAndName(email, name);
-        
+
         if (userId != null) {
             model.addAttribute("userId", userId);
         } else {
             model.addAttribute("error", "해당 정보로 등록된 아이디가 없습니다.");
         }
-        
+
         return "user/displayUserId"; // 결과를 보여줄 JSP 페이지로 이동
     }
 
     // GET 요청 처리
     @RequestMapping(value = "/displayUserId", method = RequestMethod.GET)
-    public String showUserId(@RequestParam("email") String email, 
-                              @RequestParam("name") String name, Model model) {
+    public String showUserId(@RequestParam("email") String email,
+                             @RequestParam("name") String name, Model model) {
         String userId = userService.findUserIdByEmailAndName(email, name);
-        
+
         if (userId != null) {
             model.addAttribute("userId", userId);
         } else {
             model.addAttribute("error", "일치하는 회원이 없습니다.");
         }
-        
+
         return "user/displayUserId"; // displayUserId.jsp 경로로 이동
     }
-    
-}  
+
+    // 비밀번호 찾기 페이지로 이동
+    @RequestMapping(value = "/passwordfind", method = RequestMethod.GET)
+    public String showPasswordFindPage() {
+        return "user/passwordfind";  // passwordfind.jsp 페이지로 이동
+    }
+
+    // 비밀번호 찾기 처리
+    @RequestMapping(value = "/findPassword", method = RequestMethod.POST)
+    public String findPassword(@RequestParam("userId") String userId,
+                               @RequestParam("userName") String userName,
+                               @RequestParam("userEmail") String userEmail, Model model) {
+        User user = userService.findUserByIdNameAndEmail(userId, userName, userEmail);
+
+        if (user == null || !user.getUserId().equals(userId) || !user.getUserName().equals(userName)) {
+            model.addAttribute("error", "입력하신 정보와 일치하는 사용자가 없습니다.");
+            return "user/passwordfind";
+        }
+
+        // 임시 비밀번호 생성
+        String tempPassword = generateTempPassword();
+
+        // 이메일로 임시 비밀번호 전송
+        emailService.sendTemporaryPassword(userEmail, tempPassword);
+
+        // 임시 비밀번호를 암호화하여 저장
+        user.setUserPassword(BCrypt.hashpw(tempPassword, BCrypt.gensalt()));
+        userService.modifyUser(user);
+
+        // 성공 메시지를 Model에 추가
+        model.addAttribute("message", "임시 비밀번호가 이메일로 전송되었습니다.");
+
+        // 비밀번호가 전송되었다는 페이지로 이동
+        return "user/displayUserpw";
+    }
+
+    // 임시 비밀번호 생성 메서드
+    private String generateTempPassword() {
+        // 임시 비밀번호는 영숫자 조합으로 8자리 생성
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder tempPassword = new StringBuilder();
+        Random rnd = new Random();
+        while (tempPassword.length() < 8) {  // 비밀번호 길이
+            int index = (int) (rnd.nextFloat() * chars.length());
+            tempPassword.append(chars.charAt(index));
+        }
+        return tempPassword.toString();
+    }
+}

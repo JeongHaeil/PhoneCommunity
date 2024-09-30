@@ -58,4 +58,20 @@ public class EmailServiceImpl implements EmailService {
         calendar.add(Calendar.MINUTE, 10);  // 만료 시간을 10분 후로 설정
         return calendar.getTime();
     }
+
+    @Override
+    public void sendTemporaryPassword(String toEmail, String temporaryPassword) {
+        // 임시 비밀번호를 이메일로 전송하는 로직
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(toEmail);
+            message.setSubject("임시 비밀번호 안내");
+            message.setText("임시 비밀번호는 다음과 같습니다: " + temporaryPassword);
+            mailSender.send(message);
+            System.out.println("임시 비밀번호 이메일이 성공적으로 전송되었습니다.");
+        } catch (Exception e) {
+            System.err.println("임시 비밀번호 이메일 전송에 실패했습니다: " + e.getMessage());
+            throw new RuntimeException("임시 비밀번호 이메일 전송 실패", e);
+        }
+    }
 }

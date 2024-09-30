@@ -1,6 +1,7 @@
 package xyz.itwill.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import xyz.itwill.dto.User;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserDAO userDAO;
+    private final EmailService emailService; // 이메일 전송을 위한 서비스 추가
 
     @Transactional
     @Override
@@ -77,15 +79,33 @@ public class UserServiceImpl implements UserService {
     public User getUserByNickname(String nickname) {
         return userDAO.selectUserByNickname(nickname);
     }
-    
-    @Override
-    public User getUserByEmail(String email) {
-        return userDAO.selectUserByEmail(email);
-    }
-    
+
+ 
     @Override
     public String findUserIdByEmailAndName(String email, String name) {
         return userDAO.selectUserIdByEmailAndName(email, name);
     }
 
+    // 새로운 비밀번호 찾기 메서드 추가
+    @Override
+    @Transactional
+    public User findUserByIdNameAndEmail(String userId, String userName, String userEmail) {
+        return userDAO.selectUserByIdNameAndEmail(userId, userName, userEmail);
+    }
+
+    @Override
+    @Transactional
+    public void updatePassword(User user) {
+        // 임시 비밀번호 생성
+        String temporaryPassword = UUID.randomUUID().toString().substring(0, 8); // 8자리 임시 비밀번호
+        String hashedPassword = BCrypt.hashpw(temporaryPassword, BCrypt.gensalt());
+
+        user.setUserPassword(hashedPassword); // 비밀번호 암호화 후 업데이트
+
+        // 비밀번호 업데이트
+        userDAO.updateUser(user);
+        
+        // 임시 비밀번호를 이메일로 전송
+        emailService.sendTemporaryPassword(user.getUserEmail(), temporaryPassword); // 임시 비밀번호 이메일 전송
+    }
 }

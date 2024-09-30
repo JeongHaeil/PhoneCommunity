@@ -14,7 +14,9 @@ public interface UserMapper {
     List<User> selectUserList();
     User selectUserByNickname(String nickname);
     User selectUserByUserId(String userId);
-    User selectUserByEmail(String userEmail);
     String selectUserIdByEmailAndName(@Param("email") String email, @Param("name") String name);
-
+ // 아이디, 이메일, 이름으로 사용자 조회
+    User selectUserByIdAndEmailAndName(@Param("userId") String userId, 
+                                       @Param("userEmail") String userEmail,
+                                       @Param("userName") String userName);
 }
