@@ -59,6 +59,7 @@
 <div class="terms-container">
     <h5>회원가입 이용약관</h5>
     <form id="termsForm" method="POST" action="${pageContext.request.contextPath}/user/agreeTerms">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <div class="form-check">
             <input class="form-check-input" type="checkbox" id="agreeAll">
             <label class="form-check-label" for="agreeAll">전체 동의하기</label>

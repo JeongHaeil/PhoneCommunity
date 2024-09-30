@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>이메일 인증</title>
+    <title>임시 비밀번호 발급 완료</title>
     <!-- 부트스트랩 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -12,55 +12,47 @@
             background-color: #f8f9fa;
             font-family: 'Noto Sans KR', sans-serif;
         }
-        .verification-container {
+        .pw-reset-complete-container {
             max-width: 400px;
-            margin: 50px auto;
+            margin: 100px auto;
             padding: 20px;
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        h4 {
-            margin-bottom: 30px;
+        .pw-reset-complete-container h3 {
             font-weight: bold;
-            color: #333;
+            margin-bottom: 20px;
             text-align: center;
         }
-        .form-control {
-            border-radius: 10px;
-            padding: 10px;
-        }
-        .btn-verify {
+        .pw-reset-complete-container .btn-custom {
             background-color: #f86d6d;
             color: white;
             border-radius: 20px;
             width: 100%;
             padding: 10px;
-            margin-top: 20px;
         }
-        .btn-verify:hover {
+        .pw-reset-complete-container .btn-custom:hover {
             background-color: #f75c5c;
+        }
+        .pw-reset-complete-container p {
+            text-align: center;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
 
-<div class="verification-container">
-    <h4>이메일 인증</h4>
-    <form action="${pageContext.request.contextPath}/email/verify" method="post">
-    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-    <div class="mb-3">
-        <label for="verification_code" class="form-label">인증 코드</label>
-        <input type="text" class="form-control" id="verification_code" name="emailCode" placeholder="이메일로 받은 인증 코드를 입력하세요" required pattern="\d*">
-    </div>
-    <button type="submit" class="btn btn-verify">인증하기</button>
-</form>
+<div class="pw-reset-complete-container">
+    <h3>비밀번호 찾기 완료</h3>
+    <p>해당 이메일로 임시 비밀번호가 발급되었습니다.</p>
 
+    <form action="/user/login" method="get">
+        <!-- CSRF 토큰 추가 -->
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
-    <div class="mt-4 text-center">
-        <p>이메일을 받지 못하셨나요?</p>
-        <a href="${pageContext.request.contextPath}/email/resend" class="btn btn-link">인증 코드 재발송</a>
-    </div>
+        <button type="submit" class="btn btn-custom">로그인창으로 돌아가기</button>
+    </form>
 </div>
 
 <!-- 부트스트랩 JS -->

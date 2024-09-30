@@ -11,4 +11,9 @@ public interface UserDAO {
     User selectUser(String userId);
     List<User> selectUserList();
     User selectUserByNickname(String nickname);
+    User selectUserByUserId(String userId);
+    
+    String selectUserIdByEmailAndName(String email, String name); // 추가
+ // 새로 추가된 메서드: 아이디, 이름, 이메일로 사용자 조회
+    User selectUserByIdNameAndEmail(String userId, String userName, String userEmail);
 }

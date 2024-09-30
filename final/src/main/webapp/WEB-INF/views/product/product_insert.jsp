@@ -1,10 +1,11 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>상품 등록 페이지</title>
+    <title>ìí ë±ë¡ íì´ì§</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -18,7 +19,7 @@
             margin: 0 auto;
         }
 
-        /* 이미지 업로드 박스 */
+        /* ì´ë¯¸ì§ ìë¡ë ë°ì¤ */
         .upload-container {
             display: flex;
             align-items: center;
@@ -46,7 +47,7 @@
             text-align: center;
         }
 
-        /* 카테고리 선택 박스 */
+        /* ì¹´íê³ ë¦¬ ì í ë°ì¤ */
         .category-box {
             height: 150px;
             overflow-y: scroll;
@@ -78,7 +79,7 @@
             border-left: 3px solid #000;
         }
 
-        /* 유의사항 입력 박스 */
+        /* ì ìì¬í­ ìë ¥ ë°ì¤ */
         .notice-box {
             padding: 10px;
             border: 1px solid #d3d3d3;
@@ -91,7 +92,7 @@
             cursor: text;
         }
 
-        /* 상품상태 버튼 */
+        /* ìíìí ë²í¼ */
         .product-status-btn {
             padding: 12px 25px;
             border-radius: 30px;
@@ -108,7 +109,7 @@
             border: 2px solid #00c73c;
         }
 
-        /* 라디오 버튼 및 체크박스 커스텀 */
+        /* ë¼ëì¤ ë²í¼ ë° ì²´í¬ë°ì¤ ì»¤ì¤í */
         .form-check {
             position: relative;
             padding-left: 35px;
@@ -137,13 +138,13 @@
         .form-check-input:checked~.form-check-label::before {
             background-color: #00c73c;
             border-color: #00c73c;
-            background-image: url('https://via.placeholder.com/20x20?text=✓');
+            background-image: url('https://via.placeholder.com/20x20?text=â');
             background-size: 80%;
             background-position: center;
             background-repeat: no-repeat;
         }
 
-        /* 배송비 관련 */
+        /* ë°°ì¡ë¹ ê´ë ¨ */
         .shipping-method {
             margin-top: 20px;
             display: none;
@@ -153,7 +154,7 @@
             display: block;
         }
 
-        /* 판매가격 입력 필드 */
+        /* íë§¤ê°ê²© ìë ¥ íë */
         .price-input-container {
             display: flex;
             align-items: center;
@@ -174,7 +175,7 @@
             border: 1px solid #000;
         }
 
-        /* 무료나눔 체크박스 */
+        /* ë¬´ë£ëë ì²´í¬ë°ì¤ */
         .free-giveaway {
             display: flex;
             align-items: center;
@@ -185,7 +186,7 @@
             margin-right: 5px;
         }
 
-        /* 등록 버튼 */
+        /* ë±ë¡ ë²í¼ */
         .btn-submit {
             background-color: #000;
             color: white;
@@ -203,14 +204,14 @@
             background-color: #333;
         }
 
-        /* 유의사항 안내 */
+        /* ì ìì¬í­ ìë´ */
         .info-text {
             font-size: 0.8rem;
             color: #888;
             margin-top: 20px;
         }
 
-        /* 반응형 디자인 */
+        /* ë°ìí ëìì¸ */
         @media (max-width: 768px) {
             .product-status-btn {
                 padding: 10px 20px;
@@ -238,7 +239,7 @@
 
     <div class="container mt-5">
         <form>
-            <!-- 이미지 업로드 -->
+            <!-- ì´ë¯¸ì§ ìë¡ë -->
             <div class="mb-3">
                 <div class="upload-container" id="uploadContainer">
                     <span class="upload-text">0/10</span>
@@ -246,82 +247,82 @@
                 <input type="file" id="fileInput" class="d-none" accept="image/*" multiple>
             </div>
 
-            <!-- 상품명 입력 -->
+            <!-- ìíëª ìë ¥ -->
             <div class="mb-3">
-                <input type="text" class="form-control" placeholder="상품명">
+                <input type="text" class="form-control" placeholder="ìíëª">
             </div>
 
-            <!-- 카테고리 선택 -->
+            <!-- ì¹´íê³ ë¦¬ ì í -->
             <div class="mb-3">
                 <div class="category-box">
-                    <div class="category-item">수입명품</div>
-                    <div class="category-item">패션의류</div>
-                    <div class="category-item">패션잡화</div>
-                    <div class="category-item">뷰티</div>
-                    <div class="category-item">출산/유아동</div>
-                    <div class="category-item">모바일/태블릿</div>
+                    <div class="category-item">ììëªí</div>
+                    <div class="category-item">í¨ììë¥</div>
+                    <div class="category-item">í¨ìì¡í</div>
+                    <div class="category-item">ë·°í°</div>
+                    <div class="category-item">ì¶ì°/ì ìë</div>
+                    <div class="category-item">ëª¨ë°ì¼/íë¸ë¦¿</div>
                 </div>
             </div>
 
-            <!-- 판매가격 입력 및 무료나눔 -->
+            <!-- íë§¤ê°ê²© ìë ¥ ë° ë¬´ë£ëë -->
             <div class="mb-3 price-input-container">
-                <input type="text" class="form-control price-input" placeholder="₩ 판매가격">
+                <input type="text" class="form-control price-input" placeholder="â© íë§¤ê°ê²©">
                 <div class="free-giveaway">
                     <input type="checkbox" id="freeGiveaway">
-                    <label for="freeGiveaway">무료나눔</label>
+                    <label for="freeGiveaway">ë¬´ë£ëë</label>
                 </div>
             </div>
 
-            <!-- 유의사항 텍스트박스 -->
+            <!-- ì ìì¬í­ íì¤í¸ë°ì¤ -->
             <div class="mb-3">
                 <textarea class="form-control notice-box" id="noticeBox" rows="4" onclick="clearPlaceholder(this)">
-                    - 상품명(브랜드)
-- 구매 시기
-- 사용 기간
-- 하자 여부
+                    - ìíëª(ë¸ëë)
+- êµ¬ë§¤ ìê¸°
+- ì¬ì© ê¸°ê°
+- íì ì¬ë¶
 
-* 실제 촬영한 사진과 함께 상세 정보를 입력해주세요.
+* ì¤ì  ì´¬ìí ì¬ì§ê³¼ í¨ê» ìì¸ ì ë³´ë¥¼ ìë ¥í´ì£¼ì¸ì.
                 </textarea>
                 <div class="text-end mt-2"><span id="charCount">0</span> / 1000</div>
             </div>
 
-            <!-- 상품상태 -->
+            <!-- ìíìí -->
             <div class="mb-3 d-flex">
-                <div class="product-status-btn selected" id="usedBtn">중고</div>
-                <div class="product-status-btn" id="newBtn">새상품</div>
+                <div class="product-status-btn selected" id="usedBtn">ì¤ê³ </div>
+                <div class="product-status-btn" id="newBtn">ììí</div>
             </div>
 
-            <!-- 거래방법 -->
+            <!-- ê±°ëë°©ë² -->
             <div class="mb-3">
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="dealMethod" id="delivery" value="택배거래">
-                    <label class="form-check-label" for="delivery">택배거래</label>
+                    <input class="form-check-input" type="radio" name="dealMethod" id="delivery" value="íë°°ê±°ë">
+                    <label class="form-check-label" for="delivery">íë°°ê±°ë</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="dealMethod" id="direct" value="직거래">
-                    <label class="form-check-label" for="direct">직거래</label>
+                    <input class="form-check-input" type="radio" name="dealMethod" id="direct" value="ì§ê±°ë">
+                    <label class="form-check-label" for="direct">ì§ê±°ë</label>
                 </div>
             </div>
 
-            <!-- 배송비 추가 박스 -->
+            <!-- ë°°ì¡ë¹ ì¶ê° ë°ì¤ -->
             <div class="shipping-method" id="shippingMethod">
-                <div class="shipping-label">배송비:</div>
+                <div class="shipping-label">ë°°ì¡ë¹:</div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="shippingFee" id="shippingSeparate" value="별도">
-                    <label class="form-check-label" for="shippingSeparate">배송비 별도</label>
+                    <input class="form-check-input" type="radio" name="shippingFee" id="shippingSeparate" value="ë³ë">
+                    <label class="form-check-label" for="shippingSeparate">ë°°ì¡ë¹ ë³ë</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="shippingFee" id="shippingIncluded" value="포함">
-                    <label class="form-check-label" for="shippingIncluded">배송비 포함</label>
+                    <input class="form-check-input" type="radio" name="shippingFee" id="shippingIncluded" value="í¬í¨">
+                    <label class="form-check-label" for="shippingIncluded">ë°°ì¡ë¹ í¬í¨</label>
                 </div>
             </div>
 
-            <!-- 등록 버튼 -->
-            <button type="submit" class="btn-submit">등록</button>
+            <!-- ë±ë¡ ë²í¼ -->
+            <button type="submit" class="btn-submit">ë±ë¡</button>
 
-            <!-- 안내문 -->
+            <!-- ìë´ë¬¸ -->
             <div class="info-text">
-                체크 후 Pay 거부 시 서비스 제한 처리될 수 있어요. <a href="#">바로가기</a>
+                ì²´í¬ í Pay ê±°ë¶ ì ìë¹ì¤ ì í ì²ë¦¬ë  ì ìì´ì. <a href="#">ë°ë¡ê°ê¸°</a>
             </div>
         </form>
     </div>
@@ -340,19 +341,19 @@ const uploadContainer = document.getElementById('uploadContainer');
             if (files.length > 0) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    uploadContainer.innerHTML = `<img src="${e.target.result}" alt="이미지">`;
+                    uploadContainer.innerHTML = `<img src="${e.target.result}" alt="ì´ë¯¸ì§">`;
                 };
                 reader.readAsDataURL(files[0]);
             }
         });
-        // 유의사항 박스 클릭 시 placeholder처럼 동작
+        // ì ìì¬í­ ë°ì¤ í´ë¦­ ì placeholderì²ë¼ ëì
         function clearPlaceholder(element) {
-            if (element.value.startsWith('- 상품명')) {
+            if (element.value.startsWith('- ìíëª')) {
                 element.value = '';
             }
         }
 
-        // 상품상태 버튼 클릭 시 색상 변경
+        // ìíìí ë²í¼ í´ë¦­ ì ìì ë³ê²½
         const usedBtn = document.getElementById('usedBtn');
         const newBtn = document.getElementById('newBtn');
 
@@ -366,7 +367,7 @@ const uploadContainer = document.getElementById('uploadContainer');
             usedBtn.classList.remove('selected');
         });
 
-        // 거래방법 선택 시 배송비 옵션 표시
+        // ê±°ëë°©ë² ì í ì ë°°ì¡ë¹ ìµì íì
         const delivery = document.getElementById('delivery');
         const direct = document.getElementById('direct');
         const shippingMethod = document.getElementById('shippingMethod');
@@ -383,7 +384,7 @@ const uploadContainer = document.getElementById('uploadContainer');
             }
         });
 
-        // 문자수 카운터
+        // ë¬¸ìì ì¹´ì´í°
         const textarea = document.getElementById('noticeBox');
         const charCount = document.getElementById('charCount');
 

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -16,7 +17,6 @@
         .btn-login { background-color: #f05d5e !important; color: #fff !important; }
         .card { margin-bottom: 20px; }
         .card-header { background-color: #f8f9fa; }
-        
     </style>
 </head>
 <body>
@@ -36,41 +36,28 @@
                     <li class="nav-item"><a class="nav-link" href="#">서비스</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">운영관리</a></li>
                 </ul>
-                <div class="login-container position-relative" id="loginContainer">
-                    <a class="btn btn-login" id="loginButton" href ="<c:url value='/user/login'/>">로그인</a>
-                    <div class="login-form position-absolute bg-light p-3 shadow" id="loginForm" style="display: none;">
-                        <form>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">이메일 주소</label>
-                                <input type="email" class="form-control" id="email" placeholder="email@example.com">
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">비밀번호</label>
-                                <input type="password" class="form-control" id="password" placeholder="비밀번호">
-                            </div>
-                            <div class="form-check mb-3">
-                                <input type="checkbox" class="form-check-input" id="dropdownCheck">
-                                <label class="form-check-label" for="dropdownCheck">로그인 상태 유지</label>
-                            </div>
-                            <button type="submit" class="btn btn-primary">로그인</button>
-                        </form>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">새 계정 만들기</a>
-                        <a class="dropdown-item" href="#">비밀번호를 잊으셨나요?</a>
-                    </div>
-                </div>
+				<div class="login-container position-relative" id="loginContainer">
+				    <c:choose>
+				        <c:when test="${not empty pageContext.request.userPrincipal}">
+				            <span style="color: white;"> <sec:authentication property="principal.nickname"/> 님</span>
+				            <!-- 로그아웃을 POST 방식으로 처리 -->
+				           	 <sec:authorize access="isAuthenticated()">
+				            <form action="<c:url value='/logout'/>" method="post" style="display:inline;">
+                                
+                                <sec:csrfInput/>
+                              <!-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/-->
+                                <button type="submit" class="btn btn-link">로그아웃</button>
+                            
+                            </form>
+                            </sec:authorize>
+				        </c:when>
+				        <c:otherwise>
+				            <a class="btn btn-login" id="loginButton" href ="<c:url value='/user/login'/>">로그인</a>
+				        </c:otherwise>
+				    </c:choose>
+				</div>
             </div>
         </div>
     </nav>
-
-    <style>
-        .login-container:hover .login-form {
-            display: block !important;
-        }
-    </style>
-
-    <!-- 부트스트랩 5.3 JS 링크 -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-     
 </body>
 </html>
