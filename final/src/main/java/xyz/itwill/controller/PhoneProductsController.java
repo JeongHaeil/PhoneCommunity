@@ -38,15 +38,15 @@ public class PhoneProductsController {
     }
 
     @PostMapping("/phone")
-    public String calculatePlan(
-        @RequestParam(defaultValue = "0") int carrierId, 
-        @RequestParam(defaultValue = "0") int productId, 
-        @RequestParam String planProductType, 
-        @RequestParam String planType, 
-        @RequestParam(defaultValue = "0") int planMonths,  
-        @RequestParam String planOption, 
-        @RequestParam(defaultValue = "0") int planAdditional,  
-        Model model) {
+    public String getPlanDetails(
+            @RequestParam(defaultValue = "0") int carrierId, 
+            @RequestParam(defaultValue = "0") int productId, 
+            @RequestParam String planProductType, 
+            @RequestParam String planType, 
+            @RequestParam(defaultValue = "0") int planMonths,  
+            @RequestParam String planOption, 
+            @RequestParam(defaultValue = "0") int planAdditional,  
+            Model model) {
 
         // 자급제 선택 시 할부 개월 수를 0으로 설정
         if ("자급제".equals(planOption)) {
@@ -63,6 +63,7 @@ public class PhoneProductsController {
         paramMap.put("planOption", planOption);
         paramMap.put("planAdditional", planAdditional);
 
+        // 요금제 데이터 조회
         List<PhonePlans> phonePlans = phonePlansService.selectPhonePlans(paramMap);
         model.addAttribute("phonePlans", phonePlans);
 
@@ -72,6 +73,19 @@ public class PhoneProductsController {
             model.addAttribute("planDetails", planDetails);
         }
 
-        return "phone/phone";  // 조회 후 동일한 JSP 파일로 반환
+        return "phone/phone";  // 요금제 테이블만 반환
     }
+    
+    @PostMapping("/phonePlansTable")
+    public String getPlanDetails(
+            @RequestParam Map<String, Object> paramMap, Model model) {
+        
+        // 요금제 계산 처리
+        List<PhonePlans> phonePlans = phonePlansService.selectPhonePlans(paramMap);
+        model.addAttribute("phonePlans", phonePlans);
+
+        // 반환할 JSP 파일 이름
+        return "phone/phonePlansTable";  // 결과를 보여줄 JSP 파일
+    }
+    
 }
