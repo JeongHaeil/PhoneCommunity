@@ -108,6 +108,11 @@ public class BoardServiceImpl implements BoardService {
 		return boardDAO.selectBBallotByIdx(map);
 	}
 
+	@Override
+	public void boardViewCountUp(int boardPostIdx) {
+		boardDAO.boardViewCountUp(boardPostIdx);
+	}
+
 	
 	
 }

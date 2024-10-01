@@ -18,4 +18,5 @@ public interface BoardService {
 	void BBinsert(BBallot bBallot);
 	void BBupdate(BBallot bBallot);
 	BBallot selectBBallotByIdx(Map<String, Object> map);
+	void boardViewCountUp(int boardPostIdx);
 }
