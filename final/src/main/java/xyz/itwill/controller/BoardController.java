@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -53,7 +55,43 @@ public class BoardController {
 	
 	@RequestMapping("/boarddetail/{boardCode}/{boardPostIdx}")
 	public String boarddetail(@PathVariable int boardPostIdx,@PathVariable int boardCode,@RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "5") int pageSize
-			, @RequestParam(defaultValue = "board_user_id") String search, @RequestParam(defaultValue = "") String keyword, Model model) {
+			, @RequestParam(defaultValue = "board_user_id") String search, @RequestParam(defaultValue = "") String keyword, Model model,HttpServletRequest request, HttpServletResponse response) {
+		//쿠키저장
+		Cookie[] cookies=request.getCookies();
+		String oldCookiesValue=null;
+		Cookie oldCookies=null;
+		List<String> cookieList=new ArrayList<String>();
+		if(cookies!=null) {
+			for(Cookie cookie : cookies) {
+				if("viewCountCookie".equals(cookie.getName())){
+					oldCookies=cookie;
+					oldCookiesValue=cookie.getValue();
+					oldCookiesValue=oldCookiesValue.replaceAll("[\\[\\]]", ",");			
+					String[] cookieArray=oldCookiesValue.split(",");
+					for(String view :cookieArray) {
+						cookieList.add(view);
+					}					
+					break;
+				}
+			}
+		}
+		if(oldCookies!=null) {
+			if(!cookieList.contains(String.valueOf(boardPostIdx))) {
+				oldCookies.setValue(oldCookies.getValue()+"["+boardPostIdx+"]");
+				oldCookies.setPath("/final/board/");
+				oldCookies.setMaxAge(60*60*24);
+				response.addCookie(oldCookies);
+				boardService.boardViewCountUp(boardPostIdx);
+			}
+		}else {
+			Cookie newCookie=new Cookie("viewCountCookie", "["+boardPostIdx+"]");
+			newCookie.setPath("/final/board/");		
+			newCookie.setMaxAge(60 * 60 * 24);
+			response.addCookie(newCookie);
+			boardService.boardViewCountUp(boardPostIdx);
+		}
+		
+		
 		int commentCount=commentsService.getCommentsCount(boardPostIdx);
 		Board board=boardService.getboard(boardPostIdx);
 		if(board.getBoardImage()!=null&&!board.getBoardImage().equals("")) {
@@ -88,7 +126,7 @@ public class BoardController {
 	
 	@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_SUPER_ADMIN')")
 	@RequestMapping(value ="/boardwrite/{boardCode}", method = RequestMethod.POST)
-	public String boardwrite(@PathVariable int boardCode, @ModelAttribute Board board, List<MultipartFile> uploaderFileList,HttpServletRequest request,Authentication authentication) throws IllegalStateException, IOException {
+	public String boardwrite(@PathVariable int boardCode, @ModelAttribute Board board,@RequestParam String boardtag, List<MultipartFile> uploaderFileList,HttpServletRequest request,Authentication authentication) throws IllegalStateException, IOException {
 		if(authentication != null) {			
 			CustomUserDetails user=(CustomUserDetails)authentication.getPrincipal();
 			board.setBoardUserId(user.getUserId());
@@ -109,7 +147,7 @@ public class BoardController {
 			board.setBoardIp(request.getRemoteAddr());
 			board.setBoardCode(boardCode);
 			board.setBoardContent(board.getBoardContent().replace("<","&lt;").replace(">","&gt;").replace("\n", "<br>"));
-			board.setBoardTitle(board.getBoardTitle().replace("<","&lt;").replace(">","&gt;"));
+			board.setBoardTitle(boardtag+" "+board.getBoardTitle().replace("<","&lt;").replace(">","&gt;"));
 			boardService.addFreeboard(board);			
 		}else {
 			return "redirect:/user/login";	
@@ -124,6 +162,15 @@ public class BoardController {
 			CustomUserDetails user=(CustomUserDetails)authentication.getPrincipal();
 			Board board=boardService.getboard(boardPostIdx);
 			if(board.getBoardUserId().equals(user.getUserId().toString())) {
+				String fulltitle=board.getBoardTitle();
+				int index=fulltitle.indexOf("[");
+				int indexs=fulltitle.indexOf("]");
+				if(index != -1 && indexs!= -1) {
+					String boardtag=fulltitle.substring(fulltitle.indexOf("[")+1,fulltitle.indexOf("]"));
+					String title=fulltitle.substring(fulltitle.indexOf("]")+1).trim();
+					board.setBoardTitle(title);					
+					model.addAttribute("boardtag", boardtag);				
+				}				
 				model.addAttribute("board", board);				
 				model.addAttribute("boardCode", boardCode);											
 			}else {
@@ -138,7 +185,7 @@ public class BoardController {
 	
 	@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_SUPER_ADMIN')")
 	@RequestMapping(value ="/boardModify/{boardCode}/{boardPostIdx}", method = RequestMethod.POST)
-	public String boardModify(@PathVariable int boardCode, @PathVariable int boardPostIdx,@ModelAttribute Board board,List<MultipartFile> uploaderFileList,HttpServletRequest request) throws IllegalStateException, IOException {
+	public String boardModify(@PathVariable int boardCode, @PathVariable int boardPostIdx,@RequestParam String boardtag,@ModelAttribute Board board,List<MultipartFile> uploaderFileList,HttpServletRequest request) throws IllegalStateException, IOException {
 		Board oldboard=boardService.getboard(boardPostIdx);	
 		String uploadDirectory=context.getServletContext().getRealPath("/resources/uploadFile/freeboard_image");
 	
@@ -156,6 +203,7 @@ public class BoardController {
 				board.setBoardImage(filenameList.toString());
 			}
 		}
+		board.setBoardTitle(boardtag+" "+board.getBoardTitle().replace("<","&lt;").replace(">","&gt;"));
 		boardService.updateFreeboard(board);	
 		return "redirect:/board/boarddetail/"+boardCode+"/"+boardPostIdx;
 	}

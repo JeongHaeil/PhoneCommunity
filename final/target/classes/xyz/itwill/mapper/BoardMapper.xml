@@ -107,4 +107,8 @@
 	<select id="selectBBallotByIdx" resultType="BBallot">
 		select bo_ba_idx, ballot_board_idx, ballot_board_user_id, ballot_board_star, ballot_board_spam from  board_ballot where ballot_board_idx=#{ballotBoardIdx} and  ballot_board_user_id=#{ballotBoardUserId}
 	</select>
+	
+	<update id="boardViewCountUp">
+		update board set board_count=board_count+1 where board_post_idx=#{boardPostIdx}
+	</update>
 </mapper>

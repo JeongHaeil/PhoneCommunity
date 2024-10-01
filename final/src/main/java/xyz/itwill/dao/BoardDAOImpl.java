@@ -79,5 +79,10 @@ public class BoardDAOImpl implements BoardDAO{
 	@Override
 	public BBallot selectBBallotByIdx(Map<String, Object> map) {
 		return sqlSession.getMapper(BoardMapper.class).selectBBallotByIdx(map);
+	}
+
+	@Override
+	public int boardViewCountUp(int boardPostIdx) {
+		return sqlSession.getMapper(BoardMapper.class).boardViewCountUp(boardPostIdx);
 	}	
 }

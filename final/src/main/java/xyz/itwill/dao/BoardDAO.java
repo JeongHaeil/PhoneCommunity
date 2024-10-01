@@ -20,4 +20,5 @@ public interface BoardDAO {
 	int BBinsert(BBallot bBallot);
 	int BBupdate(BBallot bBallot);
 	BBallot selectBBallotByIdx(Map<String, Object> map);
+	int boardViewCountUp(int boardPostIdx);
 }

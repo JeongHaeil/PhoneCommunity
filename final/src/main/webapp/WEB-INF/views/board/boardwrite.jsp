@@ -33,14 +33,41 @@
     		<input type="hidden" name="search" value="${ search}">			
     		<input type="hidden" name="keyword" value="${keyword }">			
 		</c:otherwise>
-	</c:choose>    	
-        <div class="form-group">
-            <label for="title">제목:</label>
-            <input type="text" class="form-control" id="boardTitle" name="boardTitle" value="${board.boardTitle }" required>
-        </div>
-
-        <div class="form-group">
-            <label for="content">내용:</label>
+	</c:choose>
+		<div class="d-flex align-items-center mb-3"> 
+			<c:choose>
+				<c:when test="${boardCode == 11}">
+					<div class="me-2">
+						<select name="boardtag" class="form-select">
+							<option value="[기타]" <c:if test="${boardtag  == '기타'}"> selected </c:if>>기타</option>
+							<option value="[통신사]" <c:if test="${boardtag  == '통신사'}"> selected </c:if>>통신사</option>
+							<option value="[구매처]" <c:if test="${boardtag  == '구매처'}"> selected </c:if>>구매처</option>
+							<option value="[제품]" <c:if test="${boardtag  == '제품'}"> selected </c:if>>제품</option>
+						</select>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<div class="me-2">
+						<select name="boardtag" class="form-select">
+							<option value="[기타]" <c:if test="${boardtag  == '기타'}"> selected </c:if>>기타</option>
+							<option value="[잡답]" <c:if test="${boardtag  == '잡답'}"> selected </c:if>>잡답</option>
+							<option value="[웃긴글]" <c:if test="${boardtag  == '웃긴글'}"> selected </c:if>>웃긴글</option>
+							<option value="[퍼옴]" <c:if test="${boardtag  == '퍼옴'}"> selected </c:if>>퍼옴</option>
+						</select>
+					</div>
+				</c:otherwise>
+			</c:choose>
+			
+			<div>   	
+	           <label for="boardTitle" class="me-2">제목:</label>
+	        </div>   
+	        <div class="flex-grow-1">
+   			   <input type="text" class="form-control" id="boardTitle" name="boardTitle" value="${board.boardTitle}" required>
+	        </div>	
+		</div>
+		<hr>
+        <div class="form-group mt-2">
+            <label for="content">내용</label>
             <textarea class="form-control" id="boardContent" name="boardContent" rows="5"  required></textarea>
         </div>
 
@@ -48,7 +75,7 @@
             <label for="image">이미지 업로드:</label>
             <input type="file" class="form-control-file" name=uploaderFileList accept="image/*" value="${board.boardImage }" multiple="multiple">
         </div>
-        
+        <div class="mt-2">
 		<button type="button" class="btn btn-dark" onclick="window.location.href='<c:url value='/board/boardlist/${boardCode }'/>'">목록</button>
 		<c:choose>
 		<c:when test="${empty board }">
@@ -58,6 +85,7 @@
 			<button type="submit" class="btn btn-dark">수정</button>		    					
 		</c:otherwise>
 		</c:choose>
+		</div>
 		<sec:csrfInput/>
     </form>
 </div>
