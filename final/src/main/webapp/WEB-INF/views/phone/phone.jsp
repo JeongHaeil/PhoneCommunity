@@ -65,7 +65,7 @@
                                 <button class="plans-btn">기변</button>
                             </div>
                         </div>
-                        <div class="plans-option-group">
+                       <!--  <div class="plans-option-group">
                             <h3>할부 개월</h3>
                             <div class="plans-btn-group">
                                 <button class="plans-btn active">자급제</button>
@@ -78,10 +78,11 @@
                                     <button class="dropdown-item" onclick="selectMonth(24)">24개월</button>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="plans-option-group">
                             <h3>추가 지원금</h3>
                             <select id="extra-support" class="plans-select">
+                                <option >없음</option>
                                 <option value="추가지원금 0.15">추가지원금 15%</option>
                                 <option value="추가지원금 0.10%">추가지원금 10%</option>
                                 <option value="추가지원금 0.20%">추가지원금 20%</option>
@@ -95,8 +96,8 @@
 					    <input type="hidden" name="planProductType" id="planProductType">
 					    <!-- <input type="hidden" name="planType" id="planType">
 					    <input type="hidden" name="planOption" id="planOption">
-					    <input type="hidden" name="planMonths" id="planMonths">
-					    <input type="hidden" name="planAdditional" id="planAdditional"> -->
+					    <input type="hidden" name="planMonths" id="planMonths">-->
+					    <input type="hidden" name="planAdditional" id="planAdditional"> 
 					    <!-- <button type="button"  class="plans-calculate-btn">요금제 조회</button> -->
 					    </form>
                     </td>
@@ -104,8 +105,9 @@
             </tbody>
         </table>
     </section>
-   
-
+    
+   <button id="downloadExcelBtn">엑셀다운</button>
+	
     <!-- 요금제 구분 테이블 -->
     <div class="plans-summary">
     
@@ -130,6 +132,11 @@
 
 <script type="text/javascript" src="<c:url value='/js/jquery-3.7.1.min.js'/>"></script>
 <script type="text/javascript">
+
+
+
+
+
 $(document).ready(function() {
  
     $(document).on("click", ".plans-filter-btn[data-manufacturer]", function(e) {
@@ -158,6 +165,15 @@ $(document).ready(function() {
             }
         });
     }
+    
+    
+   
+    $('#downloadExcelBtn').click(function() {
+        window.location.href = "/phone/downloadExcel";  // 엑셀 다운로드 요청
+    });
+    
+    
+    
 
     function filterPlansByDivision(division) {
     	 
@@ -166,7 +182,12 @@ $(document).ready(function() {
         $.ajax({
             url: "<c:url value="/phone/phonePlansTable"/>",
             type: "POST",
-            data: { planProductType: division },
+            data: { planProductType: division 
+            		
+            
+            	},
+            
+            
             beforeSend: function(xhr) {
                 xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
             },
