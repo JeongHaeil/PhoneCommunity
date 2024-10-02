@@ -76,7 +76,7 @@
 
         <div class="form-group">
             <label for="image">이미지 업로드:</label>
-            <input type="file" class="form-control-file" name=uploaderFileList accept="image/*" value="${board.boardImage }" multiple="multiple">
+            <input type="file" class="form-control-file" name=uploaderFileList accept="image/*"  multiple="multiple">
         </div>
         <div class="mt-2">
 		<button type="button" class="btn btn-dark" onclick="window.location.href='<c:url value='/board/boardlist/${boardCode }'/>'">목록</button>
