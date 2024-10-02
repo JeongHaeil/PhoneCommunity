@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.HtmlUtils;
 
@@ -25,15 +29,18 @@ import xyz.itwill.service.ProductService;
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
+    private final WebApplicationContext context;
     
     private static final String UPLOAD_DIR = "C:/upload/"; // 파일 업로드 디렉토리 설정 (경로는 환경에 맞게 변경)
 
     @RequestMapping("/list")
     public String list(@RequestParam Map<String, Object> map, Model model) {
-        model.addAttribute("resultMap", productService.getProductList(map));
+        Map<String, Object> resultMap = productService.getProductList(map);
+        model.addAttribute("result", resultMap); // 수정된 부분
         model.addAttribute("searchMap", map);
         return "product/productlist";
     }
+
     
     @RequestMapping(value= "/register", method = RequestMethod.GET)
     public String register() {
@@ -41,36 +48,23 @@ public class ProductController {
     }
     
     @RequestMapping(value= "/register", method = RequestMethod.POST)
-    public String register(@ModelAttribute Product product, @RequestParam("imageFile") MultipartFile productImage) {
+    public String register(@ModelAttribute Product product, List<MultipartFile> productImage2) throws IllegalStateException, IOException {
     	System.out.println("컨스톨러 실행");
-        try {
-        	if(productImage.isEmpty()) {
-        		 return "redirect:/product/list";
-        	}
-        	System.out.println("이미지 삽입");
-            // 이미지 파일 업로드 처리
-            if (!productImage.isEmpty()) {
-                // 업로드된 파일 이름 생성 (고유하게 하기 위해 현재 시간 사용)
-                String fileName = System.currentTimeMillis() + "_" + productImage.getOriginalFilename();
-                // 파일 저장 경로 설정
-                File file = new File("C:/upload/" + fileName); // 파일 경로는 환경에 맞게 설정하세요
-                productImage.transferTo(file); // 파일 저장
-
-                // Product 객체에 파일 이름 저장
-                product.setProductImage(fileName);
-            }
-
-            // 기타 필드 처리
-            product.setProcutSubject(HtmlUtils.htmlEscape(product.getProcutSubject()));
-            product.setProcutContent(HtmlUtils.htmlEscape(product.getProcutContent()));
-
-            // Product 등록
-            productService.addProduct(product);
-        } catch (IOException e) {
-            e.printStackTrace(); // 파일 업로드 오류 처리
-        }
-
-        return "redirect:/product/list";
+    	
+    	String uploadDirectory=context.getServletContext().getRealPath("/resources/uploadFile/freeboard_image");
+		List<String> filenameList=new ArrayList<String>();
+		for(MultipartFile multipartFile : productImage2) {
+			if(!multipartFile.isEmpty()) {
+				String uploadFilename=UUID.randomUUID().toString()+"_"+multipartFile.getOriginalFilename();
+				File file=new File(uploadDirectory,uploadFilename);
+				multipartFile.transferTo(file);
+				filenameList.add(uploadFilename);
+			}			
+		}
+		productService.addProduct(product);
+		return "product/productlist";
+        
+		
     }
     
     @RequestMapping("/detail")
@@ -104,8 +98,8 @@ public class ProductController {
                 product.setProductImage(fileName); // 파일명을 product 객체에 저장
             }
 
-            product.setProcutSubject(HtmlUtils.htmlEscape(product.getProcutSubject()));
-            product.setProcutContent(HtmlUtils.htmlEscape(product.getProcutContent()));
+            product.setProductSubject(HtmlUtils.htmlEscape(product.getProductSubject()));
+            product.setProductContent(HtmlUtils.htmlEscape(product.getProductContent()));
             productService.modifyProduct(product);
         } catch (IOException e) {
             e.printStackTrace(); // 파일 업로드 오류 처리

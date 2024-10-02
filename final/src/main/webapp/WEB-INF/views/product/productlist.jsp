@@ -214,14 +214,14 @@
                 </div>
                 <img src="${pageContext.request.contextPath}/upload/${product.productImage}" alt="상품 이미지" class="img-fluid">
                 <div class="product-meta">
-                  <span class="text-muted">판매</span>, <span>${product.procutRegisterdate}</span>
+                  <span class="text-muted">판매</span>, <span>${product.productRegisterdate}</span>
                 </div>
-                <p class="product-title">${product.procutSubject}</p>
+                <p class="product-title">${product.productSubject}</p>
                 <div class="product-details">
                   <p>· 배송 방법: 
                     <c:choose>
-                      <c:when test="${product.prodcutMode == 1}">직거래</c:when>
-                      <c:when test="${product.prodcutMode == 2}">안전거래</c:when>
+                      <c:when test="${product.productMode == 1}">직거래</c:when>
+                      <c:when test="${product.productMode == 2}">안전거래</c:when>
                       <c:otherwise>택배</c:otherwise>
                     </c:choose>
                   </p>
@@ -234,7 +234,7 @@
                   </div>
                   <div class="stats">
                     <span>💬 0</span>
-                    <span>👁️ ${product.prodcutCount}</span>
+                    <span>👁️ ${product.productCount}</span>
                   </div>
                 </div>
               </div>

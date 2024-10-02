@@ -22,26 +22,22 @@ public class ProductDAOImpl implements ProductDAO {
 
 	@Override
 	public int updateProduct(Product product) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.getMapper(ProductMapper.class).updateProduct(product);
 	}
 
 	@Override
 	public int deleteProduct(int productIdx) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.getMapper(ProductMapper.class).deleteProduct(productIdx);
 	}
 
 	@Override
 	public Product selectPoridctByNum(int productIdx) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.getMapper(ProductMapper.class).selectProductByNum(productIdx);
 	}
 
 	@Override
 	public int selectProductCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.getMapper(ProductMapper.class).selectProductCount(map);
 	}
 
 	@Override

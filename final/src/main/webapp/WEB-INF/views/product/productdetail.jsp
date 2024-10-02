@@ -30,7 +30,7 @@
 
     <div class="container">
         <!-- 제품명 -->
-        <div class="product-title">${product.procutSubject}</div>
+        <div class="product-title">${product.productSubject}</div>
 
         <!-- 가격 -->
         <div class="price">
@@ -39,7 +39,7 @@
         </div>
 
         <!-- 시간 정보 -->
-        <div class="time-info">${product.procutRegisterdate} · 조회 ${product.prodcutCount} · 채팅 1 · 찜 0</div>
+        <div class="time-info">${product.productRegisterdate} · 조회 ${product.productCount} · 채팅 1 · 찜 0</div>
 
         <!-- 제품 이미지와 정보 -->
         <div class="product-details">
@@ -62,16 +62,16 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>${product.product_model_status}</td>
+                            <td>${product.productModelStatus}</td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${product.prodcutMode == 1}">직거래</c:when>
-                                    <c:when test="${product.prodcutMode == 2}">안전거래</c:when>
+                                    <c:when test="${product.productMode == 1}">직거래</c:when>
+                                    <c:when test="${product.productMode == 2}">안전거래</c:when>
                                     <c:otherwise>택배</c:otherwise>
                                 </c:choose>
                             </td>
-                            <td>${product.product_delivery}</td>
-                            <td>${product.product_category}</td>
+                            <td>${product.productDelivery}</td>
+                            <td>${product.productCategory}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -79,7 +79,7 @@
                 <!-- 추가 정보 -->
                 <div class="extra-info">
                     <ul>
-                        <li><b>내용:</b> ${product.procutContent}</li>
+                        <li><b>내용:</b> ${product.productContent}</li>
                     </ul>
                 </div>
 
@@ -98,11 +98,11 @@
                 <h4 style="font-weight: bold;">상품 정보</h4>
                 <div class="left-wrap" style="border-top: 1px solid #e1e1e1; margin-top: 25px;">
                     <ul style="margin-top: 25px;">
-                        <li>- 상품명: ${product.procutSubject}</li>
+                        <li>- 상품명: ${product.productSubject}</li>
                         <li>- 가격: ${product.productPrice}원</li>
-                        <li>- 등록일: ${product.procutRegisterdate}</li>
-                        <li>- 상품상태: ${product.product_model_status}</li>
-                        <li>- 내용: ${product.procutContent}</li>
+                        <li>- 등록일: ${product.productRegisterdate}</li>
+                        <li>- 상품상태: ${product.productModelStatus}</li>
+                        <li>- 내용: ${product.productContent}</li>
                     </ul>
                 </div>
             </div>
@@ -141,7 +141,7 @@
                     <div class="posted-product">
                         <img src="https://via.placeholder.com/60" alt="아이폰 13미니">
                         <div class="posted-product-info">
-                            ${product.procutSubject}<br>
+                            ${product.productSubject}<br>
                             ${product.productPrice}원
                         </div>
                     </div>

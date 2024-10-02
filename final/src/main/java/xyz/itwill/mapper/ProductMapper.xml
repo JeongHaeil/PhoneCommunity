@@ -1,53 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xyz.itwill.mapper.ProductMapper">
-	<insert id="insertProuduct">
-	<selectKey resultType="int" keyProperty="productIdx">
-		select product_seq.nextval from dual
-	</selectKey>
-	insert into product values(#{productIdx}, #{productUserid}, #{procutSubject}, #{procutContent}, #{productImage}, #{procutRegisterdate}, #{prodcutMode}, #{productPrice}, #{product_model_status}, #{product_delivery}, #{product_category}, sysdate)
-	</insert>
-	
-	<update id="updateProduct">
-		update product set procutSubject=#{procutSubject}, procutContent=#{procutContent} where productIdx=#{productIdx}
-	</update>
-	
-		<delete id="deleteProduct">
-		delete from product where productIdx =#{productIdx}
-	</delete>
-	
-	<select id="selectProductByNum" resultType="Product">
-	select productUserid, procutSubject, procutContent, productImage, prodcutCount, prodcutMode, productPrice, product_model_status, product_delivery, product_category
-	from product  join users on productUserid = userId where productIdx =#{productIdx}
-	</select>
-	
-	<select id="selectProductCount" resultType="int">
-		select count(*) from product  join users on productUserid=userId
-		<if test="keyword != null and keyword != ''">
-			<bind name="word" value="'%'+keyword+'%'"/>
-			where ${column} like #{word}
-		</if>
-	</select>
-	
-	<select id="selectProductList" resultType="Product">
-    select * from (
-        select rownum rn, product.*
-        from (
-            select product_idx as productIdx, product_user_id as productUserid,
-                   product_subject as procutSubject, product_register_date as procutRegisterdate,
-                   product_count as prodcutCount, product_mode as prodcutMode,
-                   product_price as productPrice
-            from product
-            <if test="keyword != null and keyword != ''">
-                <bind name="word" value="'%' + keyword + '%'" />
-                where ${column} like #{word}
-            </if>
-            order by product_idx desc
-        ) product
-    ) where rn between #{startRow} and #{endRow}
-</select>
+    <insert id="insertProduct">
+        <selectKey resultType="int" keyProperty="productIdx" order="BEFORE">
+            SELECT product_seq.NEXTVAL FROM dual
+        </selectKey>
+        INSERT INTO product (
+            product_idx, product_user_id, product_subject, product_content, product_image,
+            product_register_date, product_mode, product_price, product_model_status,
+            product_delivery, product_category
+        ) VALUES (
+            #{productIdx}, #{productUserid}, #{productSubject}, #{productContent}, #{productImage},
+            SYSDATE, #{productMode}, #{productPrice}, #{productModelStatus},
+            #{productDelivery}, #{productCategory}
+        )
+    </insert>
 
-	
-	
+    <update id="updateProduct">
+        UPDATE product 
+        SET product_subject = #{productSubject}, product_content = #{productContent} 
+        WHERE product_idx = #{productIdx}
+    </update>
 
+    <delete id="deleteProduct">
+        DELETE FROM product WHERE product_idx = #{productIdx}
+    </delete>
+
+    <select id="selectProductByNum" resultType="Product">
+        SELECT product_user_id AS productUserid, product_subject AS productSubject, 
+               product_content AS productContent, product_image AS productImage, 
+               product_count AS productCount, product_mode AS productMode, 
+               product_price AS productPrice, product_model_status AS productModelStatus, 
+               product_delivery AS productDelivery, product_category AS productCategory
+        FROM product 
+        JOIN users ON product_user_id = user_id 
+        WHERE product_idx = #{productIdx}
+    </select>
+
+    <select id="selectProductCount" resultType="int">
+        SELECT COUNT(*) 
+        FROM product 
+        JOIN users ON product_user_id = user_id
+        <if test="keyword != null and keyword != ''">
+            <bind name="word" value="'%' + keyword + '%'" />
+            WHERE ${column} LIKE #{word}
+        </if>
+    </select>
+
+    <select id="selectProductList" resultType="Product">
+        SELECT * FROM (
+            SELECT rownum rn, product.*
+            FROM (
+                SELECT product_idx AS productIdx, product_user_id AS productUserid,
+                       product_subject AS productSubject, product_register_date AS productRegisterDate,
+                       product_count AS productCount, product_mode AS productMode,
+                       product_price AS productPrice
+                FROM product
+                <if test="keyword != null and keyword != ''">
+                    <bind name="word" value="'%' + keyword + '%'" />
+                    WHERE ${column} LIKE #{word}
+                </if>
+                ORDER BY product_idx DESC
+            ) product
+        ) WHERE rn BETWEEN #{startRow} AND #{endRow}
+    </select>
 </mapper>

@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -146,18 +147,18 @@
 <body>
 
     <div class="container mt-5">
-      <form id="productForm" action="${pageContext.request.contextPath}/register"  method="post"  enctype="multipart/form-data">
+        <form id="productForm" action="${pageContext.request.contextPath}/register" method="post" enctype="multipart/form-data">
             <!-- 이미지 업로드 -->
             <div class="mb-3">
                 <div class="upload-container" id="uploadContainer">
                     <span class="upload-text">이미지 선택 (최대 10장)</span>
                 </div>
-                <input type="file" id="fileInput" class="d-none" name="productImage"  >
+                <input type="file" id="fileInput" class="d-none" name="productImage2" multiple="multiple">
             </div>
 
             <!-- 상품명 입력 -->
             <div class="mb-3">
-                <input type="text" class="form-control" name="procutSubject" placeholder="상품명">
+                <input type="text" class="form-control" name="productSubject" placeholder="상품명">
             </div>
 
             <!-- 카테고리 선택 -->
@@ -196,7 +197,7 @@
 
             <!-- 유의사항 텍스트박스 -->
             <div class="mb-3">
-                <textarea class="form-control notice-box" name="procutContent" id="noticeBox" rows="4" onclick="clearPlaceholder(this)">
+                <textarea class="form-control notice-box" name="productContent" id="noticeBox" rows="4" onclick="clearPlaceholder(this)">
 - 상품명(브랜드)
 - 구매 시기
 - 사용 기간
@@ -215,12 +216,14 @@
             </div>
 
             <!-- 선택한 거래방법을 저장할 히든 필드 -->
-            <input type="hidden" name="prodcutMode" id="dealMethod" value="택배">
+            <input type="hidden" name="productMode" id="dealMethod" value="택배">
 
             <!-- 등록 버튼 -->
             <button type="submit" class="btn-submit">등록</button>
+            <sec:csrfInput/>
         </form>
     </div>
+    
     <script>
         const uploadContainer = document.getElementById('uploadContainer');
         const fileInput = document.getElementById('fileInput');
