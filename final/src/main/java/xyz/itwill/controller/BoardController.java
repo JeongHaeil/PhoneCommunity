@@ -131,7 +131,7 @@ public class BoardController {
 			CustomUserDetails user=(CustomUserDetails)authentication.getPrincipal();
 			board.setBoardUserId(user.getUserId());
 			
-			String uploadDirectory=context.getServletContext().getRealPath("/resources/uploadFile/board");
+			String uploadDirectory=context.getServletContext().getRealPath("/resources/images/uploadFile/board");
 			List<String> filenameList=new ArrayList<String>();
 			for(MultipartFile multipartFile : uploaderFileList) {
 				if(!multipartFile.isEmpty()) {
@@ -146,7 +146,7 @@ public class BoardController {
 			}
 			board.setBoardIp(request.getRemoteAddr());
 			board.setBoardCode(boardCode);
-			board.setBoardContent(board.getBoardContent().replace("<","&lt;").replace(">","&gt;").replace("\n", "<br>"));
+			//board.setBoardContent(board.getBoardContent().replace("<","&lt;").replace(">","&gt;").replace("\n", "<br>"));
 			board.setBoardTitle(boardtag+" "+board.getBoardTitle().replace("<","&lt;").replace(">","&gt;"));
 			boardService.addFreeboard(board);			
 		}else {
@@ -155,7 +155,7 @@ public class BoardController {
 		return "redirect:/board/boardlist/"+boardCode;
 	}
 	
-	//@PreAuthorize("hasRole('ROLE_USER') or principal.userid eq #map['writer'] ")
+	
 	@RequestMapping(value ="/boardModify/{boardCode}/{boardPostIdx}", method = RequestMethod.GET)
 	public String boardModify(@PathVariable int boardCode, @PathVariable int boardPostIdx, Model model,Authentication authentication) {	
 		if(authentication != null) {
@@ -187,9 +187,8 @@ public class BoardController {
 	@RequestMapping(value ="/boardModify/{boardCode}/{boardPostIdx}", method = RequestMethod.POST)
 	public String boardModify(@PathVariable int boardCode, @PathVariable int boardPostIdx,@RequestParam String boardtag,@ModelAttribute Board board,List<MultipartFile> uploaderFileList,HttpServletRequest request) throws IllegalStateException, IOException {
 		Board oldboard=boardService.getboard(boardPostIdx);
-		
-		if(board.getBoardImage()!=null) {
-			String uploadDirectory=context.getServletContext().getRealPath("/resources/uploadFile/board");		
+		if(uploaderFileList!=null) {
+			String uploadDirectory=context.getServletContext().getRealPath("/resources/images/uploadFile/board");		
 			List<String> filenameList=new ArrayList<String>();
 			if(uploaderFileList!=null&&!uploaderFileList.isEmpty()) {
 				for(MultipartFile multipartFile : uploaderFileList) {

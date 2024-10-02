@@ -145,7 +145,7 @@
 						 <c:choose>
 							<c:when test="${imageArray != null && !empty imageArray}">
 								<c:forEach var="boardgetimage" items="${imageArray }" varStatus="status">
-									<img  src="<c:url value="/resources/uploadFile/board/${fn:trim(boardgetimage) }"/>" width="200" >					
+									<img  src="<c:url value="/resources/images/uploadFile/board/${fn:trim(boardgetimage) }"/>" width="200" >					
 								</c:forEach>
 							</c:when>
 							<c:otherwise>
@@ -427,26 +427,10 @@
 												}
 												
 												if (this.commentUserId == result.board.boardUserId) {//세션에서 값 가져와서 로그인 유저와 비교 <---잘못된 작성
-													html += "<span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: blue;'>작성자</span>";
-													//권한 수정
-													html +="<sec:authorize access='isAuthenticated()'>";
-													html +="<sec:authorize access='hasRole("ROLE_SUPER_ADMIN")' var='admin'/>"
-													html +="<sec:authentication property='principal' var='userinfo'/>"
-													html +=	"<c:if test='${admin || userinfo.userId eq board.boardUserId }'>"
-																//이건 원래 있던거
-															html += "<a class='aCursorActive' onclick='deleteComment("+ this.commentIdx+ ");'><span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: red;'>삭제</span></a>";
-													html +="</c:if>"					
-													html +="</sec:authorize>"
-												}else{
-													//권한 수정
-													html +="<sec:authorize access='isAuthenticated()'>";
-													html +="<sec:authorize access='hasRole("ROLE_SUPER_ADMIN")' var='admin'/>"
-													html +="<sec:authentication property='principal' var='userinfo'/>"
-													html +=	"<c:if test='${admin || userinfo.userId eq board.boardUserId }'>"
-																//이건 원래 있던거
-															html += "<a class='aCursorActive' onclick='deleteComment("+ this.commentIdx+ ");'><span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: red;'>삭제</span></a>";
-													html +="</c:if>"					
-													html +="</sec:authorize>"
+													html += "<span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: blue;'>작성자</span>";										
+												}
+												if(this.commentUserId == result.board.boardUserId || result.boardAdmin !=null){
+													html += "<a class='aCursorActive' onclick='deleteComment("+ this.commentIdx+ ");'><span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: red;'>삭제</span></a>";													
 												}
 												
 												html += "</div>";												
@@ -468,7 +452,7 @@
 													}													
 													if (this.commentImage
 															&& this.commentImage.length != 0) {
-														html += "<img  src='<c:url value='/resources/uploadFile/comment/"+this.commentImage+"'/>' width='80' >";						
+														html += "<img  src='<c:url value='/resources/images/uploadFile/comment/"+this.commentImage+"'/>' width='80' >";						
 													}
 												}
 												html += "</div>";
