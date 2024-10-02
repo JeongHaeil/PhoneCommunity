@@ -145,7 +145,7 @@
 						 <c:choose>
 							<c:when test="${imageArray != null && !empty imageArray}">
 								<c:forEach var="boardgetimage" items="${imageArray }" varStatus="status">
-									<img  src="<c:url value="../uploadFile/freeboard_image/${boardgetimage }"/>" >						
+									<img  src="<c:url value="/resources/uploadFile/board/${fn:trim(boardgetimage) }"/>" width="200" >					
 								</c:forEach>
 							</c:when>
 							<c:otherwise>
@@ -448,6 +448,7 @@
 													html +="</c:if>"					
 													html +="</sec:authorize>"
 												}
+												
 												html += "</div>";												
 												html += "<div class='btn-group btn-group-sm aCursorActive' role='group' aria-label='Small button group'>";
 												if(this.commentStatus>1){
@@ -460,17 +461,15 @@
 												if(this.commentStatus>1){
 													html +="<p><span style='color: pink;'>삭제된 댓글입니다.</span></p>"
 												}else{
-													if (this.commentImage
-															&& this.commentImage.length != 0) {
-														html += "<p>"
-																+ this.content
-																+ "</p>";//이미지 추가 경로 설정							
-													}
 													if(this.commentRestep!=0){
 													html += "<p><span style='color: blue;'>@"+this.commentReuser+"&nbsp;&nbsp;&nbsp;   </span>" + this.content+ "</p>";																										
 													}else{
 													html += "<p>" + this.content+ "</p>";													
 													}													
+													if (this.commentImage
+															&& this.commentImage.length != 0) {
+														html += "<img  src='<c:url value='/resources/uploadFile/comment/"+this.commentImage+"'/>' width='80' >";						
+													}
 												}
 												html += "</div>";
 												html += "<div class='d-flex justify-content-between'>";

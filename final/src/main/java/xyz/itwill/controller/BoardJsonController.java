@@ -80,7 +80,7 @@ public class BoardJsonController {
 			putcomment.setCommentUserId(user.getUserId());	
 			putcomment.setContent(content.replace("<","&lt;").replace(">","&gt;").replace("\n", "<br>"));
 			if (commentImage != null && !commentImage.isEmpty()) {
-				String uploadDirectory=context.getServletContext().getRealPath("/resources/uploadFile/comment_image");
+				String uploadDirectory=context.getServletContext().getRealPath("/resources/uploadFile/comment");
 				String uploadFilename=UUID.randomUUID().toString()+"_"+commentImage.getOriginalFilename();
 				File file=new File(uploadDirectory, uploadFilename);
 				commentImage.transferTo(file);
@@ -102,7 +102,7 @@ public class BoardJsonController {
 			putcomment.setCommentUserId(user.getUserId());
 			putcomment.setContent(content.replace("<","&lt;").replace(">","&gt;").replace("\n", "<br>"));
 			if (commentImage != null && !commentImage.isEmpty()) {
-				String uploadDirectory=context.getServletContext().getRealPath("/resources/uploadFile/freeboard_image");
+				String uploadDirectory=context.getServletContext().getRealPath("/resources/uploadFile/comment");
 				String uploadFilename=UUID.randomUUID().toString()+"_"+commentImage.getOriginalFilename();
 				File file=new File(uploadDirectory, uploadFilename);
 				commentImage.transferTo(file);

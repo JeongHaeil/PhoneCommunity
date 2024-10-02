@@ -131,7 +131,7 @@ public class BoardController {
 			CustomUserDetails user=(CustomUserDetails)authentication.getPrincipal();
 			board.setBoardUserId(user.getUserId());
 			
-			String uploadDirectory=context.getServletContext().getRealPath("/resources/uploadFile/freeboard_image");
+			String uploadDirectory=context.getServletContext().getRealPath("/resources/uploadFile/board");
 			List<String> filenameList=new ArrayList<String>();
 			for(MultipartFile multipartFile : uploaderFileList) {
 				if(!multipartFile.isEmpty()) {
@@ -186,25 +186,28 @@ public class BoardController {
 	@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_SUPER_ADMIN')")
 	@RequestMapping(value ="/boardModify/{boardCode}/{boardPostIdx}", method = RequestMethod.POST)
 	public String boardModify(@PathVariable int boardCode, @PathVariable int boardPostIdx,@RequestParam String boardtag,@ModelAttribute Board board,List<MultipartFile> uploaderFileList,HttpServletRequest request) throws IllegalStateException, IOException {
-		Board oldboard=boardService.getboard(boardPostIdx);	
-		String uploadDirectory=context.getServletContext().getRealPath("/resources/uploadFile/freeboard_image");
-	
-		List<String> filenameList=new ArrayList<String>();
-		if(uploaderFileList!=null&&!uploaderFileList.isEmpty()) {
-			for(MultipartFile multipartFile : uploaderFileList) {
-				if(!multipartFile.isEmpty()) {
-					String uploadFilename=UUID.randomUUID().toString()+"_"+multipartFile.getOriginalFilename();
-					File file=new File(uploadDirectory,uploadFilename);
-					multipartFile.transferTo(file);
-					filenameList.add(uploadFilename);
-				}			
-			}
-			if(!filenameList.isEmpty()) {			
-				board.setBoardImage(filenameList.toString());
+		Board oldboard=boardService.getboard(boardPostIdx);
+		
+		if(board.getBoardImage()!=null) {
+			String uploadDirectory=context.getServletContext().getRealPath("/resources/uploadFile/board");		
+			List<String> filenameList=new ArrayList<String>();
+			if(uploaderFileList!=null&&!uploaderFileList.isEmpty()) {
+				for(MultipartFile multipartFile : uploaderFileList) {
+					if(!multipartFile.isEmpty()) {
+						String uploadFilename=UUID.randomUUID().toString()+"_"+multipartFile.getOriginalFilename();
+						File file=new File(uploadDirectory,uploadFilename);
+						multipartFile.transferTo(file);
+						filenameList.add(uploadFilename);
+					}			
+				}
+				if(!filenameList.isEmpty()) {			
+					oldboard.setBoardImage(filenameList.toString());
+				}
 			}
 		}
-		board.setBoardTitle(boardtag+" "+board.getBoardTitle().replace("<","&lt;").replace(">","&gt;"));
-		boardService.updateFreeboard(board);	
+		oldboard.setBoardTitle(boardtag+" "+board.getBoardTitle().replace("<","&lt;").replace(">","&gt;"));
+		oldboard.setBoardContent(board.getBoardContent());
+		boardService.updateFreeboard(oldboard);	
 		return "redirect:/board/boarddetail/"+boardCode+"/"+boardPostIdx;
 	}
 	
