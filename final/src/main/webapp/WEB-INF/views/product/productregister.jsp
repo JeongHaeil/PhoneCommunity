@@ -146,23 +146,23 @@
 <body>
 
     <div class="container mt-5">
-      <form id="productForm" action="${pageContext.request.contextPath}/product/productregister" method="post" enctype="multipart/form-data">
+      <form id="productForm" action="${pageContext.request.contextPath}/register"  method="post"  enctype="multipart/form-data">
             <!-- 이미지 업로드 -->
             <div class="mb-3">
                 <div class="upload-container" id="uploadContainer">
                     <span class="upload-text">이미지 선택 (최대 10장)</span>
                 </div>
-                <input type="file" id="fileInput" class="d-none" name="imageFile" accept="image/*" multiple>
+                <input type="file" id="fileInput" class="d-none" name="productImage"  >
             </div>
 
             <!-- 상품명 입력 -->
             <div class="mb-3">
-                <input type="text" class="form-control" name="productName" placeholder="상품명">
+                <input type="text" class="form-control" name="procutSubject" placeholder="상품명">
             </div>
 
             <!-- 카테고리 선택 -->
             <div class="mb-3">
-                <select class="form-control category-select" name="category">
+                <select class="form-control category-select" name="productCategory">
                     <option value="" disabled selected>카테고리 선택</option>
                     <option value="휴대폰">휴대폰</option>
                     <option value="태블릿">태블릿</option>
@@ -173,12 +173,12 @@
 
             <!-- 판매가격 입력 -->
             <div class="mb-3 price-input-container">
-                <input type="text" class="form-control price-input" name="price" placeholder="₩ 판매가격">
+                <input type="text" class="form-control price-input" name="productPrice" placeholder="₩ 판매가격">
             </div>
 
             <!-- 배송비 선택 -->
             <div class="mb-3">
-                <select class="form-control shipping-select" name="shippingFee">
+                <select class="form-control shipping-select" name="productDelivery">
                     <option value="" disabled selected>배송비 선택</option>
                     <option value="별도">별도</option>
                     <option value="포함">포함</option>
@@ -192,12 +192,12 @@
             </div>
 
             <!-- 선택한 제품상태를 저장할 히든 필드 -->
-            <input type="hidden" name="productCondition" id="productCondition" value="중고">
+            <input type="hidden" name="productModelStatus" id="productCondition" value="중고">
 
             <!-- 유의사항 텍스트박스 -->
             <div class="mb-3">
-                <textarea class="form-control notice-box" name="description" id="noticeBox" rows="4" onclick="clearPlaceholder(this)">
-                    - 상품명(브랜드)
+                <textarea class="form-control notice-box" name="procutContent" id="noticeBox" rows="4" onclick="clearPlaceholder(this)">
+- 상품명(브랜드)
 - 구매 시기
 - 사용 기간
 - 하자 여부
@@ -215,20 +215,19 @@
             </div>
 
             <!-- 선택한 거래방법을 저장할 히든 필드 -->
-            <input type="hidden" name="dealMethod" id="dealMethod" value="택배">
+            <input type="hidden" name="prodcutMode" id="dealMethod" value="택배">
 
             <!-- 등록 버튼 -->
             <button type="submit" class="btn-submit">등록</button>
         </form>
     </div>
-
     <script>
         const uploadContainer = document.getElementById('uploadContainer');
         const fileInput = document.getElementById('fileInput');
 
         uploadContainer.addEventListener('click', () => {
             fileInput.click();
-        });
+        }); 
 
         fileInput.addEventListener('change', function () {
             uploadContainer.innerHTML = ''; // Clear previous images

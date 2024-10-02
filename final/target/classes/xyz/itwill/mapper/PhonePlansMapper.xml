@@ -5,7 +5,7 @@
 <mapper namespace="xyz.itwill.mapper.PhonePlansMapper">
 
     <select id="selectPhonePlans" parameterType="map" resultType="PhonePlans">
-        SELECT 
+         SELECT 
         phone_plans.plan_id, 
         phone_plans.carrier_id, 
         phone_plans.product_id, 
@@ -14,15 +14,15 @@
         phone_plans.plan_months, 
         phone_plans.plan_option, 
         phone_plans.plan_additional,
-        carriers.carrier_name,             -- 통신사 이름
-        products.product_name,             -- 제품 이름
-        plan_details.plan_name,            -- 요금제 이름
-        plan_details.plan_contract_type,   -- 약정 구분
-        plan_details.plan_data,            -- 데이터 용량
-        plan_details.additional_support,   -- 추가 지원금
-        plan_details.monthly_installment_fee, -- 월 할부금
-        plan_details.installment_interest, -- 할부 이자
-        plan_details.total_monthly_fee     -- 총 월 요금
+        carriers.carrier_name,             
+        products.product_name,             
+        plan_details.plan_name,            
+        plan_details.plan_contract_type,   
+        plan_details.plan_data,            
+        plan_details.additional_support,   
+        plan_details.monthly_installment_fee, 
+        plan_details.installment_interest, 
+        plan_details.total_monthly_fee     
     FROM 
         phone_plans
     JOIN 
@@ -31,13 +31,14 @@
         products ON phone_plans.product_id = products.product_id
     JOIN 
         plan_details ON phone_plans.plan_id = plan_details.plan_id
-    WHERE 
+      WHERE 
         phone_plans.carrier_id = #{carrierId}
     AND 
         phone_plans.product_id = #{productId}
     AND 
         phone_plans.plan_product_type = #{planProductType}
-    AND 
-        phone_plans.plan_type = #{planType}
+    <if test="planType != null and planType != ''">
+        AND phone_plans.plan_type = #{planType} 
+    </if> 
     </select>
 </mapper>

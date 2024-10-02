@@ -8,8 +8,46 @@
 	insert into product values(#{productIdx}, #{productUserid}, #{procutSubject}, #{procutContent}, #{productImage}, #{procutRegisterdate}, #{prodcutMode}, #{productPrice}, #{product_model_status}, #{product_delivery}, #{product_category}, sysdate)
 	</insert>
 	
-	<select id="selectProductList" resultType="xyz.itwill.dto.Product">
-    SELECT * FROM product ORDER BY product_register_date DESC
+	<update id="updateProduct">
+		update product set procutSubject=#{procutSubject}, procutContent=#{procutContent} where productIdx=#{productIdx}
+	</update>
+	
+		<delete id="deleteProduct">
+		delete from product where productIdx =#{productIdx}
+	</delete>
+	
+	<select id="selectProductByNum" resultType="Product">
+	select productUserid, procutSubject, procutContent, productImage, prodcutCount, prodcutMode, productPrice, product_model_status, product_delivery, product_category
+	from product  join users on productUserid = userId where productIdx =#{productIdx}
+	</select>
+	
+	<select id="selectProductCount" resultType="int">
+		select count(*) from product  join users on productUserid=userId
+		<if test="keyword != null and keyword != ''">
+			<bind name="word" value="'%'+keyword+'%'"/>
+			where ${column} like #{word}
+		</if>
+	</select>
+	
+	<select id="selectProductList" resultType="Product">
+    select * from (
+        select rownum rn, product.*
+        from (
+            select product_idx as productIdx, product_user_id as productUserid,
+                   product_subject as procutSubject, product_register_date as procutRegisterdate,
+                   product_count as prodcutCount, product_mode as prodcutMode,
+                   product_price as productPrice
+            from product
+            <if test="keyword != null and keyword != ''">
+                <bind name="word" value="'%' + keyword + '%'" />
+                where ${column} like #{word}
+            </if>
+            order by product_idx desc
+        ) product
+    ) where rn between #{startRow} and #{endRow}
 </select>
+
+	
+	
 
 </mapper>

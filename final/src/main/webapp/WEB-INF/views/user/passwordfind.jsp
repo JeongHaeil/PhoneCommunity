@@ -42,17 +42,24 @@
 <div class="password-reset-container">
     <h3>비밀번호 찾기</h3>
 
-    <form action="/find-password" method="post">
-        <div class="mb-3">
-            <label for="userId" class="form-label">아이디</label>
-            <input type="text" class="form-control" id="userId" name="userId" placeholder="아이디를 입력하세요" required>
-        </div>
-        <div class="mb-3">
-            <label for="emailForPassword" class="form-label">가입 시 사용한 이메일</label>
-            <input type="email" class="form-control" id="emailForPassword" name="emailForPassword" placeholder="이메일을 입력하세요" required>
-        </div>
-        <button type="submit" class="btn btn-custom">비밀번호 찾기</button>
-    </form>
+    <form action="/final/user/findPassword" method="post">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    <div class="mb-3">
+        <label for="userId" class="form-label">아이디</label>
+        <input type="text" class="form-control" id="userId" name="userId" placeholder="아이디를 입력하세요" required>
+    </div>
+    <div class="mb-3">
+        <label for="userName" class="form-label">이름</label>
+        <input type="text" class="form-control" id="userName" name="userName" placeholder="이름을 입력하세요" required>
+    </div>
+    <div class="mb-3">
+        <label for="userEmail" class="form-label">이메일</label>
+        <input type="email" class="form-control" id="userEmail" name="userEmail" placeholder="이메일을 입력하세요" required>
+    </div>
+    <button type="submit" class="btn btn-custom">비밀번호 찾기</button>
+</form>
+
+
 </div>
 
 <!-- 부트스트랩 JS -->

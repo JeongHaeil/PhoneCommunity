@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -133,7 +134,14 @@
 					<div class="card-body">
 						<h5 class="card-title" style="color:#f05d5e;">${board.boardTitle }</h5>
 						<%-- 삭제 수정은 로그인 유저와 작성자가 같을때만 출력 --%>
-						<p class="card-text d-flex justify-content-between aCursorActive"><small class="text-muted">작성자: ${board.userNickname} | 작성일:${board.boardResigsterDate }</small><small class="text-muted"><a onclick="deleteFreeboard();" style="color: red;">삭제</a> | <a onclick="modifyFreeboard();">수정</a></small></p>
+						<p class="card-text d-flex justify-content-between aCursorActive">
+						<small class="text-muted">작성자: ${board.userNickname} | 작성일:${board.boardResigsterDate }</small>
+							<sec:authorize access="isAuthenticated()">
+								<sec:authorize access="hasRole('ROLE_SUPER_ADMIN')" var="admin"/>
+								<sec:authentication property="principal" var="userinfo"/>	
+								<c:if test="${admin || userinfo.userId eq board.boardUserId }"><small class="text-muted"><a onclick="deleteFreeboard();" style="color: red;">삭제</a> | <a onclick="modifyFreeboard();">수정</a></small></c:if>					
+							</sec:authorize>
+						</p>
 						 <c:choose>
 							<c:when test="${imageArray != null && !empty imageArray}">
 								<c:forEach var="boardgetimage" items="${imageArray }" varStatus="status">
@@ -211,9 +219,12 @@
 				<div class="card mt-4" id="commentsNumber_0">
 					<form id="commentsList_0">
 						<div class="form-group">
+							<sec:authorize access="isAuthenticated()">
+							<input type="hidden" id="commentwriter" value="<sec:authentication property="principal.userId"/>">
+							</sec:authorize>
 							<label for="commentText">게시글에 댓글 작성</label>
 							<textarea class="form-control" id="commentText_0"
-								name="content" rows="3" required></textarea>
+								name="content" rows="3"  onclick="checkLogin()" required></textarea>
 						</div>
 						<div class="d-flex justify-content-between">
 							<div>
@@ -256,7 +267,7 @@
 			    						<c:forEach var="boards" items="${boardList}">
 			    							<tr>
 			    								<td>${boards.boardPostIdx }</td>  								
-			    								<td>○&nbsp;&nbsp;<a href="<c:url value='/board/boarddetail/${boards.boardCode }/${boards.boardPostIdx }'/>?pageNum=${pager.pageNum}&search=${search }&keyword=${keyword }" style="color: #333;">${boards.boardTitle }</a></td>
+			    								<td>&nbsp;&nbsp;<a href="<c:url value='/board/boarddetail/${boards.boardCode }/${boards.boardPostIdx }'/>?pageNum=${pager.pageNum}&search=${search }&keyword=${keyword }" style="color: #333;">${boards.boardTitle }</a></td>
 			    								<td>${boards.userNickname }</td>
 			    								<td>${fn:substring(boards.boardResigsterDate,5,10) }</td>
 			    								<td>${boards.boardCount }</td>
@@ -417,9 +428,27 @@
 												
 												if (this.commentUserId == result.board.boardUserId) {//세션에서 값 가져와서 로그인 유저와 비교 <---잘못된 작성
 													html += "<span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: blue;'>작성자</span>";
-													html += "<a class='aCursorActive' onclick='deleteComment("+ this.commentIdx+ ");'><span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: red;'>삭제</span></a>";
+													//권한 수정
+													html +="<sec:authorize access='isAuthenticated()'>";
+													html +="<sec:authorize access='hasRole("ROLE_SUPER_ADMIN")' var='admin'/>"
+													html +="<sec:authentication property='principal' var='userinfo'/>"
+													html +=	"<c:if test='${admin || userinfo.userId eq board.boardUserId }'>"
+																//이건 원래 있던거
+															html += "<a class='aCursorActive' onclick='deleteComment("+ this.commentIdx+ ");'><span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: red;'>삭제</span></a>";
+													html +="</c:if>"					
+													html +="</sec:authorize>"
+												}else{
+													//권한 수정
+													html +="<sec:authorize access='isAuthenticated()'>";
+													html +="<sec:authorize access='hasRole("ROLE_SUPER_ADMIN")' var='admin'/>"
+													html +="<sec:authentication property='principal' var='userinfo'/>"
+													html +=	"<c:if test='${admin || userinfo.userId eq board.boardUserId }'>"
+																//이건 원래 있던거
+															html += "<a class='aCursorActive' onclick='deleteComment("+ this.commentIdx+ ");'><span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: red;'>삭제</span></a>";
+													html +="</c:if>"					
+													html +="</sec:authorize>"
 												}
-												html += "</div>";
+												html += "</div>";												
 												html += "<div class='btn-group btn-group-sm aCursorActive' role='group' aria-label='Small button group'>";
 												if(this.commentStatus>1){
 													
@@ -438,7 +467,7 @@
 																+ "</p>";//이미지 추가 경로 설정							
 													}
 													if(this.commentRestep!=0){
-													html += "<p><span style='color: blue;'>@"+this.userNickname+"&nbsp;&nbsp;&nbsp;   </span>" + this.content+ "</p>";																										
+													html += "<p><span style='color: blue;'>@"+this.commentReuser+"&nbsp;&nbsp;&nbsp;   </span>" + this.content+ "</p>";																										
 													}else{
 													html += "<p>" + this.content+ "</p>";													
 													}													
@@ -488,14 +517,18 @@
 						}
 					});
 		}
-
+	
 		//=========댓글 삭제버튼
 		function deleteComment(commentIdx) {
+			checkLogin();
 			var confirmCommentdelet = confirm("정말로 댓글을 삭제 하시겠습니까?");
 			if(confirmCommentdelet){				 
 				$.ajax({
 					type : "put",
 					url : "<c:url value='/rest/comment_delete'/>/" + commentIdx,
+					beforeSend: function(xhr) {
+						xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+					},
 					contentType : "application/json",
 					success : function(result) {
 						commentsListDisplay(boardCode, boardPostIdx);
@@ -509,6 +542,7 @@
 		
 		//게시글 삭제버튼
 		function deleteFreeboard(){
+			checkLogin();
 			var confirmdelet = confirm("정말로 게시글을 삭제 하시겠습니까?");
 			if(confirmdelet){
 				 window.location.href = '<c:url value="/board/boardDeleteBoard"/>/'+boardCode+"/"+boardPostIdx;
@@ -516,6 +550,7 @@
 		}
 		//게시글 수정버튼
 		function modifyFreeboard(){
+			 checkLogin();
 			var confirmdelet = confirm("게시글을 수정 하시겠습니까?");
 			if(confirmdelet){
 				 window.location.href = '<c:url value="/board/boardModify"/>/'+boardCode+"/"+boardPostIdx;
@@ -540,6 +575,9 @@
 				type : "POST",
 				url : "<c:url value='/rest/comment_insert'/>/" +boardPostIdx +"/"+commentIdx,
 				data: formData,
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+				},
 				processData: false, // jQuery가 데이터를 처리하지 않도록 설정
 		        contentType: false, // jQuery가 Content-Type을 설정하지 않도록 설정
 				success : function(result) {
@@ -554,6 +592,7 @@
 		
 		//대댓글 답글 버튼
 		function writeComment(commentIdx){
+			 checkLogin();
 			 $(".cocoment").css({ display: 'none' });
 			 $("#commentsNumber_" + commentIdx).css({ display: 'block' });
 		}
@@ -587,82 +626,146 @@
 		
 		//댓글 중 추천 버튼 클릭
 		function voteUp(commentIdx){
-			$.ajax({
-				type : "post",
-				url : "<c:url value='/rest/comment_starup'/>/" + commentIdx,
-				contentType : "application/json",
-				success : function(result) {
-					alert("댓글 추천 완료!");					
-					commentsListDisplay(boardCode, boardPostIdx);
-				},
-				error : function(xhr) {
-					alert("에러코드(게시글 검색) = " + xhr.status);
-				}
-			});
+			checkLogin();
+			var confirmcommentvoteUp = confirm("추천 하시겠습니까?");
+			if(confirmcommentvoteUp){ 
+				$.ajax({
+					type : "post",
+					url : "<c:url value='/rest/comment_starup'/>/" + commentIdx,
+					beforeSend: function(xhr) {
+						xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+					},
+					contentType : "application/json",
+					success : function(result) {
+						if(result =="success"){										
+							alert("댓글 추천 완료!");					
+						}else if(result =="pass"){
+							alert("이미 추천에 참여하셨습니다.");						
+						}
+						commentsListDisplay(boardCode, boardPostIdx);
+					},
+					error : function(xhr) {
+						alert("에러코드(게시글 검색) = " + xhr.status);
+					}
+				});
+			}	
 		}
 		//댓글 신고 버튼 클릭
 		function commentspam(commentIdx){
-			$.ajax({
-				type : "post",
-				url : "<c:url value='/rest/comment_commentspam'/>/" + commentIdx,
-				contentType : "application/json",
-				success : function(result) {
-					alert("댓글 신고 완료!");					
-					commentsListDisplay(boardCode, boardPostIdx);
-				},
-				error : function(xhr) {
-					alert("에러코드(게시글 검색) = " + xhr.status);
-				}
-			});
+			 checkLogin();
+			var confirmcommentspam = confirm("댓글을 신고 하시겠습니까?");
+			if(confirmcommentspam){
+				$.ajax({
+					type : "post",
+					url : "<c:url value='/rest/comment_commentspam'/>/" + commentIdx,
+					beforeSend: function(xhr) {
+						xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+					},
+					contentType : "application/json",
+					success : function(result) {
+						if(result =="success"){										
+							alert("댓글 신고 완료!");					
+						}else if(result =="pass"){
+							alert("이미 신고한 댓글 입니다.");						
+						}
+						commentsListDisplay(boardCode, boardPostIdx);
+					},
+					error : function(xhr) {
+						alert("에러코드(게시글 검색) = " + xhr.status);
+					}
+				});
+			}	
 		}
 		
 		//게시글 추천 버튼 클릭
 		function boardstarup(boardPostIdx){
-			$.ajax({
-				type : "post",
-				url : "<c:url value='/rest/board_starup'/>/" + boardPostIdx,
-				contentType : "application/json",
-				success : function(result) {
-					alert("게시글 추천 완료!");					
-					commentsListDisplay(boardCode, boardPostIdx);
-				},
-				error : function(xhr) {
-					alert("에러코드(게시글 검색) = " + xhr.status);
-				}
-			});
+			checkLogin();
+			var confirmboardstarup = confirm("이 게시글을 추천 하시겠습니까?");
+			if(confirmboardstarup){
+				$.ajax({
+					type : "post",
+					url : "<c:url value='/rest/board_starup'/>/" + boardPostIdx,
+					beforeSend: function(xhr) {
+						xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+					},
+					contentType : "application/json",
+					success : function(result) {
+						if(result =="success"){
+						alert("게시글 추천 완료!");					
+						}else if(result =="pass"){
+						alert("이미 추천에 참여하셨습니다.");					
+						}
+						commentsListDisplay(boardCode, boardPostIdx);	
+					},
+					error : function(xhr) {
+						alert("에러코드(게시글 검색) = " + xhr.status);
+					}
+				});
+			}	
 		}
 		
 		//게시글 비추천 버튼 클릭
 		function boardstardown(boardPostIdx){
-			$.ajax({
-				type : "post",
-				url : "<c:url value='/rest/board_stardown'/>/" + boardPostIdx,
-				contentType : "application/json",
-				success : function(result) {
-					alert("게시글 비추천 완료!");					
-					commentsListDisplay(boardCode, boardPostIdx);
-				},
-				error : function(xhr) {
-					alert("에러코드(게시글 검색) = " + xhr.status);
-				}
-			});
+			 checkLogin();
+			 checkLogin();
+			var confirmboardsdown = confirm("이 게시글을 비추천 하시겠습니까?");
+			if(confirmboardsdown){
+				$.ajax({
+					type : "post",
+					url : "<c:url value='/rest/board_stardown'/>/" + boardPostIdx,
+					beforeSend: function(xhr) {
+						xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+					},
+					contentType : "application/json",
+					success : function(result) {
+						if(result =="success"){
+							alert("게시글 비추천 완료!");										
+						}else if(result =="pass"){
+							alert("이미 추천에 참여하셨습니다.");						
+						}
+						commentsListDisplay(boardCode, boardPostIdx);
+					},
+					error : function(xhr) {
+						alert("에러코드(게시글 검색) = " + xhr.status);
+					}
+				});
+			}
 		}
 		
 		//게시글 신고 버튼 클릭
 		function boardspam(boardPostIdx){
-			$.ajax({
-				type : "post",
-				url : "<c:url value='/rest/board_spam'/>/" + boardPostIdx,
-				contentType : "application/json",
-				success : function(result) {
-					alert("게시글 신고 완료!");					
-					commentsListDisplay(boardCode, boardPostIdx);
-				},
-				error : function(xhr) {
-					alert("에러코드(게시글 검색) = " + xhr.status);
-				}
-			});
+			checkLogin();
+			var confirmboardspam = confirm("이 게시글을 신고 하시겠습니까?");
+			if(confirmboardspam){
+				$.ajax({
+					type : "post",
+					url : "<c:url value='/rest/board_spam'/>/" + boardPostIdx,
+					beforeSend: function(xhr) {
+						xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+					},
+					contentType : "application/json",
+					success : function(result) {
+						if(result =="success"){
+							alert("게시글 신고 완료!");															
+						}else if(result =="pass"){
+							alert("이미 신고한 게시글 입니다..");						
+						}
+						commentsListDisplay(boardCode, boardPostIdx);
+					},
+					error : function(xhr) {
+						alert("에러코드(게시글 검색) = " + xhr.status);
+					}
+				});
+			}	
 		}
+		
+	//로그인 상태 확인
+	function checkLogin() {
+        var isAuthenticated = $("#commentwriter").val() ? true : false;
+        if (!isAuthenticated) {
+            window.location.href = "<c:url value='/user/login'/>"; 
+        }
+    }
 	</script>
 </body>
 </html>

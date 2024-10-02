@@ -8,7 +8,7 @@ public class User {
     private String userId;
     private String userPassword;
     private String userEmail;
-    private String userPhoneNumber;
+    private String userPhoneNum;
     private String userName;
     private String userUpdateDate;
     private String userLastLogin;

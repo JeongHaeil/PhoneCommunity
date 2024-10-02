@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
+import xyz.itwill.dto.BBallot;
 import xyz.itwill.dto.Board;
 import xyz.itwill.mapper.BoardMapper;
 
@@ -65,7 +66,23 @@ public class BoardDAOImpl implements BoardDAO{
 		return sqlSession.getMapper(BoardMapper.class).boardspam(boardPostIdx);
 	}
 
-	
+	@Override
+	public int BBinsert(BBallot bBallot) {
+		return sqlSession.getMapper(BoardMapper.class).BBinsert(bBallot);
+	}
 
-	
+	@Override
+	public int BBupdate(BBallot bBallot) {
+		return sqlSession.getMapper(BoardMapper.class).BBupdate(bBallot);
+	}
+
+	@Override
+	public BBallot selectBBallotByIdx(Map<String, Object> map) {
+		return sqlSession.getMapper(BoardMapper.class).selectBBallotByIdx(map);
+	}
+
+	@Override
+	public int boardViewCountUp(int boardPostIdx) {
+		return sqlSession.getMapper(BoardMapper.class).boardViewCountUp(boardPostIdx);
+	}	
 }

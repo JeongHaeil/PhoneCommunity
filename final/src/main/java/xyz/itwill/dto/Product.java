@@ -21,15 +21,15 @@ public class Product {
 	private Date productUpdatedate; // 수정일
 	private String procutUserip; // 작성자 아이피
 	private int prodcutCount; // 조회수
-	private int prodcutSold; // 판매상태 1: 판매중, 2: 예약중 , 3: 판매완료
-	private int prodcutMode; // 거래방법 1:직거래, 2:안전거래, 3: 택배
+	private String prodcutSold; // 판매상태 1: 판매중, 2: 예약중 , 3: 판매완료
+	private String prodcutMode; // 거래방법 1:직거래, 2:안전거래, 3: 택배
 	private int prodcutStatus; // 글상태
 	private int prodcutPurchid; // 구매자 id
 	private Date prodcutSolddate; // 판매날짜
 	private int productPrice; // 판매가격
-	private String product_model_status; //상품상태
-	private String product_delivery; // 배송비 별도,포함 선택
-	private String product_category; // 상품 카테고리 설정
+	private String productModelStatus; //상품상태
+	private String productDelivery; // 배송비 별도,포함 선택
+	private String productCategory; // 상품 카테고리 설정
 	
 	
 

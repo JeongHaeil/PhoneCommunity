@@ -12,59 +12,48 @@
     body {
       background-color: #f8f9fa;
     }
-
     .nav-tabs .nav-link.active {
       color: #f85656;
       border-color: #f85656;
       font-weight: bold;
     }
-
     .filter-buttons .btn {
       margin-right: 10px;
       border-radius: 2px;
     }
-
     .info-list .list-group-item {
       display: flex;
       justify-content: space-between;
       padding: 10px 20px;
       font-size: 14px;
     }
-
     .info-list .badge {
       background-color: #f85656;
       margin-right: 10px;
     }
-
     .btn-outline-secondary {
       font-size: 14px;
       padding: 5px 10px;
     }
-
     .btn-primary {
       background-color: #333;
       border-color: #333;
     }
-
     .popular-list ul {
       list-style-type: none;
       padding-left: 0;
     }
-
     .popular-list ul li {
       font-size: 14px;
       line-height: 1.8;
       color: #212529;
     }
-
     .popular-list ul li span {
       color: #f85656;
     }
-
     .popular-list ul li:hover {
       font-weight: bold;
     }
-
     .popular-list {
       border: 1px solid #ddd;
       padding: 15px;
@@ -72,25 +61,20 @@
       max-height: 300px;
       overflow-y: auto;
     }
-
     .content-wrapper {
       display: flex;
       gap: 20px;
     }
-
     .main-content {
       flex: 3;
     }
-
     .sidebar {
       flex: 1;
     }
-
     /* 상품목록 스타일 */
     .product-list {
       margin-top: 20px;
     }
-
     .product-card {
       border: 1px solid #e0e0e0;
       border-radius: 5px;
@@ -99,16 +83,13 @@
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       height: 100%;
     }
-
     .img-fluid {
       width: 190px;
     }
-
     .product-card:hover {
       transform: scale(1.05);
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
     }
-
     .product-title {
       font-size: 14px;
       font-weight: bold;
@@ -116,60 +97,49 @@
       color: #000;
       margin-top: 10px;
     }
-
     .product-meta {
       font-size: 12px;
       color: #6c757d;
       margin-top: 10px;
     }
-
     .product-details {
       font-size: 13px;
       color: #6c757d;
     }
-
     .product-footer {
       margin-top: 10px;
     }
-
     .profile-info img {
       margin-right: 5px;
     }
-
     .profile-info span {
       font-size: 12px;
     }
-
     .stats span {
       margin-left: 10px;
       font-size: 12px;
       color: #6c757d;
     }
-
     @media (max-width: 768px) {
       .product-card {
         margin-bottom: 20px;
       }
     }
-
     /* Pagination 스타일 */
     .pagination-wrapper {
       display: flex;
       justify-content: center;
       margin-top: 20px;
     }
-
     .pagination {
       list-style: none;
       padding-left: 0;
       display: flex;
       gap: 10px;
     }
-
     .pagination li {
       cursor: pointer;
     }
-
     .pagination li.active span {
       background-color: #333;
       color: white;
@@ -180,11 +150,9 @@
       justify-content: center;
       align-items: center;
     }
-
     .pagination li span {
       padding: 5px;
     }
-
     .text-muted span {
       color: blue;
     }
@@ -215,7 +183,7 @@
       <button class="btn btn-dark btn-sm">정렬</button>
     </div>
     <div>
-     <button class="btn btn-primary btn-sm" onclick="location.href='${pageContext.request.contextPath}/product/productregister'">쓰기</button>
+      <button class="btn btn-primary btn-sm" onclick="location.href='${pageContext.request.contextPath}/register'">쓰기</button>
       <button class="btn btn-outline-secondary btn-sm" id="search-btn">검색</button>
       <button class="btn btn-outline-secondary btn-sm">목록</button>
     </div>
@@ -236,17 +204,27 @@
     <div class="main-content">
       <!-- 상품 목록 -->
       <div class="row product-list">
-        <c:forEach var="product" items="${productList}">
+        <c:forEach var="product" items="${result.productList}">
           <div class="col-md-3 col-sm-6 mb-4">
             <a href="productDetail.jsp?productIdx=${product.productIdx}" class="text-decoration-none">
               <div class="product-card">
+                <!-- 글 번호 표시 -->
+                <div class="product-meta text-muted" style="font-size: 12px; margin-bottom: 5px;">
+                  글 번호: ${product.productIdx}
+                </div>
                 <img src="${pageContext.request.contextPath}/upload/${product.productImage}" alt="상품 이미지" class="img-fluid">
                 <div class="product-meta">
                   <span class="text-muted">판매</span>, <span>${product.procutRegisterdate}</span>
                 </div>
                 <p class="product-title">${product.procutSubject}</p>
                 <div class="product-details">
-                  <p>· 배송 방법: ${product.productMode}</p>
+                  <p>· 배송 방법: 
+                    <c:choose>
+                      <c:when test="${product.prodcutMode == 1}">직거래</c:when>
+                      <c:when test="${product.prodcutMode == 2}">안전거래</c:when>
+                      <c:otherwise>택배</c:otherwise>
+                    </c:choose>
+                  </p>
                   <p>· 판매 가격: ₩ ${product.productPrice}원</p>
                 </div>
                 <div class="product-footer d-flex align-items-center justify-content-between">
@@ -281,40 +259,46 @@
 
   <!-- Pagination -->
   <div class="pagination-wrapper">
-    <ul class="pagination">
-      <li class="active"><span>1</span></li>
-      <li><span>2</span></li>
-      <li><span>3</span></li>
-      <li><span>4</span></li>
-      <li><span>5</span></li>
-      <li><span>6</span></li>
-      <li><span>7</span></li>
-      <li><span>8</span></li>
-      <li><span>9</span></li>
-      <li><span>10</span></li>
-      <li><span>›</span></li>
-    </ul>
+    <c:choose>
+      <c:when test="${result.pager.startPage > result.pager.blockSize}">
+        <a href="<c:url value='/product/list'/>?pageNum=${result.pager.prevPage}&pageSize=${result.pager.pageSize}">
+          [이전]
+        </a>
+      </c:when>
+      <c:otherwise>
+        [이전]
+      </c:otherwise>
+    </c:choose>
+
+    <c:forEach var="i" begin="${result.pager.startPage}" end="${result.pager.endPage}" step="1">
+      <c:choose>
+        <c:when test="${result.pager.pageNum != i}">
+          <a href="<c:url value='/product/list'/>?pageNum=${i}&pageSize=${result.pager.pageSize}">
+            [${i}]
+          </a>
+        </c:when>
+        <c:otherwise>
+          [${i}]
+        </c:otherwise>
+      </c:choose>
+    </c:forEach>
+
+    <c:choose>
+      <c:when test="${result.pager.endPage != result.pager.totalPage}">
+        <a href="<c:url value='/product/list'/>?pageNum=${result.pager.nextPage}&pageSize=${result.pager.pageSize}">
+          [다음]
+        </a>
+      </c:when>
+      <c:otherwise>
+        [다음]
+      </c:otherwise>
+    </c:choose>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  $(document).ready(function() {
-    // 페이지 번호 클릭 시 이벤트 처리
-    $('.pagination li').click(function() {
-      $('.pagination li').removeClass('active');
-      $(this).addClass('active');
-
-      var pageNumber = $(this).text().trim();
-      if (pageNumber === '›') {
-        pageNumber = '다음 페이지';
-      }
-
-      $('#content').html('<p>페이지 ' + pageNumber + '의 내용입니다.</p>');
-    });
-  });
-
   $(document).ready(function() {
     // 검색 버튼 클릭 시 검색창 표시/숨기기
     $('#search-btn').click(function() {

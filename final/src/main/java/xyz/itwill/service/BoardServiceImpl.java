@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import xyz.itwill.dao.BoardDAO;
+import xyz.itwill.dto.BBallot;
 import xyz.itwill.dto.Board;
 import xyz.itwill.util.Pager;
 
@@ -90,6 +91,26 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public void boardSpam(int boardPostIdx) {
 		boardDAO.boardspam(boardPostIdx);
+	}
+
+	@Override
+	public void BBinsert(BBallot bBallot) {
+		boardDAO.BBinsert(bBallot);		
+	}
+
+	@Override
+	public void BBupdate(BBallot bBallot) {
+		boardDAO.BBupdate(bBallot);
+	}
+
+	@Override
+	public BBallot selectBBallotByIdx(Map<String, Object> map) {
+		return boardDAO.selectBBallotByIdx(map);
+	}
+
+	@Override
+	public void boardViewCountUp(int boardPostIdx) {
+		boardDAO.boardViewCountUp(boardPostIdx);
 	}
 
 	
