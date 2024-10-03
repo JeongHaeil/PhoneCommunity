@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시판 작성</title>
-    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
     <style type="text/css">
     .cke_button__source { display: none; }
     </style>
@@ -65,18 +65,23 @@
 	           <label for="boardTitle" class="me-2">제목:</label>
 	        </div>   
 	        <div class="flex-grow-1">
-   			   <input type="text" class="form-control" id="boardTitle" name="boardTitle" value="${board.boardTitle}" required>
+   			   <input type="text" class="form-control" id="boardTitle" name="boardTitle" value="${board.boardTitle}" required maxlength="50" >
 	        </div>	
 		</div>
 		<hr>
         <div class="form-group mt-2">
             <label for="content">내용</label>
-            <textarea class="form-control" id="boardContent" name="boardContent" rows="5"  required></textarea>
+            <textarea class="form-control" id="boardContent" name="boardContent" rows="5"  required oninput="checkVarchar2(this, 1300)" ></textarea>
         </div>
-
+		
+		<div>
+		<p id="charCount">남은 글자 수: 3800</p>
+		</div>
+		
         <div class="form-group">
             <label for="image">이미지 업로드:</label>
             <input type="file" class="form-control-file" name=uploaderFileList accept="image/*"  multiple="multiple">
+            
         </div>
         <div class="mt-2">
 		<button type="button" class="btn btn-dark" onclick="window.location.href='<c:url value='/board/boardlist/${boardCode }'/>'">목록</button>
@@ -99,10 +104,11 @@
 
 <script type="text/javascript">
 CKEDITOR.replace('boardContent', {
-    removePlugins: 'sourcearea',  
+    removePlugins: 'sourcearea', 
 });
 var getcotent=document.getElementById("getcontent").value
 document.getElementById("boardContent").value =getcotent;
+
 </script>
 </body>
 </html>

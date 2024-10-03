@@ -41,7 +41,7 @@ public class BoardController {
 	
 	@RequestMapping("/boardlist/{boardCode}")
 	public String boardList(@PathVariable int boardCode, @RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "5") int pageSize
-			, @RequestParam(defaultValue = "board_user_id") String search, @RequestParam(defaultValue = "") String keyword, Model model) {
+			, @RequestParam(defaultValue = "board_user_id") String search, @RequestParam(defaultValue = "") String keyword, Model model) throws Exception {
 		Map<String, Object> map=boardService.getBoardList(boardCode, pageNum, pageSize, search, keyword);
 		String boardCodeTitle=boardService.getBoardCT(boardCode);
 		model.addAttribute("boardCodeTitle", boardCodeTitle);
@@ -55,7 +55,7 @@ public class BoardController {
 	
 	@RequestMapping("/boarddetail/{boardCode}/{boardPostIdx}")
 	public String boarddetail(@PathVariable int boardPostIdx,@PathVariable int boardCode,@RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "5") int pageSize
-			, @RequestParam(defaultValue = "board_user_id") String search, @RequestParam(defaultValue = "") String keyword, Model model,HttpServletRequest request, HttpServletResponse response) {
+			, @RequestParam(defaultValue = "board_user_id") String search, @RequestParam(defaultValue = "") String keyword, Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//쿠키저장
 		Cookie[] cookies=request.getCookies();
 		String oldCookiesValue=null;
