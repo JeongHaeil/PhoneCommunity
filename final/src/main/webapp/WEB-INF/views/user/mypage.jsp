@@ -51,12 +51,11 @@
             color: white;
             border-radius: 5px;
             padding: 10px 20px;
-            margin-right: 5px;
+            margin-right: 10px;
         }
         .mypage-btn-custom:hover {
             background-color: #f75c5c;
         }
-        /* 네비게이션 탭을 더 이미지처럼 수정 */
         .nav-pills .nav-link {
             background-color: transparent;
             border: none;
@@ -65,6 +64,26 @@
             background-color: #f86d6d;
             color: white;
             border-radius: 5px;
+        }
+        .btn-section {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-start;
+        }
+        .btn-section .btn {
+            margin-right: 10px;
+        }
+        .upload-section {
+            display: flex;
+            align-items: center;
+        }
+        .upload-section input[type="file"] {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        .upload-section .btn-custom {
+            white-space: nowrap; /* 한 줄로 유지 */
+            padding: 10px 15px; /* 버튼 크기 조정 */
         }
     </style>
 </head>
@@ -88,7 +107,6 @@
         <li class="nav-item">
             <a class="nav-link" href="#">자동 로그인 관리</a>
         </li>
-        <!-- 필요한 탭 추가 -->
     </ul>
 
     <!-- 회원 정보 섹션 -->
@@ -97,52 +115,50 @@
 
         <div class="row mb-3">
             <div class="col-md-3 label">이메일 주소</div>
-            <div class="col-md-9 value">tosmreo@naver.com</div>
+            <div class="col-md-9 value">${user.userEmail}</div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-3 label">아이디</div>
-            <div class="col-md-9 value">tosmreo</div>
+            <div class="col-md-9 value">${user.userId}</div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-3 label">닉네임</div>
-            <div class="col-md-9 value">김혜련</div>
+            <div class="col-md-9 value">${user.userNickName}</div>
         </div>
 
         <div class="row mb-3">
-            <div class="col-md-3 label">프로필 사진</div>
-            <div class="col-md-9 value">...</div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-3 label">포인트</div>
-            <div class="col-md-9 value">150 P</div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-3 label">레벨</div>
-            <div class="col-md-9 value">Lv.1 (83%) / 17</div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-3 label">회원 그룹</div>
-            <div class="col-md-9 value">신입</div>
+            <div class="col-md-3 label">핸드폰 번호</div>
+            <div class="col-md-9 value">${user.userPhoneNum}</div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-3 label">가입일</div>
-            <div class="col-md-9 value">2024-09-17</div>
+            <div class="col-md-9 value">${user.userRegisterDate}</div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-3 label">최근 로그인</div>
-            <div class="col-md-9 value">2024-10-03</div>
+            <div class="col-md-9 value">${user.userLastLogin}</div>
+        </div>
+
+        <!-- 프로필 사진 업로드 -->
+        <div class="row mb-3">
+            <div class="col-md-3 label">프로필 사진</div>
+            <div class="col-md-9 value">
+                <!-- 파일 업로드 섹션 -->
+                <form action="/final/user/uploadProfilePicture" method="post" enctype="multipart/form-data" class="upload-section">
+                    <input type="file" name="profilePic" class="form-control">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <button type="submit" class="btn mypage-btn-custom">업로드</button>
+                </form>
+            </div>
         </div>
     </div>
 
     <!-- 버튼 섹션 -->
-    <div class="mt-4">
+    <div class="btn-section">
         <form action="/final/user/userUpdate" method="POST">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <button type="submit" class="btn mypage-btn-custom">회원정보 변경</button>
