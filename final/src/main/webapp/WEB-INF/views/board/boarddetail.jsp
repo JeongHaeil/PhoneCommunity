@@ -18,18 +18,22 @@
 		margin: 0 auto;
 		font-weight: normal;
 		overflow-x: hidden;
-		font-size: 14px;
+		font-size: 12px;
 		letter-spacing: -0.03em;
     }
     .boardsListTable{
  		 width: 100%;
- 		 /* border: 1px solid #ededed; */
     }
     @media (min-width: 1400px) {
   		.container {
    	 		max-width: 1320px;
  		}
  	}
+ 	@media (max-width: 900px) {
+	    .sideHotboardList {
+	        display: none; 
+   		 }
+	}
 	
    .boardsListTable th:not(.boardTitle,.boardWriter,.boardDate) {
   		text-align: center;
@@ -37,7 +41,7 @@
  		 padding: 0 0px;
 	}
 	.boardsListTable th:not(.boardNum,.boardTitle,.boardDate,.boardViewCount){
-		width: 70px;
+		width: 125px;
  		padding: 0 0px;
 	}
 	th.boardDate{
@@ -49,24 +53,18 @@
 		text-align: center;
 	}
 	.boardsListTable thead th{
-		/* border-top: 1px solid #e5e5e5; */
  		padding: 0 8px;
-  		/* border-bottom: 1px solid #e5e5e5; */
-  		background: #fff;
   		text-align: center;
   		
 	}
 	.boardsListTable thead{
-		background-color: #343a40;
-    	color: #fff;
     	line-height: 2.5;		
 	}
-	.boardsListTable tbody td{
- 		 text-align: left;
- 		 padding: 3.5 2px;
- 		 line-height: 1.5;
- 		 
-	}
+	.boardsListTable tbody td:not(.tdboardTitle){
+        text-align: center;
+        padding: 3.5px 2px;
+        line-height: 1.5;
+    }
     .pagebtn{
    	    border-radius: 32px;
     	min-width: 36px;
@@ -115,11 +113,31 @@
 	.aCursorActive{
 	 cursor: pointer;
 	}
+	.sideHotboardList {
+    position: fixed;
+    top: 110px; 
+    right: 40px; 
+    z-index: 1000;
+    box-sizing: border-box;
+      
+	}
+	.sideHotboard{
+	white-space: nowrap;       
+    overflow: hidden;          
+    text-overflow: ellipsis;
+	}
+	.tdboardTitle {
+        white-space: nowrap;       
+        overflow: hidden;          
+        text-overflow: ellipsis;
+    }
+    .tdboardWriter {
+        white-space: nowrap;       
+        overflow: hidden;          
+        text-overflow: ellipsis;
+    }
     </style>
 
-<!-- 추천에 하트모양 오류 출력불가-->
-<!-- <script src="https://kit.fontawesome.com/a076d05399.js"
-	crossorigin="anonymous"></script> -->
 </head>
 <body>
 	<div class="container mt-5">
@@ -267,9 +285,12 @@
 			    						<c:forEach var="boards" items="${boardList}">
 			    							<tr>
 			    								<td>${boards.boardPostIdx }</td>  								
-			    								<td>&nbsp;&nbsp;<a href="<c:url value='/board/boarddetail/${boards.boardCode }/${boards.boardPostIdx }'/>?pageNum=${pager.pageNum}&search=${search }&keyword=${keyword }" style="color: #333;">${boards.boardTitle }</a></td>
-			    								<td>${boards.userNickname }</td>
-			    								<td>${fn:substring(boards.boardResigsterDate,5,10) }</td>
+			    								<td class="tdboardTitle" style="color: #333; cursor: pointer;" 
+												    onclick="location.href='<c:url value='/board/boarddetail/${boards.boardCode }/${boards.boardPostIdx }'/>?pageNum=${pager.pageNum}&search=${search }&keyword=${keyword }'">
+												    &nbsp;&nbsp;${boards.boardTitle}
+												</td>
+			    								<td class="tdboardWriter">${boards.userNickname }</td>
+			    								<td>${boards.boardResigsterDate }</td>
 			    								<td>${boards.boardCount }</td>
 			    							</tr>
 			    						</c:forEach>   						
@@ -357,18 +378,18 @@
 
 
 			<!-- 사이드 광고 및 인기글  -->
-			<div class="col-md-3">
+			<div class="col-md-3 sideHotboardList" >
 				<h2>오늘의 인기글</h2>
 				<ul class="list-group">
-					<li class="list-group-item"><a href="#">1. 일반 bcaa 2종
-							1980원 무배</a> <span class="badge badge-primary">13</span></li>
-					<li class="list-group-item"><a href="#">2. 블렌드 유산균 반값</a> <span
+					<li class="list-group-item sideHotboard"><a href="#">1. 일반 bcaa 2종
+							1980원 무배 으디까지 출력될까여따리 쿵쿵따리</a> <span class="badge badge-primary">13</span></li>
+					<li class="list-group-item sideHotboard"><a href="#">2. 블렌드 유산균 반값</a> <span
 						class="badge badge-primary">8</span></li>
-					<li class="list-group-item"><a href="#">3. 미사 스포츠 음료 300P</a>
+					<li class="list-group-item sideHotboard"><a href="#">3. 미사 스포츠 음료 300P</a>
 						<span class="badge badge-primary">1500</span></li>
-					<li class="list-group-item"><a href="#">4. 가스펠 포드 ADV 신제품</a>
+					<li class="list-group-item sideHotboard"><a href="#">4. 가스펠 포드 ADV 신제품</a>
 						<span class="badge badge-primary">16</span></li>
-					<li class="list-group-item"><a href="#">5. 이너 마이핏 ADV 신제품</a>
+					<li class="list-group-item sideHotboard"><a href="#">5. 이너 마이핏 ADV 신제품</a>
 						<span class="badge badge-primary">14</span></li>
 				</ul>
 			</div>
@@ -420,19 +441,22 @@
 												html += "<div class='d-flex justify-content-between'>";
 												
 												html += "<div>";
-												if(this.commentLevel!=0){													
-												html += "<strong>┖"+ this.userNickname+ "</strong> <small class='text-muted'>"+ this.commentRegDate+ "</small>";													
+												
+												
+												if(this.commentStatus>1){
 												}else{
-												html += "<strong>"+ this.userNickname+ "</strong> <small class='text-muted'>"+ this.commentRegDate+ "</small>";
+													if(this.commentLevel!=0){													
+													html += "<strong>┖"+ this.userNickname+ "</strong> <small class='text-muted'>"+ this.commentRegDate+ "</small>";													
+													}else{
+													html += "<strong>"+ this.userNickname+ "</strong> <small class='text-muted'>"+ this.commentRegDate+ "</small>";
+													}							
+													if (this.commentUserId == result.board.boardUserId) {//세션에서 값 가져와서 로그인 유저와 비교 <---잘못된 작성
+														html += "<span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: blue;'>작성자</span>";										
+													}
+													if(this.commentUserId == result.board.boardUserId || result.boardAdmin !=null){
+														html += "<a class='aCursorActive' onclick='deleteComment("+ this.commentIdx+ ");'><span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: red;'>삭제</span></a>";													
+													}													
 												}
-												
-												if (this.commentUserId == result.board.boardUserId) {//세션에서 값 가져와서 로그인 유저와 비교 <---잘못된 작성
-													html += "<span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: blue;'>작성자</span>";										
-												}
-												if(this.commentUserId == result.board.boardUserId || result.boardAdmin !=null){
-													html += "<a class='aCursorActive' onclick='deleteComment("+ this.commentIdx+ ");'><span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: red;'>삭제</span></a>";													
-												}
-												
 												html += "</div>";												
 												html += "<div class='btn-group btn-group-sm aCursorActive' role='group' aria-label='Small button group'>";
 												if(this.commentStatus>1){
