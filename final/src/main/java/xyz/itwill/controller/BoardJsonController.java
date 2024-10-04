@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,15 +42,24 @@ public class BoardJsonController {
 	private final WebApplicationContext context;
 	
 	@GetMapping("/commentsList/{boardCode}/{boardPostIdx}")
-	public Map<String, Object> CommentsList(@PathVariable int boardCode,@PathVariable int boardPostIdx,@RequestParam(defaultValue = "1") int pageNum) {
-		/* List<Comments> commentList=commentsService.getCommentsList(freePostIdx); */
+	public Map<String, Object> CommentsList(@PathVariable int boardCode,@PathVariable int boardPostIdx,@RequestParam(defaultValue = "1") int pageNum,Authentication authentication) {
+		Map<String, Object> resultmap=new HashMap<String, Object>();
+		if(authentication!=null) {
+			CustomUserDetails user=(CustomUserDetails)authentication.getPrincipal();
+			List<GrantedAuthority> authorities=(List<GrantedAuthority>) user.getAuthorities();
+			for(GrantedAuthority authority : authorities) {
+				 if (authority.getAuthority().equals("ROLE_BOARD_ADMIN")) {
+					 resultmap.put("boardAdmin", user.getUserId());
+				 }
+			}
+		}
+		
 		int pageSize=5;
 		Map<String, Object> getcommentList=commentsService.getCommentsList(boardPostIdx, pageNum, pageSize);
 		List<Comments> commentList=(List<Comments>)getcommentList.get("commentsList");
 		Pager pager=(Pager)getcommentList.get("pager");
 		int commentCount=commentsService.getCommentsCount(boardPostIdx);
 		Board board=boardService.getboard(boardPostIdx);
-		Map<String, Object> resultmap=new HashMap<String, Object>();
 		resultmap.put("board", board);
 		resultmap.put("boardCode", boardCode);
 		resultmap.put("boardPostIdx", boardPostIdx);
@@ -80,7 +90,7 @@ public class BoardJsonController {
 			putcomment.setCommentUserId(user.getUserId());	
 			putcomment.setContent(content.replace("<","&lt;").replace(">","&gt;").replace("\n", "<br>"));
 			if (commentImage != null && !commentImage.isEmpty()) {
-				String uploadDirectory=context.getServletContext().getRealPath("/resources/uploadFile/comment_image");
+				String uploadDirectory=context.getServletContext().getRealPath("/resources/images/uploadFile/comment");
 				String uploadFilename=UUID.randomUUID().toString()+"_"+commentImage.getOriginalFilename();
 				File file=new File(uploadDirectory, uploadFilename);
 				commentImage.transferTo(file);
@@ -102,7 +112,7 @@ public class BoardJsonController {
 			putcomment.setCommentUserId(user.getUserId());
 			putcomment.setContent(content.replace("<","&lt;").replace(">","&gt;").replace("\n", "<br>"));
 			if (commentImage != null && !commentImage.isEmpty()) {
-				String uploadDirectory=context.getServletContext().getRealPath("/resources/uploadFile/freeboard_image");
+				String uploadDirectory=context.getServletContext().getRealPath("/resources/images/uploadFile/comment");
 				String uploadFilename=UUID.randomUUID().toString()+"_"+commentImage.getOriginalFilename();
 				File file=new File(uploadDirectory, uploadFilename);
 				commentImage.transferTo(file);
