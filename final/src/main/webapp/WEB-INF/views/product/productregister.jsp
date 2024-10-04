@@ -147,81 +147,76 @@
 <body>
 
     <div class="container mt-5">
-        <form id="productForm" action="${pageContext.request.contextPath}/register" method="post" enctype="multipart/form-data">
-            <!-- 이미지 업로드 -->
-            <div class="mb-3">
-                <div class="upload-container" id="uploadContainer">
-                    <span class="upload-text">이미지 선택 (최대 10장)</span>
-                </div>
-                <input type="file" id="fileInput" class="d-none" name="productImage2" multiple="multiple">
-            </div>
+       <form id="productForm" action="${pageContext.request.contextPath}/register" method="post" enctype="multipart/form-data">
+    <!-- 이미지 업로드 -->
+    <div class="mb-3">
+        <div class="upload-container" id="uploadContainer">
+            <span class="upload-text">이미지 선택 (최대 10장)</span>
+        </div>
+        <input type="file" id="fileInput" class="d-none" name="productImage2" multiple="multiple">
+    </div>
 
-            <!-- 상품명 입력 -->
-            <div class="mb-3">
-                <input type="text" class="form-control" name="productSubject" placeholder="상품명">
-            </div>
+    <!-- 상품명 입력 -->
+    <div class="mb-3">
+        <input type="text" class="form-control" name="productSubject" placeholder="상품명">
+    </div>
 
-            <!-- 카테고리 선택 -->
-            <div class="mb-3">
-                <select class="form-control category-select" name="productCategory">
-                    <option value="" disabled selected>카테고리 선택</option>
-                    <option value="휴대폰">휴대폰</option>
-                    <option value="태블릿">태블릿</option>
-                    <option value="노트북">노트북</option>
-                    <option value="PC">PC</option>
-                </select>
-            </div>
+    <!-- 카테고리 선택 -->
+    <div class="mb-3">
+        <select class="form-control category-select" name="productCategory">
+            <option value="" disabled selected>카테고리 선택</option>
+            <option value="휴대폰">휴대폰</option>
+            <option value="태블릿">태블릿</option>
+            <option value="노트북">노트북</option>
+            <option value="PC">PC</option>
+        </select>
+    </div>
 
-            <!-- 판매가격 입력 -->
-            <div class="mb-3 price-input-container">
-                <input type="text" class="form-control price-input" name="productPrice" placeholder="₩ 판매가격">
-            </div>
+    <!-- 판매가격 입력 -->
+    <div class="mb-3 price-input-container">
+        <input type="text" class="form-control price-input" name="productPrice" placeholder="₩ 판매가격">
+    </div>
 
-            <!-- 배송비 선택 -->
-            <div class="mb-3">
-                <select class="form-control shipping-select" name="productDelivery">
-                    <option value="" disabled selected>배송비 선택</option>
-                    <option value="별도">별도</option>
-                    <option value="포함">포함</option>
-                </select>
-            </div>
+    <!-- 배송비 선택 -->
+    <div class="mb-3">
+        <select class="form-control shipping-select" name="productDelivery">
+            <option value="" disabled selected>배송비 선택</option>
+            <option value="별도">별도</option>
+            <option value="포함">포함</option>
+        </select>
+    </div>
 
-            <!-- 제품상태 선택 -->
-            <div class="mb-3 d-flex">
-                <div class="product-status-btn selected" id="usedBtn" data-value="중고">중고</div>
-                <div class="product-status-btn" id="newBtn" data-value="새상품">새상품</div>
-            </div>
+    <!-- 제품상태 선택 -->
+    <div class="mb-3 d-flex">
+        <div class="product-status-btn selected" id="usedBtn" data-value="중고">중고</div>
+        <div class="product-status-btn" id="newBtn" data-value="새상품">새상품</div>
+    </div>
+    <input type="hidden" name="productModelStatus" id="productCondition" value="중고">
 
-            <!-- 선택한 제품상태를 저장할 히든 필드 -->
-            <input type="hidden" name="productModelStatus" id="productCondition" value="중고">
-
-            <!-- 유의사항 텍스트박스 -->
-            <div class="mb-3">
-                <textarea class="form-control notice-box" name="productContent" id="noticeBox" rows="4" onclick="clearPlaceholder(this)">
+    <!-- 유의사항 텍스트박스 -->
+    <div class="mb-3">
+        <textarea class="form-control notice-box" name="productContent" id="noticeBox" rows="4" onclick="clearPlaceholder(this)">
 - 상품명(브랜드)
 - 구매 시기
 - 사용 기간
 - 하자 여부
-
 * 실제 촬영한 사진과 함께 상세 정보를 입력해주세요.
-                </textarea>
-                <div class="text-end mt-2"><span id="charCount">0</span> / 1000</div>
-            </div>
+        </textarea>
+        <div class="text-end mt-2"><span id="charCount">0</span> / 1000</div>
+    </div>
 
-            <!-- 거래방법 -->
-            <div class="mb-3 d-flex">
-                <div class="product-status-btn selected" id="deliveryBtn" data-value="택배">택배</div>
-                <div class="product-status-btn" id="safeBtn" data-value="안전">안전</div>
-                <div class="product-status-btn" id="directBtn" data-value="직거래">직거래</div>
-            </div>
+    <!-- 거래방법 -->
+    <div class="mb-3 d-flex">
+        <div class="product-status-btn selected" id="deliveryBtn" data-value="택배">택배</div>
+        <div class="product-status-btn" id="safeBtn" data-value="안전">안전</div>
+        <div class="product-status-btn" id="directBtn" data-value="직거래">직거래</div>
+    </div>
+    <input type="hidden" name="productMode" id="dealMethod" value="택배">
 
-            <!-- 선택한 거래방법을 저장할 히든 필드 -->
-            <input type="hidden" name="productMode" id="dealMethod" value="택배">
+    <button type="submit" class="btn-submit">등록</button>
+    <sec:csrfInput/>
+</form>
 
-            <!-- 등록 버튼 -->
-            <button type="submit" class="btn-submit">등록</button>
-            <sec:csrfInput/>
-        </form>
     </div>
     
     <script>

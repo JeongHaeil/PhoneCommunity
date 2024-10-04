@@ -52,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
 			pageNum=Integer.parseInt((String)map.get("pageNum"));
 		}
 		
-		int pageSize=5;
+		int pageSize=12;
 		if(map.get("pageSize") != null && !map.get("pageSize").equals("")) {
 			pageSize=Integer.parseInt((String)map.get("pageSize"));
 		}
