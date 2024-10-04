@@ -74,8 +74,8 @@
             <textarea class="form-control" id="boardContent" name="boardContent" rows="5"  required oninput="checkVarchar2(this, 1300)" ></textarea>
         </div>
 		
-		<div>
-		<p id="charCount">남은 글자 수: 3800</p>
+		 <div>
+		<p id="charCount">남은 글자 수: </p>
 		</div>
 		
         <div class="form-group">
@@ -104,10 +104,39 @@
 
 <script type="text/javascript">
 CKEDITOR.replace('boardContent', {
-    removePlugins: 'sourcearea', 
+    removePlugins: 'sourcearea',
+    on: {
+        change: function(event) {
+            updateCharacterCount();
+        }
+    }
 });
 var getcotent=document.getElementById("getcontent").value
 document.getElementById("boardContent").value =getcotent;
+
+function updateCharacterCount() {
+    var editorData = CKEDITOR.instances.boardContent.getData() 
+    //var charCount = editorData.replace(/<[^>]*>/g, '').length; 
+    var charCount = editorData.length; 
+    var maxLength = 1300; // 최대 글자 수 설정
+    var charCountElement = document.getElementById('charCount');
+ 
+    charCountElement.textContent = "남은 글자 수(제한기능 아직 미구현) = "+(maxLength-charCount);
+
+    // 글자 수가 최대값을 초과할 경우 경고
+    if (charCount > maxLength) {
+        //alert("최대 글자 수를 초과 하였습니다");
+        charCountElement.style.color = 'red';  // 글자 수 초과 시 빨간색으로 표시
+        var limitData = editorData.substring(0, 1280);
+        //alert("자수="+limitData.length)
+        //CKEDITOR.instances.boardContent.setData(limitData); 
+        var editor = CKEDITOR.instances.boardContent;
+        editor.setData(limitData);
+    } else {
+        charCountElement.style.color = '#555';  // 정상 범위일 때 기본 색상
+    }
+
+}
 
 </script>
 </body>
