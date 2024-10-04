@@ -47,21 +47,22 @@
         </if>
     </select>
 
-    <select id="selectProductList" resultType="Product">
-        SELECT * FROM (
-            SELECT rownum rn, product.*
-            FROM (
-                SELECT product_idx AS productIdx, product_user_id AS productUserid,
-                       product_subject AS productSubject, product_register_date AS productRegisterDate,
-                       product_count AS productCount, product_mode AS productMode,
-                       product_price AS productPrice
-                FROM product
-                <if test="keyword != null and keyword != ''">
-                    <bind name="word" value="'%' + keyword + '%'" />
-                    WHERE ${column} LIKE #{word}
-                </if>
-                ORDER BY product_idx DESC
-            ) product
-        ) WHERE rn BETWEEN #{startRow} AND #{endRow}
-    </select>
+<select id="selectProductList" resultType="Product">
+    SELECT * FROM (
+        SELECT rownum rn, product.*, users.user_id AS productUserid
+        FROM (
+            SELECT product_idx AS productIdx, product_user_id,
+                   product_subject AS productSubject, product_register_date AS productRegisterDate,
+                   product_count AS productCount, product_mode AS productMode,
+                   product_price AS productPrice
+            FROM product
+            <if test="keyword != null and keyword != ''">
+                <bind name="word" value="'%' + keyword + '%'" />
+                WHERE ${column} LIKE #{word}
+            </if>
+            ORDER BY product_idx DESC
+        ) product
+        JOIN users ON product.product_user_id = users.user_id
+    ) WHERE rn BETWEEN #{startRow} AND #{endRow}
+</select>
 </mapper>
