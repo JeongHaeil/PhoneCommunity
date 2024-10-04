@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -81,11 +82,34 @@ public class ProductController {
 
 	@RequestMapping("/detail")
 	public String detail(@RequestParam Map<String, Object> map, Model model) {
-		int productIdx = Integer.parseInt((String) map.get("productIdx"));
-		model.addAttribute("product", productService.getProductByNum(productIdx));
-		model.addAttribute("searchMap", map);
-		return "product/productdetail";
+	    int productIdx = Integer.parseInt((String) map.get("productIdx"));
+
+	    // 조회수 증가
+	    productService.increaseProductCount(productIdx);
+
+	    // 제품 정보 조회
+	    model.addAttribute("product", productService.getProductByNum(productIdx));
+	    model.addAttribute("searchMap", map);
+
+	    // 모든 상품 목록 조회 및 페이징 처리
+	    int pageNum = 1; // 기본 페이지 번호
+	    int pageSize = 12; // 한 페이지에 보여줄 상품 수
+	    if (map.get("pageNum") != null) {
+	        pageNum = Integer.parseInt((String) map.get("pageNum"));
+	    }
+	    if (map.get("pageSize") != null) {
+	        pageSize = Integer.parseInt((String) map.get("pageSize"));
+	    }
+	    Map<String, Object> listMap = new HashMap<>();
+	    listMap.put("pageNum", String.valueOf(pageNum));
+	    listMap.put("pageSize", String.valueOf(pageSize));
+	    Map<String, Object> resultMap = productService.getProductList(listMap);
+	    model.addAttribute("otherProductList", resultMap.get("productList"));
+	    model.addAttribute("pager", resultMap.get("pager")); // 페이징 정보 추가
+
+	    return "product/productdetail";
 	}
+
 
 	@PreAuthorize("hasRole('ROLE_ADMIN') or principal.userid eq #map['productUserid']")
 	@RequestMapping(value = "/modify", method = RequestMethod.GET)

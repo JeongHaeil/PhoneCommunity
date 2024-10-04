@@ -45,4 +45,9 @@ public class ProductDAOImpl implements ProductDAO {
 		return sqlSession.getMapper(ProductMapper.class).selectProductList(map);
 	}
 
+	@Override
+	public int updateProductCount(int productIdx) {
+	    return sqlSession.getMapper(ProductMapper.class).updateProductCount(productIdx);
+	}
+
 }

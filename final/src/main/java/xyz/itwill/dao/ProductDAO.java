@@ -11,6 +11,7 @@ public interface ProductDAO {
  int deleteProduct(int  productIdx);
  Product selectPoridctByNum(int productIdx);
  int selectProductCount(Map<String, Object> map);
+ int updateProductCount(int productIdx);
  List<Product> selectProductList(Map<String, Object> map);
  
  

@@ -7,9 +7,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>제품 페이지</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-	rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
 * {
 	list-style: none;
@@ -278,6 +276,36 @@ body {
 	font-size: 0.9rem;
 }
 
+/* 다른 상품 목록 스타일 */
+.other-products-section {
+    margin-top: 50px;
+}
+
+.other-products-section .product-card {
+    border: 1px solid #e1e1e1;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #fff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.other-products-section .product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.other-products-section .product-title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.other-products-section .product-price {
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 5px;
+}
+
 /* 반응형 디자인 */
 @media ( max-width : 768px) {
 	.product-details {
@@ -320,9 +348,7 @@ body {
 		<div class="product-details">
 			<!-- 이미지 -->
 			<div class="product-image">
-				<img
-					src="${pageContext.request.contextPath}/upload/${product.productImage}"
-					alt="상품 이미지" class="img-fluid">
+				<img src="${pageContext.request.contextPath}/upload/${product.productImage}" alt="상품 이미지" class="img-fluid">
 			</div>
 
 			<!-- 정보 -->
@@ -355,7 +381,7 @@ body {
 				<div class="extra-info">
 					<ul>
 						<li>결제혜택: 페이코 최대 4만원 즉시할인, KB국민카드 18개월 6% 특별 할부 수수료</li>
-                          <li>  무이자혜택: 1만원 이상 무이자 할부</li>
+                        <li>무이자혜택: 1만원 이상 무이자 할부</li>
 					</ul>
 				</div>
 
@@ -372,8 +398,7 @@ body {
 			<!-- 상품 정보 -->
 			<div class="product-info-left">
 				<h4 style="font-weight: bold;">상품 정보</h4>
-				<div class="left-wrap"
-					style="border-top: 1px solid #e1e1e1; margin-top: 25px;">
+				<div class="left-wrap" style="border-top: 1px solid #e1e1e1; margin-top: 25px;">
 					<ul style="margin-top: 25px;">
 						<li>- 상품명: ${product.productSubject}</li>
 						<li>- 가격: ${product.productPrice}원</li>
@@ -387,18 +412,10 @@ body {
 			<!-- 가게 정보 -->
 			<div class="store-info-right">
 				<h4 style="font-weight: bold;">프로필 정보</h4>
-				<div class="left-wrap"
-					style="border-top: 1px solid #e1e1e1; margin-top: 25px;">
+				<div class="left-wrap" style="border-top: 1px solid #e1e1e1; margin-top: 25px;">
 					<div class="store-name-container" style="margin-top: 30px;">
 						<div class="store-name">${product.productUserid}</div>
-						<img src="https://via.placeholder.com/50" alt="프로필 사진"
-							width="70px;">
-					</div>
-					<div class="trust-score" style="margin-top: 30px;">
-						신뢰지수 <span>80</span>
-					</div>
-					<div class="trust-bar">
-						<div class="trust-bar-fill" style="width: 80%;"></div>
+						<img src="https://via.placeholder.com/50" alt="프로필 사진" width="70px;">
 					</div>
 
 					<!-- 두 번째 테이블 -->
@@ -428,10 +445,86 @@ body {
 				</div>
 			</div>
 		</div>
+
+        <!-- 다른 상품 목록 추가 -->
+        <div class="other-products-section">
+          
+            <div class="other-products-section">
+    <h3>전체 상품 목록</h3>
+    <div class="row product-list">
+        <c:forEach var="product" items="${otherProductList}">
+            <div class="col-md-3 col-sm-6 mb-4">
+                <a href="${pageContext.request.contextPath}/detail?productIdx=${product.productIdx}" class="text-decoration-none">
+                    <div class="product-card">
+                        <!-- 글 번호 표시 -->
+                        <div class="product-meta text-muted" style="font-size: 12px; margin-bottom: 5px;">
+                            글 번호: ${product.productIdx}
+                        </div>
+                        <img src="${pageContext.request.contextPath}/upload/${product.productImage}" alt="상품 이미지" class="img-fluid">
+                        <div class="product-meta">
+                            <span class="text-muted">판매</span>, <span>${product.productRegisterdate}</span>
+                        </div>
+                        <p class="product-title">${product.productSubject}</p>
+                        <div class="product-details">
+                            <p>· 배송 방법:
+                                <c:choose>
+                                    <c:when test="${product.productMode == '직거래'}">직거래</c:when>
+                                    <c:when test="${product.productMode == '안전거래'}">안전거래</c:when>
+                                    <c:otherwise>택배</c:otherwise>
+                                </c:choose>
+                            </p>
+                            <p>· 판매 가격: ₩ ${product.productPrice}원</p>
+                        </div>
+                        <div class="product-footer d-flex align-items-center justify-content-between">
+                            <div class="profile-info">
+                                <img src="https://via.placeholder.com/24" alt="프로필 이미지" class="rounded-circle" style="width: 24px; height: 24px;">
+                                <span>${product.productUserid}</span>
+                            </div>
+                            <div class="stats">
+                                <span>💬 0</span> <span>👁️ ${product.productCount}</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </c:forEach>
+    </div>
+</div>
+
+            <!-- Pagination for other products -->
+            <div class="pagination-wrapper">
+                <c:choose>
+                    <c:when test="${pager.startPage > pager.blockSize}">
+                        <a href="${pageContext.request.contextPath}/detail?productIdx=${product.productIdx}&pageNum=${pager.prevPage}&pageSize=${pager.pageSize}">[이전]</a>
+                    </c:when>
+                    <c:otherwise>
+                        [이전]
+                    </c:otherwise>
+                </c:choose>
+
+                <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
+                    <c:choose>
+                        <c:when test="${pager.pageNum != i}">
+                            <a href="${pageContext.request.contextPath}/detail?productIdx=${product.productIdx}&pageNum=${i}&pageSize=${pager.pageSize}">[${i}]</a>
+                        </c:when>
+                        <c:otherwise>
+                            [${i}]
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+
+                <c:choose>
+                    <c:when test="${pager.endPage != pager.totalPage}">
+                        <a href="${pageContext.request.contextPath}/detail?productIdx=${product.productIdx}&pageNum=${pager.nextPage}&pageSize=${pager.pageSize}">[다음]</a>
+                    </c:when>
+                    <c:otherwise>
+                        [다음]
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
 	</div>
 
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

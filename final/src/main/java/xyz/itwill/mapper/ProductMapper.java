@@ -12,5 +12,6 @@ public interface ProductMapper {
 	Product selectProductByNum(int productIdx);
 	int selectProductCount(Map<String, Object> map);
 	List<Product> selectProductList(Map<String, Object> map);
+	int updateProductCount(int productIdx);
 
 }

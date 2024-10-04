@@ -21,6 +21,12 @@
         SET product_subject = #{productSubject}, product_content = #{productContent} 
         WHERE product_idx = #{productIdx}
     </update>
+    
+    <update id="updateProductCount">
+    UPDATE product
+    SET product_count = product_count + 1
+    WHERE product_idx = #{productIdx}
+</update>
 
     <delete id="deleteProduct">
         DELETE FROM product WHERE product_idx = #{productIdx}

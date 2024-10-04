@@ -56,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
 		if(map.get("pageSize") != null && !map.get("pageSize").equals("")) {
 			pageSize=Integer.parseInt((String)map.get("pageSize"));
 		}
-		
+		 
 		int totalBoard=productDAO.selectProductCount(map);
 		
 		int blockSize=5;
@@ -73,6 +73,12 @@ public class ProductServiceImpl implements ProductService {
 		
 		return result;
 	}
+
+    @Override
+    @Transactional
+    public void increaseProductCount(int productIdx) {
+        productDAO.updateProductCount(productIdx);
+    }
 
  
 }
