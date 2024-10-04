@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시판 작성</title>
-    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
     <style type="text/css">
     .cke_button__source { display: none; }
     </style>
@@ -65,18 +65,23 @@
 	           <label for="boardTitle" class="me-2">제목:</label>
 	        </div>   
 	        <div class="flex-grow-1">
-   			   <input type="text" class="form-control" id="boardTitle" name="boardTitle" value="${board.boardTitle}" required>
+   			   <input type="text" class="form-control" id="boardTitle" name="boardTitle" value="${board.boardTitle}" required maxlength="50" >
 	        </div>	
 		</div>
 		<hr>
         <div class="form-group mt-2">
             <label for="content">내용</label>
-            <textarea class="form-control" id="boardContent" name="boardContent" rows="5"  required></textarea>
+            <textarea class="form-control" id="boardContent" name="boardContent" rows="5"  required oninput="checkVarchar2(this, 1300)" ></textarea>
         </div>
-
+		
+		 <div>
+		<p id="charCount">남은 글자 수: </p>
+		</div>
+		
         <div class="form-group">
             <label for="image">이미지 업로드:</label>
             <input type="file" class="form-control-file" name=uploaderFileList accept="image/*"  multiple="multiple">
+            
         </div>
         <div class="mt-2">
 		<button type="button" class="btn btn-dark" onclick="window.location.href='<c:url value='/board/boardlist/${boardCode }'/>'">목록</button>
@@ -99,10 +104,40 @@
 
 <script type="text/javascript">
 CKEDITOR.replace('boardContent', {
-    removePlugins: 'sourcearea',  
+    removePlugins: 'sourcearea',
+    on: {
+        change: function(event) {
+            updateCharacterCount();
+        }
+    }
 });
 var getcotent=document.getElementById("getcontent").value
 document.getElementById("boardContent").value =getcotent;
+
+function updateCharacterCount() {
+    var editorData = CKEDITOR.instances.boardContent.getData() 
+    //var charCount = editorData.replace(/<[^>]*>/g, '').length; 
+    var charCount = editorData.length; 
+    var maxLength = 1300; // 최대 글자 수 설정
+    var charCountElement = document.getElementById('charCount');
+ 
+    charCountElement.textContent = "남은 글자 수(제한기능 아직 미구현) = "+(maxLength-charCount);
+
+    // 글자 수가 최대값을 초과할 경우 경고
+    if (charCount > maxLength) {
+        //alert("최대 글자 수를 초과 하였습니다");
+        charCountElement.style.color = 'red';  // 글자 수 초과 시 빨간색으로 표시
+        var limitData = editorData.substring(0, 1280);
+        //alert("자수="+limitData.length)
+        //CKEDITOR.instances.boardContent.setData(limitData); 
+        var editor = CKEDITOR.instances.boardContent;
+        editor.setData(limitData);
+    } else {
+        charCountElement.style.color = '#555';  // 정상 범위일 때 기본 색상
+    }
+
+}
+
 </script>
 </body>
 </html>

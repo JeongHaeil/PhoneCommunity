@@ -7,104 +7,115 @@
 <head>
     <meta charset="UTF-8">
     <title>게시판</title>
-   <!--   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">  -->
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> --> 
-   
     <style type="text/css">
-    .boardDiv{
-		padding: 0;
-		margin: 0 auto;
-		font-weight: normal;
-		overflow-x: hidden;
-		font-size: 14px;
-		letter-spacing: -0.03em;
+    .boardDiv {
+        padding: 0;
+        margin: 0 auto;
+        font-weight: normal;
+        overflow-x: hidden;
+        font-size: 12px;
+        letter-spacing: -0.03em;
     }
-    .boardsListTable{
- 		 width: 100%;
- 		 /* border: 1px solid #ededed; */
+    .boardsListTable {
+        width: 100%;
     }
     @media (min-width: 1400px) {
   		.container {
    	 		max-width: 1320px;
  		}
  	}
-	
-    .boardsListTable th:not(.boardTitle,.boardWriter,.boardDate) {
-  		text-align: center;
- 		 width: 55px;
- 		 padding: 0 0px;
+ 	@media (max-width: 900px) {
+	    .sideHotboardList {
+	        display: none; 
+   		 }
 	}
-	.boardsListTable th:not(.boardNum,.boardTitle,.boardDate,.boardViewCount){
-		width: 70px;
- 		padding: 0 0px;
-	}
-	th.boardDate{
-		width: 65px;
- 		padding: 0 0px;
-	}
-	
-	.boardTitle{
-		text-align: center;
-	}
-	.boardsListTable thead th{
-		/* border-top: 1px solid #e5e5e5; */
- 		padding: 0 8px;
-  		/* border-bottom: 1px solid #e5e5e5; */
-  		background: #fff;
-  		text-align: center;
-  		
-	}
-	.boardsListTable thead{
-		background-color: #343a40;
-    	color: #fff;
-    	line-height: 2.5;		
-	}
-	.boardsListTable tbody td{
- 		 text-align: left;
- 		 padding: 3.5 2px;
- 		 line-height: 1.5;
- 		 
-	}
-    .pagebtn{
-   	    border-radius: 32px;
-    	min-width: 36px;
-    	padding: 0 4px;
-    	height: 36px;
-    	line-height: 36px;
-    	color: #444;
-    	text-decoration: none !important;
-    	display: inline-block;
-    	font-weight: bold;
-    	font-size: 12px;
-    	text-align: center;
+    
+    .boardsListTable th:not(.boardTitle, .boardWriter, .boardDate) {
+        text-align: center;
+        width: 55px;
+        padding: 0;
     }
-    .pagebtn:hover{
-    	background-color : #444; 
-   	  	color: #fff;
+    .boardsListTable th:not(.boardNum, .boardTitle, .boardDate, .boardViewCount) {
+        width: 125px;
+        padding: 0;
     }
-    .apagebtn{
-   	    border-radius: 32px;
-    	min-width: 36px;
-    	padding: 0 4px;
-    	height: 36px;
-    	line-height: 36px;
-    	color: #fff;
-    	text-decoration: none !important;
-    	display: inline-block;
-    	font-weight: bold;
-    	font-size: 12px;
-    	background-color : #444;
-    	text-align: center;
+    th.boardDate {
+        width: 65px;
+        padding: 0;
     }
-     .apagebtn:hover{
-     	color: #fff;
+    
+    .boardTitle {
+        text-align: center;
     }
-    #boardSearchBtn{
-    	
-    } 
-	<!-- 검색창 -->
-
-    </style>
+    .boardsListTable thead th {
+        padding: 0 8px;
+        text-align: center;
+    }
+    .boardsListTable thead {
+        line-height: 2.5;		
+    }
+    .boardsListTable tbody td:not(.tdboardTitle){
+        text-align: center;
+        padding: 3.5px 2px;
+        line-height: 1.5;
+    }
+    .pagebtn {
+        border-radius: 32px;
+        min-width: 36px;
+        padding: 0 4px;
+        height: 36px;
+        line-height: 36px;
+        color: #444;
+        text-decoration: none !important;
+        display: inline-block;
+        font-weight: bold;
+        font-size: 12px;
+        text-align: center;
+    }
+    .pagebtn:hover {
+        background-color: #444; 
+        color: #fff;
+    }
+    .apagebtn {
+        border-radius: 32px;
+        min-width: 36px;
+        padding: 0 4px;
+        height: 36px;
+        line-height: 36px;
+        color: #fff;
+        text-decoration: none !important;
+        display: inline-block;
+        font-weight: bold;
+        font-size: 12px;
+        background-color: #444;
+        text-align: center;
+    }
+    .apagebtn:hover {
+        color: #fff;
+    }
+    .sideHotboardList {
+        position: fixed;
+        top: 190px; 
+        right: 40px; 
+        z-index: 1000;
+        box-sizing: border-box;
+    }
+    .sideHotboard {
+        white-space: nowrap;       
+        overflow: hidden;          
+        text-overflow: ellipsis;
+    }
+    .tdboardTitle {
+        white-space: nowrap;       
+        overflow: hidden;          
+        text-overflow: ellipsis;
+    }
+    .tdboardWriter {
+        white-space: nowrap;       
+        overflow: hidden;          
+        text-overflow: ellipsis;
+    }
+</style>
 </head>
 <body>
 <div class="container mt-5">
@@ -171,9 +182,12 @@
 		    						<c:forEach var="boards" items="${boardList}">
 		    							<tr>
 		    								<td>${boards.boardPostIdx }</td>  								
-		    								<td>○&nbsp;&nbsp;<a href="<c:url value='/board/boarddetail/${boards.boardCode }/${boards.boardPostIdx }'/>?pageNum=${pager.pageNum}&search=${search }&keyword=${keyword }" style="color: #333;">${boards.boardTitle }</a></td>
-		    								<td>${boards.userNickname }</td>
-		    								<td>${fn:substring(boards.boardResigsterDate,5,10) }</td>
+		    								<td class="tdboardTitle" style="color: #333; cursor: pointer;" 
+											    onclick="location.href='<c:url value='/board/boarddetail/${boards.boardCode }/${boards.boardPostIdx }'/>?pageNum=${pager.pageNum}&search=${search }&keyword=${keyword }'">
+											    &nbsp;&nbsp;${boards.boardTitle}
+											</td>
+		    								<td class="tdboardWriter">${boards.userNickname }</td>
+		    								<td>${boards.boardResigsterDate }</td>
 		    								<td>${boards.boardCount }</td>
 		    							</tr>
 		    						</c:forEach>   						
@@ -241,14 +255,14 @@
 			</div> 		
         </div>
         <%-- 사이드  --%>
-        <div class="col-md-3">
+        <div class="col-md-3 sideHotboardList">
             <h2>오늘의 인기글</h2>
             <ul class="list-group">
-                <li class="list-group-item"><a href="#">1. 일반 bcaa 2종 1980원 무배</a> <span class="badge badge-primary">13</span></li>
-                <li class="list-group-item"><a href="#">2. 블렌드 유산균 반값</a> <span class="badge badge-primary">8</span></li>
-                <li class="list-group-item"><a href="#">3. 미사 스포츠 음료 300P</a> <span class="badge badge-primary">1500</span></li>
-                <li class="list-group-item"><a href="#">4. 가스펠 포드 ADV 신제품</a> <span class="badge badge-primary">16</span></li>
-                <li class="list-group-item"><a href="#">5. 이너 마이핏 ADV 신제품</a> <span class="badge badge-primary">14</span></li>
+                <li class="list-group-item sideHotboard"><a href="#">1. 일반 bcaa 2종 1980원 무배</a> <span class="badge badge-primary">13</span></li>
+                <li class="list-group-item sideHotboard"><a href="#">2. 블렌드 유산균 반값</a> <span class="badge badge-primary">8</span></li>
+                <li class="list-group-item sideHotboard"><a href="#">3. 미사 스포츠 음료 300P</a> <span class="badge badge-primary">1500</span></li>
+                <li class="list-group-item sideHotboard"><a href="#">4. 가스펠 포드 ADV 신제품</a> <span class="badge badge-primary">16</span></li>
+                <li class="list-group-item sideHotboard"><a href="#">5. 이너 마이핏 ADV 신제품</a> <span class="badge badge-primary">14</span></li>
             </ul>
         </div>
 		
