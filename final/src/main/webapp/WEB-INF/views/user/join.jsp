@@ -90,10 +90,10 @@
             <input type="text" class="form-control" id="user_email" name="userEmail" placeholder="이메일 주소를 입력하세요" required>
             <div id="emailCheck" class="validation-message"></div>
         </div>
-        <div class="mb-3">
+       <div class="mb-3">
     <label for="user_phone_number" class="form-label">핸드폰 번호</label>
     <div class="phone-number-container">
-        <select class="form-control" id="phone_first" required>
+        <select class="form-control" id="phone_first" name="phone_first" required> <!-- name 속성 추가 -->
             <option value="010" selected>010</option>
             <option value="011">011</option>
             <option value="016">016</option>
@@ -101,12 +101,12 @@
             <option value="018">018</option>
             <option value="019">019</option>
         </select>
-        <input type="text" class="form-control" id="phone_middle" maxlength="4" placeholder="0000" required>
-        <input type="text" class="form-control" id="phone_last" maxlength="4" placeholder="0000" required>
+        <input type="text" class="form-control" id="phone_middle" name="phone_middle" maxlength="4" placeholder="0000" required> <!-- name 속성 추가 -->
+        <input type="text" class="form-control" id="phone_last" name="phone_last" maxlength="4" placeholder="0000" required> <!-- name 속성 추가 -->
     </div>
     <input type="hidden" id="user_phone_number" name="userPhoneNumber">
     <div id="phoneValidation" class="validation-message"></div>
-	</div>
+</div>
         <div class="mb-3">
             <label for="user_nickname" class="form-label">닉네임</label>
             <input type="text" class="form-control" id="user_nickname" name="userNickName" placeholder="닉네임을 입력하세요" required>

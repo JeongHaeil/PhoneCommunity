@@ -9,14 +9,7 @@ h3{
     font-size: 16px;
     margin: 20px;
 }
-.plans-header {
-    background-color: #ff9800;
-    color: white;
-    text-align: center;
-    padding: 20px;
-    font-size: 28px;
-    font-weight: bold;
-}
+
 
 .plans-filter {
     margin: 20px auto;

@@ -5,6 +5,7 @@
 <mapper namespace="xyz.itwill.mapper.PhonePlansMapper">
 
     <select id="selectPhonePlans" parameterType="map" resultType="PhonePlans">
+    <!-- 
          SELECT 
         phone_plans.plan_id, 
         phone_plans.carrier_id, 
@@ -40,5 +41,126 @@
     <if test="planType != null and planType != ''">
         AND phone_plans.plan_type = #{planType} 
     </if> 
+     -->
+     
+      <!-- 
+         SELECT 
+        phone_plans.plan_id, 
+        phone_plans.carrier_id, 
+        phone_plans.product_id, 
+        phone_plans.plan_product_type, 
+        phone_plans.plan_type, 
+        phone_plans.plan_months, 
+        phone_plans.plan_option, 
+        phone_plans.plan_additional,
+        carriers.carrier_name,             
+        products.product_name,             
+        plan_details.plan_name,            
+        plan_details.plan_contract_type,   
+        plan_details.plan_data,            
+        plan_details.additional_support,   
+        plan_details.monthly_installment_fee, 
+        plan_details.installment_interest, 
+        plan_details.total_monthly_fee     
+    FROM 
+        phone_plans
+    JOIN 
+        carriers ON phone_plans.carrier_id = carriers.carrier_id
+    JOIN 
+        products ON phone_plans.product_id = products.product_id
+    JOIN 
+        plan_details ON phone_plans.plan_id = plan_details.plan_id
+      -->
+      
+      <!--   SELECT 
+        phone_plans.plan_id, 
+        phone_plans.carrier_id, 
+        phone_plans.product_id, 
+        phone_plans.plan_product_type, 
+        phone_plans.plan_type, 
+        phone_plans.plan_months, 
+        phone_plans.plan_option, 
+        phone_plans.plan_additional,
+        carriers.carrier_name,             
+        products.product_name,             
+        plan_details.plan_name,            
+        plan_details.plan_contract_type,   
+        plan_details.plan_data,            
+        plan_details.additional_support,   
+        plan_details.monthly_installment_fee, 
+        plan_details.installment_interest, 
+        plan_details.total_monthly_fee     
+    FROM 
+        phone_plans
+    JOIN 
+        carriers ON phone_plans.carrier_id = carriers.carrier_id
+    JOIN 
+        products ON phone_plans.product_id = products.product_id
+    JOIN 
+        plan_details ON phone_plans.plan_id = plan_details.plan_id
+    <where>
+        통신사 선택 시
+        <if test="carrierId != 0">
+            AND phone_plans.carrier_id = #{carrierId}
+        </if>
+        제품 선택 시
+        <if test="productId != 0">
+            AND phone_plans.product_id = #{productId}
+        </if>
+        5G/LTE 선택 시
+        <if test="planProductType != null and planProductType != ''">
+            AND phone_plans.plan_product_type = #{planProductType}
+        </if>
+        신규/기변 선택 시
+        <if test="planType != null and planType != ''">
+            AND phone_plans.plan_type = #{planType}
+        </if>
+        할부 개월 선택 시
+        <if test="planMonths != 0">
+            AND phone_plans.plan_months = #{planMonths}
+        </if>
+        자급제/할부 선택 시
+        <if test="planOption != null and planOption != ''">
+            AND phone_plans.plan_option = #{planOption}
+        </if>
+        추가 지원금 선택 시
+        <if test="planAdditional != 0">
+            AND phone_plans.plan_additional = #{planAdditional}
+        </if>
+    </where> -->
+   
+    SELECT 
+        phone_plans.plan_id, 
+        phone_plans.carrier_id, 
+        phone_plans.product_id, 
+        phone_plans.plan_product_type, 
+        phone_plans.plan_type, 
+        phone_plans.plan_months, 
+        phone_plans.plan_option, 
+        phone_plans.plan_additional,
+        carriers.carrier_name,             
+        products.product_name,             
+        plan_details.plan_name,            
+        plan_details.plan_contract_type,   
+        plan_details.plan_data,            
+        plan_details.additional_support,   
+        plan_details.monthly_installment_fee, 
+        plan_details.installment_interest, 
+        plan_details.total_monthly_fee     
+    FROM 
+        phone_plans
+    JOIN 
+        carriers ON phone_plans.carrier_id = carriers.carrier_id
+    JOIN 
+        products ON phone_plans.product_id = products.product_id
+    JOIN 
+        plan_details ON phone_plans.plan_id = plan_details.plan_id
+      WHERE 
+        1=1
+    <if test="planProductType != null and planProductType != ''">
+         AND UPPER(phone_plans.plan_product_type) = UPPER(#{planProductType})
+    </if>
+
+    
     </select>
 </mapper>
