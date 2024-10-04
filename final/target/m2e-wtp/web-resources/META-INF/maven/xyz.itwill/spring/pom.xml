@@ -304,6 +304,15 @@
 		
 		
 		
+		<dependency>
+		    <groupId>org.atmosphere</groupId>
+		    <artifactId>atmosphere-runtime</artifactId>
+		    <version>2.6.4</version>
+		</dependency>
+		
+		
+		
+		
 		
 		
 	</dependencies>

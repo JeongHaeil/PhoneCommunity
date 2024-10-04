@@ -65,7 +65,8 @@
                                 <button class="plans-btn">기변</button>
                             </div>
                         </div>
-                       <!--  <div class="plans-option-group">
+                        
+                      <div class="plans-option-group">
                             <h3>할부 개월</h3>
                             <div class="plans-btn-group">
                                 <button class="plans-btn active">자급제</button>
@@ -78,7 +79,8 @@
                                     <button class="dropdown-item" onclick="selectMonth(24)">24개월</button>
                                 </div>
                             </div>
-                        </div> -->
+                        </div> 
+                        
                         <div class="plans-option-group">
                             <h3>추가 지원금</h3>
                             <select id="extra-support" class="plans-select">
@@ -106,8 +108,7 @@
         </table>
     </section>
     
-   <button id="downloadExcelBtn">엑셀다운</button>
-	
+    <button id="downloadExcelBtn">엑셀 다운로드</button>
     <!-- 요금제 구분 테이블 -->
     <div class="plans-summary">
     
@@ -167,14 +168,9 @@ $(document).ready(function() {
     }
     
     
-   
-    $('#downloadExcelBtn').click(function() {
-        window.location.href = "/phone/downloadExcel";  // 엑셀 다운로드 요청
-    });
     
     
-    
-
+  
     function filterPlansByDivision(division) {
     	 
     	 console.log("실행 확인"); 
@@ -185,17 +181,12 @@ $(document).ready(function() {
             data: { planProductType: division 
             		
             
-            	},
-            
-            
+            	},   
             beforeSend: function(xhr) {
                 xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
             },
             success: function(response) {
-                try {
-                	
-                
-                	
+                try {                  	
                     // JSON 응답을 HTML로 변환
                     var htmlContent = "";
                     
@@ -233,9 +224,14 @@ $(document).ready(function() {
             }
         });
     }
-
-    
+        
 });
+
+                document.getElementById("downloadExcelBtn").addEventListener("click", function() {
+                    window.location.href = "<c:url value="/phone/download"/>";
+                });
+
+
 
 </script>
 
