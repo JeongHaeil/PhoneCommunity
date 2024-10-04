@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -12,7 +12,7 @@
             background-color: #f8f9fa;
             font-family: 'Noto Sans KR', sans-serif;
         }
-        .container {
+        .password-change-container {
             max-width: 600px;
             margin: 50px auto;
             padding: 20px;
@@ -20,18 +20,18 @@
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        h3 {
+        .password-change-header {
             font-weight: bold;
             margin-bottom: 20px;
         }
-        .btn-custom {
+        .password-change-btn {
             background-color: #f86d6d;
             color: white;
             border-radius: 5px;
             padding: 10px 15px;
             margin-right: 5px;
         }
-        .btn-custom:hover {
+        .password-change-btn:hover {
             background-color: #f75c5c;
         }
         .form-label {
@@ -41,9 +41,12 @@
 </head>
 <body>
 
-<div class="container">
-    <h3>비밀번호 변경</h3>
-    <form action="/change-password" method="post">
+<div class="password-change-container">
+    <h3 class="password-change-header">비밀번호 변경</h3>
+    <form id="passwordChangeForm" action="/final/user/passwordUpdate" method="post" onsubmit="return validateForm();">
+        <!-- CSRF 토큰 추가 -->
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        
         <!-- 이메일 -->
         <div class="mb-3">
             <label for="email" class="form-label">이메일</label>
@@ -70,11 +73,27 @@
         </div>
 
         <!-- 등록 버튼 -->
-        <button type="submit" class="btn btn-custom">등록</button>
+        <button type="submit" class="btn password-change-btn">등록</button>
     </form>
 </div>
 
 <!-- 부트스트랩 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- 비밀번호 확인용 스크립트 -->
+<script>
+    function validateForm() {
+        var newPassword = document.getElementById("newPassword").value;
+        var confirmNewPassword = document.getElementById("confirmNewPassword").value;
+
+        if (newPassword !== confirmNewPassword) {
+            alert("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            return false;  // 폼 제출을 중단
+        }
+
+        return true;  // 폼 제출 진행
+    }
+</script>
+
 </body>
 </html>

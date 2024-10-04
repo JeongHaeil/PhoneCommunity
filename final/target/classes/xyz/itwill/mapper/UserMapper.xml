@@ -5,6 +5,22 @@
 
 <mapper namespace="xyz.itwill.mapper.UserMapper">
 
+    <!-- resultMap 정의 -->
+    <resultMap id="userResultMap" type="xyz.itwill.dto.User">
+        <id property="userNum" column="USER_NUM"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="userPassword" column="USER_PASSWORD"/>
+        <result property="userEmail" column="USER_EMAIL"/>
+        <result property="userPhoneNum" column="USER_PHONE_NUM"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="userUpdateDate" column="USER_UPDATE_DATE"/>
+        <result property="userLastLogin" column="USER_LAST_LOGIN"/>
+        <result property="userRegisterDate" column="USER_REGISTER_DATE"/>
+        <result property="userLevel" column="USER_LEVEL"/>
+        <result property="userStatus" column="USER_STATUS"/>
+        <result property="userNickName" column="USER_NICKNAME"/>
+    </resultMap>
+
     <!-- Insert User -->
     <insert id="insertUser">
         INSERT INTO USERS (USER_NUM, USER_ID, USER_PASSWORD, USER_EMAIL, USER_PHONE_NUM, USER_NAME, USER_REGISTER_DATE, USER_LEVEL, USER_STATUS, USER_NICKNAME)
@@ -30,72 +46,33 @@
     </delete>
 
     <!-- Select a User by userId -->
-    <select id="selectUser" parameterType="String" resultType="xyz.itwill.dto.User">
+    <select id="selectUser" parameterType="String" resultMap="userResultMap">
         SELECT * FROM USERS WHERE USER_ID = #{userId}
     </select>
 
     <!-- Select all Users -->
-    <select id="selectUserList" resultType="xyz.itwill.dto.User">
+    <select id="selectUserList" resultMap="userResultMap">
         SELECT * FROM USERS
     </select>
 
    <!-- 닉네임으로 사용자 조회 -->
-<select id="selectUserByNickname" parameterType="string" resultType="xyz.itwill.dto.User">
-    SELECT USER_NUM AS userNum,
-           USER_ID AS userId,
-           USER_PASSWORD AS userPassword,
-           USER_EMAIL AS userEmail,
-           USER_PHONE_NUM AS userPhoneNum,
-           USER_NAME AS userName,
-           USER_UPDATE_DATE AS userUpdateDate,
-           USER_LAST_LOGIN AS userLastLogin,
-           USER_REGISTER_DATE AS userRegisterDate,
-           USER_LEVEL AS userLevel,
-           USER_STATUS AS userStatus,
-           USER_NICKNAME AS userNickName
-    FROM USERS
-    WHERE USER_NICKNAME = #{userNickName}
-</select>
+    <select id="selectUserByNickname" parameterType="string" resultMap="userResultMap">
+        SELECT * FROM USERS WHERE USER_NICKNAME = #{userNickName}
+    </select>
 
-
- 
     <!-- Select a User by userId with explicit column mappings -->
-    <select id="selectUserByUserId" parameterType="string" resultType="xyz.itwill.dto.User">
-        SELECT USER_NUM AS userNum,
-               USER_ID AS userId,
-               USER_PASSWORD AS userPassword,
-               USER_EMAIL AS userEmail,
-               USER_PHONE_NUM AS userPhoneNum,
-               USER_NAME AS userName,
-               USER_UPDATE_DATE AS userUpdateDate,
-               USER_LAST_LOGIN AS userLastLogin,
-               USER_REGISTER_DATE AS userRegisterDate,
-               USER_LEVEL AS userLevel,
-               USER_STATUS AS userStatus,
-               USER_NICKNAME AS userNickName
-        FROM USERS
-        WHERE USER_ID = #{userId}
+    <select id="selectUserByUserId" parameterType="string" resultMap="userResultMap">
+        SELECT * FROM USERS WHERE USER_ID = #{userId}
     </select>
-    
-   
-	
+
+    <!-- 아이디, 이메일, 이름으로 사용자 확인 -->
+    <select id="selectUserByIdNameAndEmail" parameterType="map" resultMap="userResultMap">
+        SELECT * FROM USERS WHERE USER_ID = #{userId} AND USER_EMAIL = #{userEmail} AND USER_NAME = #{userName}
+    </select>
+
+    <!-- 이메일과 이름으로 아이디 찾기 -->
     <select id="selectUserIdByEmailAndName" parameterType="map" resultType="String">
-    SELECT user_id
-    FROM users
-    WHERE user_email = #{email}
-    AND user_name = #{name}
-    AND ROWNUM = 1
-</select>
-
- <!-- 아이디, 이름, 이메일로 사용자 확인 -->
-    <select id="selectUserByIdNameAndEmail" parameterType="map" resultType="xyz.itwill.dto.User">
-        SELECT *
-        FROM users
-        WHERE user_id = #{userId}
-        AND user_email = #{userEmail}
-        AND user_name = #{userName}
+        SELECT USER_ID FROM USERS WHERE USER_EMAIL = #{email} AND USER_NAME = #{name} AND ROWNUM = 1
     </select>
 
-
-    
 </mapper>

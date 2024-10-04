@@ -23,6 +23,7 @@ public class CustomUserDetails implements UserDetails {
     private String userEmail;
     private String nickname; // 닉네임 필드 추가
     private int userStatus;
+    private int userLevel; // 사용자 레벨 추가
 
     // 인증된 사용자의 모든 권한 정보가 저장될 필드
     private List<GrantedAuthority> authorities;
@@ -35,6 +36,7 @@ public class CustomUserDetails implements UserDetails {
         this.userEmail = user.getUserEmail();
         this.nickname = user.getUserNickName(); // 닉네임 초기화
         this.userStatus = user.getUserStatus();
+        this.userLevel = user.getUserLevel(); // 레벨 설정
 
         this.authorities = new ArrayList<>();
         for (SecurityAuth auth : securityAuthList) {

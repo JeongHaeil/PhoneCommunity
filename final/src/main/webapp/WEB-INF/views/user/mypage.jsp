@@ -12,7 +12,7 @@
             background-color: #f8f9fa;
             font-family: 'Noto Sans KR', sans-serif;
         }
-        .container {
+        .mypage-container {
             max-width: 900px;
             margin: 50px auto;
             padding: 20px;
@@ -24,42 +24,55 @@
             font-weight: bold;
             margin-bottom: 20px;
         }
-        .nav-tabs {
+        .mypage-nav-tabs {
             border-bottom: 2px solid #ddd;
+            margin-bottom: 20px;
         }
-        .nav-tabs .nav-link {
+        .mypage-nav-tabs .nav-link {
             color: #f86d6d;
+            padding: 8px 16px;
         }
-        .nav-tabs .nav-link.active {
+        .mypage-nav-tabs .nav-link.active {
             color: #f75c5c;
             border-color: #f75c5c #f75c5c #fff;
+            border-bottom: 2px solid #f75c5c;
         }
-        .info-section {
-            margin-top: 30px;
+        .mypage-info-section {
+            margin-top: 20px;
         }
-        .info-section .label {
+        .mypage-info-section .label {
             font-weight: bold;
         }
-        .info-section .value {
+        .mypage-info-section .value {
             margin-left: 10px;
         }
-        .btn-custom {
+        .mypage-btn-custom {
             background-color: #f86d6d;
             color: white;
             border-radius: 5px;
-            padding: 10px 15px;
+            padding: 10px 20px;
             margin-right: 5px;
         }
-        .btn-custom:hover {
+        .mypage-btn-custom:hover {
             background-color: #f75c5c;
+        }
+        /* 네비게이션 탭을 더 이미지처럼 수정 */
+        .nav-pills .nav-link {
+            background-color: transparent;
+            border: none;
+        }
+        .nav-pills .nav-link.active {
+            background-color: #f86d6d;
+            color: white;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="mypage-container">
     <!-- 네비게이션 탭 -->
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-pills mypage-nav-tabs">
         <li class="nav-item">
             <a class="nav-link active" href="#">회원정보 보기</a>
         </li>
@@ -79,7 +92,7 @@
     </ul>
 
     <!-- 회원 정보 섹션 -->
-    <div class="info-section">
+    <div class="mypage-info-section">
         <h3>회원 정보</h3>
 
         <div class="row mb-3">
@@ -104,12 +117,12 @@
 
         <div class="row mb-3">
             <div class="col-md-3 label">포인트</div>
-            <div class="col-md-9 value">120 P</div>
+            <div class="col-md-9 value">150 P</div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-3 label">레벨</div>
-            <div class="col-md-9 value">Lv.1 (66%) / 17</div>
+            <div class="col-md-9 value">Lv.1 (83%) / 17</div>
         </div>
 
         <div class="row mb-3">
@@ -124,17 +137,28 @@
 
         <div class="row mb-3">
             <div class="col-md-3 label">최근 로그인</div>
-            <div class="col-md-9 value">2024-09-17</div>
+            <div class="col-md-9 value">2024-10-03</div>
         </div>
     </div>
 
     <!-- 버튼 섹션 -->
     <div class="mt-4">
-        <button type="button" class="btn btn-custom">이메일 주소 변경</button>
-        <button type="button" class="btn btn-custom">회원정보 변경</button>
-        <button type="button" class="btn btn-custom">비밀번호 변경</button>
-        <button type="button" class="btn btn-custom">탈퇴</button>
+        <form action="/final/user/userUpdate" method="POST">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <button type="submit" class="btn mypage-btn-custom">회원정보 변경</button>
+        </form>
+        
+        <form action="/final/user/passwordUpdate" method="POST">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <button type="submit" class="btn mypage-btn-custom">비밀번호 변경</button>
+        </form>
+        
+        <form action="/final/user/userDelete" method="POST">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <button type="submit" class="btn mypage-btn-custom">탈퇴</button>
+        </form>
     </div>
+
 </div>
 
 <!-- 부트스트랩 JS -->
