@@ -19,4 +19,6 @@ public interface UserMapper {
     User selectUserByIdAndEmailAndName(@Param("userId") String userId, 
                                        @Param("userEmail") String userEmail,
                                        @Param("userName") String userName);
+ // 비밀번호 업데이트 쿼리 추가
+    int updatePassword(User user);
 }

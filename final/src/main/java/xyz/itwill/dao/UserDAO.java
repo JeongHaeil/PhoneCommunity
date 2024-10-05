@@ -14,6 +14,9 @@ public interface UserDAO {
     User selectUserByUserId(String userId);
     
     String selectUserIdByEmailAndName(String email, String name); // 추가
- // 새로 추가된 메서드: 아이디, 이름, 이메일로 사용자 조회
+    
+    // 새로 추가된 메서드: 아이디, 이름, 이메일로 사용자 조회
     User selectUserByIdNameAndEmail(String userId, String userName, String userEmail);
-}
+    
+    int updatePassword(User user); // 비밀번호만 변경하는 메서드 추가
+    }

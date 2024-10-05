@@ -2,10 +2,14 @@ package xyz.itwill.controller;
 
 import java.util.Random;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -30,6 +34,8 @@ public class UserController {
 
     private final UserService userService;
     private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder; // PasswordEncoder 주입
+    
 
     // 홈 페이지 요청을 처리하는 메서드
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -277,7 +283,7 @@ public class UserController {
         }
         return tempPassword.toString();
     }
-    // 회원정보 수정 페이지로 이동 (GET 방식)
+ // 회원정보 수정 페이지로 이동 (GET 방식)
     @RequestMapping(value = "/userUpdate", method = RequestMethod.GET)
     public String showUserUpdatePage(Authentication authentication, Model model) {
         if (authentication == null) {
@@ -311,68 +317,63 @@ public class UserController {
         return "user/userUpdate";
     }
 
-    // 비밀번호 변경 페이지로 이동 (GET 방식)
+ // 비밀번호 변경 페이지로 이동 (GET 요청)
     @RequestMapping(value = "/passwordUpdate", method = RequestMethod.GET)
     public String showPasswordUpdatePage(Authentication authentication, Model model) {
-        if (authentication == null) {
-            return "redirect:/user/login";  // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+        // 인증된 사용자의 ID를 가져와서 뷰에 전달
+        if (authentication != null) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            model.addAttribute("userId", userDetails.getUserId()); // userId를 폼에 전달
         }
-
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        User loginUser = userService.getUser(userDetails.getUserId());
-        model.addAttribute("user", loginUser);
-
-        return "user/passwordUpdate";  // passwordUpdate.jsp로 이동
+        return "user/passwordUpdate"; // 비밀번호 변경 페이지로 이동
     }
-
-    // 비밀번호 변경 처리 (POST 방식)
+ // 비밀번호 변경 처리 (POST 요청)
     @RequestMapping(value = "/passwordUpdate", method = RequestMethod.POST)
     public String updatePassword(
-            @RequestParam("currentPassword") String currentPassword,
-            @RequestParam("newPassword") String newPassword,
-            Authentication authentication, 
-            Model model) {
-        if (authentication == null) {
-            return "redirect:/user/login";  // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
-        }
+        @RequestParam("currentPassword") String currentPassword,
+        @RequestParam("newPassword") String newPassword,
+        @RequestParam("confirmNewPassword") String confirmNewPassword,
+        Authentication authentication, 
+        Model model) {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         User loginUser = userService.getUser(userDetails.getUserId());
 
-        // 현재 비밀번호와 맞는지 확인
-        if (!BCrypt.checkpw(currentPassword, loginUser.getUserPassword())) {
+        if (!passwordEncoder.matches(currentPassword, loginUser.getUserPassword())) {
             model.addAttribute("error", "현재 비밀번호가 일치하지 않습니다.");
             return "user/passwordUpdate";
         }
 
-        // 새 비밀번호를 암호화하여 저장
-        loginUser.setUserPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
-        userService.modifyUser(loginUser);
-        model.addAttribute("message", "비밀번호가 성공적으로 변경되었습니다.");
-
-        return "user/passwordUpdate";
-    }
-
-    // 회원 탈퇴 페이지로 이동 (GET 방식)
-    @RequestMapping(value = "/userDelete", method = RequestMethod.GET)
-    public String showUserDeletePage(Authentication authentication, Model model) {
-        if (authentication == null) {
-            return "redirect:/user/login";  // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+        if (!newPassword.equals(confirmNewPassword)) {
+            model.addAttribute("error", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+            return "user/passwordUpdate";
         }
 
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        User loginUser = userService.getUser(userDetails.getUserId());
-        model.addAttribute("user", loginUser);
+        loginUser.setUserPassword(passwordEncoder.encode(newPassword));
+        userService.modifyUser(loginUser);
 
-        return "user/userDelete";  // userDelete.jsp로 이동
+        model.addAttribute("message", "비밀번호가 성공적으로 변경되었습니다.");
+        return "user/passwordUpdate";
     }
-
-    // 회원 탈퇴 처리 (POST 방식)
+ // 회원 탈퇴 확인 페이지로 이동 (GET 요청)
+    @RequestMapping(value = "/userDelete", method = RequestMethod.GET)
+    public String showUserDeletePage(Authentication authentication, Model model) {
+        if (authentication != null) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            model.addAttribute("userId", userDetails.getUserId()); // 로그인한 사용자의 ID 전달
+        }
+        return "user/deleteUser"; // 탈퇴 페이지로 이동
+    }
+ 
+ // 회원 탈퇴 처리 (POST 방식)
     @RequestMapping(value = "/userDelete", method = RequestMethod.POST)
     public String deleteUser(
-            Authentication authentication,
-            @RequestParam("password") String password, 
-            Model model) {
+        Authentication authentication,
+        @RequestParam("password") String password, 
+        HttpServletRequest request,  // HttpServletRequest 추가
+        HttpServletResponse response, // HttpServletResponse 추가
+        Model model) {
+
         if (authentication == null) {
             return "redirect:/user/login";  // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
         }
@@ -381,15 +382,43 @@ public class UserController {
         User loginUser = userService.getUser(userDetails.getUserId());
 
         // 비밀번호 확인
-        if (!BCrypt.checkpw(password, loginUser.getUserPassword())) {
+        if (!passwordEncoder.matches(password, loginUser.getUserPassword())) {
             model.addAttribute("error", "비밀번호가 일치하지 않습니다.");
             return "user/userDelete";
         }
 
-        userService.deleteUser(loginUser.getUserId());  // 사용자 계정 삭제
-        authentication.setAuthenticated(false);  // 로그아웃 처리
-        model.addAttribute("message", "회원 탈퇴가 완료되었습니다.");
+        // user_status를 0으로 변경하여 계정 비활성화
+        loginUser.setUserStatus(0);
+        userService.modifyUser(loginUser);  // 상태 업데이트
 
+        // 인증 상태 해제 및 로그아웃 처리
+        new SecurityContextLogoutHandler().logout(request, response, authentication);
+
+        model.addAttribute("message", "회원 탈퇴가 완료되었습니다.");
         return "redirect:/user/login";  // 로그인 페이지로 리다이렉트
+    }
+    
+ // 스크랩 보기 페이지로 이동
+    @RequestMapping(value = "/myScrap", method = RequestMethod.GET)
+    public String showMyScrapPage() {
+        return "user/myScrap"; // 스크랩 보기 페이지로 이동
+    }
+
+    // 작성 글 보기 페이지로 이동
+    @RequestMapping(value = "/myWrite", method = RequestMethod.GET)
+    public String showMyWritePage() {
+        return "user/myWrite"; // 작성 글 보기 페이지로 이동
+    }
+
+    // 자동 로그인 관리 페이지로 이동
+    @RequestMapping(value = "/myRemember-me", method = RequestMethod.GET)
+    public String showMyRememberMePage() {
+        return "user/myRemember-me"; // 자동 로그인 관리 페이지로 이동
+    }
+
+    // 작성 댓글 보기 페이지로 이동
+    @RequestMapping(value = "/myComment", method = RequestMethod.GET)
+    public String showMyCommentPage() {
+        return "user/myComment"; // 작성 댓글 보기 페이지로 이동
     }
 }

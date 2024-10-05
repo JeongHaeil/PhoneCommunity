@@ -96,16 +96,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updatePassword(User user) {
-        // 임시 비밀번호 생성
-        String temporaryPassword = UUID.randomUUID().toString().substring(0, 8); // 8자리 임시 비밀번호
-        String hashedPassword = BCrypt.hashpw(temporaryPassword, BCrypt.gensalt());
-
-        user.setUserPassword(hashedPassword); // 비밀번호 암호화 후 업데이트
-
-        // 비밀번호 업데이트
-        userDAO.updateUser(user);
-        
-        // 임시 비밀번호를 이메일로 전송
-        emailService.sendTemporaryPassword(user.getUserEmail(), temporaryPassword); // 임시 비밀번호 이메일 전송
+        // 비밀번호 암호화는 컨트롤러에서 처리되었으므로 그대로 업데이트
+        userDAO.updatePassword(user);
     }
 }

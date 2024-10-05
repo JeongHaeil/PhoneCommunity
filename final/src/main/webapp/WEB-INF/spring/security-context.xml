@@ -60,4 +60,6 @@
     <context:component-scan base-package="xyz.itwill.dao"/>
 
     <beans:bean class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" id="passwordEncoder"/>
+    
+    
 </beans:beans>
