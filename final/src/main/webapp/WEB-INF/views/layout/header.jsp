@@ -60,12 +60,11 @@
                                     <!-- 로그인한 회원의 레벨 표시 및 경험치 바 -->
                                     <div class="level-bar text-center mt-2">
                                         <p id="userLevel">Loading...</p>
-                                        <p id="progressPercentage">Loading...</p>
-                                        <p id="currentExperience">Loading...</p>
-                                        <p id="experienceForNextLevel">Loading...</p>
                                         <div class="progress">
                                             <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
+                                        <!-- 경험치 정보 표시 (0/100 P (0%)) -->
+                                        <p class="level-text mt-2" id="experienceText">Loading...</p>
                                     </div>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
@@ -103,10 +102,8 @@
         	    success: function(data) {
         	        if (data.userLevel) {
         	            $('#userLevel').text('레벨: ' + data.userLevel);
-        	            $('#progressPercentage').text('진행률: ' + data.progressPercentage + '%');
-        	            $('#currentExperience').text('현재 경험치: ' + data.currentExperience);
-        	            $('#experienceForNextLevel').text('다음 레벨까지 필요한 경험치: ' + data.experienceForNextLevel);
         	            $('.progress-bar').css('width', data.progressPercentage + '%');
+        	            $('#experienceText').text(data.currentExperience + '/' + data.experienceForNextLevel + ' P (' + data.progressPercentage + '%)');
         	        } else {
         	            $('#userLevel').text('레벨 정보가 없습니다.');
         	        }
