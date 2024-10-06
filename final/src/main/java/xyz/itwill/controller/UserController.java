@@ -421,35 +421,27 @@ public class UserController {
     public String showMyScrapPage() {
         return "user/myScrap"; // 스크랩 보기 페이지로 이동
     }
+    
 
-    // 작성 글 보기 페이지로 이동
+ // 작성 글 보기 페이지로 이동
     @RequestMapping(value = "/myWrite", method = RequestMethod.GET)
-    public String showMyWritePage(HttpSession session, Model model) {
-        // 세션에서 로그인한 사용자의 ID를 가져옴
-        String userId = (String) session.getAttribute("loggedInUserId");
-
-        // 사용자가 로그인되어 있을 경우에만 처리
-        if (userId != null) {
-            // 사용자가 작성한 게시글 목록을 가져옴
-            List<Board> postList = boardService.getBoardsByUserId(userId);
-            model.addAttribute("postList", postList);  // 모델에 게시글 목록 추가
-        } else {
-            return "redirect:/user/login";  // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+    public String showMyWritePage(Authentication authentication, Model model) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/user/login";
         }
 
-        return "user/myWrite";  // 작성 글 보기 페이지로 이동
-    }
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String userId = userDetails.getUserId();
 
-    // 자동 로그인 관리 페이지로 이동
-    @RequestMapping(value = "/myRemember-me", method = RequestMethod.GET)
-    public String showMyRememberMePage() {
-        return "user/myRemember-me"; // 자동 로그인 관리 페이지로 이동
-    }
+        // 게시글 목록 가져오기
+        List<Board> postList = boardService.getBoardsByUserId(userId);
+        
+        // 데이터 확인을 위해 로그 추가
+        log.info("게시글 목록: " + postList);
+        
+        model.addAttribute("postList", postList);
 
-    // 작성 댓글 보기 페이지로 이동
-    @RequestMapping(value = "/myComment", method = RequestMethod.GET)
-    public String showMyCommentPage() {
-        return "user/myComment"; // 작성 댓글 보기 페이지로 이동
+        return "user/myWrite";
     }
     
  // 헤더에 사용자의 레벨, 경험치, 경험치 진행률을 표시하기 위한 메서드
