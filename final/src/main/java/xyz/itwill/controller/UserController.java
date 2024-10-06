@@ -25,9 +25,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import xyz.itwill.auth.CustomUserDetails;
 import xyz.itwill.dto.Board;
+import xyz.itwill.dto.Comments;
 import xyz.itwill.dto.Email;
 import xyz.itwill.dto.User;
 import xyz.itwill.service.BoardService;
+import xyz.itwill.service.CommentsService;
 import xyz.itwill.service.EmailService;
 import xyz.itwill.service.UserService;
 import xyz.itwill.util.ExperienceUtil;
@@ -42,6 +44,7 @@ public class UserController {
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder; // PasswordEncoder 주입
     private final BoardService boardService; // BoardService 주입
+    private final CommentsService commentsService; // CommentsService 주입
     
 
     // 홈 페이지 요청을 처리하는 메서드
@@ -422,6 +425,23 @@ public class UserController {
         return "user/myScrap"; // 스크랩 보기 페이지로 이동
     }
     
+ // 작성 댓글 보기 페이지로 이동
+    @RequestMapping(value = "/myComment")
+    public String showMyCommentPage(Authentication authentication, Model model) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/user/login"; // 인증되지 않은 사용자는 로그인 페이지로 리다이렉트
+        }
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String userId = userDetails.getUserId(); // 로그인한 사용자의 ID 가져오기
+
+        // 사용자가 작성한 댓글 목록을 가져옴
+        List<Comments> commentList = commentsService.getCommentsByUserId(userId);
+
+        model.addAttribute("commentList", commentList); // 모델에 댓글 목록 추가
+        return "user/myComment"; // JSP 파일로 이동
+    }
+
 
  // 작성 글 보기 페이지로 이동
     @RequestMapping(value = "/myWrite", method = RequestMethod.GET)

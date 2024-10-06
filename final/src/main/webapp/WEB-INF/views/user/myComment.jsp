@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  <!-- JSTL 코어 태그 선언 -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -50,10 +51,11 @@
     </style>
 </head>
 <body>
-<!-- 탭 include -->
+    <!-- 탭 include -->
     <jsp:include page="/WEB-INF/views/user/mypageTabs.jsp">
         <jsp:param name="activeTab" value="myComment" />
     </jsp:include>
+
 <div class="container">
     <h3 class="header-title">작성 댓글 보기</h3>
     
@@ -79,12 +81,13 @@
                             <td>${comment.content}</td>
                             <td>
                                 <form action="/final/comment/delete" method="post">
-                                    <input type="hidden" name="commentId" value="${comment.commentId}">
+                                    <input type="hidden" name="commentIdx" value="${comment.commentIdx}">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"> <!-- CSRF 토큰 추가 -->
                                     <button type="submit" class="btn btn-danger btn-sm">삭제</button>
                                 </form>
                             </td>
-                            <td>${comment.date}</td>
-                            <td>${comment.upvotes}/${comment.downvotes}</td>
+                            <td>${comment.commentRegDate}</td>
+                            <td>${comment.commentStarup}/${comment.commentStardown}</td> <!-- 수정된 부분 -->
                         </tr>
                     </c:forEach>
                 </c:otherwise>
