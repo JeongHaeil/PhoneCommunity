@@ -1,7 +1,6 @@
 package xyz.itwill.service;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -10,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import xyz.itwill.dao.UserDAO;
 import xyz.itwill.dto.User;
+import xyz.itwill.util.ExperienceUtil;
 
 @Service
 @RequiredArgsConstructor
@@ -98,5 +98,23 @@ public class UserServiceImpl implements UserService {
     public void updatePassword(User user) {
         // 비밀번호 암호화는 컨트롤러에서 처리되었으므로 그대로 업데이트
         userDAO.updatePassword(user);
+    }
+ // 경험치 증가 메서드 구현
+    @Override
+    public void increaseExperience(String userId, int amount) {
+        User user = userDAO.selectUser(userId);
+        if (user != null) {
+            // 현재 경험치에 추가할 경험치를 더함
+            int newExperience = user.getUserExperience() + amount;
+            
+            // 경험치가 레벨업에 도달하는 경우 처리
+            while (newExperience >= ExperienceUtil.getExperienceForNextLevel(user.getUserLevel())) {
+                newExperience -= ExperienceUtil.getExperienceForNextLevel(user.getUserLevel());
+                user.setUserLevel(user.getUserLevel() + 1);  // 레벨업
+            }
+            
+            user.setUserExperience(newExperience);  // 경험치 갱신
+            userDAO.updateUser(user);  // 변경된 사용자 정보 저장
+        }
     }
 }

@@ -111,4 +111,16 @@
 	<update id="boardViewCountUp">
 		update board set board_count=board_count+1 where board_post_idx=#{boardPostIdx}
 	</update>
+	<!-- 마이페이지 작성 게시글 보기 -->
+	<select id="selectBoardsByUserId" parameterType="string" resultType="xyz.itwill.dto.Board">
+    SELECT 
+        BOARD_POST_IDX AS postId,
+        BOARD_TITLE AS title,
+        BOARD_RESIGISTER_DATE AS date,
+        BOARD_COUNT AS viewCount,
+        BOARD_STARUP AS recommendCount
+    FROM board
+    WHERE BOARD_USER_ID = #{userId}
+    ORDER BY BOARD_RESIGISTER_DATE DESC
+</select>
 </mapper>

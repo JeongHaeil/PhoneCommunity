@@ -19,26 +19,30 @@
         <result property="userLevel" column="USER_LEVEL"/>
         <result property="userStatus" column="USER_STATUS"/>
         <result property="userNickName" column="USER_NICKNAME"/>
+        <result property="userExperience" column="USER_EXPERIENCE"/>
     </resultMap>
 
     <!-- Insert User -->
     <insert id="insertUser">
-        INSERT INTO USERS (USER_NUM, USER_ID, USER_PASSWORD, USER_EMAIL, USER_PHONE_NUM, USER_NAME, USER_REGISTER_DATE, USER_LEVEL, USER_STATUS, USER_NICKNAME)
-        VALUES (USER_SEQ.NEXTVAL, #{userId}, #{userPassword}, #{userEmail}, #{userPhoneNum}, #{userName}, SYSDATE, #{userLevel}, #{userStatus}, #{userNickName})
-    </insert>
+    INSERT INTO USERS (USER_NUM, USER_ID, USER_PASSWORD, USER_EMAIL, USER_PHONE_NUM, USER_NAME, USER_REGISTER_DATE, USER_LEVEL, USER_STATUS, USER_NICKNAME, USER_EXPERIENCE)
+    VALUES (USER_SEQ.NEXTVAL, #{userId}, #{userPassword}, #{userEmail}, #{userPhoneNum}, #{userName}, SYSDATE, #{userLevel}, #{userStatus}, #{userNickName}, #{userExperience})
+</insert>
+
 
     <!-- Update User -->
-    <update id="updateUser">
-        UPDATE USERS
-        SET 
-            USER_PASSWORD = #{userPassword}, 
-            USER_EMAIL = #{userEmail}, 
-            USER_PHONE_NUM = #{userPhoneNum}, 
-            USER_NAME = #{userName},
-            USER_UPDATE_DATE = SYSDATE,
-            USER_NICKNAME = #{userNickName}
-        WHERE USER_ID = #{userId}
-    </update>
+   <update id="updateUser">
+    UPDATE USERS
+    SET 
+        USER_PASSWORD = #{userPassword}, 
+        USER_EMAIL = #{userEmail}, 
+        USER_PHONE_NUM = #{userPhoneNum}, 
+        USER_NAME = #{userName},
+        USER_UPDATE_DATE = SYSDATE,
+        USER_NICKNAME = #{userNickName},
+        USER_EXPERIENCE = #{userExperience}
+    WHERE USER_ID = #{userId}
+</update>
+
 
     <!-- Delete User by userId -->
     <delete id="deleteUser">
@@ -46,19 +50,26 @@
     </delete>
 
     <!-- Select a User by userId -->
-    <select id="selectUser" parameterType="String" resultMap="userResultMap">
-        SELECT * FROM USERS WHERE USER_ID = #{userId}
-    </select>
+   <select id="selectUser" parameterType="String" resultMap="userResultMap">
+    SELECT USER_NUM, USER_ID, USER_PASSWORD, USER_EMAIL, USER_PHONE_NUM, USER_NAME, USER_UPDATE_DATE, USER_LAST_LOGIN, USER_REGISTER_DATE, USER_LEVEL, USER_STATUS, USER_NICKNAME, USER_EXPERIENCE
+    FROM USERS
+    WHERE USER_ID = #{userId}
+</select>
+
 
     <!-- Select all Users -->
     <select id="selectUserList" resultMap="userResultMap">
-        SELECT * FROM USERS
-    </select>
+    SELECT USER_NUM, USER_ID, USER_PASSWORD, USER_EMAIL, USER_PHONE_NUM, USER_NAME, USER_UPDATE_DATE, USER_LAST_LOGIN, USER_REGISTER_DATE, USER_LEVEL, USER_STATUS, USER_NICKNAME, USER_EXPERIENCE
+    FROM USERS
+</select>
+
 
    <!-- 닉네임으로 사용자 조회 -->
     <select id="selectUserByNickname" parameterType="string" resultMap="userResultMap">
-        SELECT * FROM USERS WHERE USER_NICKNAME = #{userNickName}
-    </select>
+    SELECT USER_NUM, USER_ID, USER_PASSWORD, USER_EMAIL, USER_PHONE_NUM, USER_NAME, USER_UPDATE_DATE, USER_LAST_LOGIN, USER_REGISTER_DATE, USER_LEVEL, USER_STATUS, USER_NICKNAME, USER_EXPERIENCE
+    FROM USERS
+    WHERE USER_NICKNAME = #{userNickName}
+</select>
 
     <!-- Select a User by userId with explicit column mappings -->
     <select id="selectUserByUserId" parameterType="string" resultMap="userResultMap">
@@ -82,5 +93,10 @@
     WHERE user_id = #{userId}
 </update>
 
+<update id="updateUserExperience">
+    UPDATE users
+    SET user_experience = #{userExperience}
+    WHERE user_id = #{userId}
+</update>
 
 </mapper>

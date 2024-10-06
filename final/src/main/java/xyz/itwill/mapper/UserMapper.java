@@ -21,4 +21,7 @@ public interface UserMapper {
                                        @Param("userName") String userName);
  // 비밀번호 업데이트 쿼리 추가
     int updatePassword(User user);
+    
+ // 경험치 업데이트 쿼리 추가
+    int updateUserExperience(User user); // User 객체를 매개변수로 받도록 수정
 }

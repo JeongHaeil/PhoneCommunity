@@ -19,4 +19,6 @@ public interface UserDAO {
     User selectUserByIdNameAndEmail(String userId, String userName, String userEmail);
     
     int updatePassword(User user); // 비밀번호만 변경하는 메서드 추가
+    int updateUserExperience(User user);  // 경험치 업데이트 메서드 추가
+    
     }

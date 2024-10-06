@@ -79,6 +79,17 @@
             <div class="col-md-9 info-value">${user.userLevel} 레벨</div>
         </div>
 
+        <!-- 경험치 표시 -->
+        <div class="row mb-3">
+            <div class="col-md-3 info-label">경험치</div>
+            <div class="col-md-9 info-value">
+                ${currentExperience}/${experienceForNextLevel} P (${progressPercentage}%)
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: ${progressPercentage}%;" aria-valuenow="${progressPercentage}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+
         <!-- 프로필 사진 업로드 -->
         <div class="row mb-3">
             <div class="col-md-3 info-label">프로필 사진</div>

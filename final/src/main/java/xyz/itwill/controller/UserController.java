@@ -1,5 +1,8 @@
 package xyz.itwill.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,10 +24,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import xyz.itwill.auth.CustomUserDetails;
+import xyz.itwill.dto.Board;
 import xyz.itwill.dto.Email;
 import xyz.itwill.dto.User;
+import xyz.itwill.service.BoardService;
 import xyz.itwill.service.EmailService;
 import xyz.itwill.service.UserService;
+import xyz.itwill.util.ExperienceUtil;
 
 @Slf4j
 @Controller
@@ -35,6 +41,7 @@ public class UserController {
     private final UserService userService;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder; // PasswordEncoder 주입
+    private final BoardService boardService; // BoardService 주입
     
 
     // 홈 페이지 요청을 처리하는 메서드
@@ -185,11 +192,22 @@ public class UserController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         User loginUser = userService.getUser(userDetails.getUserId());  // 로그인된 사용자의 정보를 DB에서 조회
 
-        model.addAttribute("user", loginUser);  // 사용자 정보를 모델에 추가하여 뷰에 전달
+        // 현재 경험치와 레벨 정보를 가져옴
+        int currentExperience = loginUser.getUserExperience();
+        int currentLevel = loginUser.getUserLevel();
+
+        // 다음 레벨에 도달하기 위한 경험치 계산
+        int experienceForNextLevel = ExperienceUtil.getExperienceForNextLevel(currentLevel);
+        int progressPercentage = ExperienceUtil.calculateProgressPercentage(currentExperience, experienceForNextLevel);
+
+        // 모델에 추가
+        model.addAttribute("currentExperience", currentExperience);
+        model.addAttribute("experienceForNextLevel", experienceForNextLevel);
+        model.addAttribute("progressPercentage", progressPercentage);
+        model.addAttribute("user", loginUser);
+
         return "user/mypage";  // 프로필 페이지로 이동
     }
-
-
     // 아이디 중복 확인
     @RequestMapping(value = "/checkUserId", method = RequestMethod.GET)
     @ResponseBody
@@ -398,7 +416,7 @@ public class UserController {
         return "redirect:/user/login";  // 로그인 페이지로 리다이렉트
     }
     
- // 스크랩 보기 페이지로 이동
+    // 스크랩 보기 페이지로 이동
     @RequestMapping(value = "/myScrap", method = RequestMethod.GET)
     public String showMyScrapPage() {
         return "user/myScrap"; // 스크랩 보기 페이지로 이동
@@ -406,8 +424,20 @@ public class UserController {
 
     // 작성 글 보기 페이지로 이동
     @RequestMapping(value = "/myWrite", method = RequestMethod.GET)
-    public String showMyWritePage() {
-        return "user/myWrite"; // 작성 글 보기 페이지로 이동
+    public String showMyWritePage(HttpSession session, Model model) {
+        // 세션에서 로그인한 사용자의 ID를 가져옴
+        String userId = (String) session.getAttribute("loggedInUserId");
+
+        // 사용자가 로그인되어 있을 경우에만 처리
+        if (userId != null) {
+            // 사용자가 작성한 게시글 목록을 가져옴
+            List<Board> postList = boardService.getBoardsByUserId(userId);
+            model.addAttribute("postList", postList);  // 모델에 게시글 목록 추가
+        } else {
+            return "redirect:/user/login";  // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+        }
+
+        return "user/myWrite";  // 작성 글 보기 페이지로 이동
     }
 
     // 자동 로그인 관리 페이지로 이동
@@ -421,4 +451,59 @@ public class UserController {
     public String showMyCommentPage() {
         return "user/myComment"; // 작성 댓글 보기 페이지로 이동
     }
+    
+ // 헤더에 사용자의 레벨, 경험치, 경험치 진행률을 표시하기 위한 메서드
+    @RequestMapping("/someEndpoint")
+    public String showHeaderInfo(Authentication authentication, Model model) {
+        if (authentication != null) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            User loginUser = userService.getUser(userDetails.getUserId());
+
+            // 현재 경험치 및 레벨 정보 계산
+            int currentExperience = loginUser.getUserExperience();
+            int userLevel = loginUser.getUserLevel();
+            int experienceForNextLevel = ExperienceUtil.getExperienceForNextLevel(userLevel);
+            int progressPercentage = ExperienceUtil.calculateProgressPercentage(currentExperience, experienceForNextLevel);
+
+            // 로그 찍기 - 여기서 값이 제대로 나오는지 확인
+            log.debug("User Level: " + userLevel);
+            log.debug("Current Experience: " + currentExperience);
+            log.debug("Experience for Next Level: " + experienceForNextLevel);
+            log.debug("Progress Percentage: " + progressPercentage);
+
+            // 모델에 값 추가
+            model.addAttribute("userLevel", userLevel);
+            model.addAttribute("currentExperience", currentExperience);
+            model.addAttribute("experienceForNextLevel", experienceForNextLevel);
+            model.addAttribute("progressPercentage", progressPercentage);
+        }
+
+        return "header";
+    }
+    // 사용자 정보를 AJAX로 제공하기 위한 메서드
+    @RequestMapping(value = "/getUserInfo", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> getUserInfo(Authentication authentication) {
+        Map<String, Object> userInfo = new HashMap<>();
+
+        if (authentication != null) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            User loginUser = userService.getUser(userDetails.getUserId());
+
+            // 레벨 및 경험치 정보 계산
+            int currentExperience = loginUser.getUserExperience();
+            int userLevel = loginUser.getUserLevel();
+            int experienceForNextLevel = ExperienceUtil.getExperienceForNextLevel(userLevel);
+            int progressPercentage = ExperienceUtil.calculateProgressPercentage(currentExperience, experienceForNextLevel);
+
+            // 사용자 정보를 map에 저장
+            userInfo.put("userLevel", userLevel);
+            userInfo.put("currentExperience", currentExperience);
+            userInfo.put("experienceForNextLevel", experienceForNextLevel);
+            userInfo.put("progressPercentage", progressPercentage);
+        }
+        return userInfo;
+    }
 }
+
+

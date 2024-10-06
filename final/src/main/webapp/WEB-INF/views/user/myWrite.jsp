@@ -46,6 +46,7 @@
             text-align: center;
             padding: 20px;
             font-size: 1rem;
+            color: #999;
         }
     </style>
 </head>
@@ -80,7 +81,7 @@
                     <c:forEach var="post" items="${postList}" varStatus="status">
                         <tr class="post-item">
                             <td>${status.index + 1}</td>
-                            <td><a href="/final/post/${post.postId}">${post.title}</a></td>
+                            <td><a href="/post/${post.postId}?${_csrf.parameterName}=${_csrf.token}">${post.title}</a></td>
                             <td>${post.date}</td>
                             <td>${post.viewCount}</td>
                             <td>${post.recommendCount}</td>
@@ -91,7 +92,43 @@
         </tbody>
     </table>
 
+    <!-- CSRF Token을 포함한 폼 예시 -->
+    <form action="/post/new" method="POST">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+        <!-- 추가할 데이터 입력 -->
+        <button type="submit" class="btn btn-primary mt-3">글 작성하기</button>
+    </form>
+
 </div>
+
+<!-- CSRF Token을 AJAX 요청에 포함시키기 위한 스크립트 -->
+<script type="text/javascript">
+    // CSRF 토큰 가져오기
+    var csrfParameterName = "${_csrf.parameterName}";
+    var csrfToken = "${_csrf.token}";
+
+    // AJAX 설정
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            xhr.setRequestHeader(csrfParameterName, csrfToken);
+        }
+    });
+
+    // AJAX 예시 - 글 삭제 요청
+    function deletePost(postId) {
+        $.ajax({
+            url: '/post/delete/' + postId,
+            type: 'POST',
+            success: function(result) {
+                alert('게시글이 삭제되었습니다.');
+                location.reload(); // 페이지를 새로고침하여 게시글 목록을 업데이트
+            },
+            error: function() {
+                alert('게시글 삭제 중 오류가 발생했습니다.');
+            }
+        });
+    }
+</script>
 
 <!-- 부트스트랩 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
