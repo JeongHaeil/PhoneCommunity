@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -58,10 +59,19 @@
             <div class="col-md-9 info-value">${user.userNickName}</div>
         </div>
 
+        <!-- 이름 표시 섹션 추가 -->
         <div class="row mb-3">
-            <div class="col-md-3 info-label">핸드폰 번호</div>
-            <div class="col-md-9 info-value">${user.userPhoneNum}</div>
+            <div class="col-md-3 info-label">이름</div>
+            <div class="col-md-9 info-value">${user.userName}</div>
         </div>
+
+        <div class="row mb-3">
+    <div class="col-md-3 info-label">핸드폰 번호</div>
+    <div class="col-md-9 info-value">
+        ${fn:substring(user.userPhoneNum, 0, 3)}-${fn:substring(user.userPhoneNum, 3, 7)}-${fn:substring(user.userPhoneNum, 7, 11)}
+    </div>
+</div>
+
 
         <div class="row mb-3">
             <div class="col-md-3 info-label">가입일</div>
@@ -90,20 +100,6 @@
             </div>
         </div>
 
-        <!-- 프로필 사진 업로드 -->
-        <div class="row mb-3">
-            <div class="col-md-3 info-label">프로필 사진</div>
-            <div class="col-md-9 info-value">
-                <!-- 파일 업로드 섹션 -->
-                <form action="/final/user/uploadProfilePicture" method="post" enctype="multipart/form-data" class="upload-section">
-                    <input type="file" name="profilePic" class="form-control">
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    <button type="submit" class="btn btn-custom">업로드</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <!-- 하단 버튼 섹션 -->
     <div class="btn-section">
         <form action="/final/user/userUpdate" method="POST">
@@ -121,8 +117,6 @@
             <button type="submit" class="btn btn-custom">탈퇴</button>
         </form>
     </div>
-
-</div>
 
 <!-- 부트스트랩 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

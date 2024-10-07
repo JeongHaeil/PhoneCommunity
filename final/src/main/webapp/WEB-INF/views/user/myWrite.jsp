@@ -83,7 +83,7 @@
                         <tr class="post-item">
                             <td>${status.index + 1}</td>
                             <td><a href="/post/${post.boardPostIdx}?${_csrf.parameterName}=${_csrf.token}">${post.boardTitle}</a></td>
-                            <td>${post.boardResigsterDate}</td>
+                            <td>${post.boardRegisterDate}</td>
                             <td>${post.boardCount}</td>
                             <td>${post.boardStarup}</td>
                         </tr>

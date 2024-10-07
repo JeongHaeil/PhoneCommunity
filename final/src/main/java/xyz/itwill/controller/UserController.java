@@ -281,13 +281,14 @@ public class UserController {
 
         // 임시 비밀번호 생성
         String tempPassword = generateTempPassword();
-
+        log.info("password = "+tempPassword);
+        
         // 이메일로 임시 비밀번호 전송
         emailService.sendTemporaryPassword(userEmail, tempPassword);
 
         // 임시 비밀번호를 암호화하여 저장
-        String encryptedPassword = passwordEncoder.encode(tempPassword);
-        user.setUserPassword(encryptedPassword);
+        user.setUserPassword(passwordEncoder.encode(tempPassword));
+        userService.modifyUser(user);
 
         // 성공 메시지를 Model에 추가
         model.addAttribute("message", "임시 비밀번호가 이메일로 전송되었습니다.");
@@ -374,7 +375,6 @@ public class UserController {
             return "user/passwordUpdate";
         }
 
-        
         loginUser.setUserPassword(passwordEncoder.encode(newPassword));
         userService.modifyUser(loginUser);
 

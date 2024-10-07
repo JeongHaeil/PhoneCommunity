@@ -47,22 +47,27 @@
     <form action="/final/user/profile" method="GET">
         <button type="submit" class="mypage-button ${activeTab == 'profile' ? 'active' : ''}">회원정보 보기</button>
     </form>
-    <form action="/final/user/myScrap" method="GET">
+    
+    <!-- <form action="/final/user/myScrap" method="GET">
         <button type="submit" class="mypage-button ${activeTab == 'myScrap' ? 'active' : ''}">스크랩 보기</button>
-    </form>
+    </form> -->
+    
     <form action="/final/user/myWrite" method="GET">
         <button type="submit" class="mypage-button ${activeTab == 'myWrite' ? 'active' : ''}">작성 글 보기</button>
     </form>
-    <form action="/final/user/myRemember-me" method="GET">
+    
+    <!-- <form action="/final/user/myRemember-me" method="GET">
         <button type="submit" class="mypage-button ${activeTab == 'myRemember-me' ? 'active' : ''}">자동 로그인 관리</button>
-    </form>
+    </form> -->
+    
     <form action="/final/user/myComment" method="GET">
         <button type="submit" class="mypage-button ${activeTab == 'myComment' ? 'active' : ''}">작성 댓글 보기</button>
     </form>
     <!-- 쪽지함 보기 버튼을 폼으로 추가하여 동일한 스타일 적용 -->
-    <form action="/final/user/message" method="GET">
+    
+    <!-- <form action="/final/user/message" method="GET">
         <button type="submit" class="mypage-button ${activeTab == 'message' ? 'active' : ''}">쪽지함 보기</button>
-    </form>
+    </form> -->
 </div>
 
 <!-- 부트스트랩 JS -->
