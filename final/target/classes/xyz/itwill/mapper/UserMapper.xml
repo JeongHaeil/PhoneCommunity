@@ -5,11 +5,6 @@
 
 <mapper namespace="xyz.itwill.mapper.UserMapper">
 
-<!-- Insert User -->
-    <insert id="insertUser">
-    insert into users values(#{userId}, #{userPassword}, #{userEmail}, #{userPhoneNum}, #{userName}, SYSDATE, #{userLevel}, #{userStatus}, #{userNickName}, #{userExperience})
-	</insert>
-
     <!-- resultMap 정의 -->
     <resultMap id="userResultMap" type="xyz.itwill.dto.User">
         <id property="userNum" column="USER_NUM"/>
@@ -27,8 +22,11 @@
         <result property="userExperience" column="USER_EXPERIENCE"/>
     </resultMap>
 
-    
-
+    <!-- Insert User -->
+    <insert id="insertUser">
+    INSERT INTO USERS (USER_NUM, USER_ID, USER_PASSWORD, USER_EMAIL, USER_PHONE_NUM, USER_NAME, USER_REGISTER_DATE, USER_LEVEL, USER_STATUS, USER_NICKNAME, USER_EXPERIENCE)
+    VALUES (USER_SEQ.NEXTVAL, #{userId}, #{userPassword}, #{userEmail}, #{userPhoneNum}, #{userName}, SYSDATE, #{userLevel}, #{userStatus}, #{userNickName}, #{userExperience})
+</insert>
 
 
     <!-- Update User -->
@@ -63,7 +61,7 @@
     <select id="selectUserList" resultMap="userResultMap">
     SELECT USER_NUM, USER_ID, USER_PASSWORD, USER_EMAIL, USER_PHONE_NUM, USER_NAME, USER_UPDATE_DATE, USER_LAST_LOGIN, USER_REGISTER_DATE, USER_LEVEL, USER_STATUS, USER_NICKNAME, USER_EXPERIENCE
     FROM USERS
-	</select>
+</select>
 
 
    <!-- 닉네임으로 사용자 조회 -->

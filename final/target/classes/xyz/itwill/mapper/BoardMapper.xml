@@ -115,7 +115,7 @@
 	<select id="selectBoardsByUserId" parameterType="string" resultType="Board">
     SELECT BOARD_POST_IDX AS boardPostIdx,  
            BOARD_TITLE AS boardTitle,  
-           TO_CHAR(BOARD_RESIGSTER_DATE, 'YYYY-MM-DD HH24:MI:SS') AS boardRegisterDate, 
+           TO_CHAR(board_register_date, 'YYYY-MM-DD HH24:MI:SS') AS board_register_date, 
            BOARD_COUNT AS boardCount,  
            BOARD_STARUP AS boardStarup  
     FROM BOARD
