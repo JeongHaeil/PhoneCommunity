@@ -2,18 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="xyz.itwill.mapper.AdminMapper">
   
-  	<select id="selectSpamBoardList" resultType="Admin">
+  	<select id="selectSpamBoardList" resultType="xyz.itwill.dto.Admin">
 	    SELECT * FROM (
 	        SELECT rownum rn, board.*
 	        FROM (
-	            SELECT *
-	            FROM BOARD
-	            WHERE BOARD_SPAM != 0
+	            SELECT b.*, u.user_nickname
+	            FROM BOARD b
+	            JOIN USERS u ON b.BOARD_USER_ID = u.USER_ID
+	            WHERE b.BOARD_SPAM != 0
 	            <if test="keyword != null and keyword != ''">
 	                <bind name="word" value="'%' + keyword + '%'"/>
 	                AND ${column} LIKE #{word}
 	            </if>
-	            ORDER BY BOARD_POST_IDX DESC
+	            ORDER BY b.BOARD_POST_IDX DESC
 	        ) board
 	    )
 	    WHERE rn BETWEEN #{startRow} AND #{endRow}
@@ -30,10 +31,11 @@
     </select>
     
 	
-	<select id="selectSpamBoardByNum" resultType="Admin">
+	<select id="selectSpamBoardByNum" resultType="admin">
 		select board_post_idx, board_user_id, board_title, board_content, board_image, board_resigster_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam,user_nickname 
 		from Board join users on board_user_id=user_id  where board_post_idx=#{boardPostIdx}
 	</select>
   	
+  
   	
   </mapper>

@@ -22,35 +22,35 @@ public class AdminServiceImpl implements AdminService {
 
 	//SpamBoard List 구현과 페이징 처리
 	@Override
-	public Map<String, Object> getSpamBoardList(Map<String, Object> map) {
-		
-		int pageNum = 1;
-		if(map.get("pageNum") != null && !map.get("pageNum").equals("")) {
-			pageNum = Integer.parseInt((String)map.get("pageNum")); 
-		}
-		
-		int pageSize=5;
-		if(map.get("pageSize") != null && !map.get("pageSize").equals("")) {
-			pageSize=Integer.parseInt((String)map.get("pageSize"));
-		}
-		
-		int totalBoard = adminDAO.selectSpamBoardCount(map);
-		
-		int blockSize = 10;
-		
-		Pager pager = new Pager(pageNum, pageSize, totalBoard, blockSize);
-		
-		map.put("startRow", pager.getStartPage());
-		map.put("endRow", pager.getEndRow());
-		List<Admin> spamBoardList = adminDAO.selectSpamBoardList(map);
-		
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("pager", pager);
-		resultMap.put("SpamBoardList", spamBoardList);
-		
-		
-		return resultMap;
+	public Map<String, Object> getSpamBoardList(int pageNum, int pageSize, int totalSize, int blockSize, String search,
+			String keyword) {
+		// 검색 조건 설정
+	    Map<String, Object> searchMap = new HashMap<>();
+	    searchMap.put("search", search);
+	    searchMap.put("keyword", keyword);
+
+	    // 전체 게시글 수 계산 (검색 조건을 포함하여)
+	    totalSize = adminDAO.selectSpamBoardCount(searchMap);
+
+	    // 페이저 객체 생성 (totalSize를 갱신한 후에 생성)
+	    Pager pager = new Pager(pageNum, pageSize, totalSize, blockSize);
+
+	    // 검색 조건과 페이징 정보를 사용하여 게시글 목록 조회
+	    searchMap.put("startRow", pager.getStartRow());
+	    searchMap.put("endRow", pager.getEndRow());
+	    
+	    List<Admin> spamBoardList = adminDAO.selectSpamBoardList(searchMap);
+
+	    // 결과를 저장할 맵 생성
+	    Map<String, Object> resultMap = new HashMap<>();
+	    resultMap.put("pager", pager);
+	    resultMap.put("spamBoardList", spamBoardList);
+
+	    return resultMap;
 	}
+	
+	
+	
 
 	//SpamBoard 에서 글 조회
 	@Transactional
@@ -66,5 +66,9 @@ public class AdminServiceImpl implements AdminService {
 		
 		return admin;
 	}
+
+
+
+
 
 }
