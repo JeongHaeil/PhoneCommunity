@@ -54,7 +54,7 @@
                                 <li class="user-info text-center">
                                     <!-- 로그인한 회원의 닉네임과 이메일 -->
                                     <h4><sec:authentication property="principal.nickname"/></h4>
-                                    <p class="email"><sec:authentication property="principal.userEmail"/></p>
+                                  <!--    <p class="email"><sec:authentication property="principal.userEmail"/></p>-->
                                 </li>
                                 <li>
                                     <!-- 로그인한 회원의 레벨 표시 및 경험치 바 -->
@@ -70,10 +70,10 @@
                                 <li><hr class="dropdown-divider"></li>
                                 <li class="menu-list">
                                     <a class="dropdown-item" href="<c:url value='/user/profile'/>"><i class="bi bi-person"></i> 마이페이지</a>
-                                    <a class="dropdown-item" href="#"><i class="bi bi-bookmark"></i> 스크랩</a>
-                                    <a class="dropdown-item" href="#"><i class="bi bi-pencil-square"></i> 작성글</a>
-                                    <a class="dropdown-item" href="#"><i class="bi bi-chat-dots"></i> 작성 댓글</a>
-                                    <a class="dropdown-item" href="#"><i class="bi bi-envelope"></i> 쪽지함</a>
+                                   <!--  <a class="dropdown-item" href="#"><i class="bi bi-bookmark"></i> 스크랩</a>  -->
+              						  <a class="dropdown-item" href="<c:url value='/user/myWrite'/>"><i class="bi bi-pencil-square"></i> 작성글</a>
+              							  <a class="dropdown-item" href="<c:url value='/user/myComment'/>"><i class="bi bi-chat-dots"></i> 작성 댓글</a>
+                                     <!--  <a class="dropdown-item" href="#"><i class="bi bi-envelope"></i> 쪽지함</a>  -->
                                     <a class="dropdown-item" href="#"><i class="bi bi-moon"></i> 다크모드</a>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
