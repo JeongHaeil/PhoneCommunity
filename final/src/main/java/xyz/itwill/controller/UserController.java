@@ -189,7 +189,7 @@ public class UserController {
         return "user/login";  // login.jsp 경로 유지
     }
 
- // 회원 프로필 조회 (JSP 파일명: mypage.jsp)
+    // 회원 프로필 조회 (JSP 파일명: mypage.jsp)
     @RequestMapping("/profile")
     public String profile(Authentication authentication, Model model) {
         if (authentication == null) {

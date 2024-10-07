@@ -81,6 +81,7 @@ public class UserServiceImpl implements UserService {
         return userDAO.selectUserByNickname(nickname);
     }
 
+ 
     @Override
     public String findUserIdByEmailAndName(String email, String name) {
         return userDAO.selectUserIdByEmailAndName(email, name);
@@ -104,25 +105,25 @@ public class UserServiceImpl implements UserService {
 
         // 비밀번호 업데이트
         userDAO.updateUser(user);
-
+        
         // 임시 비밀번호를 이메일로 전송
         emailService.sendTemporaryPassword(user.getUserEmail(), temporaryPassword); // 임시 비밀번호 이메일 전송
     }
-    
-    // 경험치 증가 메서드 구현
+
+ // 경험치 증가 메서드 구현
     @Override
     public void increaseExperience(String userId, int amount) {
         User user = userDAO.selectUser(userId);
         if (user != null) {
             // 현재 경험치에 추가할 경험치를 더함
             int newExperience = user.getUserExperience() + amount;
-
+            
             // 경험치가 레벨업에 도달하는 경우 처리
             while (newExperience >= ExperienceUtil.getExperienceForNextLevel(user.getUserLevel())) {
                 newExperience -= ExperienceUtil.getExperienceForNextLevel(user.getUserLevel());
                 user.setUserLevel(user.getUserLevel() + 1);  // 레벨업
             }
-
+            
             user.setUserExperience(newExperience);  // 경험치 갱신
             userDAO.updateUser(user);  // 변경된 사용자 정보 저장
         }

@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -41,9 +42,6 @@
         .info-form-control:disabled {
             background-color: #e9ecef;
         }
-        .info-form-check-input {
-            margin-right: 10px;
-        }
     </style>
 </head>
 <body>
@@ -53,62 +51,31 @@
     <form action="/user/update" method="post">
         <!-- CSRF 토큰 추가 -->
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        
+
+        <!-- 이메일 주소는 수정 불가, 로그인한 사용자의 이메일 출력 -->
         <div class="info-form-group row">
             <label for="email" class="col-sm-3 col-form-label info-label">이메일 주소 <span class="text-danger">*</span></label>
             <div class="col-sm-9">
-                <input type="email" class="form-control info-form-control" id="email" value="tosmreo@naver.com" disabled>
+                <input type="email" class="form-control info-form-control" id="email" value="<sec:authentication property='principal.userEmail'/>" disabled>
             </div>
         </div>
+
+        <!-- 아이디는 수정 불가, 로그인한 사용자의 아이디 출력 -->
         <div class="info-form-group row">
             <label for="userId" class="col-sm-3 col-form-label info-label">아이디</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control info-form-control" id="userId" value="tosmreo">
+                <input type="text" class="form-control info-form-control" id="userId" value="<sec:authentication property='principal.userId'/>" disabled>
             </div>
         </div>
+
+        <!-- 닉네임은 수정 가능 -->
         <div class="info-form-group row">
             <label for="nickname" class="col-sm-3 col-form-label info-label">닉네임 <span class="text-danger">*</span></label>
             <div class="col-sm-9">
-                <input type="text" class="form-control info-form-control" id="nickname" value="김혜련">
+                <input type="text" class="form-control info-form-control" id="nickname" name="nickname" value="<sec:authentication property='principal.nickname'/>">
             </div>
         </div>
-        <div class="info-form-group row">
-            <label for="profilePic" class="col-sm-3 col-form-label info-label">프로필 사진</label>
-            <div class="col-sm-9">
-                <input type="file" class="form-control info-form-control" id="profilePic">
-                <small class="form-text text-muted">가로 제한 길이: 100px, 세로 제한 길이: 100px</small>
-            </div>
-        </div>
-        <div class="info-form-group row">
-            <label class="col-sm-3 col-form-label info-label">메일링 가입</label>
-            <div class="col-sm-9">
-                <div class="form-check">
-                    <input class="form-check-input info-form-check-input" type="radio" name="mailing" id="mailingYes" value="yes" checked>
-                    <label class="form-check-label" for="mailingYes">예</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input info-form-check-input" type="radio" name="mailing" id="mailingNo" value="no">
-                    <label class="form-check-label" for="mailingNo">아니오</label>
-                </div>
-            </div>
-        </div>
-        <div class="info-form-group row">
-            <label class="col-sm-3 col-form-label info-label">쪽지 수신 허용</label>
-            <div class="col-sm-9">
-                <div class="form-check">
-                    <input class="form-check-input info-form-check-input" type="radio" name="message" id="messageAll" value="all" checked>
-                    <label class="form-check-label" for="messageAll">전체 수신</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input info-form-check-input" type="radio" name="message" id="messageFriend" value="friend">
-                    <label class="form-check-label" for="messageFriend">친구만 허용</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input info-form-check-input" type="radio" name="message" id="messageNone" value="none">
-                    <label class="form-check-label" for="messageNone">거부</label>
-                </div>
-            </div>
-        </div>
+
         <div class="info-form-group row">
             <div class="col-sm-12 text-end">
                 <button type="button" class="btn btn-secondary">취소</button>
