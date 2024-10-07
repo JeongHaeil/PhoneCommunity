@@ -277,13 +277,17 @@ public class UserController {
 
         // 임시 비밀번호 생성
         String tempPassword = generateTempPassword();
+        log.info("생성된 임시 비밀번호: {}", tempPassword); // 로그 추가
 
         // 이메일로 임시 비밀번호 전송
         emailService.sendTemporaryPassword(userEmail, tempPassword);
+        log.info("이메일로 전송된 임시 비밀번호: {}", tempPassword); // 로그 추가
 
         // 임시 비밀번호를 암호화하여 저장
-        user.setUserPassword(BCrypt.hashpw(tempPassword, BCrypt.gensalt()));
+        String encryptedPassword = passwordEncoder.encode(tempPassword);
+        user.setUserPassword(encryptedPassword);
         userService.modifyUser(user);
+        log.info("DB에 저장된 암호화된 비밀번호: {}", encryptedPassword); // 로그 추가
 
         // 성공 메시지를 Model에 추가
         model.addAttribute("message", "임시 비밀번호가 이메일로 전송되었습니다.");
@@ -294,13 +298,13 @@ public class UserController {
 
     // 임시 비밀번호 생성 메서드
     private String generateTempPassword() {
-        // 임시 비밀번호는 영숫자 조합으로 8자리 생성
-    	String chars = "0123456789";
+        // 임시 비밀번호는 영문 대소문자와 숫자 조합으로 8자리 생성
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         StringBuilder tempPassword = new StringBuilder();
         Random rnd = new Random();
-        while (tempPassword.length() < 8) {  // 비밀번호 길이
-            int index = (int) (rnd.nextFloat() * chars.length());
-            tempPassword.append(chars.charAt(index));
+        while (tempPassword.length() < 8) {  // 비밀번호 길이 8자리
+            int index = rnd.nextInt(chars.length());  // 0부터 chars 길이까지의 랜덤 숫자 생성
+            tempPassword.append(chars.charAt(index));  // 랜덤으로 선택된 문자를 추가
         }
         return tempPassword.toString();
     }
