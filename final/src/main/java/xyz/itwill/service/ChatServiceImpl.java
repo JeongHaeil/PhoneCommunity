@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import xyz.itwill.dao.ChatDAO;
 import xyz.itwill.dto.Chat;
+import xyz.itwill.dto.ChatMessages;
 
 @Service
 @RequiredArgsConstructor
@@ -32,5 +33,15 @@ public class ChatServiceImpl implements ChatService{
 		    }
 		
 	}
+
+	@Override
+	public void saveChatMessage(ChatMessages chatMessages) {
+		chatDAO.saveChatMessage(chatMessages);
+		
+	}
+
+	
+	
+	
 
 }

@@ -17,6 +17,7 @@ public class ChatRooms {
 	private int roomId;
 	private int sellerId;
 	private int buyerId;
+	private int productId;
 	private Date createdAt;
 	private String chatStatus;
 }
