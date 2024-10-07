@@ -181,7 +181,11 @@ public class UserController {
 
     // 로그인 페이지로 이동 (GET 요청)
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login() {
+    public String login(HttpServletRequest request) {
+    	String prevPage=request.getHeader("Referer");
+    	if(prevPage!=null && !prevPage.contains("/login")) {
+    		request.getSession().setAttribute("prevPage", prevPage);
+    	}
         return "user/login";  // login.jsp 경로 유지
     }
 
