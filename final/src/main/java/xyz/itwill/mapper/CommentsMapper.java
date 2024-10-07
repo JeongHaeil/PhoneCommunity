@@ -3,6 +3,7 @@ package xyz.itwill.mapper;
 import java.util.List;
 import java.util.Map;
 
+import xyz.itwill.dto.CBallot;
 import xyz.itwill.dto.Comments;
 
 public interface CommentsMapper {
@@ -18,4 +19,7 @@ public interface CommentsMapper {
 	int selectCommentCountByRef(int commentRef);
 	int commentUpStar(int commentIdx);
 	int commentSpam(int commentIdx);
+	int CBinsert(CBallot cBallot);
+	int CBupdate(CBallot cBallot);
+	CBallot selectCBallotByIdx(Map<String, Object> map);
 }

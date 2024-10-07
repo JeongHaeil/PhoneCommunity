@@ -13,6 +13,7 @@
 		<org.springframework-version>5.3.39</org.springframework-version>
 		<org.aspectj-version>1.9.22.1</org.aspectj-version>
 		<org.slf4j-version>2.0.16</org.slf4j-version>
+		<spring.security-version>5.8.14</spring.security-version>
 	</properties>
 	
 
@@ -212,7 +213,7 @@
 		<dependency>
 		    <groupId>org.mybatis</groupId>
 		    <artifactId>mybatis-spring</artifactId>
-		    <version>3.0.4</version>
+		    <version>2.0.7</version>
 		</dependency>
 		
 		
@@ -257,6 +258,62 @@
 		    <artifactId>json-simple</artifactId>
 		    <version>1.1.1</version>
 		</dependency>
+		
+		 <!-- Spring Security Core 라이브러리 -->
+    <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-core</artifactId>
+        <version>${spring.security-version}</version>
+    </dependency>
+
+    <!-- Spring Security Web 라이브러리 -->
+    <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-web</artifactId>
+        <version>${spring.security-version}</version>
+    </dependency>
+
+    <!-- Spring Security Config 라이브러리 -->
+    <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-config</artifactId>
+        <version>${spring.security-version}</version>
+    </dependency>
+
+    <!-- Spring Security Taglibs 라이브러리 (JSP에서 사용하기 위한 태그 라이브러리) -->
+    <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-taglibs</artifactId>
+        <version>${spring.security-version}</version>
+    </dependency>
+
+    <!-- OAuth2 로그인을 추가할 경우 -->
+    <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-oauth2-client</artifactId>
+        <version>${spring.security-version}</version>
+    </dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
+		<!-- 엑셀저장 -->
+		<dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi</artifactId>
+		    <version>3.17</version>
+		</dependency>
+		
+		
+		
+		<dependency>
+    <groupId>org.atmosphere</groupId>
+    <artifactId>atmosphere-runtime</artifactId>
+    <version>2.7.3</version> <!-- Java 11과 호환되는 최신 2.x 버전 -->
+</dependency>
+		
+		
+		
+		
+		
 		
 	</dependencies>
     

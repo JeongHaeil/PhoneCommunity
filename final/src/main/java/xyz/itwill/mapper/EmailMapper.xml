@@ -23,4 +23,10 @@
         SELECT * FROM Email 
         WHERE EMAIL_CODE = #{emailCode}
     </select>
+    
+    <update id="updateEmailUserNum">
+    UPDATE Email
+    SET email_user_num = #{userNum}
+    WHERE email_verification = #{emailVerification}
+</update>
 </mapper>

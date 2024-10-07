@@ -1,48 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-	
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/spring/root-context.xml</param-value>
-	</context-param>
-	
-	<listener>
-	
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            /WEB-INF/spring/root-context.xml
+            /WEB-INF/spring/security-context.xml
+        </param-value>
+    </context-param>
 
-	<filter>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
 
-		<filter-name>encodingFilter</filter-name>
+    <filter>
+        <filter-name>multipartFilter</filter-name>
+        <filter-class>org.springframework.web.multipart.support.MultipartFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>multipartFilter</filter-name>
+        <url-pattern>/*</url-pattern>	
+    </filter-mapping>
 
-		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>	
+    </filter-mapping>
 
-		<init-param>
-			<param-name>encoding</param-name>
-			<param-value>utf-8</param-value>
-		</init-param>
-	</filter>
-	
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>	
+    </filter-mapping>
 
-	<!-- Processes application requests -->
-	<servlet>
-		<servlet-name>appServlet</servlet-name>
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-		<init-param>
-			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
+    <servlet>
+        <servlet-name>appServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>appServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    
+    
+    
+     <servlet>
+	    <servlet-name>AtmosphereServlet</servlet-name>
+	    <servlet-class>org.atmosphere.cpr.AtmosphereServlet</servlet-class>
+	    <init-param>
+	        <param-name>org.atmosphere.cpr.packages</param-name>
+	        <param-value>xyz.itwill.controller</param-value> <!-- Replace with your package containing Atmosphere resource classes -->
+	    </init-param>
+	    <init-param>
+	        <param-name>org.atmosphere.cpr.sessionSupport</param-name>
+	        <param-value>true</param-value>
+	    </init-param>
+	    <load-on-startup>1</load-on-startup>
+		</servlet>
+    
+	 <servlet-mapping>
+	    <servlet-name>AtmosphereServlet</servlet-name>
+	     <url-pattern>/chat/websockets/*</url-pattern>
+	</servlet-mapping>
+    
+    
+    
+	    <servlet>
+	    <servlet-name>dispatcher</servlet-name>
+	    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	    <init-param>
+	        <param-name>contextConfigLocation</param-name>	
+	        <param-value>/WEB-INF/applicationContext.xml</param-value> <!-- 여기서 applicationContext.xml 파일을 연결 -->
+	    </init-param>
+	    <load-on-startup>1</load-on-startup>
 	</servlet>
 	
-		
 	<servlet-mapping>
-		<servlet-name>appServlet</servlet-name>
-		
-		<url-pattern>/</url-pattern>
+	    <servlet-name>dispatcher</servlet-name>
+	    <url-pattern>/final/*</url-pattern>
 	</servlet-mapping>
-
+	    
+	   <session-config>
+		    <session-timeout>30</session-timeout> <!-- 30분 -->
+		</session-config>
+			    
+	 
+    
+    
+    
 </web-app>

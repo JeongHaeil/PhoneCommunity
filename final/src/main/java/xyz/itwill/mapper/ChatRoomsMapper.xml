@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="xyz.itwill.mapper.ChatRoomsMapper">
+  	<insert id="createChatRooms" parameterType="ChatRooms"> 
+		 		INSERT INTO chatrooms (room_id, seller_id, buyer_id, product_id, created_at)
+    VALUES (room_id_seq.NEXTVAL, #{sellerId}, #{buyerId}, #{productId}, SYSDATE)
+    
+ 	</insert>
+ 	
+ 	
+ 	<select id="getChatRooms" resultType="ChatRooms" parameterType="map">
+	 	SELECT room_id, seller_id, buyer_id, product_id, created_at
+    FROM chatrooms
+    WHERE seller_id = #{sellerId} 
+    AND buyer_id = #{buyerId} 
+    AND product_id = #{productId}
+ 		AND ROWNUM = 1
+ 	</select>
+  
+  
+	  <select id="getLastInsertedRoomId" resultType="int">
+	    SELECT room_id
+	    FROM chatrooms
+	    WHERE ROWNUM = 1
+	    ORDER BY room_id DESC
+	 </select>
+  
+  
+  </mapper>

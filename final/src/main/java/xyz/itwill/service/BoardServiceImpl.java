@@ -1,15 +1,18 @@
 package xyz.itwill.service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Service;
 
-
-
 import lombok.RequiredArgsConstructor;
 import xyz.itwill.dao.BoardDAO;
+import xyz.itwill.dto.BBallot;
 import xyz.itwill.dto.Board;
 import xyz.itwill.util.Pager;
 
@@ -19,7 +22,7 @@ public class BoardServiceImpl implements BoardService {
 	private final BoardDAO boardDAO;
 	
 	@Override 
-	public Map<String, Object> getBoardList(int boardCode, int pageNum, int pagaSize, String search, String keyword) {
+	public Map<String, Object> getBoardList(int boardCode, int pageNum, int pagaSize, String search, String keyword) throws Exception {
 		Map<String, Object> searchMap=new HashMap<String, Object>();
 		searchMap.put("boardCode", boardCode);
 		searchMap.put("search", search);
@@ -32,8 +35,27 @@ public class BoardServiceImpl implements BoardService {
 		pageMap.put("boardCode", boardCode);
 		pageMap.put("startRow", pager.getStartRow());
 		pageMap.put("endRow", pager.getEndRow());		
-		List<Board> boardList=boardDAO.selectBoardList(pageMap);
-		
+		List<Board> boardLists=boardDAO.selectBoardList(pageMap);
+		List<Board> boardList=new ArrayList<Board>();
+		if(boardLists!=null) {
+			Date nowDate=new Date();
+			SimpleDateFormat hourType=new SimpleDateFormat("HH:mm");
+			SimpleDateFormat monthType=new SimpleDateFormat("MM-dd");			
+			for(Board board : boardLists) {
+				SimpleDateFormat getTime=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				Date transGetTime=getTime.parse(board.getBoardResigsterDate());
+				long minusMillis=nowDate.getTime()-transGetTime.getTime();
+				long transMtoH=TimeUnit.MILLISECONDS.toHours(minusMillis);
+				String insertDate;
+				if (transMtoH < 24) {
+					insertDate = hourType.format(transGetTime); // HH:mm 형식
+		        } else {
+		        	insertDate = monthType.format(transGetTime); // MM.dd 형식
+		        }
+				board.setBoardResigsterDate(insertDate);
+				boardList.add(board);
+			}	
+		}
 		Map<String, Object> boardCodeSource=new HashMap<String, Object>();
 		boardCodeSource.put("boardCode", boardCode);
 		String codeName=boardDAO.selectBoardCT(boardCodeSource);
@@ -90,6 +112,26 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public void boardSpam(int boardPostIdx) {
 		boardDAO.boardspam(boardPostIdx);
+	}
+
+	@Override
+	public void BBinsert(BBallot bBallot) {
+		boardDAO.BBinsert(bBallot);		
+	}
+
+	@Override
+	public void BBupdate(BBallot bBallot) {
+		boardDAO.BBupdate(bBallot);
+	}
+
+	@Override
+	public BBallot selectBBallotByIdx(Map<String, Object> map) {
+		return boardDAO.selectBBallotByIdx(map);
+	}
+
+	@Override
+	public void boardViewCountUp(int boardPostIdx) {
+		boardDAO.boardViewCountUp(boardPostIdx);
 	}
 
 	

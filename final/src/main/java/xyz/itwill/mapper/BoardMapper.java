@@ -3,6 +3,7 @@ package xyz.itwill.mapper;
 import java.util.List;
 import java.util.Map;
 
+import xyz.itwill.dto.BBallot;
 import xyz.itwill.dto.Board;
 
 public interface BoardMapper {	
@@ -16,4 +17,8 @@ public interface BoardMapper {
 	int boardstarup(int boardPostIdx);
 	int boardstardown(int boardPostIdx);
 	int boardspam(int boardPostIdx);
+	int BBinsert(BBallot bBallot);
+	int BBupdate(BBallot bBallot);
+	BBallot selectBBallotByIdx(Map<String, Object> map);
+	int boardViewCountUp(int boardPostIdx);
 }

@@ -18,60 +18,45 @@ import xyz.itwill.service.UserService;
 @RequestMapping("/email")
 @RequiredArgsConstructor
 public class EmailController {
-    private final UserService userService; 
+    private final UserService userService;
     private final EmailService emailService;
-    
 
-    
-    // 회원가입 후 이메일 인증을 위한 로직
-    @RequestMapping(value = "/sendVerification", method = RequestMethod.GET)
-    public String sendVerificationEmail(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("pendingUser");
-        
-        
-        if (user == null) {
-            return "redirect:/user/register"; // 회원가입 정보가 없으면 다시 회원가입 페이지로 이동
-        }
-
-        // 인증 코드 생성 후 이메일로 전송
-        int emailCode = (int) (Math.random() * 1000000); // 6자리 인증 코드 생성
-        emailService.sendVerificationEmail(user.getUserEmail(), emailCode);
-
-        // 이메일 인증 정보를 저장
-        Email emailVerification = new Email();
-        emailVerification.setEmailUserNum(user.getUserNum());
-        emailVerification.setEmailCode(emailCode);
-        emailVerification.setEmailExpiration(emailService.calculateExpirationDate()); // 만료 시간 설정
-        emailService.addEmail(emailVerification);
-
-        model.addAttribute("message", "인증 이메일이 발송되었습니다.");
-        return "email/emailVerification"; // 이메일 인증 페이지로 이동
-    }
-
-    // 이메일 인증 페이지 이동
+    // 이메일 인증 페이지로 이동
     @RequestMapping(value = "/verify", method = RequestMethod.GET)
     public String showEmailVerificationForm() {
         return "email/emailVerification"; // 이메일 인증 JSP 파일 경로
     }
 
-    // 이메일 인증 처리
+    // 이메일 인증 코드 검증 및 회원가입 완료 처리
     @RequestMapping(value = "/verify", method = RequestMethod.POST)
-    public String verifyEmail(@RequestParam("emailCode") int emailCode, Model model, HttpSession session) {
-        Email email = emailService.getEmailByCode(emailCode);
+    public String verifyEmail(@RequestParam("emailCode") int emailCode, HttpSession session, Model model) {
+        User user = (User) session.getAttribute("tempUser");
 
-        if (email != null && !email.isExpired()) { // 인증 코드 확인 및 만료 여부 확인
-            // 인증 성공 처리
-            User pendingUser = (User) session.getAttribute("pendingUser");
-            if (pendingUser != null) {
-                userService.addUser(pendingUser);  // 인증 성공 시 회원 정보 저장
-                session.removeAttribute("pendingUser");  // 임시 사용자 정보 삭제
-            }
-            
-            model.addAttribute("message", "이메일 인증에 성공했습니다.");
-            return "redirect:/user/login"; // 인증 성공 후 로그인 페이지로 이동
-        } else {
-            model.addAttribute("error", "인증 코드가 유효하지 않거나 만료되었습니다.");
+        if (user == null) {
+            return "redirect:/user/register"; // 세션에 사용자 정보가 없으면 회원가입 페이지로 이동
+        }
+
+        Email emailVerification = emailService.getEmailByCode(emailCode);
+
+        if (emailVerification == null || emailVerification.isExpired()) {
+            model.addAttribute("error", "유효하지 않은 인증 코드입니다. 다시 시도하세요.");
             return "email/emailVerification"; // 인증 실패 시 다시 인증 페이지로 이동
         }
+
+        // 이메일 인증이 성공했으므로 회원 정보를 데이터베이스에 저장
+        userService.addUser(user);
+
+        // 방금 저장된 user_num을 가져오기 위해 다시 조회
+        User savedUser = userService.getUser(user.getUserId());
+
+        // 방금 저장된 user_num을 사용하여 이메일 인증 정보 업데이트
+        emailVerification.setEmailUserNum(savedUser.getUserNum());
+        emailVerification.setEmailAuth(true);
+        emailService.updateEmail(emailVerification);
+
+        // 세션에서 임시 사용자 정보 삭제
+        session.removeAttribute("tempUser");
+
+        return "redirect:/user/login"; // 인증 성공 후 로그인 페이지로 이동
     }
 }

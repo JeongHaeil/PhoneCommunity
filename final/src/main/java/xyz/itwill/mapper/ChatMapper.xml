@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="xyz.itwill.mapper.ChatMapper">
+ 
+ 	<insert id="insertChat" parameterType="Chat"> 
+ 	insert id="insertChat" parameterType="Chat">
+ 		insert into chat (buyer_id, seller_id, product_id, message, timestamp)
+    values (#{buyerId}, #{sellerId}, #{productId}, #{message}, CURRENT_TIMESTAMP)
+ 	</insert>
+ 	
+ 	<select id="getChatByProductId" resultType="Chat">
+    select chat_id, buyer_id, seller_id, product_id, message, timestamp
+    from chat
+    where product_id = #{productId}
+    order by timestamp desc
+ 	</select>
+ 	
+ </mapper>

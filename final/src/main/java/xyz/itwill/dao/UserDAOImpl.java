@@ -1,6 +1,8 @@
 package xyz.itwill.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
@@ -14,11 +16,12 @@ import xyz.itwill.mapper.UserMapper;
 public class UserDAOImpl implements UserDAO {
     private final SqlSession sqlSession;
     
+    
     @Override
     public int insertUser(User user) {
         return sqlSession.getMapper(UserMapper.class).insertUser(user);
     }
-
+ 
     @Override
     public int updateUser(User user) {
         return sqlSession.getMapper(UserMapper.class).updateUser(user);
@@ -41,12 +44,32 @@ public class UserDAOImpl implements UserDAO {
         return sqlSession.getMapper(UserMapper.class).selectUserList();
     }
     @Override
-    public int updateUserAuth(User user) {
-        return sqlSession.getMapper(UserMapper.class).updateUserAuth(user);
-    }
-    
-    @Override
     public User selectUserByNickname(String nickname) {
         return sqlSession.selectOne("UserMapper.selectUserByNickname", nickname);
     }
+    @Override
+    public User selectUserByUserId(String userId) {
+        return sqlSession.getMapper(UserMapper.class).selectUserByUserId(userId);
+    }
+ 
+    @Override
+    public String selectUserIdByEmailAndName(String email, String name) {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", email);
+        params.put("name", name);
+        
+        return sqlSession.selectOne("xyz.itwill.mapper.UserMapper.selectUserIdByEmailAndName", params);
+    }
+    
+ // 새로 추가된 메서드: 아이디, 이름, 이메일로 사용자 조회
+    @Override
+    public User selectUserByIdNameAndEmail(String userId, String userName, String userEmail) {
+        Map<String, String> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("userName", userName);
+        params.put("userEmail", userEmail);
+        
+        return sqlSession.selectOne("xyz.itwill.mapper.UserMapper.selectUserByIdNameAndEmail", params);
+    }
+
 }
