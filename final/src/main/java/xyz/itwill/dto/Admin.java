@@ -26,7 +26,7 @@ public class Admin {
     private int userStatus =1;
 
     //공통적으로 사용되는 userNickName
-    private String userNickName;
+    //private String userNickName;
     private String userNickname;
 	
     //Board
@@ -35,7 +35,7 @@ public class Admin {
 	private String boardTitle;
 	private String boardContent;
 	private String boardImage;
-	private String boardResigsterDate;
+	private String boardRegisterDate;
 	private String boardUpdateDate;
 	private String boardIp;
 	private int boardCount;

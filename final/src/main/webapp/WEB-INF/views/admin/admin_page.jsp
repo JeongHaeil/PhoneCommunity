@@ -33,9 +33,9 @@
                                         <!-- 제목 -->
                                         <td>${article.boardTitle}</td>
                                         <!-- 작성자 -->
-                                        <td>${article.userNickName}</td>
+                                        <td>${article.userNickname}</td>
                                         <!-- 작성일 -->
-                                        <td>${article.boardResigsterDate}</td>
+                                        <td>${article.boardRegisterDate}</td>
                                     </tr>
                                 </c:forEach>
                             </tbody>
