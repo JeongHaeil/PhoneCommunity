@@ -4,18 +4,28 @@
   
   <mapper namespace="xyz.itwill.mapper.ChatRoomsMapper">
   	<insert id="createChatRooms" parameterType="ChatRooms"> 
-		 		insert into chatrooms (room_id, seller_id, buyer_id, created_at, chat_status)
-		    values (#{roomId}, #{sellerId}, #{buyerId}, SYSDATE, ${chatStatus})
+		 		INSERT INTO chatrooms (room_id, seller_id, buyer_id, product_id, created_at)
+    VALUES (room_id_seq.NEXTVAL, #{sellerId}, #{buyerId}, #{productId}, SYSDATE)
+    
  	</insert>
  	
  	
- 	<select id="getChatRooms" resultType="ChatRooms">
-	 	select room_id, seller_id, buyer_id, created_at, chat_status
-	    from chatrooms
-	    where buyer_id = #{buyerId} and seller_id = #{sellerId}
- 		
+ 	<select id="getChatRooms" resultType="ChatRooms" parameterType="map">
+	 	SELECT room_id, seller_id, buyer_id, product_id, created_at
+    FROM chatrooms
+    WHERE seller_id = #{sellerId} 
+    AND buyer_id = #{buyerId} 
+    AND product_id = #{productId}
+ 		AND ROWNUM = 1
  	</select>
   
+  
+	  <select id="getLastInsertedRoomId" resultType="int">
+	    SELECT room_id
+	    FROM chatrooms
+	    WHERE ROWNUM = 1
+	    ORDER BY room_id DESC
+	 </select>
   
   
   </mapper>

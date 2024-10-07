@@ -7,7 +7,7 @@ import xyz.itwill.dto.ChatMessages;
 public interface ChatMessageDAO {
 	
 	
-void insertChatMessage(ChatMessages chatMessages);
+	void insertChatMessage(ChatMessages chatMessages);
 	
 	List<ChatMessages> getMessagesByRoomId(int roomId);
 }
