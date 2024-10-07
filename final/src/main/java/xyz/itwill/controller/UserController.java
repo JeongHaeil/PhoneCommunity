@@ -226,7 +226,7 @@ public class UserController {
         return "user/idfind"; // idfind.jsp 파일로 이동
     }
 
-    // 아이디 찾기 요청 처리
+ // 아이디 찾기 요청 처리
     @RequestMapping(value = "/displayUserId", method = RequestMethod.POST)
     public String displayUserId(@RequestParam("email") String email,
                                 @RequestParam("name") String name, Model model) {
@@ -263,7 +263,7 @@ public class UserController {
         return "user/passwordfind";  // passwordfind.jsp 페이지로 이동
     }
 
-    // 비밀번호 찾기 처리
+ // 비밀번호 찾기 처리
     @RequestMapping(value = "/findPassword", method = RequestMethod.POST)
     public String findPassword(@RequestParam("userId") String userId,
                                @RequestParam("userName") String userName,
@@ -304,6 +304,8 @@ public class UserController {
         }
         return tempPassword.toString();
     }
+
+
  // 회원정보 수정 페이지로 이동 (GET 방식)
     @RequestMapping(value = "/userUpdate", method = RequestMethod.GET)
     public String showUserUpdatePage(Authentication authentication, Model model) {
