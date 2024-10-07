@@ -91,4 +91,9 @@ public class BoardDAOImpl implements BoardDAO{
 	public List<Board> selectBoardsByUserId(String userId) {
 	    return sqlSession.getMapper(BoardMapper.class).selectBoardsByUserId(userId);
 	}
+
+	@Override
+	public int updateBoardStatus3(int boardPostIdx) {
+		return sqlSession.getMapper(BoardMapper.class).updateBoardStatus3(boardPostIdx);
+	}
 }

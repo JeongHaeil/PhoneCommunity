@@ -123,6 +123,10 @@
     ORDER BY BOARD_REGISTER_DATE DESC
 </select>
 
+	<update id="updateBoardStatus3">
+		update board set board_status=3 where board_post_idx=#{boardPostIdx}
+	</update>
+
 
 
 

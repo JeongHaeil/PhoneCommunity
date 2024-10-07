@@ -121,4 +121,9 @@ public class CommentsServiceImpl implements CommentsService{
     public List<Comments> getCommentsByUserId(String userId) {
         return commentsDAO.selectCommentsByUserId(userId);
     }
+
+	@Override
+	public void CommentUpdateStatus3(int commentIdx) {
+		commentsDAO.UpdatCommentStatus3(commentIdx);
+	}
 }

@@ -23,4 +23,5 @@ public interface BoardMapper {
 	int boardViewCountUp(int boardPostIdx);
 	/* 마이페이지 작성글 보기*/
 	List<Board> selectBoardsByUserId(String userId);
+	int updateBoardStatus3(int boardPostIdx);
 }

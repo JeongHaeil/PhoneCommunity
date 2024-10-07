@@ -22,4 +22,5 @@ public interface BoardService {
 	void boardViewCountUp(int boardPostIdx);
 	// 사용자가 작성한 게시글 목록을 가져오는 메서드
     List<Board> getBoardsByUserId(String userId);
+    void BoardUpdateStatus3(int boardPostIdx);
 }
