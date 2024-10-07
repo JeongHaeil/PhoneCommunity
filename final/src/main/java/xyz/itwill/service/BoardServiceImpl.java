@@ -133,7 +133,11 @@ public class BoardServiceImpl implements BoardService {
 	public void boardViewCountUp(int boardPostIdx) {
 		boardDAO.boardViewCountUp(boardPostIdx);
 	}
-
+	/* 마이페이지 */
+	@Override
+	public List<Board> getBoardsByUserId(String userId) {
+	    return boardDAO.selectBoardsByUserId(userId);
+	}
 	
 	
 }

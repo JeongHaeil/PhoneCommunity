@@ -14,6 +14,8 @@ public class User {
     private String userLastLogin;
     private String userRegisterDate;
     private int userLevel =1;
+    private int userExperience = 0; // 경험치 필드 추가 (기본값 0)
     private int userStatus =1;
     private String userNickName;
+    
 }

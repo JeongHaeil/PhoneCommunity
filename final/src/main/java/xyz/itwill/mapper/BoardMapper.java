@@ -21,4 +21,6 @@ public interface BoardMapper {
 	int BBupdate(BBallot bBallot);
 	BBallot selectBBallotByIdx(Map<String, Object> map);
 	int boardViewCountUp(int boardPostIdx);
+	/* 마이페이지 작성글 보기*/
+	List<Board> selectBoardsByUserId(String userId);
 }

@@ -111,4 +111,20 @@
 	<update id="boardViewCountUp">
 		update board set board_count=board_count+1 where board_post_idx=#{boardPostIdx}
 	</update>
+	<!-- 마이페이지 작성 게시글 보기 -->
+	<select id="selectBoardsByUserId" parameterType="string" resultType="Board">
+    SELECT BOARD_POST_IDX AS boardPostIdx,  
+           BOARD_TITLE AS boardTitle,  
+           TO_CHAR(BOARD_RESIGSTER_DATE, 'YYYY-MM-DD HH24:MI:SS') AS boardResigsterDate, 
+           BOARD_COUNT AS boardCount,  
+           BOARD_STARUP AS boardStarup  
+    FROM BOARD
+    WHERE BOARD_USER_ID = #{userId}
+    ORDER BY BOARD_RESIGSTER_DATE DESC
+</select>
+
+
+
+
+
 </mapper>
