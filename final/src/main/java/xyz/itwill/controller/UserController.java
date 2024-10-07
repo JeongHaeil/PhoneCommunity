@@ -181,7 +181,11 @@ public class UserController {
 
     // 로그인 페이지로 이동 (GET 요청)
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login() {
+    public String login(HttpServletRequest request) {
+    	String prevPage=request.getHeader("Referer");
+    	if(prevPage!=null && !prevPage.contains("/login")) {
+    		request.getSession().setAttribute("prevPage", prevPage);
+    	}
         return "user/login";  // login.jsp 경로 유지
     }
 
@@ -226,7 +230,7 @@ public class UserController {
         return "user/idfind"; // idfind.jsp 파일로 이동
     }
 
- // 아이디 찾기 요청 처리
+    // 아이디 찾기 요청 처리
     @RequestMapping(value = "/displayUserId", method = RequestMethod.POST)
     public String displayUserId(@RequestParam("email") String email,
                                 @RequestParam("name") String name, Model model) {
@@ -263,7 +267,7 @@ public class UserController {
         return "user/passwordfind";  // passwordfind.jsp 페이지로 이동
     }
 
- // 비밀번호 찾기 처리
+    // 비밀번호 찾기 처리
     @RequestMapping(value = "/findPassword", method = RequestMethod.POST)
     public String findPassword(@RequestParam("userId") String userId,
                                @RequestParam("userName") String userName,
@@ -277,17 +281,13 @@ public class UserController {
 
         // 임시 비밀번호 생성
         String tempPassword = generateTempPassword();
-        log.info("생성된 임시 비밀번호: {}", tempPassword); // 로그 추가
 
         // 이메일로 임시 비밀번호 전송
         emailService.sendTemporaryPassword(userEmail, tempPassword);
-        log.info("이메일로 전송된 임시 비밀번호: {}", tempPassword); // 로그 추가
 
         // 임시 비밀번호를 암호화하여 저장
-        String encryptedPassword = passwordEncoder.encode(tempPassword);
-        user.setUserPassword(encryptedPassword);
+        user.setUserPassword(BCrypt.hashpw(tempPassword, BCrypt.gensalt()));
         userService.modifyUser(user);
-        log.info("DB에 저장된 암호화된 비밀번호: {}", encryptedPassword); // 로그 추가
 
         // 성공 메시지를 Model에 추가
         model.addAttribute("message", "임시 비밀번호가 이메일로 전송되었습니다.");
@@ -298,18 +298,16 @@ public class UserController {
 
     // 임시 비밀번호 생성 메서드
     private String generateTempPassword() {
-        // 임시 비밀번호는 영문 대소문자와 숫자 조합으로 8자리 생성
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        // 임시 비밀번호는 영숫자 조합으로 8자리 생성
+    	String chars = "0123456789";
         StringBuilder tempPassword = new StringBuilder();
         Random rnd = new Random();
-        while (tempPassword.length() < 8) {  // 비밀번호 길이 8자리
-            int index = rnd.nextInt(chars.length());  // 0부터 chars 길이까지의 랜덤 숫자 생성
-            tempPassword.append(chars.charAt(index));  // 랜덤으로 선택된 문자를 추가
+        while (tempPassword.length() < 8) {  // 비밀번호 길이
+            int index = (int) (rnd.nextFloat() * chars.length());
+            tempPassword.append(chars.charAt(index));
         }
         return tempPassword.toString();
     }
-
-
  // 회원정보 수정 페이지로 이동 (GET 방식)
     @RequestMapping(value = "/userUpdate", method = RequestMethod.GET)
     public String showUserUpdatePage(Authentication authentication, Model model) {
@@ -524,5 +522,4 @@ public class UserController {
     }
     
 }
-
 
