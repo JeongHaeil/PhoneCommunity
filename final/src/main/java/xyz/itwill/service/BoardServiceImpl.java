@@ -43,7 +43,7 @@ public class BoardServiceImpl implements BoardService {
 			SimpleDateFormat monthType=new SimpleDateFormat("MM-dd");			
 			for(Board board : boardLists) {
 				SimpleDateFormat getTime=new SimpleDateFormat("yyyy-MM-dd HH:mm");
-				Date transGetTime=getTime.parse(board.getBoardResigsterDate());
+				Date transGetTime=getTime.parse(board.getBoardRegisterDate());
 				long minusMillis=nowDate.getTime()-transGetTime.getTime();
 				long transMtoH=TimeUnit.MILLISECONDS.toHours(minusMillis);
 				String insertDate;
@@ -52,7 +52,7 @@ public class BoardServiceImpl implements BoardService {
 		        } else {
 		        	insertDate = monthType.format(transGetTime); // MM.dd 형식
 		        }
-				board.setBoardResigsterDate(insertDate);
+				board.setBoardRegisterDate(insertDate);
 				boardList.add(board);
 			}	
 		}
