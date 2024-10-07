@@ -23,4 +23,5 @@ public interface CommentsMapper {
 	int CBupdate(CBallot cBallot);
 	CBallot selectCBallotByIdx(Map<String, Object> map);
 	List<Comments> selectCommentsByUserId(String userId); // 마이페이지 댓글
+	int UpdatCommentStatus3(int commentIdx);
 }

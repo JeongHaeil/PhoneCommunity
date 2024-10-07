@@ -23,4 +23,5 @@ public interface CommentsService {
 	CBallot selectCBallotByIdx(Map<String, Object> map);
 	// 마이페이지 댓글 조회
 		List<Comments> getCommentsByUserId(String userId);
+	void CommentUpdateStatus3(int commentIdx);
 }

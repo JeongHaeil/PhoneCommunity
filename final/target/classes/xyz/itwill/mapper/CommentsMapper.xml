@@ -85,5 +85,8 @@
         ORDER BY COMMENT_REG_DATE DESC
     </select>
 	
+	<update id="UpdatCommentStatus3">
+		update comments set comment_status=3 where comment_idx=#{commentIdx}
+	</update>
 	
 </mapper>

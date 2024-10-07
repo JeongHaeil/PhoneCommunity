@@ -201,6 +201,10 @@ public class BoardJsonController {
 		}else {
 			return "pass";
 		}
+		Comments comments=commentsService.getCommentByNum(commentIdx);
+		if(comments.getCommentSpam()==10) {
+			commentsService.CommentUpdateStatus3(commentIdx);
+		}
 		return "success";
 	}
 	
@@ -292,6 +296,10 @@ public class BoardJsonController {
 			boardService.boardSpam(boardPostIdx);
 		}else {
 			return "pass";
+		}
+		Board board=boardService.getboard(boardPostIdx);	
+		if(board.getBoardSpam()==10) {
+			boardService.BoardUpdateStatus3(boardPostIdx);
 		}
 		return "success";
 	}

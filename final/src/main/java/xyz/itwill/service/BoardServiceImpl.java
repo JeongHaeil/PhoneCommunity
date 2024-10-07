@@ -138,6 +138,11 @@ public class BoardServiceImpl implements BoardService {
 	public List<Board> getBoardsByUserId(String userId) {
 	    return boardDAO.selectBoardsByUserId(userId);
 	}
+
+	@Override
+	public void BoardUpdateStatus3(int boardPostIdx) {
+		boardDAO.updateBoardStatus3(boardPostIdx);
+	}
 	
 	
 }

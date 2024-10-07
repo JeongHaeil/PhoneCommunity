@@ -97,5 +97,8 @@ public class CommentsDAOImpl implements CommentsDAO{
 			return sqlSession.getMapper(CommentsMapper.class).selectCommentsByUserId(userId);
 		}
 
-	
+	@Override
+	public int UpdatCommentStatus3(int commentIdx) {
+		return sqlSession.getMapper(CommentsMapper.class).UpdatCommentStatus3(commentIdx);
+	}
 }
