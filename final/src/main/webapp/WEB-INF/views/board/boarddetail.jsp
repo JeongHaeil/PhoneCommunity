@@ -153,7 +153,7 @@
 						<h5 class="card-title" style="color:#f05d5e;">${board.boardTitle }</h5>
 						<%-- 삭제 수정은 로그인 유저와 작성자가 같을때만 출력 --%>
 						<p class="card-text d-flex justify-content-between aCursorActive">
-						<small class="text-muted">작성자: ${board.userNickname} | 작성일:${board.boardResigsterDate }</small>
+						<small class="text-muted">작성자: ${board.userNickname} | 작성일:${board.boardRegisterDate }</small>
 							<sec:authorize access="isAuthenticated()">
 								<sec:authorize access="hasRole('ROLE_SUPER_ADMIN')" var="admin"/>
 								<sec:authentication property="principal" var="userinfo"/>	
@@ -290,7 +290,7 @@
 												    &nbsp;&nbsp;${boards.boardTitle}
 												</td>
 			    								<td class="tdboardWriter">${boards.userNickname }</td>
-			    								<td>${boards.boardResigsterDate }</td>
+			    								<td>${boards.boardRegisterDate }</td>
 			    								<td>${boards.boardCount }</td>
 			    							</tr>
 			    						</c:forEach>   						
