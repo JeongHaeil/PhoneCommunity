@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import xyz.itwill.dao.UserDAO;
+import xyz.itwill.dto.SecurityAuth;
 import xyz.itwill.dto.User;
 import xyz.itwill.util.ExperienceUtil;
 
@@ -17,6 +18,7 @@ import xyz.itwill.util.ExperienceUtil;
 public class UserServiceImpl implements UserService {
     private final UserDAO userDAO;
     private final EmailService emailService; // 이메일 전송을 위한 서비스 추가
+    private final SecurityAuthService securityAuthService; // 권한 부여를 위한 서비스 추가
 
     @Transactional
     @Override
@@ -25,9 +27,16 @@ public class UserServiceImpl implements UserService {
         String hashedPassword = BCrypt.hashpw(user.getUserPassword(), BCrypt.gensalt());
         user.setUserPassword(hashedPassword);
 
+        // 회원 정보 저장
         userDAO.insertUser(user);
-    }
 
+        // 권한 추가 (회원가입 시 기본 권한을 부여)
+        SecurityAuth securityAuth = new SecurityAuth();
+        securityAuth.setAuthUserId(user.getUserId());
+        securityAuth.setAuth("ROLE_USER"); // 기본 권한 설정
+        securityAuthService.addSecurityAuth(securityAuth);
+    }
+    
     @Transactional
     @Override
     public void modifyUser(User user) {
