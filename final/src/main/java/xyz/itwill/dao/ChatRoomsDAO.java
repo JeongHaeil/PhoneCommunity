@@ -11,4 +11,8 @@ public interface ChatRoomsDAO {
 	ChatRooms getChatRooms(Map<String, Object> map); 
 	
 	int getLastInsertedRoomId();
+	
+	int generateNewRoomId();
+	
+	int getSellerIdByProductId(String productId);
 }

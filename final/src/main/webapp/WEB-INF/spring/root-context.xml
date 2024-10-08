@@ -1,59 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd">
-	
-	
-	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
-		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"/>
-		<property name="url" value="jdbc:log4jdbc:oracle:thin:@www.itwill.xyz:1521:xe"/>
-		<property name="username" value="phone"/>
-		<property name="password" value="phone123"/>
-	</bean>
-	
-	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactoryBean">
-		<property name="configLocation" value="/WEB-INF/spring/mybatis-config.xml"/> 
-		<property name="dataSource" ref="dataSource"/>
-		<property name="typeAliasesPackage" value="xyz.itwill.dto"/>
-		<property name="mapperLocations">
-			<list>
-				<value>classpath:xyz/itwill/mapper/*.xml</value>
-			</list>
-		</property>
-	</bean>	
-	
-	
-	<bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession" destroy-method="clearCache">
-		<constructor-arg ref="sqlSessionFactoryBean"/>
-	</bean>
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:tx="http://www.springframework.org/schema/tx"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd">
+   
+   
+   <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
+      <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"/>
+      <property name="url" value="jdbc:log4jdbc:oracle:thin:@www.itwill.xyz:1521:xe"/>
+      <property name="username" value="phone"/>
+      <property name="password" value="phone123"/>
+   </bean>
+   
+   <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactoryBean">
+      <property name="configLocation" value="/WEB-INF/spring/mybatis-config.xml"/> 
+      <property name="dataSource" ref="dataSource"/>
+      <property name="typeAliasesPackage" value="xyz.itwill.dto"/>
+      <property name="mapperLocations">
+         <list>
+            <value>classpath:xyz/itwill/mapper/*.xml</value>
+         </list>
+      </property>
+   </bean>   
+   
+   
+   <bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession" destroy-method="clearCache">
+      <constructor-arg ref="sqlSessionFactoryBean"/>
+   </bean>
 
 
-	<bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">
-		<property name="dataSource" ref="dataSource"/>
-	</bean>
-	
-	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="filterMultipartResolver">
-		<property name="maxUploadSize" value="20971520"/>
-		<property name="defaultEncoding" value="utf-8"/>
-	</bean>
-	
+   <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">
+      <property name="dataSource" ref="dataSource"/>
+   </bean>
+   
+   <bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="filterMultipartResolver">
+      <property name="maxUploadSize" value="20971520"/>
+      <property name="defaultEncoding" value="utf-8"/>
+   </bean>
+   
 
-	
-	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="smtp.gmail.com"/>
-		<property name="port" value="587"/>
-		<property name="username" value="tosmreo@gmail.com"/>
-		<property name="password" value="shtp apfk mfcx fjun"/>
-		<property name="javaMailProperties">
-			<props>
-				<prop key="mail.transport.protocol">smtp</prop>
-				<prop key="mail.smtp.auth">true</prop>
-				<prop key="mail.smtp.starttls.enable">true</prop>
-				<prop key="mail.debug">true</prop>
-			</props>
-		</property>
-	</bean>
+   
+   <bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+      <property name="host" value="smtp.gmail.com"/>
+      <property name="port" value="587"/>
+      <property name="username" value="tosmreo@gmail.com"/>
+      <property name="password" value="shtp apfk mfcx fjun"/>
+      <property name="javaMailProperties">
+         <props>
+            <prop key="mail.transport.protocol">smtp</prop>
+            <prop key="mail.smtp.auth">true</prop>
+            <prop key="mail.smtp.starttls.enable">true</prop>
+            <prop key="mail.debug">true</prop>
+         </props>
+      </property>
+   </bean>
 
 </beans>

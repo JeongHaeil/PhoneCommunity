@@ -6,9 +6,11 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import lombok.RequiredArgsConstructor;
 import xyz.itwill.dto.SecurityAuth;
 
 @Repository
+
 public class SecurityAuthDAOImpl implements SecurityAuthDAO {
     private static final String NAMESPACE = "xyz.itwill.dao.SecurityAuthDAO.";
 

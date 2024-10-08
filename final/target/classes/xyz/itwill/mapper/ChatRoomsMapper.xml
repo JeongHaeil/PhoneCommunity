@@ -3,6 +3,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
   <mapper namespace="xyz.itwill.mapper.ChatRoomsMapper">
+  
   	<insert id="createChatRooms" parameterType="ChatRooms"> 
 		 		INSERT INTO chatrooms (room_id, seller_id, buyer_id, product_id, created_at)
     VALUES (room_id_seq.NEXTVAL, #{sellerId}, #{buyerId}, #{productId}, SYSDATE)
@@ -26,6 +27,19 @@
 	    WHERE ROWNUM = 1
 	    ORDER BY room_id DESC
 	 </select>
+  
+      <!-- 특정 상품의 판매자 ID 조회 -->
+      <select id="getSellerIdByProductId" resultType="int" parameterType="String">
+        SELECT seller_id
+        FROM products
+        WHERE product_idx = #{productId}
+    </select>
+  
+  	<select id="generateNewRoomId" resultType="int">
+        SELECT chat_room_seq.NEXTVAL FROM dual
+    </select>
+  
+  
   
   
   </mapper>
