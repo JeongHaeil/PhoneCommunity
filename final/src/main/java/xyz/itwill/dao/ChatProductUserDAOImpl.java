@@ -14,7 +14,6 @@ public class ChatProductUserDAOImpl implements ChatProductUserDAO{
 	private final SqlSession sqlSession;
 	
 	
-	
 	public ChatProductUser getProductAndSellerInfo(int productIdx) {
 		
 		/*

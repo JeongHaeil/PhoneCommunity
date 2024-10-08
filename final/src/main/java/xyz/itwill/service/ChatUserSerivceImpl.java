@@ -11,7 +11,7 @@ import xyz.itwill.dto.User;
 @Service
 @RequiredArgsConstructor
 public class ChatUserSerivceImpl implements ChatUserSerivce{
-	
+	 
 	private final ChatUserDAO chatUserDAO;
 	
 	@Override

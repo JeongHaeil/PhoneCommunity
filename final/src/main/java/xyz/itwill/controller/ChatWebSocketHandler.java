@@ -16,6 +16,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         sessions.add(session);
     }
 
+    
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();

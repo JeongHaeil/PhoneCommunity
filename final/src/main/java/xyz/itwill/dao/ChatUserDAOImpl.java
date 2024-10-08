@@ -20,4 +20,5 @@ public class ChatUserDAOImpl implements ChatUserDAO{
 		return sqlSession.getMapper(ChatUserMapper.class).getUserChatById(map);
 	}
 
+	
 }

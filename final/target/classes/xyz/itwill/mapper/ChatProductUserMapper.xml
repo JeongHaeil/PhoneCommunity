@@ -11,7 +11,7 @@
     WHERE p.PRODUCT_IDX = #{productIdx}
 </select>
 
-
+ 
 <resultMap id="productUserResultMap" type="xyz.itwill.dto.ChatProductUser">
     <result property="productId" column="PRODUCT_IDX"/>
     <result property="productUserId" column="PRODUCT_USER_ID"/>
