@@ -24,7 +24,7 @@ import xyz.itwill.service.ChatRoomsService;
 @RequiredArgsConstructor
 public class ChatController  {
 		private final ChatRoomsService chatRoomsService;
-		
+		 
 		
 		
 		// 채팅 시작 버튼을 클릭하면 호출되는 메서드

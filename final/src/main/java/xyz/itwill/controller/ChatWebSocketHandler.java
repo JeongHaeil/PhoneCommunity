@@ -47,7 +47,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         session.getAttributes().put("userId", userId);
         System.out.println("roomId: " + roomId); // 콘솔에서 roomId 값을 확인
         // 채팅방에 사용자 세션 추가
-       
+        
         Integer buyerId = (Integer) httpSession.getAttribute("buyerId");
         Integer sellerId = (Integer) httpSession.getAttribute("sellerId");
         session.getAttributes().put("buyerId", buyerId);
