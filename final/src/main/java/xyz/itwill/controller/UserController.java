@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -189,7 +188,7 @@ public class UserController {
         return "user/login";  // login.jsp 경로 유지
     }
 
- // 회원 프로필 조회 (JSP 파일명: mypage.jsp)
+    // 회원 프로필 조회 (JSP 파일명: mypage.jsp)
     @RequestMapping("/profile")
     public String profile(Authentication authentication, Model model) {
         if (authentication == null) {

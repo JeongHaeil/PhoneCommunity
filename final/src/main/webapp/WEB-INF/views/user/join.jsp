@@ -109,7 +109,7 @@
 </div>
         <div class="mb-3">
             <label for="user_nickname" class="form-label">닉네임</label>
-            <input type="text" class="form-control" id="user_nickname" name="userNickName" placeholder="닉네임을 입력하세요" required>
+            <input type="text" class="form-control" id="user_nickname" name="userNickname" placeholder="닉네임을 입력하세요" required>
             <div id="nicknameCheck" class="validation-message"></div>
         </div>
         <button type="submit" class="btn btn-signup">가입하기</button>
@@ -191,10 +191,10 @@ $(document).ready(function() {
     // 닉네임 중복 체크 및 정규식 검사 (한글, 영어, 숫자, 특수문자 허용, ㅁㄴㅇㄹ 금지)
     var restrictedNicknames = ["ㅁㄴㅇㄹ", "ㄱㄴㄷㄹ", "ㅇㄹㅁㄴ"];
     $("#user_nickname").on("keyup", function() {
-        var userNickName = $(this).val();
+        var userNickname = $(this).val();
         var nicknameReg = /^[a-zA-Z가-힣0-9!@#$%^&*()_+-=]{2,20}$/;
 
-        if (!nicknameReg.test(userNickName) || restrictedNicknames.includes(userNickName)) {
+        if (!nicknameReg.test(userNickname) || restrictedNicknames.includes(userNickname)) {
             $("#nicknameCheck").text("유효하지 않은 닉네임입니다.").css("color", "red");
             return;
         }
@@ -202,7 +202,7 @@ $(document).ready(function() {
         $.ajax({
             url: "${pageContext.request.contextPath}/user/checkNickname",
             type: "GET",
-            data: { userNickName: userNickName },
+            data: { userNickname: userNickname },
             success: function(response) {
                 if (response === "AVAILABLE") {
                     $("#nicknameCheck").text("사용 가능한 닉네임입니다.").css("color", "green");
