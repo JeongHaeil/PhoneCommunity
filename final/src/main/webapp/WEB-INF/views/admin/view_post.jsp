@@ -18,14 +18,6 @@
 
 <div>${post.boardContent}</div>
 
-<h3>댓글 목록</h3>
-<c:forEach var="comment" items="${comments}">
-    <div>
-        <p>댓글 작성자: ${comment.userNickname}</p>
-        <p>내용: ${comment.commentContent}</p>
-        <p>작성일: ${comment.commentRegDate}</p>
-    </div>
-</c:forEach>
 
 <a href="/final/super_admin/admin">목록으로 돌아가기</a>
 
