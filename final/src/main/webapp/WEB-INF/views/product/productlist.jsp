@@ -98,11 +98,14 @@ body {
 	padding: 10px;
 	background-color: #fff;
 	transition: transform 0.3s ease, box-shadow 0.3s ease;
-	height: 100%;
+	height: auto;
+	max-width:220px;
 }
 
+
 .img-fluid {
-	width: 190px;
+	width: 100%;
+	height: auto;
 }
 
 .product-card:hover {
