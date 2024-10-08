@@ -71,5 +71,15 @@ public class UserDAOImpl implements UserDAO {
         
         return sqlSession.selectOne("xyz.itwill.mapper.UserMapper.selectUserByIdNameAndEmail", params);
     }
+ // 비밀번호 업데이트를 위한 메서드 추가
+    @Override
+    public int updatePassword(User user) {
+        return sqlSession.getMapper(UserMapper.class).updatePassword(user); // 단순 비밀번호 업데이트
+    }
+    // 새로 추가된 경험치 업데이트 메서드
+    @Override
+    public int updateUserExperience(User user) {
+        return sqlSession.getMapper(UserMapper.class).updateUserExperience(user); // 경험치 업데이트 메서드
+    }
 
 }

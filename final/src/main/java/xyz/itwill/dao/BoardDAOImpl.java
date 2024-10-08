@@ -85,4 +85,15 @@ public class BoardDAOImpl implements BoardDAO{
 	public int boardViewCountUp(int boardPostIdx) {
 		return sqlSession.getMapper(BoardMapper.class).boardViewCountUp(boardPostIdx);
 	}	
+		
+	/*마이페이지*/
+	@Override
+	public List<Board> selectBoardsByUserId(String userId) {
+	    return sqlSession.getMapper(BoardMapper.class).selectBoardsByUserId(userId);
+	}
+
+	@Override
+	public int updateBoardStatus3(int boardPostIdx) {
+		return sqlSession.getMapper(BoardMapper.class).updateBoardStatus3(boardPostIdx);
+	}
 }

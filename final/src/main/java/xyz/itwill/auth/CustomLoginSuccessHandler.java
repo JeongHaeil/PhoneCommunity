@@ -24,6 +24,10 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
         // 로그인 사용자의 권한을 저장하기 위한 List 객체 생성
         List<String> roleNames = new ArrayList<String>();
         
+        String prevPage = (String) request.getSession().getAttribute("prevPage");
+        if (prevPage != null) {
+            request.getSession().removeAttribute("prevPage");
+        }
         // Authentication.getAuthorities() : 인증된 사용자에 대한 모든 권한정보(GrantedAuthority 객체)가 
         // 요소값으로 저장된 List 객체를 반환하는 메소드
         for(GrantedAuthority authority : authentication.getAuthorities()) {
@@ -38,7 +42,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
             response.sendRedirect(request.getContextPath() + "/board_admin/");
         } else {
             // 일반 유저는 기본 페이지로 리다이렉트
-            response.sendRedirect(request.getContextPath() + "/");
+            response.sendRedirect(prevPage);
         }
     }
 }

@@ -1,18 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>마이페이지</title>
-    <!-- 부트스트랩 CSS -->
+    <title>회원정보 보기</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        /* 페이지의 스타일 */
         body {
             background-color: #f8f9fa;
             font-family: 'Noto Sans KR', sans-serif;
         }
-        .container {
+        .mypage-container {
             max-width: 900px;
             margin: 50px auto;
             padding: 20px;
@@ -20,122 +21,102 @@
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        h3 {
-            font-weight: bold;
-            margin-bottom: 20px;
+        .mypage-info-section {
+            margin-top: 20px;
         }
-        .nav-tabs {
-            border-bottom: 2px solid #ddd;
-        }
-        .nav-tabs .nav-link {
-            color: #f86d6d;
-        }
-        .nav-tabs .nav-link.active {
-            color: #f75c5c;
-            border-color: #f75c5c #f75c5c #fff;
-        }
-        .info-section {
-            margin-top: 30px;
-        }
-        .info-section .label {
+        .mypage-info-section .info-label {
             font-weight: bold;
         }
-        .info-section .value {
+        .mypage-info-section .info-value {
             margin-left: 10px;
-        }
-        .btn-custom {
-            background-color: #f86d6d;
-            color: white;
-            border-radius: 5px;
-            padding: 10px 15px;
-            margin-right: 5px;
-        }
-        .btn-custom:hover {
-            background-color: #f75c5c;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- 네비게이션 탭 -->
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link active" href="#">회원정보 보기</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">스크랩 보기</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">저장한 글 보기</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">작성 글 보기</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">자동 로그인 관리</a>
-        </li>
-        <!-- 필요한 탭 추가 -->
-    </ul>
+<div class="mypage-container">
+    <!-- 탭 include -->
+    <jsp:include page="/WEB-INF/views/user/mypageTabs.jsp">
+        <jsp:param name="activeTab" value="profile" />
+    </jsp:include>
 
     <!-- 회원 정보 섹션 -->
-    <div class="info-section">
-        <h3>회원 정보</h3>
+    <div class="mypage-info-section">
+        <h3 class="mypage-header">회원 정보</h3>
 
         <div class="row mb-3">
-            <div class="col-md-3 label">이메일 주소</div>
-            <div class="col-md-9 value">tosmreo@naver.com</div>
+            <div class="col-md-3 info-label">이메일 주소</div>
+            <div class="col-md-9 info-value">${user.userEmail}</div>
         </div>
 
         <div class="row mb-3">
-            <div class="col-md-3 label">아이디</div>
-            <div class="col-md-9 value">tosmreo</div>
+            <div class="col-md-3 info-label">아이디</div>
+            <div class="col-md-9 info-value">${user.userId}</div>
         </div>
 
         <div class="row mb-3">
-            <div class="col-md-3 label">닉네임</div>
-            <div class="col-md-9 value">김혜련</div>
+            <div class="col-md-3 info-label">닉네임</div>
+            <div class="col-md-9 info-value">${user.userNickName}</div>
+        </div>
+
+        <!-- 이름 표시 섹션 추가 -->
+        <div class="row mb-3">
+            <div class="col-md-3 info-label">이름</div>
+            <div class="col-md-9 info-value">${user.userName}</div>
         </div>
 
         <div class="row mb-3">
-            <div class="col-md-3 label">프로필 사진</div>
-            <div class="col-md-9 value">...</div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-3 label">포인트</div>
-            <div class="col-md-9 value">120 P</div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-3 label">레벨</div>
-            <div class="col-md-9 value">Lv.1 (66%) / 17</div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-3 label">회원 그룹</div>
-            <div class="col-md-9 value">신입</div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-3 label">가입일</div>
-            <div class="col-md-9 value">2024-09-17</div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-3 label">최근 로그인</div>
-            <div class="col-md-9 value">2024-09-17</div>
-        </div>
-    </div>
-
-    <!-- 버튼 섹션 -->
-    <div class="mt-4">
-        <button type="button" class="btn btn-custom">이메일 주소 변경</button>
-        <button type="button" class="btn btn-custom">회원정보 변경</button>
-        <button type="button" class="btn btn-custom">비밀번호 변경</button>
-        <button type="button" class="btn btn-custom">탈퇴</button>
+    <div class="col-md-3 info-label">핸드폰 번호</div>
+    <div class="col-md-9 info-value">
+        ${fn:substring(user.userPhoneNum, 0, 3)}-${fn:substring(user.userPhoneNum, 3, 7)}-${fn:substring(user.userPhoneNum, 7, 11)}
     </div>
 </div>
+
+
+        <div class="row mb-3">
+            <div class="col-md-3 info-label">가입일</div>
+            <div class="col-md-9 info-value">${user.userRegisterDate}</div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-3 info-label">최근 로그인</div>
+            <div class="col-md-9 info-value">${user.userLastLogin}</div>
+        </div>
+
+        <!-- 레벨 표시 -->
+        <div class="row mb-3">
+            <div class="col-md-3 info-label">레벨</div>
+            <div class="col-md-9 info-value">${user.userLevel} 레벨</div>
+        </div>
+
+        <!-- 경험치 표시 -->
+        <div class="row mb-3">
+            <div class="col-md-3 info-label">경험치</div>
+            <div class="col-md-9 info-value">
+                ${currentExperience}/${experienceForNextLevel} P (${progressPercentage}%)
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: ${progressPercentage}%;" aria-valuenow="${progressPercentage}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+
+    <!-- 하단 버튼 섹션 -->
+    <div class="btn-section">
+        <form action="/final/user/userUpdate" method="POST">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <button type="submit" class="btn btn-custom">회원정보 변경</button>
+        </form>
+
+        <form action="/final/user/passwordUpdate" method="GET">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <button type="submit" class="btn btn-custom">비밀번호 변경</button>
+        </form>
+
+        <form action="/final/user/userDelete" method="GET">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <button type="submit" class="btn btn-custom">탈퇴</button>
+        </form>
+    </div>
 
 <!-- 부트스트랩 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

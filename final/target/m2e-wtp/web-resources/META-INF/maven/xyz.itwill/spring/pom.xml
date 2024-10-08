@@ -303,17 +303,19 @@
 		</dependency>
 		
 		
-		
-		<dependency>
-    <groupId>org.atmosphere</groupId>
-    <artifactId>atmosphere-runtime</artifactId>
-    <version>2.7.3</version> <!-- Java 11과 호환되는 최신 2.x 버전 -->
+	<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-websocket</artifactId>
+    <version>5.0.7.RELEASE</version>
+</dependency>
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>2.11.3</version>
 </dependency>
 		
 		
-		
-		
-		
+		 
 		
 	</dependencies>
     
