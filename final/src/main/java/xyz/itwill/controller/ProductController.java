@@ -28,7 +28,7 @@ import xyz.itwill.dto.Product;
 import xyz.itwill.service.ProductService;
 
 @Controller
-@RequestMapping
+@RequestMapping("/product")
 @RequiredArgsConstructor
 public class ProductController {
 	private final ProductService productService;
