@@ -35,7 +35,7 @@ public class CustomUserDetails implements UserDetails {
         this.userPassword = user.getUserPassword();
         this.userName = user.getUserName();
         this.userEmail = user.getUserEmail();
-        this.nickname = user.getUserNickName(); // 닉네임 초기화
+        this.nickname = user.getUserNickname(); // 닉네임 초기화
         this.userStatus = user.getUserStatus();
         this.userLevel = user.getUserLevel(); // 레벨 설정
         this.userExperience = user.getUserExperience(); // 경험치 초기화

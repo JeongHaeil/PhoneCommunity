@@ -56,7 +56,7 @@
 
         <div class="row mb-3">
             <div class="col-md-3 info-label">닉네임</div>
-            <div class="col-md-9 info-value">${user.userNickName}</div>
+            <div class="col-md-9 info-value">${user.userNickname}</div>
         </div>
 
         <!-- 이름 표시 섹션 추가 -->
@@ -66,12 +66,11 @@
         </div>
 
         <div class="row mb-3">
-    <div class="col-md-3 info-label">핸드폰 번호</div>
-    <div class="col-md-9 info-value">
-        ${fn:substring(user.userPhoneNum, 0, 3)}-${fn:substring(user.userPhoneNum, 3, 7)}-${fn:substring(user.userPhoneNum, 7, 11)}
-    </div>
-</div>
-
+            <div class="col-md-3 info-label">핸드폰 번호</div>
+            <div class="col-md-9 info-value">
+                ${fn:substring(user.userPhoneNum, 0, 3)}-${fn:substring(user.userPhoneNum, 3, 7)}-${fn:substring(user.userPhoneNum, 7, 11)}
+            </div>
+        </div>
 
         <div class="row mb-3">
             <div class="col-md-3 info-label">가입일</div>
@@ -99,6 +98,7 @@
                 </div>
             </div>
         </div>
+    </div>
 
     <!-- 하단 버튼 섹션 -->
     <div class="btn-section">
@@ -117,6 +117,7 @@
             <button type="submit" class="btn btn-custom">탈퇴</button>
         </form>
     </div>
+</div>
 
 <!-- 부트스트랩 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
