@@ -1,7 +1,7 @@
 package xyz.itwill.service;
 
+import java.security.SecureRandom;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -110,11 +110,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updatePassword(User user) {
-        // 임시 비밀번호 생성
-        String temporaryPassword = UUID.randomUUID().toString().substring(0, 8); // 8자리 임시 비밀번호
+        // 8자리 임시 비밀번호 생성
+        String temporaryPassword = generateRandomPassword(8); // 8자리 임시 비밀번호 생성
         String hashedPassword = passwordEncoder.encode(temporaryPassword); // PasswordEncoder를 사용한 암호화
 
-        user.setUserPassword(hashedPassword); // 비밀번호 암호화 후 업데이트
+        // 암호화된 비밀번호를 사용자 객체에 설정
+        user.setUserPassword(hashedPassword);
 
         // 비밀번호 업데이트
         userDAO.updateUser(user);
@@ -123,7 +124,19 @@ public class UserServiceImpl implements UserService {
         emailService.sendTemporaryPassword(user.getUserEmail(), temporaryPassword); // 임시 비밀번호 이메일 전송
     }
 
+    // 임시 비밀번호를 생성하는 메서드
+    private String generateRandomPassword(int length) {
+        String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder(length);
 
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(CHARACTERS.length());
+            password.append(CHARACTERS.charAt(index));
+        }
+
+        return password.toString();
+    }
  // 경험치 증가 메서드 구현
     @Override
     public void increaseExperience(String userId, int amount) {

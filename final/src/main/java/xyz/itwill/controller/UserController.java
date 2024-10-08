@@ -266,7 +266,7 @@ public class UserController {
         return "user/passwordfind";  // passwordfind.jsp 페이지로 이동
     }
 
-    // 비밀번호 찾기 처리
+ // 비밀번호 찾기 처리 (POST 요청)
     @RequestMapping(value = "/findPassword", method = RequestMethod.POST)
     public String findPassword(@RequestParam("userId") String userId,
                                @RequestParam("userName") String userName,
@@ -278,16 +278,8 @@ public class UserController {
             return "user/passwordfind";
         }
 
-        // 임시 비밀번호 생성
-        String tempPassword = generateTempPassword();
-        log.info("password = "+tempPassword);
-        
-        // 이메일로 임시 비밀번호 전송
-        emailService.sendTemporaryPassword(userEmail, tempPassword);
-
-        // 임시 비밀번호를 암호화하여 저장
-        user.setUserPassword(passwordEncoder.encode(tempPassword));
-        userService.modifyUser(user);
+        // 서비스에서 임시 비밀번호 생성 및 비밀번호 업데이트 처리
+        userService.updatePassword(user);
 
         // 성공 메시지를 Model에 추가
         model.addAttribute("message", "임시 비밀번호가 이메일로 전송되었습니다.");
@@ -295,19 +287,7 @@ public class UserController {
         // 비밀번호가 전송되었다는 페이지로 이동
         return "user/displayUserpw";
     }
-
-    // 임시 비밀번호 생성 메서드
-    private String generateTempPassword() {
-        // 임시 비밀번호는 영숫자 조합으로 8자리 생성
-    	String chars = "0123456789";
-        StringBuilder tempPassword = new StringBuilder();
-        Random rnd = new Random();
-        while (tempPassword.length() < 8) {  // 비밀번호 길이
-            int index = (int) (rnd.nextFloat() * chars.length());
-            tempPassword.append(chars.charAt(index));
-        }
-        return tempPassword.toString();
-    }
+    
  // 회원정보 수정 페이지로 이동 (GET 방식)
     @RequestMapping(value = "/userUpdate", method = RequestMethod.GET)
     public String showUserUpdatePage(Authentication authentication, Model model) {
