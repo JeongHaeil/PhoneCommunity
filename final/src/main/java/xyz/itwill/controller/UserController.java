@@ -1,11 +1,18 @@
 package xyz.itwill.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,10 +24,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import xyz.itwill.auth.CustomUserDetails;
+import xyz.itwill.dto.Board;
+import xyz.itwill.dto.Comments;
 import xyz.itwill.dto.Email;
 import xyz.itwill.dto.User;
+import xyz.itwill.service.BoardService;
+import xyz.itwill.service.CommentsService;
 import xyz.itwill.service.EmailService;
 import xyz.itwill.service.UserService;
+import xyz.itwill.util.ExperienceUtil;
 
 @Slf4j
 @Controller
@@ -30,6 +42,10 @@ public class UserController {
 
     private final UserService userService;
     private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder; // PasswordEncoder 주입
+    private final BoardService boardService; // BoardService 주입
+    private final CommentsService commentsService; // CommentsService 주입
+    
 
     // 홈 페이지 요청을 처리하는 메서드
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -165,21 +181,40 @@ public class UserController {
 
     // 로그인 페이지로 이동 (GET 요청)
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login() {
+    public String login(HttpServletRequest request) {
+    	String prevPage=request.getHeader("Referer");
+    	if(prevPage!=null && !prevPage.contains("/login")) {
+    		request.getSession().setAttribute("prevPage", prevPage);
+    	}
         return "user/login";  // login.jsp 경로 유지
     }
 
-    // 회원 프로필 조회 (JSP 파일명: mypage.jsp)
+ // 회원 프로필 조회 (JSP 파일명: mypage.jsp)
     @RequestMapping("/profile")
-    public String profile(HttpSession session, Model model) {
-        User loginUser = (User) session.getAttribute("loginUser");
-        if (loginUser == null) {
-            return "redirect:/user/login";
+    public String profile(Authentication authentication, Model model) {
+        if (authentication == null) {
+            return "redirect:/user/login";  // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
         }
-        model.addAttribute("user", loginUser);
-        return "user/mypage";  // 프로필 페이지 경로를 mypage.jsp로 변경
-    }
 
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User loginUser = userService.getUser(userDetails.getUserId());  // 로그인된 사용자의 정보를 DB에서 조회
+
+        // 현재 경험치와 레벨 정보를 가져옴
+        int currentExperience = loginUser.getUserExperience();
+        int currentLevel = loginUser.getUserLevel();
+
+        // 다음 레벨에 도달하기 위한 경험치 계산
+        int experienceForNextLevel = ExperienceUtil.getExperienceForNextLevel(currentLevel);
+        int progressPercentage = ExperienceUtil.calculateProgressPercentage(currentExperience, experienceForNextLevel);
+
+        // 모델에 추가
+        model.addAttribute("currentExperience", currentExperience);
+        model.addAttribute("experienceForNextLevel", experienceForNextLevel);
+        model.addAttribute("progressPercentage", progressPercentage);
+        model.addAttribute("user", loginUser);
+
+        return "user/mypage";  // 프로필 페이지로 이동
+    }
     // 아이디 중복 확인
     @RequestMapping(value = "/checkUserId", method = RequestMethod.GET)
     @ResponseBody
@@ -246,12 +281,13 @@ public class UserController {
 
         // 임시 비밀번호 생성
         String tempPassword = generateTempPassword();
-
+        log.info("password = "+tempPassword);
+        
         // 이메일로 임시 비밀번호 전송
         emailService.sendTemporaryPassword(userEmail, tempPassword);
 
         // 임시 비밀번호를 암호화하여 저장
-        user.setUserPassword(BCrypt.hashpw(tempPassword, BCrypt.gensalt()));
+        user.setUserPassword(passwordEncoder.encode(tempPassword));
         userService.modifyUser(user);
 
         // 성공 메시지를 Model에 추가
@@ -273,4 +309,218 @@ public class UserController {
         }
         return tempPassword.toString();
     }
+ // 회원정보 수정 페이지로 이동 (GET 방식)
+    @RequestMapping(value = "/userUpdate", method = RequestMethod.GET)
+    public String showUserUpdatePage(Authentication authentication, Model model) {
+        if (authentication == null) {
+            return "redirect:/user/login";  // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+        }
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User loginUser = userService.getUser(userDetails.getUserId());
+        model.addAttribute("user", loginUser);
+
+        return "user/userUpdate";  // userUpdate.jsp로 이동
+    }
+
+    // 회원정보 수정 처리 (POST 방식)
+    @RequestMapping(value = "/userUpdate", method = RequestMethod.POST)
+    public String updateUser(
+            @ModelAttribute User user, 
+            Authentication authentication, 
+            Model model) {
+        if (authentication == null) {
+            return "redirect:/user/login";  // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+        }
+
+        try {
+            userService.modifyUser(user);
+            model.addAttribute("message", "회원 정보가 성공적으로 업데이트되었습니다.");
+        } catch (Exception e) {
+            model.addAttribute("error", "회원 정보 업데이트 중 오류가 발생했습니다.");
+        }
+        
+        return "user/userUpdate";
+    }
+
+ // 비밀번호 변경 페이지로 이동 (GET 요청)
+    @RequestMapping(value = "/passwordUpdate", method = RequestMethod.GET)
+    public String showPasswordUpdatePage(Authentication authentication, Model model) {
+        // 인증된 사용자의 ID를 가져와서 뷰에 전달
+        if (authentication != null) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            model.addAttribute("userId", userDetails.getUserId()); // userId를 폼에 전달
+        }
+        return "user/passwordUpdate"; // 비밀번호 변경 페이지로 이동
+    }
+ // 비밀번호 변경 처리 (POST 요청)
+    @RequestMapping(value = "/passwordUpdate", method = RequestMethod.POST)
+    public String updatePassword(
+        @RequestParam("currentPassword") String currentPassword,
+        @RequestParam("newPassword") String newPassword,
+        @RequestParam("confirmNewPassword") String confirmNewPassword,
+        Authentication authentication, 
+        Model model) {
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User loginUser = userService.getUser(userDetails.getUserId());
+
+        if (!passwordEncoder.matches(currentPassword, loginUser.getUserPassword())) {
+            model.addAttribute("error", "현재 비밀번호가 일치하지 않습니다.");
+            return "user/passwordUpdate";
+        }
+
+        if (!newPassword.equals(confirmNewPassword)) {
+            model.addAttribute("error", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+            return "user/passwordUpdate";
+        }
+
+        loginUser.setUserPassword(passwordEncoder.encode(newPassword));
+        userService.modifyUser(loginUser);
+
+        model.addAttribute("message", "비밀번호가 성공적으로 변경되었습니다.");
+        return "user/passwordUpdate";
+    }
+ // 회원 탈퇴 확인 페이지로 이동 (GET 요청)
+    @RequestMapping(value = "/userDelete", method = RequestMethod.GET)
+    public String showUserDeletePage(Authentication authentication, Model model) {
+        if (authentication != null) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            model.addAttribute("userId", userDetails.getUserId()); // 로그인한 사용자의 ID 전달
+        }
+        return "user/deleteUser"; // 탈퇴 페이지로 이동
+    }
+ 
+ // 회원 탈퇴 처리 (POST 방식)
+    @RequestMapping(value = "/userDelete", method = RequestMethod.POST)
+    public String deleteUser(
+        Authentication authentication,
+        @RequestParam("password") String password, 
+        HttpServletRequest request,  // HttpServletRequest 추가
+        HttpServletResponse response, // HttpServletResponse 추가
+        Model model) {
+
+        if (authentication == null) {
+            return "redirect:/user/login";  // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+        }
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User loginUser = userService.getUser(userDetails.getUserId());
+
+        // 비밀번호 확인
+        if (!passwordEncoder.matches(password, loginUser.getUserPassword())) {
+            model.addAttribute("error", "비밀번호가 일치하지 않습니다.");
+            return "user/userDelete";
+        }
+
+        // user_status를 0으로 변경하여 계정 비활성화
+        loginUser.setUserStatus(0);
+        userService.modifyUser(loginUser);  // 상태 업데이트
+
+        // 인증 상태 해제 및 로그아웃 처리
+        new SecurityContextLogoutHandler().logout(request, response, authentication);
+
+        model.addAttribute("message", "회원 탈퇴가 완료되었습니다.");
+        return "redirect:/user/login";  // 로그인 페이지로 리다이렉트
+    }
+    
+    // 스크랩 보기 페이지로 이동
+    @RequestMapping(value = "/myScrap", method = RequestMethod.GET)
+    public String showMyScrapPage() {
+        return "user/myScrap"; // 스크랩 보기 페이지로 이동
+    }
+    
+ // 작성 댓글 보기 페이지로 이동
+    @RequestMapping(value = "/myComment")
+    public String showMyCommentPage(Authentication authentication, Model model) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/user/login"; // 인증되지 않은 사용자는 로그인 페이지로 리다이렉트
+        }
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String userId = userDetails.getUserId(); // 로그인한 사용자의 ID 가져오기
+
+        // 사용자가 작성한 댓글 목록을 가져옴
+        List<Comments> commentList = commentsService.getCommentsByUserId(userId);
+
+        model.addAttribute("commentList", commentList); // 모델에 댓글 목록 추가
+        return "user/myComment"; // JSP 파일로 이동
+    }
+
+
+ // 작성 글 보기 페이지로 이동
+    @RequestMapping(value = "/myWrite", method = RequestMethod.GET)
+    public String showMyWritePage(Authentication authentication, Model model) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/user/login";
+        }
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String userId = userDetails.getUserId();
+
+        // 게시글 목록 가져오기
+        List<Board> postList = boardService.getBoardsByUserId(userId);
+        
+        // 데이터 확인을 위해 로그 추가
+        log.info("게시글 목록: " + postList);
+        
+        model.addAttribute("postList", postList);
+
+        return "user/myWrite";
+    }
+    
+ // 헤더에 사용자의 레벨, 경험치, 경험치 진행률을 표시하기 위한 메서드
+    @RequestMapping("/someEndpoint")
+    public String showHeaderInfo(Authentication authentication, Model model) {
+        if (authentication != null) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            User loginUser = userService.getUser(userDetails.getUserId());
+
+            // 현재 경험치 및 레벨 정보 계산
+            int currentExperience = loginUser.getUserExperience();
+            int userLevel = loginUser.getUserLevel();
+            int experienceForNextLevel = ExperienceUtil.getExperienceForNextLevel(userLevel);
+            int progressPercentage = ExperienceUtil.calculateProgressPercentage(currentExperience, experienceForNextLevel);
+
+            // 로그 찍기 - 여기서 값이 제대로 나오는지 확인
+            log.debug("User Level: " + userLevel);
+            log.debug("Current Experience: " + currentExperience);
+            log.debug("Experience for Next Level: " + experienceForNextLevel);
+            log.debug("Progress Percentage: " + progressPercentage);
+
+            // 모델에 값 추가
+            model.addAttribute("userLevel", userLevel);
+            model.addAttribute("currentExperience", currentExperience);
+            model.addAttribute("experienceForNextLevel", experienceForNextLevel);
+            model.addAttribute("progressPercentage", progressPercentage);
+        }
+
+        return "header";
+    }
+    // 사용자 정보를 AJAX로 제공하기 위한 메서드
+    @RequestMapping(value = "/getUserInfo", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> getUserInfo(Authentication authentication) {
+        Map<String, Object> userInfo = new HashMap<>();
+
+        if (authentication != null) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            User loginUser = userService.getUser(userDetails.getUserId());
+
+            // 레벨 및 경험치 정보 계산
+            int currentExperience = loginUser.getUserExperience();
+            int userLevel = loginUser.getUserLevel();
+            int experienceForNextLevel = ExperienceUtil.getExperienceForNextLevel(userLevel);
+            int progressPercentage = ExperienceUtil.calculateProgressPercentage(currentExperience, experienceForNextLevel);
+
+            // 사용자 정보를 map에 저장
+            userInfo.put("userLevel", userLevel);
+            userInfo.put("currentExperience", currentExperience);
+            userInfo.put("experienceForNextLevel", experienceForNextLevel);
+            userInfo.put("progressPercentage", progressPercentage);
+        }
+        return userInfo;
+    }
+    
 }
+

@@ -20,5 +20,6 @@ public interface UserService {
     String findUserIdByEmailAndName(String email, String name);
     User findUserByIdNameAndEmail(String userId, String userName, String userEmail); // ID, 이름, 이메일로 사용자 찾기
     void updatePassword(User user); // 비밀번호 업데이트
+    void increaseExperience(String userId, int amount); // 경험치 증가
     
 }

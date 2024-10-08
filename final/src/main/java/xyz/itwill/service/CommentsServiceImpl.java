@@ -116,10 +116,14 @@ public class CommentsServiceImpl implements CommentsService{
 
 	
 
-	
+	// 사용자 ID를 사용하여 작성한 댓글을 조회하는 메서드 추가
+    @Override
+    public List<Comments> getCommentsByUserId(String userId) {
+        return commentsDAO.selectCommentsByUserId(userId);
+    }
 
-	
-	
-	
-
+	@Override
+	public void CommentUpdateStatus3(int commentIdx) {
+		commentsDAO.UpdatCommentStatus3(commentIdx);
+	}
 }

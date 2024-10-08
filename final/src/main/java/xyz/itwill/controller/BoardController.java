@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -44,6 +45,7 @@ public class BoardController {
 			, @RequestParam(defaultValue = "board_user_id") String search, @RequestParam(defaultValue = "") String keyword, Model model) throws Exception {
 		Map<String, Object> map=boardService.getBoardList(boardCode, pageNum, pageSize, search, keyword);
 		String boardCodeTitle=boardService.getBoardCT(boardCode);
+										
 		model.addAttribute("boardCodeTitle", boardCodeTitle);
 		model.addAttribute("search", search);
 		model.addAttribute("keyword", keyword);

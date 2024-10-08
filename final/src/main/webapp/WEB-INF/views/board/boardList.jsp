@@ -187,7 +187,7 @@
 											    &nbsp;&nbsp;${boards.boardTitle}
 											</td>
 		    								<td class="tdboardWriter">${boards.userNickname }</td>
-		    								<td>${boards.boardResigsterDate }</td>
+		    								<td>${boards.boardRegisterDate }</td>
 		    								<td>${boards.boardCount }</td>
 		    							</tr>
 		    						</c:forEach>   						

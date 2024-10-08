@@ -60,4 +60,33 @@
 	<select id="selectCBallotByIdx" resultType="CBallot">
 		select co_ba_idx, ballot_comment_idx, ballot_comment_user_id, ballot_comment_star, ballot_comment_spam from  comment_ballot where ballot_comment_idx=#{ballotCommentIdx} and  ballot_comment_user_id=#{ballotCommentUserId}
 	</select>
+	
+	<!-- 작성한 댓글 조회 -->
+    <select id="selectCommentsByUserId" parameterType="string" resultType="Comments">
+        SELECT COMMENT_IDX AS commentIdx,
+               COMMENT_BOARD_IDX AS commentBoardIdx,
+               COMMENT_USER_ID AS commentUserId,
+               CONTENT AS content,
+               COMMENT_IMAGE AS commentImage,
+               TO_CHAR(COMMENT_REG_DATE, 'YYYY-MM-DD HH24:MI:SS') AS commentRegDate,
+               TO_CHAR(COMMENT_UP_DATE, 'YYYY-MM-DD HH24:MI:SS') AS commentUpDate,
+               COMMENT_USER_IP AS commentUserIp,
+               COMMENT_REF AS commentRef,
+               COMMENT_RESTEP AS commentRestep,
+               COMMENT_LEVEL AS commentLevel,
+               COMMENT_STATUS AS commentStatus,
+               COMMENT_STARUP AS commentStarup,
+               COMMENT_STARDOWN AS commentStardown,
+               COMMENT_SPAM AS commentSpam,
+               COMMENT_REUSER AS commentReuser,
+               (SELECT USER_NICKNAME FROM USERS WHERE USER_ID = COMMENT_USER_ID) AS userNickname
+        FROM COMMENTS
+        WHERE COMMENT_USER_ID = #{userId}
+        ORDER BY COMMENT_REG_DATE DESC
+    </select>
+	
+	<update id="UpdatCommentStatus3">
+		update comments set comment_status=3 where comment_idx=#{commentIdx}
+	</update>
+	
 </mapper>
