@@ -20,15 +20,6 @@ public class AdminController {
 	
 	private final AdminService adminService;
 
-	/*
-	 * @RequestMapping(value = "/admin", method = RequestMethod.GET) public String
-	 * adminPage(@RequestParam Map<String, Object> map, Model model) {
-	 * 
-	 * model.addAttribute("resultMap", adminService.getSpamBoardList(0, 0, 0, 0,
-	 * null, null)); model.addAttribute("searchMap", map);
-	 * 
-	 * return "admin/admin_page"; // admin_page.jsp 페이지로 이동 }
-	 */
 	@RequestMapping(value = "/admin", method = RequestMethod.GET)
     public String adminPage(@RequestParam(defaultValue = "1") int pageNum,
                             @RequestParam(defaultValue = "10") int pageSize,
@@ -52,5 +43,6 @@ public class AdminController {
 
         return "admin/admin_page"; // admin_page.jsp 페이지로 이동
     }
+	
 	
 }

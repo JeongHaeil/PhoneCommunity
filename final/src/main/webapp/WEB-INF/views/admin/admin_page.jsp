@@ -15,6 +15,7 @@
                 <h2 class="mb-4">스팸 게시판</h2>
                 <div class="card">
                     <div class="card-body">
+
                         <table class="table table-hover">
                             <thead>
                                 <tr>
@@ -42,7 +43,7 @@
                         </table>
 
                         <!-- 페이징 처리 -->
-                        <nav aria-label="Page navigation example">
+                        <nav aria-label="Page navigation bar">
                             <ul class="pagination justify-content-center">
                                 <!-- 이전 페이지 링크 -->
                                 <c:if test="${resultMap.pager.prevPage > 0}">
@@ -70,7 +71,13 @@
                                 </c:if>
                             </ul>
                         </nav>
-
+                        
+						<!-- 검색 폼 -->
+                        <form action="admin" method="get" class="form-inline mb-3">
+                            <input type="text" name="keyword" placeholder="검색어 입력" value="${keyword}" class="form-control mr-2">
+                            <button type="submit" class="btn btn-primary">검색</button>
+                        </form>
+                        
                     </div>
                 </div>
             </div>
