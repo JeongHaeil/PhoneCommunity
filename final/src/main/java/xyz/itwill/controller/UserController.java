@@ -371,8 +371,8 @@ public class UserController {
     public String deleteUser(
         Authentication authentication,
         @RequestParam("password") String password, 
-        HttpServletRequest request,  // HttpServletRequest 추가
-        HttpServletResponse response, // HttpServletResponse 추가
+        HttpServletRequest request,  
+        HttpServletResponse response, 
         Model model) {
 
         if (authentication == null) {
@@ -385,20 +385,19 @@ public class UserController {
         // 비밀번호 확인
         if (!passwordEncoder.matches(password, loginUser.getUserPassword())) {
             model.addAttribute("error", "비밀번호가 일치하지 않습니다.");
-            return "user/userDelete";
+            return "user/deleteUser"; // 비밀번호가 일치하지 않을 경우 탈퇴 페이지로 유지
         }
 
-        // user_status를 0으로 변경하여 계정 비활성화
-        loginUser.setUserStatus(0);
-        userService.modifyUser(loginUser);  // 상태 업데이트
+        // 사용자 비활성화 처리 (서비스 메서드 사용)
+        userService.deactivateUser(loginUser.getUserId());
 
-        // 인증 상태 해제 및 로그아웃 처리
+        // 로그아웃 처리
         new SecurityContextLogoutHandler().logout(request, response, authentication);
 
         model.addAttribute("message", "회원 탈퇴가 완료되었습니다.");
-        return "redirect:/user/login";  // 로그인 페이지로 리다이렉트
+        return "redirect:/";  // 메인 페이지로 리다이렉트
     }
-    
+
     // 스크랩 보기 페이지로 이동
     @RequestMapping(value = "/myScrap", method = RequestMethod.GET)
     public String showMyScrapPage() {

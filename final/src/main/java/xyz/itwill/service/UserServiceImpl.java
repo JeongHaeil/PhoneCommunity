@@ -168,4 +168,17 @@ public class UserServiceImpl implements UserService {
         // 비밀번호 업데이트
         userDAO.updateUser(user);
     }
+    
+    @Transactional
+    @Override
+    public void deactivateUser(String userId) {
+        // 사용자 정보를 가져옴
+        User user = userDAO.selectUser(userId);
+
+        // user_status를 0으로 변경하여 비활성화 처리
+        if (user != null) {
+            user.setUserStatus(0);  // user_status를 0으로 설정
+            userDAO.updateUser(user);  // 사용자 정보 업데이트
+        }
+    }
 }
