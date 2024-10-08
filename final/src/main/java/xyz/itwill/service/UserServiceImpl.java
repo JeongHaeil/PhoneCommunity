@@ -155,4 +155,17 @@ public class UserServiceImpl implements UserService {
             userDAO.updateUser(user);  // 변경된 사용자 정보 저장
         }
     }
+    
+    @Override
+    @Transactional
+    public void updateUserPassword(User user, String newPassword) {
+        // 입력된 새 비밀번호를 암호화 처리
+        String hashedPassword = passwordEncoder.encode(newPassword);
+
+        // 암호화된 비밀번호를 사용자 객체에 설정
+        user.setUserPassword(hashedPassword);
+
+        // 비밀번호 업데이트
+        userDAO.updateUser(user);
+    }
 }
