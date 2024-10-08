@@ -97,5 +97,13 @@
     </select>
 
 
+<select id="getUserChatById" parameterType="map" resultType="xyz.itwill.dto.User">
+    select user_id, user_nickname   <!-- 필요한 필드만 선택 -->
+    from users
+    where user_id = #{userId}  and user_nickname = #{nickname}
+</select>
+
+
+
     
 </mapper>

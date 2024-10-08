@@ -63,41 +63,7 @@
     
     
     
-     <servlet>
-	    <servlet-name>AtmosphereServlet</servlet-name>
-	    <servlet-class>org.atmosphere.cpr.AtmosphereServlet</servlet-class>
-	    <init-param>
-	        <param-name>org.atmosphere.cpr.packages</param-name>
-	        <param-value>xyz.itwill.controller</param-value> <!-- Replace with your package containing Atmosphere resource classes -->
-	    </init-param>
-	    <init-param>
-	        <param-name>org.atmosphere.cpr.sessionSupport</param-name>
-	        <param-value>true</param-value>
-	    </init-param>
-	    <load-on-startup>1</load-on-startup>
-		</servlet>
     
-	 <servlet-mapping>
-	    <servlet-name>AtmosphereServlet</servlet-name>
-	     <url-pattern>/chat/websockets/*</url-pattern>
-	</servlet-mapping>
-    
-    
-    
-	    <servlet>
-	    <servlet-name>dispatcher</servlet-name>
-	    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-	    <init-param>
-	        <param-name>contextConfigLocation</param-name>	
-	        <param-value>/WEB-INF/applicationContext.xml</param-value> <!-- 여기서 applicationContext.xml 파일을 연결 -->
-	    </init-param>
-	    <load-on-startup>1</load-on-startup>
-	</servlet>
-	
-	<servlet-mapping>
-	    <servlet-name>dispatcher</servlet-name>
-	    <url-pattern>/final/*</url-pattern>
-	</servlet-mapping>
 	    
 	   <session-config>
 		    <session-timeout>30</session-timeout> <!-- 30분 -->
