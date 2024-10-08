@@ -29,7 +29,7 @@ public class BoardServiceImpl implements BoardService {
 		searchMap.put("keyword", keyword);
 		int totalSize=boardDAO.selectTotalBoard(searchMap);
 		
-		int blockSize=5;
+		int blockSize=10;
 		Pager pager=new Pager(pageNum, pagaSize, totalSize, blockSize);
 		Map<String, Object> pageMap=new HashMap<String, Object>();
 		pageMap.put("boardCode", boardCode);
@@ -142,6 +142,21 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public void BoardUpdateStatus3(int boardPostIdx) {
 		boardDAO.updateBoardStatus3(boardPostIdx);
+	}
+
+	@Override
+	public Board getBoardRNumber(Map<String, Object> map) {
+		return boardDAO.getBoardRN(map);
+	}
+
+	@Override
+	public Board getRnUp(Map<String, Object> map) {
+		return boardDAO.getRnUp(map);
+	}
+
+	@Override
+	public Board getRnDown(Map<String, Object> map) {
+		return boardDAO.getRnDown(map);
 	}
 	
 	

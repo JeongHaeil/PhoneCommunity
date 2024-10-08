@@ -13,7 +13,7 @@
     </style>
 </head>
 <body>
-
+<input type="hidden" id="regetmessage" value="${regetmessage} ">
 <div class="container mt-5">
 	<c:choose>
 		<c:when test="${empty board }">
@@ -46,6 +46,13 @@
 							<option value="[통신사]" <c:if test="${boardtag  == '통신사'}"> selected </c:if>>통신사</option>
 							<option value="[구매처]" <c:if test="${boardtag  == '구매처'}"> selected </c:if>>구매처</option>
 							<option value="[제품]" <c:if test="${boardtag  == '제품'}"> selected </c:if>>제품</option>
+						</select>
+					</div>
+				</c:when>
+				<c:when test="${boardCode == 2}">
+					<div class="me-2">
+						<select name="boardtag" class="form-select">
+							<option value="[공지]" <c:if test="${boardtag  == '공지'}"> selected </c:if>>공지</option>
 						</select>
 					</div>
 				</c:when>
@@ -87,10 +94,10 @@
 		<button type="button" class="btn btn-dark" onclick="window.location.href='<c:url value='/board/boardlist/${boardCode }'/>'">목록</button>
 		<c:choose>
 		<c:when test="${empty board }">
-			<button type="submit" class="btn btn-dark">글쓰기</button>		
+			<button type="submit" class="btn btn-dark" >글쓰기</button>		
 		</c:when>
 		<c:otherwise>
-			<button type="submit" class="btn btn-dark">수정</button>		    					
+			<button type="submit" class="btn btn-dark" >수정</button>		    					
 		</c:otherwise>
 		</c:choose>
 		</div>
@@ -103,12 +110,13 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 
 <script type="text/javascript">
+getgetmessage();
 CKEDITOR.replace('boardContent', {
     removePlugins: 'sourcearea',
     on: {
         change: function(event) {
             updateCharacterCount();
-        }
+        }     
     }
 });
 var getcotent=document.getElementById("getcontent").value
@@ -118,26 +126,46 @@ function updateCharacterCount() {
     var editorData = CKEDITOR.instances.boardContent.getData() 
     //var charCount = editorData.replace(/<[^>]*>/g, '').length; 
     var charCount = editorData.length; 
-    var maxLength = 1300; // 최대 글자 수 설정
+    var maxLength = 1000; // 최대 글자 수 설정
     var charCountElement = document.getElementById('charCount');
  
-    charCountElement.textContent = "남은 글자 수(제한기능 아직 미구현) = "+(maxLength-charCount);
+    charCountElement.textContent = "허용 가능한 글자 수를 초과하였습니다.";
 
     // 글자 수가 최대값을 초과할 경우 경고
     if (charCount > maxLength) {
         //alert("최대 글자 수를 초과 하였습니다");
         charCountElement.style.color = 'red';  // 글자 수 초과 시 빨간색으로 표시
-        var limitData = editorData.substring(0, 1280);
-        //alert("자수="+limitData.length)
-        //CKEDITOR.instances.boardContent.setData(limitData); 
-        var editor = CKEDITOR.instances.boardContent;
-        editor.setData(limitData);
+        charCountElement.style.display = 'block';  // 글자 수 초과 시 빨간색으로 표시
+        disableSubmitButton();
+
     } else {
         charCountElement.style.color = '#555';  // 정상 범위일 때 기본 색상
+        charCountElement.style.display = 'none';
+        enableSubmitButton();
     }
 
 }
+function getgetmessage() {
+    var getmessages = document.getElementById("regetmessage").value;
+    if (getmessages && getmessages.length > 5) {
+        alert(getmessages);
+    }
+}
+// 버튼 비활성화
+function disableSubmitButton() {
+    var submitButton = document.querySelector('button[type="submit"]');
+    if (submitButton) {
+        submitButton.disabled = true;
+    }
+}
 
+// 버튼 활성화 함수
+function enableSubmitButton() {
+    var submitButton = document.querySelector('button[type="submit"]');
+    if (submitButton) {
+        submitButton.disabled = false;
+    }
+}
 </script>
 </body>
 </html>
