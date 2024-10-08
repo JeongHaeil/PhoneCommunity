@@ -7,10 +7,10 @@
 
      <!-- 사용자 ID로 권한 정보를 조회하는 SQL 문 -->
     <select id="selectSecurityAuthByUserid" parameterType="java.lang.String" resultType="xyz.itwill.dto.SecurityAuth">
-        SELECT auth_user_id AS userId, auth
-        FROM security_auth
-        WHERE auth_user_id = #{userId}
-    </select>
+    SELECT auth_user_id AS authUserId, auth
+    FROM security_auth
+    WHERE auth_user_id = #{userId}
+</select>
 
     <!-- 권한 정보를 삽입하는 쿼리 -->
     <insert id="insertSecurityAuth" parameterType="xyz.itwill.dto.SecurityAuth">
