@@ -27,7 +27,7 @@
 		 	<otherwise>
 		 		<choose>
 		 			<when test="boardCode==1">
-		 		 		WHERE free_status = 1
+		 		 		WHERE board_status = 1
 		 			</when>
 		 			<otherwise>
 		 				 WHERE board_code=#{boardCode} and board_status = 1
@@ -126,6 +126,23 @@
 	<update id="updateBoardStatus3">
 		update board set board_status=3 where board_post_idx=#{boardPostIdx}
 	</update>
+
+<select id="getBoardRN" resultType="Board">
+select * from (select rownum rn, uxb.* from (select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam 
+					,user_nickname from Board join users on board_user_id=user_id where board_code=#{boardCode} and board_status=1 order by board_post_idx desc) uxb)
+					 where board_post_idx=#{boardPostIdx} 
+</select>
+
+<select id="getRnUp" resultType="Board">
+select * from (select rownum rn, uxb.* from (select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam 
+					,user_nickname from Board join users on board_user_id=user_id where board_code=#{boardCode} and board_status=1 order by board_post_idx desc) uxb)
+					 where rn=#{rn}+1
+</select>
+<select id="getRnDown" resultType="Board">
+select * from (select rownum rn, uxb.* from (select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam 
+					,user_nickname from Board join users on board_user_id=user_id where board_code=#{boardCode} and board_status=1 order by board_post_idx desc) uxb)
+					 where rn=#{rn}-1
+</select>
 
 
 

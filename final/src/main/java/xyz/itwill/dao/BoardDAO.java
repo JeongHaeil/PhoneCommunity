@@ -24,4 +24,7 @@ public interface BoardDAO {
 	/* 마이페이지 작성글 보기*/
 	List<Board> selectBoardsByUserId(String userId);
 	int updateBoardStatus3(int boardPostIdx);
+	Board getBoardRN(Map<String, Object> map);
+	Board getRnUp(Map<String, Object> map);
+	Board getRnDown(Map<String, Object> map);
 }
