@@ -3,14 +3,12 @@ package xyz.itwill.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -189,7 +187,7 @@ public class UserController {
         return "user/login";  // login.jsp 경로 유지
     }
 
- // 회원 프로필 조회 (JSP 파일명: mypage.jsp)
+    // 회원 프로필 조회 (JSP 파일명: mypage.jsp)
     @RequestMapping("/profile")
     public String profile(Authentication authentication, Model model) {
         if (authentication == null) {
@@ -267,7 +265,7 @@ public class UserController {
         return "user/passwordfind";  // passwordfind.jsp 페이지로 이동
     }
 
-    // 비밀번호 찾기 처리
+ // 비밀번호 찾기 처리 (POST 요청)
     @RequestMapping(value = "/findPassword", method = RequestMethod.POST)
     public String findPassword(@RequestParam("userId") String userId,
                                @RequestParam("userName") String userName,
@@ -279,16 +277,8 @@ public class UserController {
             return "user/passwordfind";
         }
 
-        // 임시 비밀번호 생성
-        String tempPassword = generateTempPassword();
-        log.info("password = "+tempPassword);
-        
-        // 이메일로 임시 비밀번호 전송
-        emailService.sendTemporaryPassword(userEmail, tempPassword);
-
-        // 임시 비밀번호를 암호화하여 저장
-        user.setUserPassword(passwordEncoder.encode(tempPassword));
-        userService.modifyUser(user);
+        // 서비스에서 임시 비밀번호 생성 및 비밀번호 업데이트 처리
+        userService.updatePassword(user);
 
         // 성공 메시지를 Model에 추가
         model.addAttribute("message", "임시 비밀번호가 이메일로 전송되었습니다.");
@@ -296,19 +286,7 @@ public class UserController {
         // 비밀번호가 전송되었다는 페이지로 이동
         return "user/displayUserpw";
     }
-
-    // 임시 비밀번호 생성 메서드
-    private String generateTempPassword() {
-        // 임시 비밀번호는 영숫자 조합으로 8자리 생성
-    	String chars = "0123456789";
-        StringBuilder tempPassword = new StringBuilder();
-        Random rnd = new Random();
-        while (tempPassword.length() < 8) {  // 비밀번호 길이
-            int index = (int) (rnd.nextFloat() * chars.length());
-            tempPassword.append(chars.charAt(index));
-        }
-        return tempPassword.toString();
-    }
+    
  // 회원정보 수정 페이지로 이동 (GET 방식)
     @RequestMapping(value = "/userUpdate", method = RequestMethod.GET)
     public String showUserUpdatePage(Authentication authentication, Model model) {
@@ -353,10 +331,10 @@ public class UserController {
         }
         return "user/passwordUpdate"; // 비밀번호 변경 페이지로 이동
     }
- // 비밀번호 변경 처리 (POST 요청)
+
+    // 비밀번호 변경 처리 (POST 요청)
     @RequestMapping(value = "/passwordUpdate", method = RequestMethod.POST)
     public String updatePassword(
-        @RequestParam("currentPassword") String currentPassword,
         @RequestParam("newPassword") String newPassword,
         @RequestParam("confirmNewPassword") String confirmNewPassword,
         Authentication authentication, 
@@ -365,22 +343,19 @@ public class UserController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         User loginUser = userService.getUser(userDetails.getUserId());
 
-        if (!passwordEncoder.matches(currentPassword, loginUser.getUserPassword())) {
-            model.addAttribute("error", "현재 비밀번호가 일치하지 않습니다.");
-            return "user/passwordUpdate";
-        }
-
+        // 새 비밀번호와 확인 비밀번호가 일치하는지 확인
         if (!newPassword.equals(confirmNewPassword)) {
             model.addAttribute("error", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
             return "user/passwordUpdate";
         }
 
-        loginUser.setUserPassword(passwordEncoder.encode(newPassword));
-        userService.modifyUser(loginUser);
+        // 새 비밀번호로 업데이트
+        userService.updateUserPassword(loginUser, newPassword);  // 새로 추가한 메서드 사용
 
         model.addAttribute("message", "비밀번호가 성공적으로 변경되었습니다.");
         return "user/passwordUpdate";
     }
+ 
  // 회원 탈퇴 확인 페이지로 이동 (GET 요청)
     @RequestMapping(value = "/userDelete", method = RequestMethod.GET)
     public String showUserDeletePage(Authentication authentication, Model model) {
