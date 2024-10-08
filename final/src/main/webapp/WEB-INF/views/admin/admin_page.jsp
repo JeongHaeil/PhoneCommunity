@@ -19,7 +19,7 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
+                                    <th scope="col">글번호</th>
                                     <th scope="col">제목</th>
                                     <th scope="col">작성자</th>
                                     <th scope="col">작성일</th>
@@ -28,7 +28,7 @@
                             <tbody>
                                 <!-- 게시글 출력 부 -->
                                 <c:forEach var="article" items="${resultMap.spamBoardList}">
-                                    <tr>
+                                    <tr style="cursor: pointer;" onclick="location.href='admin/view?boardPostIdx=${article.boardPostIdx}'">
                                         <!-- 게시글 번호 -->
                                         <td>${article.boardPostIdx}</td>
                                         <!-- 제목 -->
@@ -72,12 +72,16 @@
                             </ul>
                         </nav>
                         
-						<!-- 검색 폼 -->
-                        <form action="admin" method="get" class="form-inline mb-3">
-                            <input type="text" name="keyword" placeholder="검색어 입력" value="${keyword}" class="form-control mr-2">
-                            <button type="submit" class="btn btn-primary">검색</button>
-                        </form>
-                        
+                         <form  method="get" class="form-inline mb-3">
+						    <select name="search" class="form-control mr-2">
+						        <option value="boardPostIdx" ${searchType == 'boardPostIdx' ? 'selected' : ''}>글번호</option>
+						        <option value="boardTitle" ${searchType == 'boardTitle' ? 'selected' : ''}>제목</option>
+						        <option value="userNickname" ${searchType == 'userNickname' ? 'selected' : ''}>작성자</option>
+						    </select>
+						    <input type="text" name="keyword" placeholder="검색어 입력" value="${keyword}" class="form-control mr-2">
+						    <button type="submit" class="btn btn-primary">검색</button>
+						</form>
+						
                     </div>
                 </div>
             </div>

@@ -23,7 +23,8 @@ public class AdminServiceImpl implements AdminService {
 	//SpamBoard List 구현과 페이징 처리
 	@Override
 	public Map<String, Object> getSpamBoardList(int pageNum, int pageSize, int totalSize, int blockSize, String search,
-			String keyword) {
+			String keyword) {		
+		
 		// 검색 조건 설정
 	    Map<String, Object> searchMap = new HashMap<>();
 	    searchMap.put("search", search);
@@ -66,9 +67,6 @@ public class AdminServiceImpl implements AdminService {
 		
 		return admin;
 	}
-
-
-
 
 
 }
