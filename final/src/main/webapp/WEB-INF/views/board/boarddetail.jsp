@@ -210,8 +210,8 @@
 					<div class="row">
 						<div class="col-md-6">
 							<!-- <button class="btn btn-secondary">목록</button> -->
-							<button class="btn btn-secondary btn-sm">다음글▲</button>
-							<button class="btn btn-secondary btn-sm">이전글▼</button>
+							<button type="button" class="btn btn-secondary btn-sm" onclick="nextboard(${boardCode },${downboard})">다음글▲</button>
+							<button type="button" class="btn btn-secondary btn-sm" onclick="beforeboard(${boardCode },${upboard})">이전글▼</button>
 						</div>
 						<div
 							class="col-md-6 d-flex justify-content-end align-items-center">
@@ -453,7 +453,7 @@
 													if (this.commentUserId == result.board.boardUserId) {//세션에서 값 가져와서 로그인 유저와 비교 <---잘못된 작성
 														html += "<span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: blue;'>작성자</span>";										
 													}
-													if(this.commentUserId == result.board.boardUserId || result.boardAdmin !=null){
+													if(this.commentUserId == result.userId || result.boardAdmin !=null){
 														html += "<a class='aCursorActive' onclick='deleteComment("+ this.commentIdx+ ");'><span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: red;'>삭제</span></a>";													
 													}													
 												}
@@ -775,6 +775,22 @@
             window.location.href = "<c:url value='/user/login'/>"; 
         }
     }
+	//다음글로 이동 버튼
+	function nextboard(boardCode,boardPostIdx){
+		if(boardPostIdx==0){
+			alert("가장 최신글 입니다.");
+		}else{
+		window.location.href = "<c:url value='/board/boarddetail/"+boardCode+"/"+boardPostIdx+"'/>"; 					
+		}
+	}
+	//이전글로 이동 버튼
+	function beforeboard(boardCode,boardPostIdx){
+		if(boardPostIdx==0){
+			alert("마지막글 입니다.");
+		}else{
+		window.location.href = "<c:url value='/board/boarddetail/"+boardCode+"/"+boardPostIdx+"'/>"; 					
+		}
+	}
 	</script>
 </body>
 </html>
