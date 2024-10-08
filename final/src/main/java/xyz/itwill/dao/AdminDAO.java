@@ -9,7 +9,6 @@ public interface AdminDAO {
 	
 	List<Admin> selectSpamBoardList(Map<String, Object> map);
 	Admin selectSpamBoardByNum(int num);
-	
 	int selectSpamBoardCount(Map<String, Object> map);
 	
 }

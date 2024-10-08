@@ -14,12 +14,17 @@ import lombok.extern.slf4j.Slf4j;
 import xyz.itwill.dto.Admin;
 import xyz.itwill.service.AdminService;
 
+//로그를 기록하기 위한 Lombok 어노테이션
 @Slf4j
+//Sptring MVC 컨트롤러로 지정
 @Controller
+//URL 경로 /super_admin에 매핑
 @RequestMapping("/super_admin")
+//생성자를 통한 의존성 주입을 위한 Lombok 어노테이션
 @RequiredArgsConstructor
 public class AdminController {
 	
+	//AdminService 인스턴스 주입
 	private final AdminService adminService;
 	
 	@RequestMapping(value = "/")
@@ -58,6 +63,7 @@ public class AdminController {
 	public String spamBoardView(@RequestParam("boardPostIdx") int boardPostIdx,
 								Model model) {
 		
+		//파라미터로 받은 boardPostIdx 를 사용해 해당 boardPostIdx 게시글을 가져옴 
 		Admin post = adminService.getSpamBoardByNum(boardPostIdx);
 	    
 	    if (post == null) {

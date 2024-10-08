@@ -51,7 +51,6 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	
-	
 
 	//SpamBoard 에서 글 조회
 	@Transactional

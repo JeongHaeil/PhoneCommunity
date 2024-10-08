@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,13 +8,26 @@
 <body>
 <h2>게시글 상태 변경 / 유저 상태 변경</h2>
 
+<div class="col-8"></div>
 <h2>${post.boardTitle}</h2>
 <p>작성자: ${post.userNickname}</p>
+<p>이메일: ${post.userEmail}</p>
+<p>전화번호: ${post.userPhoneNum}</p>
+<p>가입일: ${post.userRegisterDate}</p>
 <p>작성일: ${post.boardRegisterDate}</p>
 
 <div>${post.boardContent}</div>
 
-<a href="/super_admin/admin">목록으로 돌아가기</a>
+<h3>댓글 목록</h3>
+<c:forEach var="comment" items="${comments}">
+    <div>
+        <p>댓글 작성자: ${comment.userNickname}</p>
+        <p>내용: ${comment.commentContent}</p>
+        <p>작성일: ${comment.commentRegDate}</p>
+    </div>
+</c:forEach>
+
+<a href="/final/super_admin/admin">목록으로 돌아가기</a>
 
 </body>
 </html>
