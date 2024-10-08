@@ -355,7 +355,7 @@ public class UserController {
         model.addAttribute("message", "비밀번호가 성공적으로 변경되었습니다.");
         return "user/passwordUpdate";
     }
-
+ 
  // 회원 탈퇴 확인 페이지로 이동 (GET 요청)
     @RequestMapping(value = "/userDelete", method = RequestMethod.GET)
     public String showUserDeletePage(Authentication authentication, Model model) {
