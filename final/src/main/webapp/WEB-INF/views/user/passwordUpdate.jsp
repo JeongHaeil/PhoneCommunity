@@ -39,42 +39,45 @@
             font-weight: bold;
         }
     </style>
+    <script>
+        // 비밀번호 확인 검증 함수
+        function validateForm() {
+            var newPassword = document.getElementById("newPassword").value;
+            var confirmNewPassword = document.getElementById("confirmNewPassword").value;
+
+            if (newPassword !== confirmNewPassword) {
+                alert("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+                return false; // 폼 제출 중단
+            }
+            return true; // 폼 제출 허용
+        }
+    </script>
 </head>
 <body>
 
+<div class="password-change-container">
     <h3 class="password-change-header">비밀번호 변경</h3>
-   <!-- 비밀번호 변경 폼 -->
-   <!-- 비밀번호를 POST 방식으로 /final/user/passwordUpdate로 보냄 -->
-<form id="passwordChangeForm" action="/final/user/passwordUpdate" method="post" onsubmit="return validateForm();">
-    <!-- CSRF 토큰 추가 -->
-    <sec:csrfInput />
 
-    <!-- 아이디 필드를 로그인된 사용자의 아이디로 표시 -->
-    <div class="mb-3">
-        <label for="userId" class="form-label">아이디</label>
-        <input type="text" class="form-control" id="userId" name="userId" value="${userId}" readonly>
-    </div>
+    <!-- 비밀번호 변경 폼 -->
+    <form id="passwordChangeForm" action="/final/user/passwordUpdate" method="post" onsubmit="return validateForm();">
+        <!-- CSRF 토큰 추가 -->
+        <sec:csrfInput />
 
-    <!-- 현재 비밀번호 입력 -->
-    <div class="mb-3">
-        <label for="currentPassword" class="form-label">현재 비밀번호</label>
-        <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
-    </div>
+        <!-- 새 비밀번호 입력 -->
+        <div class="mb-3">
+            <label for="newPassword" class="form-label">새 비밀번호</label>
+            <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+        </div>
 
-    <!-- 새 비밀번호 입력 -->
-    <div class="mb-3">
-        <label for="newPassword" class="form-label">새 비밀번호</label>
-        <input type="password" class="form-control" id="newPassword" name="newPassword" required>
-    </div>
+        <!-- 새 비밀번호 확인 -->
+        <div class="mb-3">
+            <label for="confirmNewPassword" class="form-label">새 비밀번호 확인</label>
+            <input type="password" class="form-control" id="confirmNewPassword" name="confirmNewPassword" required>
+        </div>
 
-    <!-- 새 비밀번호 확인 -->
-    <div class="mb-3">
-        <label for="confirmNewPassword" class="form-label">새 비밀번호 확인</label>
-        <input type="password" class="form-control" id="confirmNewPassword" name="confirmNewPassword" required>
-    </div>
-
-    <button type="submit" class="btn btn-primary">비밀번호 변경</button>
-</form>
+        <button type="submit" class="btn btn-primary">비밀번호 변경</button>
+    </form>
+</div>
 
 </body>
 </html>

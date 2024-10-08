@@ -3,7 +3,6 @@ package xyz.itwill.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -332,10 +331,10 @@ public class UserController {
         }
         return "user/passwordUpdate"; // 비밀번호 변경 페이지로 이동
     }
- // 비밀번호 변경 처리 (POST 요청)
+
+    // 비밀번호 변경 처리 (POST 요청)
     @RequestMapping(value = "/passwordUpdate", method = RequestMethod.POST)
     public String updatePassword(
-        @RequestParam("currentPassword") String currentPassword,
         @RequestParam("newPassword") String newPassword,
         @RequestParam("confirmNewPassword") String confirmNewPassword,
         Authentication authentication, 
@@ -344,22 +343,19 @@ public class UserController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         User loginUser = userService.getUser(userDetails.getUserId());
 
-        if (!passwordEncoder.matches(currentPassword, loginUser.getUserPassword())) {
-            model.addAttribute("error", "현재 비밀번호가 일치하지 않습니다.");
-            return "user/passwordUpdate";
-        }
-
+        // 새 비밀번호와 확인 비밀번호가 일치하는지 확인
         if (!newPassword.equals(confirmNewPassword)) {
             model.addAttribute("error", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
             return "user/passwordUpdate";
         }
 
-        loginUser.setUserPassword(passwordEncoder.encode(newPassword));
-        userService.modifyUser(loginUser);
+        // 새 비밀번호로 업데이트
+        userService.updateUserPassword(loginUser, newPassword);  // 새로 추가한 메서드 사용
 
         model.addAttribute("message", "비밀번호가 성공적으로 변경되었습니다.");
         return "user/passwordUpdate";
     }
+
  // 회원 탈퇴 확인 페이지로 이동 (GET 요청)
     @RequestMapping(value = "/userDelete", method = RequestMethod.GET)
     public String showUserDeletePage(Authentication authentication, Model model) {
