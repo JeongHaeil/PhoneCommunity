@@ -85,7 +85,11 @@
         <!-- 레벨 표시 -->
         <div class="row mb-3">
             <div class="col-md-3 info-label">레벨</div>
-            <div class="col-md-9 info-value">${user.userLevel} 레벨</div>
+            <div class="col-md-9 info-value">
+                ${user.userLevel} 레벨
+                <!-- 뱃지 표시 부분 include -->
+                <jsp:include page="/WEB-INF/views/user/icon.jsp" />
+            </div>
         </div>
 
         <!-- 경험치 표시 -->
@@ -94,7 +98,8 @@
             <div class="col-md-9 info-value">
                 ${currentExperience}/${experienceForNextLevel} P (${progressPercentage}%)
                 <div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: ${progressPercentage}%;" aria-valuenow="${progressPercentage}" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar" role="progressbar" style="width: ${progressPercentage}%;"
+                         aria-valuenow="${progressPercentage}" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>
         </div>
