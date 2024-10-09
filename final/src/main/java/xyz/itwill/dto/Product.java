@@ -23,4 +23,5 @@ public class Product {
     private String productModelStatus; // 상품상태
     private String productDelivery; // 배송비 별도, 포함 선택
     private String productCategory; // 상품 카테고리 설정
+    private String productUsernickname; // 유저 이름
 }

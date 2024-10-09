@@ -266,9 +266,9 @@ body {
 									<div
 										class="product-footer d-flex align-items-center justify-content-between">
 										<div class="profile-info">
-											<img src="https://via.placeholder.com/24" alt="프로필 이미지"
-												class="rounded-circle" style="width: 24px; height: 24px;">
-											<span>${product.productUserid}</span>
+											
+											<span> 작성자 : ${product.productUsernickname}</span>
+
 										</div>
 										<div class="stats">
 											<span>💬 0</span> <span>👁️ ${product.productCount}</span>
