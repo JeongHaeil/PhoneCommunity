@@ -402,7 +402,6 @@ body {
 					<ul style="margin-top: 25px;">
 						<li>- 상품명: ${product.productSubject}</li>
 						<li>- 가격: ${product.productPrice}원</li>
-						<li>- 등록일: ${product.productRegisterdate}</li>
 						<li>- 상품상태: ${product.productModelStatus}</li>
 						<li>- 내용: ${product.productContent}</li>
 					</ul>
@@ -414,7 +413,7 @@ body {
 				<h4 style="font-weight: bold;">프로필 정보</h4>
 				<div class="left-wrap" style="border-top: 1px solid #e1e1e1; margin-top: 25px;">
 					<div class="store-name-container" style="margin-top: 30px;">
-						<div class="store-name">${product.productUserid}</div>
+						<div class="store-name">${product.productUsernickname}</div>
 						<img src="https://via.placeholder.com/50" alt="프로필 사진" width="70px;">
 					</div>
 
