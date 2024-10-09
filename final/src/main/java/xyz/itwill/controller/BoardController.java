@@ -46,7 +46,6 @@ public class BoardController {
 			, @RequestParam(defaultValue = "board_user_id") String search, @RequestParam(defaultValue = "") String keyword, Model model) throws Exception {
 		Map<String, Object> map=boardService.getBoardList(boardCode, pageNum, pageSize, search, keyword);
 		String boardCodeTitle=boardService.getBoardCT(boardCode);
-										
 		model.addAttribute("boardCodeTitle", boardCodeTitle);
 		model.addAttribute("search", search);
 		model.addAttribute("keyword", keyword);

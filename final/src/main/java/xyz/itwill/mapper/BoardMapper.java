@@ -27,4 +27,7 @@ public interface BoardMapper {
 	Board getBoardRN(Map<String, Object> map);
 	Board getRnUp(Map<String, Object> map);
 	Board getRnDown(Map<String, Object> map);
+	List<Board> selectNoticeList();
+	List<Board> selectPopularView();
+	List<Board> selectPopularStar();
 }

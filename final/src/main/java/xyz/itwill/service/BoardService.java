@@ -25,5 +25,8 @@ public interface BoardService {
     void BoardUpdateStatus3(int boardPostIdx);
     Board getBoardRNumber(Map<String, Object> map);
     Board getRnUp(Map<String, Object> map);
-    Board getRnDown(Map<String, Object> map);  
+    Board getRnDown(Map<String, Object> map);
+    List<Board> getNoiceBoardList();
+    List<Board> getPopularBoardByViewCount();
+    List<Board> getPopularBoardByStartUp();
 }
