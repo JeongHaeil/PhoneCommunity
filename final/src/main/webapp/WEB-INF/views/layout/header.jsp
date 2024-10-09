@@ -48,13 +48,14 @@
                             <!-- 드롭다운 버튼 -->
                             <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                                 <sec:authentication property="principal.nickname"/> 님
+                                <!-- 아이콘 표시 -->
+                                <jsp:include page="/WEB-INF/views/user/icon.jsp" />
                             </a>
                             <!-- 드롭다운 메뉴 -->
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
                                 <li class="user-info text-center">
-                                    <!-- 로그인한 회원의 닉네임과 이메일 -->
+                                    <!-- 로그인한 회원의 닉네임 -->
                                     <h4><sec:authentication property="principal.nickname"/></h4>
-                                  <!--    <p class="email"><sec:authentication property="principal.userEmail"/></p>-->
                                 </li>
                                 <li>
                                     <!-- 로그인한 회원의 레벨 표시 및 경험치 바 -->
@@ -63,17 +64,14 @@
                                         <div class="progress">
                                             <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
-                                        <!-- 경험치 정보 표시 (0/100 P (0%)) -->
                                         <p class="level-text mt-2" id="experienceText">Loading...</p>
                                     </div>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li class="menu-list">
                                     <a class="dropdown-item" href="<c:url value='/user/profile'/>"><i class="bi bi-person"></i> 마이페이지</a>
-                                   <!--  <a class="dropdown-item" href="#"><i class="bi bi-bookmark"></i> 스크랩</a>  -->
-              						  <a class="dropdown-item" href="<c:url value='/user/myWrite'/>"><i class="bi bi-pencil-square"></i> 작성글</a>
-              							  <a class="dropdown-item" href="<c:url value='/user/myComment'/>"><i class="bi bi-chat-dots"></i> 작성 댓글</a>
-                                     <!--  <a class="dropdown-item" href="#"><i class="bi bi-envelope"></i> 쪽지함</a>  -->
+                                    <a class="dropdown-item" href="<c:url value='/user/myWrite'/>"><i class="bi bi-pencil-square"></i> 작성글</a>
+                                    <a class="dropdown-item" href="<c:url value='/user/myComment'/>"><i class="bi bi-chat-dots"></i> 작성 댓글</a>
                                     <a class="dropdown-item" href="#"><i class="bi bi-moon"></i> 다크모드</a>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
@@ -96,23 +94,22 @@
 
     <script>
         $(document).ready(function() {
-        	$.ajax({
-        	    url: '/final/user/getUserInfo',  // 서버에 데이터를 요청할 URL
-        	    method: 'GET',
-        	    success: function(data) {
-        	        if (data.userLevel) {
-        	            $('#userLevel').text('레벨: ' + data.userLevel);
-        	            $('.progress-bar').css('width', data.progressPercentage + '%');
-        	            $('#experienceText').text(data.currentExperience + '/' + data.experienceForNextLevel + ' P (' + data.progressPercentage + '%)');
-        	        } else {
-        	            $('#userLevel').text('레벨 정보가 없습니다.');
-        	        }
-        	    },
-        	    error: function() {
-        	        $('#userLevel').text('데이터를 불러오는 데 실패했습니다.');
-        	    }
-        	});
-
+            $.ajax({
+                url: '/final/user/getUserInfo',  // 서버에 데이터를 요청할 URL
+                method: 'GET',
+                success: function(data) {
+                    if (data.userLevel) {
+                        $('#userLevel').text('레벨: ' + data.userLevel);
+                        $('.progress-bar').css('width', data.progressPercentage + '%');
+                        $('#experienceText').text(data.currentExperience + '/' + data.experienceForNextLevel + ' P (' + data.progressPercentage + '%)');
+                    } else {
+                        $('#userLevel').text('레벨 정보가 없습니다.');
+                    }
+                },
+                error: function() {
+                    $('#userLevel').text('데이터를 불러오는 데 실패했습니다.');
+                }
+            });
         });
     </script>
 
