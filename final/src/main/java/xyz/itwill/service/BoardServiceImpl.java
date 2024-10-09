@@ -158,6 +158,21 @@ public class BoardServiceImpl implements BoardService {
 	public Board getRnDown(Map<String, Object> map) {
 		return boardDAO.getRnDown(map);
 	}
+
+	@Override
+	public List<Board> getNoiceBoardList() {
+		return boardDAO.selectNoticeList();
+	}
+
+	@Override
+	public List<Board> getPopularBoardByViewCount() {
+		return boardDAO.selectPopularView();
+	}
+
+	@Override
+	public List<Board> getPopularBoardByStartUp() {
+		return boardDAO.selectPopularStar();
+	}
 	
 	
 }
