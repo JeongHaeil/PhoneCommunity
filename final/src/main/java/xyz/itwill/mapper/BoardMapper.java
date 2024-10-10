@@ -31,4 +31,7 @@ public interface BoardMapper {
 	Board getRnDown(Map<String, Object> map);
 	// 게시글 상세 정보를 가져오는 쿼리 메서드 마이페이지
 	 Board selectBoardDetail(@Param("boardPostIdx") int boardPostIdx, @Param("boardCode") int boardCode);
+	 List<Board> selectNoticeList();
+		List<Board> selectPopularView();
+		List<Board> selectPopularStar();
 }

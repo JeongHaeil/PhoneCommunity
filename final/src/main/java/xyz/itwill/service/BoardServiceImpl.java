@@ -166,6 +166,20 @@ public class BoardServiceImpl implements BoardService {
 		    // 게시글을 조회하고 반환
 		    return boardMapper.selectBoardDetail(boardPostIdx, boardCode);
 	    }
-	
+	 
+	 @Override
+		public List<Board> getNoiceBoardList() {
+			return boardDAO.selectNoticeList();
+		}
+
+		@Override
+		public List<Board> getPopularBoardByViewCount() {
+			return boardDAO.selectPopularView();
+		}
+
+		@Override
+		public List<Board> getPopularBoardByStartUp() {
+			return boardDAO.selectPopularStar();
+		}
 	
 }
