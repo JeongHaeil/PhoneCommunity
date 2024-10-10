@@ -81,7 +81,10 @@ public class UserDAOImpl implements UserDAO {
     public int updateUserExperience(User user) {
         return sqlSession.getMapper(UserMapper.class).updateUserExperience(user); // 경험치 업데이트 메서드
     }
-
-	
+    // 최근 로그인 시간 업데이트 구현
+    @Override
+    public int updateLastLogin(String userId) {
+        return sqlSession.getMapper(UserMapper.class).updateLastLogin(userId);
+    }
 
 }
