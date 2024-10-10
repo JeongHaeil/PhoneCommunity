@@ -112,16 +112,19 @@
 		update board set board_count=board_count+1 where board_post_idx=#{boardPostIdx}
 	</update>
 	<!-- 마이페이지 작성 게시글 보기 -->
-	<select id="selectBoardsByUserId" parameterType="string" resultType="Board">
+<select id="selectBoardsByUserId" parameterType="string" resultType="Board">
     SELECT BOARD_POST_IDX AS boardPostIdx,  
            BOARD_TITLE AS boardTitle,  
            TO_CHAR(board_register_date, 'YYYY-MM-DD HH24:MI:SS') AS board_register_date, 
            BOARD_COUNT AS boardCount,  
-           BOARD_STARUP AS boardStarup  
+           BOARD_STARUP AS boardStarup,
+           BOARD_STATUS AS boardStatus  <!-- 상태를 함께 조회 -->
     FROM BOARD
     WHERE BOARD_USER_ID = #{userId}
     ORDER BY BOARD_REGISTER_DATE DESC
 </select>
+
+
 
 	<update id="updateBoardStatus3">
 		update board set board_status=3 where board_post_idx=#{boardPostIdx}
@@ -144,17 +147,25 @@ select * from (select rownum rn, uxb.* from (select board_post_idx, board_user_i
 					 where rn=#{rn}-1
 </select>
 
+<!-- 마이페이지 상세 작성 게시글 보기 -->
+<select id="selectBoardDetail" parameterType="map" resultType="Board">
+    SELECT *
+    FROM Board
+    WHERE board_post_idx = #{boardPostIdx}
+    AND board_code = #{boardCode}
+</select>
 <select id="selectNoticeList" resultType="Board">
  	select * from (select rownum rn, notice.* from (select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam,user_nickname from Board join users on board_user_id=user_id  where board_code=2 and board_status=1)notice ) where rn between 1 and 10  
 </select>
 
 <select id="selectPopularView" resultType="Board">
 	select * from (select rownum rn, popular.* from (select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam,user_nickname from Board join users on board_user_id=user_id  where board_code >= 10 and board_status=1 order by board_count desc)popular ) where rn between 1 and 10 
+
 </select>
 
 <select id="selectPopularStar" resultType="Board">
 	select * from (select rownum rn, Star.* from (select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam,user_nickname from Board join users on board_user_id=user_id  where board_code >= 10 and board_status=1 order by board_starup desc)Star ) where rn between 1 and 10 
-</select>
+
 
 
 </mapper>

@@ -69,11 +69,13 @@
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li class="menu-list">
-                                    <a class="dropdown-item" href="<c:url value='/user/profile'/>"><i class="bi bi-person"></i> 마이페이지</a>
-                                    <a class="dropdown-item" href="<c:url value='/user/myWrite'/>"><i class="bi bi-pencil-square"></i> 작성글</a>
-                                    <a class="dropdown-item" href="<c:url value='/user/myComment'/>"><i class="bi bi-chat-dots"></i> 작성 댓글</a>
-                                    <a class="dropdown-item" href="#"><i class="bi bi-moon"></i> 다크모드</a>
-                                </li>
+								    <a class="dropdown-item" href="<c:url value='/user/profile'/>"><i class="bi bi-person"></i> 마이페이지</a>
+								    <a class="dropdown-item" href="<c:url value='/user/myWrite'/>"><i class="bi bi-pencil-square"></i> 작성글</a>
+								    <a class="dropdown-item" href="<c:url value='/user/myComment'/>"><i class="bi bi-chat-dots"></i> 작성 댓글</a>
+								    <a class="dropdown-item" href="<c:url value='/final/user/myProducts'/>"><i class="bi bi-box-seam"></i> 중고장터 글</a> <!-- 중고장터 글 보기 추가 -->
+								    <a class="dropdown-item" href="#"><i class="bi bi-moon"></i> 다크모드</a>
+								</li>
+
                                 <li><hr class="dropdown-divider"></li>
                                 <li class="logout-section">
                                     <form action="<c:url value='/logout'/>" method="post" style="display:inline;">
