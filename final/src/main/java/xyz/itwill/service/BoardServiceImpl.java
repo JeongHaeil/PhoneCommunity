@@ -14,12 +14,14 @@ import lombok.RequiredArgsConstructor;
 import xyz.itwill.dao.BoardDAO;
 import xyz.itwill.dto.BBallot;
 import xyz.itwill.dto.Board;
+import xyz.itwill.mapper.BoardMapper;
 import xyz.itwill.util.Pager;
 
 @Service
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 	private final BoardDAO boardDAO;
+	private BoardMapper boardMapper; // MyBatis 매퍼 주입
 	
 	@Override 
 	public Map<String, Object> getBoardList(int boardCode, int pageNum, int pagaSize, String search, String keyword) throws Exception {
@@ -158,6 +160,12 @@ public class BoardServiceImpl implements BoardService {
 	public Board getRnDown(Map<String, Object> map) {
 		return boardDAO.getRnDown(map);
 	}
+	//마이페이지
+	 @Override
+	 public Board getBoardDetail(int boardPostIdx, int boardCode) {
+		    // 게시글을 조회하고 반환
+		    return boardMapper.selectBoardDetail(boardPostIdx, boardCode);
+	    }
 	
 	
 }

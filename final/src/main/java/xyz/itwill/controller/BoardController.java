@@ -259,4 +259,28 @@ public class BoardController {
 		}
 		return "redirect:/board/boardlist/"+boardCode;
 	}
+	
+	// 마이페이지 작성 글 제목 클릭시 이동 경로 수정
+	@RequestMapping("/post/{boardCode}/{boardPostIdx}")
+	public String showPostDetail(@PathVariable int boardCode, @PathVariable int boardPostIdx, Model model) {
+	    // boardCode가 0일 경우 기본값 설정
+	    if (boardCode == 0) {
+	        boardCode = 10; // 예시로 기본값 설정
+	    }
+
+	    // 게시물 정보를 가져옵니다.
+	    Board post = boardService.getboard(boardPostIdx);
+
+	    // 게시물이 없을 경우 NullPointerException 방지
+	    if (post == null) {
+	        return "redirect:/error"; // 게시물이 없을 경우 에러 페이지로 리다이렉트
+	    }
+
+	    model.addAttribute("post", post);
+	    model.addAttribute("boardCode", boardCode);
+
+	    return "board/boarddetail"; // 게시물 상세보기로 이동
+	}
+
+
 }

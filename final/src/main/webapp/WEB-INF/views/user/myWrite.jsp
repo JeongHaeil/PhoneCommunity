@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -81,11 +82,37 @@
                 <c:otherwise>
                     <c:forEach var="post" items="${postList}" varStatus="status">
                         <tr class="post-item">
-                            <td>${status.index + 1}</td>
-                            <td><a href="/post/${post.boardPostIdx}?${_csrf.parameterName}=${_csrf.token}">${post.boardTitle}</a></td>
+                            <td>${(pager.pageNum - 1) * pager.pageSize + status.index + 1}</td>
+                            <!-- 제목 클릭 시 게시글 상세 페이지로 이동 -->
+                            <td>
+                                <a href="${pageContext.request.contextPath}/board/boarddetail/${post.boardCode != 0 ? post.boardCode : 10}/${post.boardPostIdx}?pageNum=${pager.pageNum}&search=board_user_id&keyword=">
+								    ${post.boardTitle}
+								</a>
+
+                            </td>
+                            <!-- 날짜 출력 -->
                             <td>${post.boardRegisterDate}</td>
-                            <td>${post.boardCount}</td>
-                            <td>${post.boardStarup}</td>
+
+                            <td>
+                                <c:choose>
+                                    <c:when test="${post.boardCount > 0}">
+                                        ${post.boardCount}
+                                    </c:when>
+                                    <c:otherwise>
+                                        없음
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${post.boardStarup > 0}">
+                                        ${post.boardStarup}
+                                    </c:when>
+                                    <c:otherwise>
+                                        없음
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
                         </tr>
                     </c:forEach>
                 </c:otherwise>

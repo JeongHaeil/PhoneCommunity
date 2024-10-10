@@ -144,7 +144,13 @@ select * from (select rownum rn, uxb.* from (select board_post_idx, board_user_i
 					 where rn=#{rn}-1
 </select>
 
-
+<!-- 마이페이지 상세 작성 게시글 보기 -->
+<select id="selectBoardDetail" parameterType="map" resultType="Board">
+    SELECT *
+    FROM Board
+    WHERE board_post_idx = #{boardPostIdx}
+    AND board_code = #{boardCode}
+</select>
 
 
 
