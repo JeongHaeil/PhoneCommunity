@@ -110,4 +110,10 @@
     WHERE user_id = #{userId}
 </update>
 
+<update id="updateLastLogin" parameterType="string">
+    UPDATE users 
+    SET user_last_login = CURRENT_TIMESTAMP 
+    WHERE user_id = #{userId}
+</update>
+
 </mapper>
