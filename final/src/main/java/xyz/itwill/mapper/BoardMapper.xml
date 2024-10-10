@@ -120,8 +120,10 @@
            BOARD_STARUP AS boardStarup  
     FROM BOARD
     WHERE BOARD_USER_ID = #{userId}
+    AND BOARD_STATUS = 1  <!-- 기본 상태인 게시글만 조회 -->
     ORDER BY BOARD_REGISTER_DATE DESC
 </select>
+
 
 	<update id="updateBoardStatus3">
 		update board set board_status=3 where board_post_idx=#{boardPostIdx}
