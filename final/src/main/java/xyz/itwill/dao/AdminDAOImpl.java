@@ -32,14 +32,17 @@ public class AdminDAOImpl implements AdminDAO {
 	}
 
 	@Override
-	public Admin updateUserStatusByUserId(Map<String, Object> map) {
-		return sqlSession.getMapper(AdminMapper.class).updateUserStatusByUserId(map);
+	public void updateUserStatusByUserId(Map<String, Object> map) {
+		sqlSession.getMapper(AdminMapper.class).updateUserStatusByUserId(map);
 	}
 
 	@Override
-	public Admin updateBoardStatusByBoardId(Map<String, Object> map) {
-		return sqlSession.getMapper(AdminMapper.class).updateBoardStatusByBoardPostIdx(map);
+	public void updateBoardStatusByBoardId(Map<String, Object> map) {
+		sqlSession.getMapper(AdminMapper.class).updateBoardStatusByBoardPostIdx(map);
+		
 	}
+
+	
 
 
 	

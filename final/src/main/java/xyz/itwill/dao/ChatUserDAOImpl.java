@@ -10,7 +10,6 @@ import xyz.itwill.dto.User;
 import xyz.itwill.mapper.ChatUserMapper;
 import xyz.itwill.mapper.UserMapper;
 
-@Repository
 @RequiredArgsConstructor
 @Repository
 public class ChatUserDAOImpl implements ChatUserDAO{

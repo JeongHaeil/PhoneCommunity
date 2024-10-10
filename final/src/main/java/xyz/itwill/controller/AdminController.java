@@ -2,12 +2,16 @@ package xyz.itwill.controller;
 
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -79,25 +83,36 @@ public class AdminController {
 	    return "admin/view_post"; // view_post.jsp 페이지로 이동
 	}
 	
-	@PutMapping("/admin/userStatus")
-	@ResponseBody
+	@GetMapping("/admin/userStatus")
 	public ResponseEntity<String> updateUserStatus(@RequestParam int userId, @RequestParam int status) {
 		
 		adminService.updateUserStatusByUserId(userId, status);
-		
 		
 		return ResponseEntity.ok("사용자의 상태 변경을 성공하였습니다.");
 		
 	}
 	
+	/*
 	@PutMapping("/admin/boardStatus")
-	@ResponseBody
+	//@GetMapping("/admin/boardStatus")
+	
 	public ResponseEntity<String> updateBoardStatus (@RequestParam int boardPostIdx, @RequestParam int status) {
+		
 		adminService.updateBoardStatusByBoardPostIdx(boardPostIdx, status);
 		
-		return ResponseEntity.ok("게시물의 상태 변경을 성공하였습니다");
+		return ResponseEntity.ok("success");
 	}
-	
+	*/
+	@PutMapping("/admin/boardStatus")
+	public ResponseEntity<String> updateBoardStatus(@RequestBody Admin request) {
+	    try {
+	        adminService.updateBoardStatusByBoardPostIdx(request.getBoardPostIdx(), request.getBoardStatus());
+	        return ResponseEntity.ok("success");
+	    } catch (Exception e) {
+	        // 예외 처리: 적절한 오류 메시지와 상태 코드를 반환
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating board status");
+	    }
+	}
 	
 	
 }

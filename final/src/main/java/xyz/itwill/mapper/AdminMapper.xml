@@ -67,7 +67,7 @@
   	<update id="updateUserStatusByUserId">
 	    UPDATE users 
 	    SET user_status = #{status} 
-	    WHERE user_id = #{userId}
+	    WHERE user_num = #{userNum}
 	</update>
 	
 	<update id="updateBoardStatusByBoardPostIdx">
