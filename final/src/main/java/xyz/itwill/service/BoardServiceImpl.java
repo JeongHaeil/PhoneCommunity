@@ -160,6 +160,7 @@ public class BoardServiceImpl implements BoardService {
 	public Board getRnDown(Map<String, Object> map) {
 		return boardDAO.getRnDown(map);
 	}
+
 	//마이페이지
 	 @Override
 	 public Board getBoardDetail(int boardPostIdx, int boardCode) {
@@ -181,5 +182,6 @@ public class BoardServiceImpl implements BoardService {
 		public List<Board> getPopularBoardByStartUp() {
 			return boardDAO.selectPopularStar();
 		}
+
 	
 }

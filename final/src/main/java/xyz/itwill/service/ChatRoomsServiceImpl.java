@@ -2,13 +2,15 @@ package xyz.itwill.service;
 
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import xyz.itwill.dao.ChatRoomsDAO;
+import xyz.itwill.dao.ProductDAO;
+import xyz.itwill.dao.UserDAO;
 import xyz.itwill.dto.ChatRooms;
-import xyz.itwill.mapper.ChatRoomsMapper;
+import xyz.itwill.dto.Product;
+import xyz.itwill.dto.User;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +18,8 @@ public class ChatRoomsServiceImpl implements ChatRoomsService{
 		
 	
 	private final ChatRoomsDAO chatRoomsDAO;
+	private final UserDAO userDAO;  // 새로운 DAO 추가 (혹은 서비스)
+    private final ProductDAO productDAO; 
 
 	@Override
 	public void createChatRooms(ChatRooms chatRooms) {
@@ -46,6 +50,10 @@ public class ChatRoomsServiceImpl implements ChatRoomsService{
 		
 		return chatRoomsDAO.generateNewRoomId();
 	}
+
+
+	
+
 
    
 

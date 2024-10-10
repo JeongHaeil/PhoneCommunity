@@ -304,4 +304,11 @@ public class BoardJsonController {
 		}
 		return "success";
 	}
+	
+	@GetMapping("/popular_side_board")
+	public Map<String, Object> popularBoardListByStar() {
+		Map<String, Object> resultMap=new HashMap<String, Object>();
+		resultMap.put("popularBoardList", boardService.getPopularBoardByStartUp());
+		return resultMap;
+	}
 }

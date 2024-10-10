@@ -10,11 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,30 +58,32 @@ public class ProductController {
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String register(@ModelAttribute Product product, List<MultipartFile> productImage2,
-			Authentication authentication) throws IllegalStateException, IOException {
-		System.out.println("컨트롤러 실행");
+	        Authentication authentication) throws IllegalStateException, IOException {
+	    System.out.println("컨트롤러 실행");
 
-		if (authentication != null) {
-			CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-			product.setProductUserid(userDetails.getUserId());
-		}
+	    if (authentication != null) {
+	        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+	        product.setProductUserid(userDetails.getUserId());
+	    }
 
-		String uploadDirectory = context.getServletContext().getRealPath("/resources/uploadFile/freeboard_image");
-		List<String> filenameList = new ArrayList<>();
-		for (MultipartFile multipartFile : productImage2) {
-			if (!multipartFile.isEmpty()) {
-				String uploadFilename = UUID.randomUUID().toString() + "_" + multipartFile.getOriginalFilename();
-				File file = new File(uploadDirectory, uploadFilename);
-				multipartFile.transferTo(file);
-				filenameList.add(uploadFilename);
-				// 업로드된 파일명을 product 객체의 productImage 필드에 설정
-				product.setProductImage(uploadFilename);
-			}
-		}
+	    String uploadDirectory = context.getServletContext().getRealPath("/resources/uploadFile/freeboard_image");
+	    List<String> filenameList = new ArrayList<>();
+	    for (MultipartFile multipartFile : productImage2) {
+	        if (!multipartFile.isEmpty()) {
+	            String uploadFilename = UUID.randomUUID().toString() + "_" + multipartFile.getOriginalFilename();
+	            File file = new File(uploadDirectory, uploadFilename);
+	            multipartFile.transferTo(file);
+	            filenameList.add(uploadFilename);
+	            // 업로드된 파일명을 product 객체의 productImage 필드에 설정
+	            product.setProductImage(uploadFilename);
+	        }
+	    }
 
-		productService.addProduct(product);
-		return "redirect:/list";
+	    productService.addProduct(product);
+	    // 리다이렉트 경로 수정
+	    return "redirect:/product/list";
 	}
+
 
 	@RequestMapping("/detail")
 	public String detail(@RequestParam Map<String, Object> map, Model model) {
@@ -155,4 +160,20 @@ public class ProductController {
 		productService.removeProduct(productIdx);
 		return "redirect:/product/list";
 	}
+	
+	   // 상품 등록 처리
+    @PostMapping("/chat")
+    public String registerProduct(@ModelAttribute Product product, HttpSession session) {
+        // 현재 로그인한 사용자 정보를 세션에서 가져옴
+        String sellerId = (String) session.getAttribute("userId");
+
+        // 상품에 판매자 ID 저장
+        product.setProductUserid(sellerId);
+
+        // 상품 등록 처리
+        productService.addProduct(product);
+
+        return "redirect:/product/list";  // 상품 목록 페이지로 리다이렉트
+    }
+	
 }

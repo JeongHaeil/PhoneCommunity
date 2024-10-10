@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/security/tags"  prefix="sec"%>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -330,7 +331,7 @@ body {
 </head>
 
 <body>
-
+<sec:authentication property="principal" var="loginUser"/>
 	<div class="container">
 		<!-- 제품명 -->
 		<div class="product-title">${product.productSubject}</div>
@@ -360,7 +361,8 @@ body {
 							<th>제품상태</th>
 							<th>거래방식</th>
 							<th>배송비</th>
-							<th>카테고리</th>
+							<th>${session.roomId}카테고리</th>
+							
 						</tr>
 					</thead>
 					<tbody>
@@ -387,7 +389,8 @@ body {
 
 				<!-- 버튼 -->
 				<div class="buttons">
-					<button class="btn btn-chat">채팅하기</button>
+					<button id="openChatRoomBtn"class="btn btn-chat">채팅하기</button>
+					<div id="chatRoomContainer"></div> <!-- 채팅방 UI가 로드될 곳 -->
 					<button class="btn btn-safe">안전거래</button>
 				</div>
 			</div>
@@ -402,7 +405,6 @@ body {
 					<ul style="margin-top: 25px;">
 						<li>- 상품명: ${product.productSubject}</li>
 						<li>- 가격: ${product.productPrice}원</li>
-						<li>- 등록일: ${product.productRegisterdate}</li>
 						<li>- 상품상태: ${product.productModelStatus}</li>
 						<li>- 내용: ${product.productContent}</li>
 					</ul>
@@ -414,7 +416,7 @@ body {
 				<h4 style="font-weight: bold;">프로필 정보</h4>
 				<div class="left-wrap" style="border-top: 1px solid #e1e1e1; margin-top: 25px;">
 					<div class="store-name-container" style="margin-top: 30px;">
-						<div class="store-name">${product.productUserid}</div>
+						<div class="store-name">${product.productUsernickname}</div>
 						<img src="https://via.placeholder.com/50" alt="프로필 사진" width="70px;">
 					</div>
 
@@ -526,5 +528,73 @@ body {
 	</div>
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+	<script type="text/javascript">
+	 $(document).ready(function () {
+		 var loggedInUserId = "${loginUser.userId}";  // 로그인한 사용자 (구매자) ID
+		 var sellerId = "${product.productUserid}";  // 판매자 ID (상품의 소유자)
+		 var roomId = "${roomId}";  // 채팅방 ID (이미 생성된 채팅방의 ID)
+		 var buyerId = loggedInUserId;
+		 var newRoomId;
+		 
+		    console.log("buyerId: " + loggedInUserId);
+		    console.log("sellerId: " + sellerId);
+		    console.log("roomId: " + roomId);	
+		    console.log("loggedInUserId: " + loggedInUserId);	
+		 
+		 
+		 
+	        $("#openChatRoomBtn").click(function () {
+	            // 서버에 새로운 방 번호 요청 (방 번호 생성)
+	            if(!roomId){
+	            $.ajax({
+	                url:  "${pageContext.request.contextPath}/chatroom/createRoom",   // 방 번호를 생성하는 서버 URL
+	                type: "POST",             // 새로운 방 번호 생성은 POST 방식으로 요청
+	                contentType: "application/json",
+	                 data: JSON.stringify({
+						
+						buyerId: loggedInUserId,
+						sellerId: sellerId  // 판매자 ID
+					}), 
+	                success: function (response) {
+	                    // 새로운 방 번호를 받아온 후, 그 방 번호로 채팅방 UI를 로드
+	                    var newRoomId = response;
+	                    console.log("Created roomId: " + newRoomId);  // 새로운 방 번호 출력
+	                    //loadChatRoom(newRoomId); 
+	                   // window.location.href = newRoomId;  
+	                    window.location.href = "${pageContext.request.contextPath}/chatroom/room/" + newRoomId;
+	                    
+	                },
+	                
+	                beforeSend: function(xhr) {
+	                    xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	                },
+	                error: function (xhr, status, error) {
+	                    console.error('Error creating chat room:', error);
+	                }
+	            });
+	            }else{
+	            	 window.location.href = "${pageContext.request.contextPath}/chatroom/room/" + roomId;  // 기존 방으로 이동	
+	            }
+	        });
+			
+	        // 방 번호를 받아 해당 방의 채팅방 UI를 로드하는 함수
+	        function loadChatRoom(roomId) {
+	        	console.log("Loaded roomId: " + roomId); // roomId 값 출력
+	            $.ajax({
+	                url: "${pageContext.request.contextPath}/chatroom/room/" + roomId,  // 생성된 방 번호로 채팅방 UI를 요청
+	                type: "GET",
+	                success: function (data) {
+	                    $("#chatRoomContainer").html(data);  // 성공 시 채팅방 UI 로드
+	                },
+	                error: function (xhr, status, error) {
+	                    console.error("Error loading chat room:", error);
+	                }
+	            });
+	        } 
+	        
+	    }); 
+	    
+	 
+	</script>
 </body>
 </html>

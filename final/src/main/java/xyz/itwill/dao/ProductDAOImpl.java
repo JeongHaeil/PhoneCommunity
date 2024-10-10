@@ -50,4 +50,5 @@ public class ProductDAOImpl implements ProductDAO {
 	    return sqlSession.getMapper(ProductMapper.class).updateProductCount(productIdx);
 	}
 
+	
 }

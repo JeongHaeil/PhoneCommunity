@@ -147,7 +147,7 @@
 <body>
 
     <div class="container mt-5">
-       <form id="productForm" action="${pageContext.request.contextPath}/register" method="post" enctype="multipart/form-data">
+       <form id="productForm" action="${pageContext.request.contextPath}/product/register" method="post" enctype="multipart/form-data">
     <!-- 이미지 업로드 -->
     <div class="mb-3">
         <div class="upload-container" id="uploadContainer">

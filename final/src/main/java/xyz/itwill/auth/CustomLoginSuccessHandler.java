@@ -12,9 +12,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+
+import lombok.RequiredArgsConstructor;
 import xyz.itwill.dao.UserDAO; // UserDAO 임포트 추가
 import xyz.itwill.dto.User; // User DTO 임포트 추가
-import lombok.RequiredArgsConstructor;
 
 // 인증 성공 후 실행될 기능을 제공하기 위한 클래스
 @Component

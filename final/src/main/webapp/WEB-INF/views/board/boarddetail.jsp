@@ -287,7 +287,7 @@
 			    								<td>${boards.boardPostIdx }</td>  								
 			    								<td class="tdboardTitle" style="color: #333; cursor: pointer;" 
 												    onclick="location.href='<c:url value='/board/boarddetail/${boards.boardCode }/${boards.boardPostIdx }'/>?pageNum=${pager.pageNum}&search=${search }&keyword=${keyword }'">
-												    &nbsp;&nbsp;${boards.boardTitle}
+												    &nbsp;&nbsp;${boards.boardTitle}<c:if test="${boards.cocain !=0}"> &nbsp;[${boards.cocain }]</c:if>
 												</td>
 			    								<td class="tdboardWriter">${boards.userNickname }</td>
 			    								<td>${boards.boardRegisterDate }</td>
@@ -380,17 +380,8 @@
 			<!-- 사이드 광고 및 인기글  -->
 			<div class="col-md-3 sideHotboardList" >
 				<h2>오늘의 인기글</h2>
-				<ul class="list-group">
-					<li class="list-group-item sideHotboard"><a href="#">1. 일반 bcaa 2종
-							1980원 무배 으디까지 출력될까여따리 쿵쿵따리</a> <span class="badge badge-primary">13</span></li>
-					<li class="list-group-item sideHotboard"><a href="#">2. 블렌드 유산균 반값</a> <span
-						class="badge badge-primary">8</span></li>
-					<li class="list-group-item sideHotboard"><a href="#">3. 미사 스포츠 음료 300P</a>
-						<span class="badge badge-primary">1500</span></li>
-					<li class="list-group-item sideHotboard"><a href="#">4. 가스펠 포드 ADV 신제품</a>
-						<span class="badge badge-primary">16</span></li>
-					<li class="list-group-item sideHotboard"><a href="#">5. 이너 마이핏 ADV 신제품</a>
-						<span class="badge badge-primary">14</span></li>
+				<ul class="list-group" id="popularSideBoard">
+				
 				</ul>
 			</div>
 		</div>
@@ -410,6 +401,7 @@
 	
 		var cocopageNum =1;	
 		commentsListDisplay(boardCode, boardPostIdx,1);
+		popularSideBoard();
 		function commentsListDisplay(boardCode, boardPostIdx,cocopageNum) {
 			$.ajax({
 				type : "get",
@@ -790,6 +782,29 @@
 		}else{
 		window.location.href = "<c:url value='/board/boarddetail/"+boardCode+"/"+boardPostIdx+"'/>"; 					
 		}
+	}
+	//SideBoard 출력
+	function popularSideBoard() {
+	 $.ajax({
+		type:"get",
+		url: "<c:url value='/rest/popular_side_board'/>",
+		dataType: "json",
+		success : function(result) {
+			var html="";
+			if(result.popularBoardList.length==0){
+			    html += " <li class='list-group-item sideHotboard'>인기글이 없습니다.</li>";
+			    return;
+			}else{
+				$(result.popularBoardList).each(function(index) {
+				html +="<li class='list-group-item sideHotboard'>["+(index+1)+"]. <a href='<c:url value='/board/boarddetail/"+this.boardCode+"/"+this.boardPostIdx+"'/>'>"+this.boardTitle+"</a> </li>";
+				});
+			}
+			$("#popularSideBoard").html(html);
+		},
+		error : function(xhr) {
+			alert("에러코드(게시글 검색) = " + xhr.status);
+		}
+	});
 	}
 	</script>
 </body>

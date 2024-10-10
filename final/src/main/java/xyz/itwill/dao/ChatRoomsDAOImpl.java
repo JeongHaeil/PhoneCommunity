@@ -47,4 +47,7 @@ public class ChatRoomsDAOImpl implements ChatRoomsDAO{
 		return sqlSession.getMapper(ChatRoomsMapper.class).generateNewRoomId();
 	}
 
+
+	
+
 }

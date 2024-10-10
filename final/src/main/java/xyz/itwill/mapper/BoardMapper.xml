@@ -42,12 +42,12 @@
 			<when test="keyword==null or keyword==''">
 				<choose>
 					<when test="boardCode==1">
-					select * from (select rownum rn, uxb.* from (select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam
-					,user_nickname from Board join users on board_user_id=user_id board_status=1 order by board_post_idx desc) uxb)
+					select * from (select rownum rn, uxb.*,(SELECT COUNT(*) FROM comments WHERE comment_board_idx = uxb.board_post_idx AND comment_status >= 1)cocain from (select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam
+					,user_nickname from Board join users on board_user_id=user_id where board_status=1 order by board_post_idx desc) uxb)
 					 where rn between #{startRow} and #{endRow}
 					</when>
 					<otherwise>
-					select * from (select rownum rn, uxb.* from (select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam 
+					select * from (select rownum rn, uxb.*,(SELECT COUNT(*) FROM comments WHERE comment_board_idx = uxb.board_post_idx AND comment_status >= 1)cocain from (select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam 
 					,user_nickname from Board join users on board_user_id=user_id where board_code=#{boardCode} and board_status=1 order by board_post_idx desc) uxb)
 					 where rn between #{startRow} and #{endRow}	
 					</otherwise>
@@ -56,12 +56,12 @@
 			<otherwise>
 				<choose>
 					<when test="boardCode==1">
-					select * from (select rownum rn, uxb.* from (select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam 
+					select * from (select rownum rn, uxb.*,(SELECT COUNT(*) FROM comments WHERE comment_board_idx = uxb.board_post_idx AND comment_status >= 1)cocain from (select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam 
 					,user_nickname from Board join users on board_user_id=user_id where ${search} like '%'||#{keyword}||'%' and board_status=1 order by board_post_idx desc) uxb)
 					 where rn between #{startRow} and #{endRow}	
 					</when>
 					<otherwise>
-					select * from (select rownum rn, uxb.* from (select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam 
+					select * from (select rownum rn, uxb.*,(SELECT COUNT(*) FROM comments WHERE comment_board_idx = uxb.board_post_idx AND comment_status >= 1)cocain from (select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam 
 					,user_nickname from Board join users on board_user_id=user_id where ${search} like '%'||#{keyword}||'%' and board_code=#{boardCode} and board_status=1 order by board_post_idx desc) uxb)
 					 where rn between #{startRow} and #{endRow}	
 					</otherwise>
@@ -165,7 +165,6 @@ select * from (select rownum rn, uxb.* from (select board_post_idx, board_user_i
 
 <select id="selectPopularStar" resultType="Board">
 	select * from (select rownum rn, Star.* from (select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam,user_nickname from Board join users on board_user_id=user_id  where board_code >= 10 and board_status=1 order by board_starup desc)Star ) where rn between 1 and 10 
-</select>
 
 
 

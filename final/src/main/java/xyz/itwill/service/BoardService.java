@@ -29,6 +29,9 @@ public interface BoardService {
  // 게시글 상세 정보를 가져오는 메서드 추가(마이페이지)
     Board getBoardDetail(int boardPostIdx, int boardCode);
 
+
+    Board getRnDown(Map<String, Object> map);
+
     List<Board> getNoiceBoardList();
     List<Board> getPopularBoardByViewCount();
     List<Board> getPopularBoardByStartUp();

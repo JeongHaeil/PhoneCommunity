@@ -24,6 +24,7 @@ public interface UserMapper {
     
  // 경험치 업데이트 쿼리 추가
     int updateUserExperience(User user); // User 객체를 매개변수로 받도록 수정
+
  // 최근 로그인 시간 업데이트 쿼리 추가
     int updateLastLogin(@Param("userId") String userId);
     
