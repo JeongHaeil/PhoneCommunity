@@ -112,17 +112,18 @@
 		update board set board_count=board_count+1 where board_post_idx=#{boardPostIdx}
 	</update>
 	<!-- 마이페이지 작성 게시글 보기 -->
-	<select id="selectBoardsByUserId" parameterType="string" resultType="Board">
+<select id="selectBoardsByUserId" parameterType="string" resultType="Board">
     SELECT BOARD_POST_IDX AS boardPostIdx,  
            BOARD_TITLE AS boardTitle,  
            TO_CHAR(board_register_date, 'YYYY-MM-DD HH24:MI:SS') AS board_register_date, 
            BOARD_COUNT AS boardCount,  
-           BOARD_STARUP AS boardStarup  
+           BOARD_STARUP AS boardStarup,
+           BOARD_STATUS AS boardStatus  <!-- 상태를 함께 조회 -->
     FROM BOARD
     WHERE BOARD_USER_ID = #{userId}
-    AND BOARD_STATUS = 1  <!-- 기본 상태인 게시글만 조회 -->
     ORDER BY BOARD_REGISTER_DATE DESC
 </select>
+
 
 
 	<update id="updateBoardStatus3">
