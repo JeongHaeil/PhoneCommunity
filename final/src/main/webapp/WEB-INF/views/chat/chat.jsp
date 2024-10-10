@@ -43,7 +43,8 @@ $(document).ready(function () {
 		
 		 console.log("Room1 ID on chat.jsp: " + roomId);
 		 createChatRoom();
-		 function createChatRoom () {
+		
+		 function createChatRoom (roomId) { 
 				console.log("createChatRoom2  함수가 호출되었습니다.");  
 				console.log("Room3 ID on chat.jsp: " + roomId);
 				// Ajax 요청으로 채팅방 시작
@@ -51,25 +52,26 @@ $(document).ready(function () {
 					url: "${pageContext.request.contextPath}/chatroom/start",  // 요청 URL
 					type: "POST",  // POST 방식
 					contentType: "application/json",
-					data: JSON.stringify({
-						"roomId": roomId,
-						"buyerId": loggedInUserId,
+				 	data: JSON.stringify({
+						roomId: roomId,
+						buyerId: loggedInUserId,
+						sellerId: sellerId 
 						
-						"sellerId": sellerId  // 판매자 ID
-					}),
+					}), 
 					beforeSend: function(xhr) {
 						xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");  // CSRF 토큰 설정
 					},
 					success: function(response) {
 						console.log("Chat room created successfully");
-						window.location.href = "<c:url value="/chat/room/"/>" + roomId;  // 서버에서 반환된 roomId로 채팅방 이동
+						//window.location.href = "<c:url value="/chat/room/"/>" + roomId;  // 서버에서 반환된 roomId로 채팅방 이동
 						//window.location.href = "${pageContext.request.contextPath}/chatroom/room/" + roomId;
 					},
 					error: function(xhr, status, error) {
 						console.error("Error creating chat room: " + error);
 					}
 				});
-			}  
+			 }
+		 
 		 console.log("Room4 ID on chat.jsp: " + roomId);
 		// WebSocket 연결 설정
 		var socket = new WebSocket("ws://localhost:8000/final/ws/chat/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId + "&userId=" + loggedInUserId);
