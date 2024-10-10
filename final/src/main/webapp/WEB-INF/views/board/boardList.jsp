@@ -2,12 +2,32 @@
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>게시판</title>
     <style type="text/css">
+    #BoardTitleLabel {
+      font-family: 'Arial', sans-serif;
+      font-size: 48px;
+      font-weight: bold;
+      color: #f0f8ff; /* 연한 하늘색 글자 */
+      background: linear-gradient(45deg, #2c3e50, #34495e, #2f4050); /* 어두운 그라데이션 배경 */
+      padding: 20px 40px;
+      border-radius: 15px;
+      text-align: center;
+      display: inline-block;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6); /* 강한 배경 그림자 */
+      text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5), 0px 0px 15px rgba(255, 255, 255, 0.7); /* 입체적인 텍스트 그림자 */
+      transition: all 0.3s ease;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+    
     .boardDiv {
         padding: 0;
         margin: 0 auto;
@@ -58,6 +78,7 @@
         text-align: center;
         padding: 3.5px 2px;
         line-height: 1.5;
+        vertical-align: middle;
     }
     .pagebtn {
         border-radius: 32px;
@@ -122,7 +143,7 @@
 	
 	<%-- =========타이틀 출력(시작)===== --%>
 	<div class="mt-10">
-    <h1 class="text-center">${boardCodeTitle }</h1>
+	<h1 class=text-center id="BoardTitleLabel">${boardCodeTitle }</h1>
     </div>
 	<%-- =========타이틀 출력(끝)===== --%>
     
@@ -132,21 +153,32 @@
     	
         <div class="col-md-9" >
     
-             <c:if test="${boardCode >= 10 && boardCode <= 99 }">
+             
              	<div class="row justify-content-between align-items-center m-1" >
              	<div>
 			        <h3>게시글 목록</h3>
 			    </div>
 			        <div class="d-flex justify-content-end align-items-center">
-					    <button type="button" class="btn btn-dark btn-sm" onclick="hideAndShowSearch()">검색</button>&nbsp;					 					 
-					    <button type="button" class="btn btn-dark btn-sm" onclick="window.location.href='<c:url value="/board/boardwrite/${boardCode }"/>'">글쓰기</button>
+					    <button type="button" class="btn btn-dark btn-sm" onclick="hideAndShowSearch()">검색</button>&nbsp;
+					    <c:choose>
+					    	<c:when test="${boardCode >= 10 && boardCode <= 99 }">
+					    		<button type="button" class="btn btn-dark btn-sm" onclick="window.location.href='<c:url value="/board/boardwrite/${boardCode }"/>'">글쓰기</button>					    	
+					    	</c:when>
+					    	<c:otherwise>
+					    		<sec:authorize access="isAuthenticated()">
+					    			<sec:authorize access="hasRole('ROLE_BOARD_ADMIN')" var="admin"/>
+					    			<c:if test="${admin}"><button type="button" class="btn btn-dark btn-sm" onclick="window.location.href='<c:url value="/board/boardwrite/${boardCode }"/>'">글쓰기</button></c:if>
+					    		</sec:authorize>
+					    	</c:otherwise>
+					    </c:choose>					 					 
 					</div>
 				 </div>
-			 </c:if>
+			
+			 
 			 <%-- 상단 검색창 씨작 --%>
 			 <div id="boardSearchDiv" style="display: none;">
 			 <div class="row justify-content-end">
-				    <div class="col-auto">  
+				    <div class="col-auto" style="margin: 5px;">  
 				        <form id="searchForm" method="get" class="d-flex "> 
 				            <input id="code" type="hidden" name="boardCode" value="${boardCode }" disabled="disabled">
 				            <select name="search" id="searchSelect" class="">
@@ -181,7 +213,14 @@
 		    						<c:otherwise>
 		    						<c:forEach var="boards" items="${boardList}">
 		    							<tr>
-		    								<td>${boards.boardPostIdx }</td>  								
+		    								<c:choose>
+		    									<c:when test="${boards.boardCode==2 }">
+		    										<td>&lt;공지&gt;</td>
+		    									</c:when>
+		    									<c:otherwise>
+		    										<td>${boards.boardPostIdx }</td>  										    									
+		    									</c:otherwise>
+		    								</c:choose>
 		    								<td class="tdboardTitle" style="color: #333; cursor: pointer;" 
 											    onclick="location.href='<c:url value='/board/boarddetail/${boards.boardCode }/${boards.boardPostIdx }'/>?pageNum=${pager.pageNum}&search=${search }&keyword=${keyword }'">
 											    &nbsp;&nbsp;${boards.boardTitle}<c:if test="${boards.cocain !=0}"> &nbsp;[${boards.cocain }]</c:if>
@@ -200,11 +239,11 @@
 			 <div class="d-flex justify-content-end align-items-center">
 			 <div>
 				<a href="#" class="link-height text-dark">맨위로</a>
-			<c:if test="${boardCode >= 10 && boardCode <= 99 }">
+			
 			</div>
 			 <%-- <button type="button" class="btn btn-dark" onclick="window.location.href='<c:url value="/board/boardwrite/${freeCode }"/>'">글쓰기</button> --%>
 			 </div>
-			 </c:if>
+			
 			            <%-- 페이지 번호 출력 --%>
 			 <div id="pageNumDiv" class="row justify-content-center">
 			 	 <div class="col-auto">           
@@ -238,8 +277,8 @@
 				</c:choose>
 			</div>	
 				<!-- 검색   -->
-				<div class="row justify-content-center">
-				    <div class="col-auto">  
+				<div class="row justify-content-center ">
+				    <div class="col-auto" style="margin: 5px;">  
 				        <form id="searchForm" method="get" class="d-flex "> 
 				            <input id="code" type="hidden" name="boardCode" value="${boardCode }" disabled="disabled">
 				            <select name="search" id="searchSelect" class="">

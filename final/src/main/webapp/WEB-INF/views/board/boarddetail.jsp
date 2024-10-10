@@ -9,10 +9,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>부트스트랩 예제</title>
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 <!-- <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
     <style type="text/css">
+    #BoardTitleLabel {
+      font-family: 'Arial', sans-serif;
+      font-size: 48px;
+      font-weight: bold;
+      color: #f0f8ff; /* 연한 하늘색 글자 */
+      background: linear-gradient(45deg, #2c3e50, #34495e, #2f4050); /* 어두운 그라데이션 배경 */
+      padding: 20px 40px;
+      border-radius: 15px;
+      text-align: center;
+      display: inline-block;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6); /* 강한 배경 그림자 */
+      text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5), 0px 0px 15px rgba(255, 255, 255, 0.7); /* 입체적인 텍스트 그림자 */
+      transition: all 0.3s ease;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+
     .boardDiv{
 		padding: 0;
 		margin: 0 auto;
@@ -64,6 +84,7 @@
         text-align: center;
         padding: 3.5px 2px;
         line-height: 1.5;
+        vertical-align: middle;
     }
     .pagebtn{
    	    border-radius: 32px;
@@ -99,10 +120,10 @@
      .apagebtn:hover{
      	color: #fff;
     } 
-	.row{
+	/*  .row{
 		margin-left: 0px;
 		margin-right: 0px;										
-	}
+	} */
 	
 	.commentRowDiv{
 		border-top: 1px solid #e5e5e5;
@@ -141,12 +162,12 @@
 </head>
 <body>
 	<div class="container mt-5">
-		<h1 class=text-center>${boardTitle }</h1>
+		<h1 class=text-center id="BoardTitleLabel">${boardTitle }</h1>
 		<input type="hidden" value="${boardCode }" name="boardCode"
 			id="freeCodeValue"> <input type="hidden"
 			value="${board.boardPostIdx }" name="boardPostIdx"
 			id="freePostIdxValue">
-		<div class="row">
+		<div class="row no-gutters">
 			<div class="col-md-9">
 				<div class="card mb-3">
 					<div class="card-body">
@@ -155,7 +176,7 @@
 						<p class="card-text d-flex justify-content-between aCursorActive">
 						<small class="text-muted">작성자: ${board.userNickname} | 작성일:${board.boardRegisterDate }</small>
 							<sec:authorize access="isAuthenticated()">
-								<sec:authorize access="hasRole('ROLE_SUPER_ADMIN')" var="admin"/>
+								<sec:authorize access="hasRole('ROLE_BOARD_ADMIN')" var="admin"/>
 								<sec:authentication property="principal" var="userinfo"/>	
 								<c:if test="${admin || userinfo.userId eq board.boardUserId }"><small class="text-muted"><a onclick="deleteFreeboard();" style="color: red;">삭제</a> | <a onclick="modifyFreeboard();">수정</a></small></c:if>					
 							</sec:authorize>
@@ -174,33 +195,28 @@
 
 					<div class="container text-center mt-5">
 						<button class="btn btn-outline-dark" onclick="boardstarup(${board.boardPostIdx});">
-							<i class="fas fa-heart"></i> 추천
+							 추천&nbsp;<i class="fas fa-thumbs-up" style="color: #5CD1E5;"></i>
 						</button>
 						<button class="btn btn-outline-dark" onclick="boardstardown(${board.boardPostIdx});">
-							<i class="fas fa-heart" ></i> 비추천
+							<i class="fas fa-thumbs-down" style="color: #FFB2F5;"></i> 비추천
 						</button>
 					</div>
 
 					<div class="container mt-4">
-						<div class="row">
-							<div class="col-md-6">
-								<p>
-									<c:choose>
-										<c:when test="${pageNum}!=null">
-											<a href="<c:url value="/board/boardlist/${boardCode }"/>?search=${search }&keyword=${keyword }&pageNum=${pageNum}" style="color: #333;">목록</a>
-										</c:when>
-										<c:otherwise>
-											<a href="<c:url value="/board/boardlist/${boardCode }"/>?search=${search }&keyword=${keyword }&pageNum=1" style="color: #333;">목록</a>									
-										</c:otherwise>
-									</c:choose>											
-								</p>
-								
-							</div>
-							<div class="col-md-6 text-right">
-								<p>
-									<a class="" style="color: #333;" onclick="boardspam(${board.boardPostIdx});">신고하기</a>
-								</p>
-							</div>
+						<div class="d-flex justify-content-between">
+							<p>
+								<c:choose>
+									<c:when test="${pageNum}!=null">
+										<a href="<c:url value="/board/boardlist/${boardCode }"/>?search=${search }&keyword=${keyword }&pageNum=${pageNum}" style="color: #333;">목록</a>
+									</c:when>
+									<c:otherwise>
+										<a href="<c:url value="/board/boardlist/${boardCode }"/>?search=${search }&keyword=${keyword }&pageNum=1" style="color: #333;">목록</a>									
+									</c:otherwise>
+								</c:choose>											
+							</p>
+							<p>
+								<a style="color: #333; cursor: pointer;" onclick="boardspam(${board.boardPostIdx});"> <i class="fas fa-flag"></i>신고하기</a>
+							</p>
 						</div>
 					</div>
 				</div>
@@ -215,7 +231,7 @@
 						</div>
 						<div
 							class="col-md-6 d-flex justify-content-end align-items-center">
-							<div class="mr-3">
+							<div class="m-3">
 								<a href="#" class="link-height text-dark">맨위로</a>
 							</div>
 							<button type="button" class="btn btn-dark btn-sm" onclick="window.location.href='<c:url value="/board/boardwrite/${boardCode }"/>'">글쓰기</button>
@@ -227,11 +243,12 @@
 				
 				<div class="card mt-3">
 					<%--================ 댓글 출력 태그 시작============ --%>
-					<div id="commentsListDiv"></div>
+					<div class="m-2" id="commentsListDiv"></div>
 					<%--================ 댓글 출력 태그 끝============ --%>
 				</div>
-
-
+					<%--=================댓글 페이지 처리 시작 =========   --%>
+					<div id='cocopageNumDiv' class='row justify-content-center mt-2'></div>
+					<%--=================댓글 페이지 처리 끝 =========   --%>
 
 				<%-- =============================게시글 전둉 댓글 작성창 시작===================== --%>			
 				<div class="card mt-4" id="commentsNumber_0">
@@ -303,7 +320,7 @@
 					
 					<%-- 2, 게시글 페이징 (시작) --%>
 					 <div id="pageNumDiv" class="row justify-content-center">
-					 	 <div class="col-auto">           
+					 	 <div class="col-auto " style="margin: 5px;">           
 						 <c:choose>
 							<c:when test="${pager.startPage > pager.blockSize }">
 								<a class="pagebtn" href="<c:url value="/board/boardlist/${boardCode }"/>?search=${search }&keyword=${keyword }&pageNum=${pager.prevPage}">◀</a>
@@ -418,17 +435,17 @@
 								$("#commentsListDiv").html(html);
 								return;
 							}
-							var html = "<h4>댓글 (" + result.commentCount
-									+ ")</h4>";
+							var html = "<p>댓글 (" + result.commentCount
+									+ ")</p>";
 							$(result.commentList)
 									.each(
 											function() {
 												if(this.commentLevel!=0){
-												html += "<div class='row commentRowDiv reCommentDiv mt-1' style='margin-left:"+this.commentLevel*20+"px;'>"; 
+												html += "<div class='commentRowDiv reCommentDiv mt-1' style='margin-left:"+this.commentLevel*20+"px;'>"; 
 												}else{
-												html += "<div class='row commentRowDiv mt-1' style='margin-left:"+this.commentLevel*20+"px;'>"; 				
+												html += "<div class='commentRowDiv mt-1' style='margin-left:"+this.commentLevel*20+"px;'>"; 				
 												}
-												html += "<div class='list-group w-100'>";
+												html += "<div class='list-group'>";
 												html += "<div>";
 												html += "<div class='d-flex justify-content-between'>";
 												
@@ -443,10 +460,10 @@
 													html += "<strong>"+ this.userNickname+ "</strong> <small class='text-muted'>"+ this.commentRegDate+ "</small>";
 													}							
 													if (this.commentUserId == result.board.boardUserId) {//세션에서 값 가져와서 로그인 유저와 비교 <---잘못된 작성
-														html += "<span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: blue;'>작성자</span>";										
+														html += "<span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: #CC3D3D;'>작성자</span>";										
 													}
 													if(this.commentUserId == result.userId || result.boardAdmin !=null){
-														html += "<a class='aCursorActive' onclick='deleteComment("+ this.commentIdx+ ");'><span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: red;'>삭제</span></a>";													
+														html += "<a class='aCursorActive' onclick='deleteComment("+ this.commentIdx+ ");'><span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: #0D6EFD;'>삭제</span></a>";													
 													}													
 												}
 												html += "</div>";												
@@ -454,7 +471,7 @@
 												if(this.commentStatus>1){
 													
 												}else{												
-													html += "<p><small class='text-muted'><a onclick='voteUp("+this.commentIdx+");' style='color: red;'>추천▲</a> | <a onclick='commentspam("+this.commentIdx+");' style='color: dark;'>신고</a></small></p>";
+													html += "<p><small class='text-muted'><a onclick='voteUp("+this.commentIdx+");' style='color: #F29661;'><i class='fa-solid fa-hand-holding-heart'></i>추천</a> | <a onclick='commentspam("+this.commentIdx+");' style='color: dark;'><i class='fa-solid fa-user-large-slash'></i>신고</a></small></p>";
 												}	
 												html += "</div>";
 												html += "</div>";
@@ -507,7 +524,7 @@
 											
 											});
 							html += "<input type='hidden' value='${pager.pageNum }' id='pageNumValue'>"; 
-							html += "<div id='cocopageNumDiv' class='row justify-content-center'></div>"; 
+							
 							
 							$("#commentsListDiv").html(html);
 							pageNumberDisplay(result.boardCode,result.boardPostIdx,result.pager);
