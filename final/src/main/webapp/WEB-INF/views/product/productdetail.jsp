@@ -361,7 +361,7 @@ body {
 							<th>제품상태</th>
 							<th>거래방식</th>
 							<th>배송비</th>
-							<th>${room.roomId}카테고리</th>
+							<th>${session.roomId}카테고리</th>
 							
 						</tr>
 					</thead>
@@ -534,7 +534,7 @@ body {
 		 var sellerId = "${product.productUserid}";  // 판매자 ID (상품의 소유자)
 		 var roomId = "${roomId}";  // 채팅방 ID (이미 생성된 채팅방의 ID)
 		 var buyerId = loggedInUserId;
-		 
+		 var newRoomId;
 		 
 		    console.log("buyerId: " + loggedInUserId);
 		    console.log("sellerId: " + sellerId);
@@ -545,20 +545,23 @@ body {
 		 
 	        $("#openChatRoomBtn").click(function () {
 	            // 서버에 새로운 방 번호 요청 (방 번호 생성)
+	            if(!roomId){
 	            $.ajax({
 	                url:  "${pageContext.request.contextPath}/chatroom/createRoom",   // 방 번호를 생성하는 서버 URL
 	                type: "POST",             // 새로운 방 번호 생성은 POST 방식으로 요청
 	                contentType: "application/json",
-	                data: JSON.stringify({
-						"roomId": roomId,
-						"buyerId": loggedInUserId,
-						"sellerId": sellerId  // 판매자 ID
-					}),
-	                success: function (newRoomId) {
+	                 data: JSON.stringify({
+						
+						buyerId: loggedInUserId,
+						sellerId: sellerId  // 판매자 ID
+					}), 
+	                success: function (response) {
 	                    // 새로운 방 번호를 받아온 후, 그 방 번호로 채팅방 UI를 로드
+	                    var newRoomId = response;
 	                    console.log("Created roomId: " + newRoomId);  // 새로운 방 번호 출력
-	                    loadChatRoom(newRoomId);
-	                    //window.location.href = "${pageContext.request.contextPath}/chatroom/room/" + roomId;
+	                    //loadChatRoom(newRoomId); 
+	                   // window.location.href = newRoomId;  
+	                    window.location.href = "${pageContext.request.contextPath}/chatroom/room/" + newRoomId;
 	                    
 	                },
 	                
@@ -569,6 +572,9 @@ body {
 	                    console.error('Error creating chat room:', error);
 	                }
 	            });
+	            }else{
+	            	 window.location.href = "${pageContext.request.contextPath}/chatroom/room/" + roomId;  // 기존 방으로 이동	
+	            }
 	        });
 			
 	        // 방 번호를 받아 해당 방의 채팅방 UI를 로드하는 함수

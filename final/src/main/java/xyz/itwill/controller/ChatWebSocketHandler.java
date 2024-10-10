@@ -16,13 +16,13 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        String roomId = getRoomIdFromUrl(session);
+        
         
         // WebSocketSession에서 사용자 ID 가져오기 (session.getAttributes())
         String senderId = (String) session.getAttributes().get("userId");
         String sellerId = (String) session.getAttributes().get("sellerId");
         String buyerId = (String) session.getAttributes().get("buyerId");
-
+        String roomId = (String) session.getAttributes().get("roomId");
         // 사용자 ID가 제대로 세션에 저장되었는지 확인
         if (senderId == null || sellerId == null || buyerId == null) {
             System.out.println("필수 사용자 정보가 누락되었습니다. senderId: " + senderId + ", sellerId: " + sellerId + ", buyerId: " + buyerId);
@@ -46,21 +46,17 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        String roomId = roomSessionMap(session);
+        
 
-        if (roomId == null || roomId.isEmpty()) {
-            System.out.println("Invalid roomId: " + roomId);
-            return;
-        }
+      
 
         // URL 쿼리 파라미터에서 buyerId와 sellerId를 추출
         String userId = extractQueryParam(session.getUri().toString(), "userId");
         String buyerId = extractQueryParam(session.getUri().toString(), "buyerId");
         String sellerId = extractQueryParam(session.getUri().toString(), "sellerId");
-        String roomId = extractQueryParam(session.getUri().toString(), "sellerId");
-
+        String roomId = extractQueryParam(session.getUri().toString(), "roomId");  // roomId 추가
         // 필수 값 확인
-        if (userId == null || buyerId == null || sellerId == null) {
+        if (userId == null || buyerId == null || sellerId == null || roomId == null) {
             System.out.println("Buyer ID 또는 Seller ID가 누락되었습니다.");
             return;
         }
@@ -69,9 +65,10 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         session.getAttributes().put("userId", userId);
         session.getAttributes().put("buyerId", buyerId);
         session.getAttributes().put("sellerId", sellerId);
-
+        session.getAttributes().put("roomId", roomId);
+        
         System.out.println("roomId: " + roomId + ", buyerId: " + buyerId + ", sellerId: " + sellerId);
-
+        
         // 채팅방에 사용자 세션 추가
         roomSessionMap.computeIfAbsent(roomId, k -> new ConcurrentHashMap<>()).put(session.getId(), session);
     }

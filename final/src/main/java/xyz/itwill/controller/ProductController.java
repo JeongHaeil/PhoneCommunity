@@ -160,6 +160,7 @@ public class ProductController {
 		productService.removeProduct(productIdx);
 		return "redirect:/product/list";
 	}
+	
 	   // 상품 등록 처리
     @PostMapping("/chat")
     public String registerProduct(@ModelAttribute Product product, HttpSession session) {
