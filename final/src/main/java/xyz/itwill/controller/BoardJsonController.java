@@ -52,9 +52,10 @@ public class BoardJsonController {
 					 resultmap.put("boardAdmin", user.getUserId());
 				 }
 			}
+			resultmap.put("userId",user.getUserId());
 		}
 		
-		int pageSize=5;
+		int pageSize=10;
 		Map<String, Object> getcommentList=commentsService.getCommentsList(boardPostIdx, pageNum, pageSize);
 		List<Comments> commentList=(List<Comments>)getcommentList.get("commentsList");
 		Pager pager=(Pager)getcommentList.get("pager");
@@ -302,5 +303,12 @@ public class BoardJsonController {
 			boardService.BoardUpdateStatus3(boardPostIdx);
 		}
 		return "success";
+	}
+	
+	@GetMapping("/popular_side_board")
+	public Map<String, Object> popularBoardListByStar() {
+		Map<String, Object> resultMap=new HashMap<String, Object>();
+		resultMap.put("popularBoardList", boardService.getPopularBoardByStartUp());
+		return resultMap;
 	}
 }

@@ -110,7 +110,7 @@
     
     <button id="downloadExcelBtn">엑셀 다운로드</button>
     
-     <button id="openChatRoomBtn">채팅방열기</button>
+    
     
     
     <!-- 요금제 구분 테이블 -->
@@ -243,54 +243,7 @@ $(document).ready(function() {
                 });
 
                 
-                $(document).ready(function() {
-                    // 채팅방 열기 버튼 클릭 이벤트
-                	$('#openChatRoomBtn').click(function() {
-                		 var sellerId = 73;  // user123의 user_num
-                		    var buyerId = 65;   // tes123의 user_num
-                		    var productId = 1;  // 상품 ID
-						
-                		 /*    
-                		 // 서버에서 받아온 판매자 ID와 상품 ID를 동적으로 설정
-                	        var sellerId = $('#sellerId').val();  // 게시글의 작성자 ID
-                	        var productId = $('#productId').val();  // 게시글의 상품 ID
-                	        
-                	        // 현재 로그인한 사용자의 ID는 서버로부터 받아옵니다.
-                	        var buyerId = $('#buyerId').val();  // 로그인한 구매자 ID    
-                		     */
-                		    
-                		    
-                	    // 값이 제대로 설정되었는지 확인
-                	    console.log("sellerId: ", sellerId);
-                	    console.log("buyerId: ", buyerId);
-                	    console.log("productId: ", productId);
-
-                	    $.ajax({
-                	        url:  "<c:url value="/chat/chatroom/create"/>",
-                	        type: "POST",
-                	        data: {
-                	            sellerId: sellerId,
-                	            buyerId: buyerId,
-                	            productId: productId
-                	        },
-                	        beforeSend: function(xhr) {
-                                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-                            },
-                	        success: function(response) {
-                	        	console.log("Server response: ", response);
-                	        	
-                	            if (response.roomId) {
-                	                window.location.href = "<c:url value="/chat/chatroom/view"/>?sellerId=" + sellerId + "&buyerId=" + buyerId + "&productId=" + productId;
-                	            } else {
-                	            	 console.error("Error: ", response ? response.error : "No response received from server.");
-                	            }
-                	        },
-                	        error: function(xhr, status, error) {
-                	        	 console.error("AJAX error occurred: ", status, error);
-                	        }
-                	    });
-                	});
-                });
+               
                 
                 
                 

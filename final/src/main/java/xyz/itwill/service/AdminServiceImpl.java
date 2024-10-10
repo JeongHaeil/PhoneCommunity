@@ -50,9 +50,6 @@ public class AdminServiceImpl implements AdminService {
 	    return resultMap;
 	}
 	
-	
-	
-
 	//SpamBoard 에서 글 조회
 	@Transactional
 	@Override
@@ -67,6 +64,39 @@ public class AdminServiceImpl implements AdminService {
 		
 		return admin;
 	}
+	
+	@Transactional
+	@Override
+	public void updateUserStatusByUserId(int userId, int status) {
+		Map<String, Object> params  = new HashMap<String, Object>();
+		params.put("userId", userId);
+		params.put("status", status);
+		
+		adminDAO.updateUserStatusByUserId(params);
+	}
+	
+	@Transactional
+	@Override
+	public void updateBoardStatusByBoardPostIdx(int boardPostIdx, int status) {
+		Map<String, Object> params  = new HashMap<String, Object>();
+		params.put("boardPostIdx", boardPostIdx);
+		params.put("status", status);
+		
+		adminDAO.updateBoardStatusByBoardId(params);
+		
+	}
+
+	
+
+
+
+
+
+
+
+	
+
+
 
 
 }

@@ -2,12 +2,16 @@ package xyz.itwill.controller;
 
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +20,7 @@ import xyz.itwill.service.AdminService;
 
 //로그를 기록하기 위한 Lombok 어노테이션
 @Slf4j
-//Sptring MVC 컨트롤러로 지정
+//Spring MVC 컨트롤러로 지정
 @Controller
 //URL 경로 /super_admin에 매핑
 @RequestMapping("/super_admin")
@@ -34,7 +38,7 @@ public class AdminController {
 	}
 	
 
-	@RequestMapping(value = "/admin", method = RequestMethod.GET)
+	@GetMapping("/admin")
     public String spamBoardList(@RequestParam(defaultValue = "1") int pageNum,
                             @RequestParam(defaultValue = "10") int pageSize,
                             @RequestParam(defaultValue = "5") int blockSize,
@@ -59,7 +63,7 @@ public class AdminController {
         return "admin/admin_page"; // admin_page.jsp 페이지로 이동
     }
 	
-	@RequestMapping(value = "/admin/view", method = RequestMethod.GET)
+	@GetMapping("/admin/view")
 	public String spamBoardView(@RequestParam("boardPostIdx") int boardPostIdx,
 								Model model) {
 		
@@ -73,6 +77,25 @@ public class AdminController {
 	    model.addAttribute("post", post);
 	    
 	    return "admin/view_post"; // view_post.jsp 페이지로 이동
+	}
+	
+	@PutMapping("/admin/userStatus")
+	@ResponseBody
+	public ResponseEntity<String> updateUserStatus(@RequestParam int userId, @RequestParam int status) {
+		
+		adminService.updateUserStatusByUserId(userId, status);
+		
+		
+		return ResponseEntity.ok("사용자의 상태 변경을 성공하였습니다.");
+		
+	}
+	
+	@PutMapping("/admin/boardStatus")
+	@ResponseBody
+	public ResponseEntity<String> updateBoardStatus (@RequestParam int boardPostIdx, @RequestParam int status) {
+		adminService.updateBoardStatusByBoardPostIdx(boardPostIdx, status);
+		
+		return ResponseEntity.ok("게시물의 상태 변경을 성공하였습니다");
 	}
 	
 	

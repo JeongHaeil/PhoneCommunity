@@ -213,7 +213,7 @@ body {
 			</div>
 			<div>
 				<button class="btn btn-primary btn-sm"
-					onclick="location.href='${pageContext.request.contextPath}/register'">쓰기</button>
+					onclick="location.href='${pageContext.request.contextPath}/product/register'">쓰기</button>
 				<button class="btn btn-outline-secondary btn-sm" id="search-btn">검색</button>
 				<button class="btn btn-outline-secondary btn-sm">목록</button>
 			</div>
@@ -238,7 +238,7 @@ body {
 					<c:forEach var="product" items="${result.productList}">
 						<div class="col-md-3 col-sm-6 mb-4">
 							<a
-								href="${pageContext.request.contextPath}/detail?productIdx=${product.productIdx}"
+								href="${pageContext.request.contextPath}/product/detail?productIdx=${product.productIdx}"
 								class="text-decoration-none">
 								<div class="product-card">
 									<!-- 글 번호 표시 -->
@@ -266,9 +266,9 @@ body {
 									<div
 										class="product-footer d-flex align-items-center justify-content-between">
 										<div class="profile-info">
-											<img src="https://via.placeholder.com/24" alt="프로필 이미지"
-												class="rounded-circle" style="width: 24px; height: 24px;">
-											<span>${product.productUserid}</span>
+											
+											<span> 작성자 : ${product.productUsernickname}</span>
+
 										</div>
 										<div class="stats">
 											<span>💬 0</span> <span>👁️ ${product.productCount}</span>

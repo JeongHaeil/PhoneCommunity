@@ -55,7 +55,7 @@
 
 <select id="selectProductList" resultType="Product">
     SELECT * FROM (
-        SELECT rownum rn, product.*, users.user_id AS productUserid
+        SELECT rownum rn, product.*, users.user_nickname AS productUsernickname
         FROM (
             SELECT product_idx AS productIdx, product_user_id,
                    product_subject AS productSubject, product_register_date AS productRegisterDate,
@@ -71,4 +71,5 @@
         JOIN users ON product.product_user_id = users.user_id
     ) WHERE rn BETWEEN #{startRow} AND #{endRow}
 </select>
+
 </mapper>

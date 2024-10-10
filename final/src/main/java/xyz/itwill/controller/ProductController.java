@@ -28,7 +28,7 @@ import xyz.itwill.dto.Product;
 import xyz.itwill.service.ProductService;
 
 @Controller
-@RequestMapping
+@RequestMapping("/product")
 @RequiredArgsConstructor
 public class ProductController {
 	private final ProductService productService;
@@ -55,30 +55,32 @@ public class ProductController {
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String register(@ModelAttribute Product product, List<MultipartFile> productImage2,
-			Authentication authentication) throws IllegalStateException, IOException {
-		System.out.println("컨트롤러 실행");
+	        Authentication authentication) throws IllegalStateException, IOException {
+	    System.out.println("컨트롤러 실행");
 
-		if (authentication != null) {
-			CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-			product.setProductUserid(userDetails.getUserId());
-		}
+	    if (authentication != null) {
+	        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+	        product.setProductUserid(userDetails.getUserId());
+	    }
 
-		String uploadDirectory = context.getServletContext().getRealPath("/resources/uploadFile/freeboard_image");
-		List<String> filenameList = new ArrayList<>();
-		for (MultipartFile multipartFile : productImage2) {
-			if (!multipartFile.isEmpty()) {
-				String uploadFilename = UUID.randomUUID().toString() + "_" + multipartFile.getOriginalFilename();
-				File file = new File(uploadDirectory, uploadFilename);
-				multipartFile.transferTo(file);
-				filenameList.add(uploadFilename);
-				// 업로드된 파일명을 product 객체의 productImage 필드에 설정
-				product.setProductImage(uploadFilename);
-			}
-		}
+	    String uploadDirectory = context.getServletContext().getRealPath("/resources/uploadFile/freeboard_image");
+	    List<String> filenameList = new ArrayList<>();
+	    for (MultipartFile multipartFile : productImage2) {
+	        if (!multipartFile.isEmpty()) {
+	            String uploadFilename = UUID.randomUUID().toString() + "_" + multipartFile.getOriginalFilename();
+	            File file = new File(uploadDirectory, uploadFilename);
+	            multipartFile.transferTo(file);
+	            filenameList.add(uploadFilename);
+	            // 업로드된 파일명을 product 객체의 productImage 필드에 설정
+	            product.setProductImage(uploadFilename);
+	        }
+	    }
 
-		productService.addProduct(product);
-		return "redirect:/list";
+	    productService.addProduct(product);
+	    // 리다이렉트 경로 수정
+	    return "redirect:/product/list";
 	}
+
 
 	@RequestMapping("/detail")
 	public String detail(@RequestParam Map<String, Object> map, Model model) {

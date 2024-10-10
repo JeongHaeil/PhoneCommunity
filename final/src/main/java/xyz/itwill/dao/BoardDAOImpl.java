@@ -96,4 +96,34 @@ public class BoardDAOImpl implements BoardDAO{
 	public int updateBoardStatus3(int boardPostIdx) {
 		return sqlSession.getMapper(BoardMapper.class).updateBoardStatus3(boardPostIdx);
 	}
+
+	@Override
+	public Board getBoardRN(Map<String, Object> map) {
+		return sqlSession.getMapper(BoardMapper.class).getBoardRN(map);
+	}
+
+	@Override
+	public Board getRnUp(Map<String, Object> map) {
+		return sqlSession.getMapper(BoardMapper.class).getRnUp(map);
+	}
+
+	@Override
+	public Board getRnDown(Map<String, Object> map) {
+		return sqlSession.getMapper(BoardMapper.class).getRnDown(map);
+	}
+
+	@Override
+	public List<Board> selectNoticeList() {
+		return sqlSession.getMapper(BoardMapper.class).selectNoticeList();
+	}
+
+	@Override
+	public List<Board> selectPopularView() {
+		return sqlSession.getMapper(BoardMapper.class).selectPopularView();
+	}
+
+	@Override
+	public List<Board> selectPopularStar() {
+		return sqlSession.getMapper(BoardMapper.class).selectPopularStar();
+	}
 }

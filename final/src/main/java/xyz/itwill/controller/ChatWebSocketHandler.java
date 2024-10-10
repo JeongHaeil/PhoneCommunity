@@ -1,36 +1,85 @@
 package xyz.itwill.controller;
-import java.util.ArrayList;
-import java.util.List;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import javax.servlet.http.HttpSession;
+import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
+import xyz.itwill.dto.ChatMessages;
+
 public class ChatWebSocketHandler extends TextWebSocketHandler {
-	// 모든 세션을 저장할 리스트
-    private List<WebSocketSession> sessions = new ArrayList<>();
+
+    private Map<String, Map<String, WebSocketSession>> roomSessionMap = new ConcurrentHashMap<>();
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        // 연결이 완료되었을 때 세션을 추가
-        sessions.add(session);
-    }
+    public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        String roomId = getRoomIdFromUrl(session);
 
-    
-    @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        String payload = message.getPayload();
-        System.out.println("Received message: " + payload);
+        // WebSocketSession에서 사용자 ID 가져오기 (session.getAttributes())
+        String senderId = (String) session.getAttributes().get("userId");
 
-        // 받은 메시지를 연결된 모든 클라이언트에게 브로드캐스팅
-        for (WebSocketSession s : sessions) {
-            s.sendMessage(new TextMessage("Message from server: " + payload));
+        // 메시지를 받은 후 DB에 저장 (DB 처리 로직 추가)
+        saveChatMessage(roomId, message.getPayload(), senderId);
+
+        // 채팅방에 있는 사용자들에게 메시지 전달
+        if (roomSessionMap.containsKey(roomId)) {
+            for (WebSocketSession s : roomSessionMap.get(roomId).values()) {
+                s.sendMessage(new TextMessage(message.getPayload()));
+            }
         }
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, org.springframework.web.socket.CloseStatus status) throws Exception {
-        // 연결이 종료되었을 때 세션을 제거
-        sessions.remove(session);
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+    
+        String roomId = getRoomIdFromUrl(session);
+
+        // HTTP 세션에서 사용자 정보를 WebSocketSession에 저장
+        Map<String, Object> attributes = session.getAttributes();
+        HttpSession httpSession = (HttpSession) session.getAttributes().get("HTTP.SESSION");
+        //String userId = (String) httpSession.getAttribute("userId");
+        String userId = (String) session.getAttributes().get("userId");
+        // WebSocketSession에 사용자 정보 저장
+        session.getAttributes().put("userId", userId);
+        System.out.println("roomId: " + roomId); // 콘솔에서 roomId 값을 확인
+        // 채팅방에 사용자 세션 추가
+        
+        Integer buyerId = (Integer) httpSession.getAttribute("buyerId");
+        Integer sellerId = (Integer) httpSession.getAttribute("sellerId");
+        session.getAttributes().put("buyerId", buyerId);
+        session.getAttributes().put("sellerId", sellerId);
+        System.out.println("roomId: " + roomId);
+        System.out.println("buyerId: " + buyerId);
+        System.out.println("sellerId: " + sellerId);
+        
+        roomSessionMap.computeIfAbsent(roomId, k -> new ConcurrentHashMap<>()).put(session.getId(), session);
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        String roomId = getRoomIdFromUrl(session);
+
+        // 채팅방에서 사용자 세션 제거
+        if (roomSessionMap.containsKey(roomId)) {
+            roomSessionMap.get(roomId).remove(session.getId());
+        }
+    }
+
+    private void saveChatMessage(String roomId, String message, String senderId) {
+        // DB에 메시지 저장 로직 구현
+        ChatMessages chatMessage = new ChatMessages();
+        chatMessage.setRoomId(Integer.parseInt(roomId));
+        chatMessage.setMessage(message);
+        chatMessage.setSenderId(Integer.parseInt(senderId));  // String으로 받은 senderId 설정
+        // chatMessageService.insertChatMessage(chatMessage); // 서비스 호출
+    }
+
+    private String getRoomIdFromUrl(WebSocketSession session) {
+        String uri = session.getUri().toString();  // URI를 문자열로 가져옴
+        return uri.substring(uri.lastIndexOf("/") + 1);  // URL의 마지막 부분을 roomId로 추출
     }
 }

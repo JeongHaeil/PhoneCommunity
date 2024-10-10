@@ -12,6 +12,7 @@ import xyz.itwill.mapper.UserMapper;
 
 @Repository
 @RequiredArgsConstructor
+@Repository
 public class ChatUserDAOImpl implements ChatUserDAO{
 
 	private final SqlSession sqlSession;

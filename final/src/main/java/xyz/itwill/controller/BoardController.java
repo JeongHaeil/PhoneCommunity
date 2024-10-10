@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
 import xyz.itwill.auth.CustomUserDetails;
@@ -41,11 +42,10 @@ public class BoardController {
 	
 	
 	@RequestMapping("/boardlist/{boardCode}")
-	public String boardList(@PathVariable int boardCode, @RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "5") int pageSize
+	public String boardList(@PathVariable int boardCode, @RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "20") int pageSize
 			, @RequestParam(defaultValue = "board_user_id") String search, @RequestParam(defaultValue = "") String keyword, Model model) throws Exception {
 		Map<String, Object> map=boardService.getBoardList(boardCode, pageNum, pageSize, search, keyword);
 		String boardCodeTitle=boardService.getBoardCT(boardCode);
-										
 		model.addAttribute("boardCodeTitle", boardCodeTitle);
 		model.addAttribute("search", search);
 		model.addAttribute("keyword", keyword);
@@ -56,7 +56,7 @@ public class BoardController {
 	}
 	
 	@RequestMapping("/boarddetail/{boardCode}/{boardPostIdx}")
-	public String boarddetail(@PathVariable int boardPostIdx,@PathVariable int boardCode,@RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "5") int pageSize
+	public String boarddetail(@PathVariable int boardPostIdx,@PathVariable int boardCode,@RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "20") int pageSize
 			, @RequestParam(defaultValue = "board_user_id") String search, @RequestParam(defaultValue = "") String keyword, Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//쿠키저장
 		Cookie[] cookies=request.getCookies();
@@ -95,7 +95,26 @@ public class BoardController {
 		
 		
 		int commentCount=commentsService.getCommentsCount(boardPostIdx);
-		Board board=boardService.getboard(boardPostIdx);
+		Map<String, Object> insertmap=new HashMap<String, Object>();
+		insertmap.put("boardPostIdx", boardPostIdx);
+		insertmap.put("boardCode", boardCode);
+		Board board=boardService.getBoardRNumber(insertmap);
+		Map<String, Object> boardmap=new HashMap<String, Object>();
+		boardmap.put("boardCode", boardCode);
+		boardmap.put("rn", board.getRn());
+		Board upboard=boardService.getRnUp(boardmap);
+		Board downboard=boardService.getRnDown(boardmap);
+		//Board boards=boardService.getboard(boardPostIdx);
+		if(upboard==null) {
+			model.addAttribute("upboard", 0);	
+		}else {
+			model.addAttribute("upboard", upboard.getBoardPostIdx());					
+		}
+		if(downboard==null) {
+			model.addAttribute("downboard", 0);	
+		}else {
+			model.addAttribute("downboard", downboard.getBoardPostIdx());					
+		}							
 		if(board.getBoardImage()!=null&&!board.getBoardImage().equals("")) {
 			String list=board.getBoardImage().replaceAll("[\\[\\]]", "");;
 			List<String> imageArray=Arrays.asList(list.split(","));
@@ -128,7 +147,7 @@ public class BoardController {
 	
 	@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_SUPER_ADMIN')")
 	@RequestMapping(value ="/boardwrite/{boardCode}", method = RequestMethod.POST)
-	public String boardwrite(@PathVariable int boardCode, @ModelAttribute Board board,@RequestParam String boardtag, List<MultipartFile> uploaderFileList,HttpServletRequest request,Authentication authentication) throws IllegalStateException, IOException {
+	public String boardwrite(@PathVariable int boardCode, @ModelAttribute Board board,@RequestParam String boardtag, List<MultipartFile> uploaderFileList,HttpServletRequest request,Authentication authentication,RedirectAttributes attributes) throws IllegalStateException, IOException {
 		if(authentication != null) {			
 			CustomUserDetails user=(CustomUserDetails)authentication.getPrincipal();
 			board.setBoardUserId(user.getUserId());
@@ -150,7 +169,12 @@ public class BoardController {
 			board.setBoardCode(boardCode);
 			//board.setBoardContent(board.getBoardContent().replace("<","&lt;").replace(">","&gt;").replace("\n", "<br>"));
 			board.setBoardTitle(boardtag+" "+board.getBoardTitle().replace("<","&lt;").replace(">","&gt;"));
-			boardService.addFreeboard(board);			
+			if(board.getBoardContent().length()<=1300) {
+				boardService.addFreeboard(board);							
+			}else {
+				attributes.addAttribute("regetmessage","최대 허용 글자수를 초과하였습니다.");
+				return "redirect:/board/boardwrite/"+boardCode;
+			}
 		}else {
 			return "redirect:/user/login";	
 		}
@@ -159,7 +183,7 @@ public class BoardController {
 	
 	
 	@RequestMapping(value ="/boardModify/{boardCode}/{boardPostIdx}", method = RequestMethod.GET)
-	public String boardModify(@PathVariable int boardCode, @PathVariable int boardPostIdx, Model model,Authentication authentication) {	
+	public String boardModify(@PathVariable int boardCode, @PathVariable int boardPostIdx, Model model,Authentication authentication,@RequestParam(defaultValue = "") String regetmessage) {	
 		if(authentication != null) {
 			CustomUserDetails user=(CustomUserDetails)authentication.getPrincipal();
 			Board board=boardService.getboard(boardPostIdx);
@@ -174,6 +198,7 @@ public class BoardController {
 					model.addAttribute("boardtag", boardtag);				
 				}				
 				model.addAttribute("board", board);				
+				model.addAttribute("regetmessage", regetmessage);											
 				model.addAttribute("boardCode", boardCode);											
 			}else {
 				return "redirect:/user/login";
@@ -187,8 +212,9 @@ public class BoardController {
 	
 	@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_SUPER_ADMIN')")
 	@RequestMapping(value ="/boardModify/{boardCode}/{boardPostIdx}", method = RequestMethod.POST)
-	public String boardModify(@PathVariable int boardCode, @PathVariable int boardPostIdx,@RequestParam String boardtag,@ModelAttribute Board board,List<MultipartFile> uploaderFileList,HttpServletRequest request) throws IllegalStateException, IOException {
+	public String boardModify(@PathVariable int boardCode, @PathVariable int boardPostIdx,@RequestParam String boardtag,@ModelAttribute Board board,List<MultipartFile> uploaderFileList,HttpServletRequest request,RedirectAttributes attributes) throws IllegalStateException, IOException {
 		Board oldboard=boardService.getboard(boardPostIdx);
+		System.out.println("전달 내용길이="+oldboard.getBoardContent().length());
 		if(uploaderFileList!=null) {
 			String uploadDirectory=context.getServletContext().getRealPath("/resources/images/uploadFile/board");		
 			List<String> filenameList=new ArrayList<String>();
@@ -206,8 +232,13 @@ public class BoardController {
 				}
 			}
 		}
-		oldboard.setBoardTitle(boardtag+" "+board.getBoardTitle().replace("<","&lt;").replace(">","&gt;"));
-		oldboard.setBoardContent(board.getBoardContent());
+		oldboard.setBoardTitle(boardtag+" "+board.getBoardTitle().replace("<","&lt;").replace(">","&gt;"));			
+		if(oldboard.getBoardContent().length()<=1300) {
+			oldboard.setBoardContent(board.getBoardContent());
+		}else {
+			attributes.addAttribute("regetmessage","최대 허용 글자수를 초과하였습니다.");
+			return "redirect:/board/boardModify/"+boardCode+"/"+boardPostIdx;
+		}
 		boardService.updateFreeboard(oldboard);	
 		return "redirect:/board/boarddetail/"+boardCode+"/"+boardPostIdx;
 	}

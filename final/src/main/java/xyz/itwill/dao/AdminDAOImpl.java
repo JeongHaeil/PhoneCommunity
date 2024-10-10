@@ -30,7 +30,17 @@ public class AdminDAOImpl implements AdminDAO {
 	public int selectSpamBoardCount(Map<String, Object> map) {
 		return sqlSession.getMapper(AdminMapper.class).selectSpamBoardCount(map);
 	}
-	
-	
+
+	@Override
+	public Admin updateUserStatusByUserId(Map<String, Object> map) {
+		return sqlSession.getMapper(AdminMapper.class).updateUserStatusByUserId(map);
+	}
+
+	@Override
+	public Admin updateBoardStatusByBoardId(Map<String, Object> map) {
+		return sqlSession.getMapper(AdminMapper.class).updateBoardStatusByBoardPostIdx(map);
+	}
+
+
 	
 }

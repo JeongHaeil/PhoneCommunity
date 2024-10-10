@@ -33,4 +33,18 @@ public class ChatRoomsDAOImpl implements ChatRoomsDAO{
 		return sqlSession.selectOne("xyz.itwill.mapper.ChatRoomsMapper.getLastInsertedRoomId");
 	}
 
+
+	@Override
+	public int getSellerIdByProductId(String productId) {
+		// TODO Auto-generated method stub
+		return sqlSession.getMapper(ChatRoomsMapper.class).getSellerIdByProductId(productId);
+	}
+
+
+	@Override
+	public int generateNewRoomId() {
+		
+		return sqlSession.getMapper(ChatRoomsMapper.class).generateNewRoomId();
+	}
+
 }

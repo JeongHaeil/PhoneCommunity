@@ -52,10 +52,6 @@
 	</select>
 	
 	<select id="selectSpamBoardByNum" resultType="admin">
-	<!--  
-		select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam,user_nickname 
-		from Board join users on board_user_id=user_id  where board_post_idx=#{boardPostIdx}
-	-->
 			SELECT 
 	        b.*,
 	        u.*
@@ -68,6 +64,17 @@
 	        b.board_post_idx = #{boardPostIdx}
 	</select>
   	
+  	<update id="updateUserStatusByUserId">
+	    UPDATE users 
+	    SET user_status = #{status} 
+	    WHERE user_id = #{userId}
+	</update>
+	
+	<update id="updateBoardStatusByBoardPostIdx">
+	    UPDATE board 
+	    SET board_status = #{status} 
+	    WHERE board_post_idx = #{boardPostIdx}
+	</update>
   
   	
   </mapper>

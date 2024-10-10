@@ -25,10 +25,12 @@ import xyz.itwill.auth.CustomUserDetails;
 import xyz.itwill.dto.Board;
 import xyz.itwill.dto.Comments;
 import xyz.itwill.dto.Email;
+import xyz.itwill.dto.Product;
 import xyz.itwill.dto.User;
 import xyz.itwill.service.BoardService;
 import xyz.itwill.service.CommentsService;
 import xyz.itwill.service.EmailService;
+import xyz.itwill.service.ProductService;
 import xyz.itwill.service.UserService;
 import xyz.itwill.util.ExperienceUtil;
 
@@ -43,6 +45,7 @@ public class UserController {
     private final PasswordEncoder passwordEncoder; // PasswordEncoder 주입
     private final BoardService boardService; // BoardService 주입
     private final CommentsService commentsService; // CommentsService 주입
+    private final ProductService productService; // ProductService 추가
     
 
     // 홈 페이지 요청을 처리하는 메서드
@@ -496,6 +499,31 @@ public class UserController {
         }
         return userInfo;
     }
-    
+ // 중고장터 게시물 보기 페이지로 이동
+    @RequestMapping(value = "/myProducts", method = RequestMethod.GET)
+    public String showMyProductsPage(Authentication authentication, Model model) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/user/login"; // 인증되지 않은 사용자는 로그인 페이지로 리다이렉트
+        }
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String userId = userDetails.getUserId(); // 로그인한 사용자의 ID 가져오기
+
+        // 사용자 ID를 Map에 추가
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("userId", userId);
+
+        // 사용자가 작성한 중고장터 게시물 목록을 가져옴
+        Map<String, Object> productListMap = productService.getProductList(paramMap);
+        List<Product> productList = (List<Product>) productListMap.get("productList"); // 게시물 목록 추출
+
+        // 데이터 확인을 위해 로그 추가
+        log.info("중고장터 게시물 목록: " + productList);
+
+        model.addAttribute("productList", productList); // 모델에 중고장터 게시물 목록 추가
+
+        return "user/myProduct"; // myProduct.jsp로 이동
+    }
+
 }
 
