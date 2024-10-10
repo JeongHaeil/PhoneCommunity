@@ -27,4 +27,7 @@ public class Comments {
 	private String commentReuser;
 	private String userNickname;
 	
+	// 추가: 게시글 상태
+	private int boardStatus;
+	
 }
