@@ -168,7 +168,7 @@ public class UserServiceImpl implements UserService {
         // 비밀번호 업데이트
         userDAO.updateUser(user);
 
-    
+    }
 
  // 최근 로그인 시간을 업데이트하는 메서드 구현
 

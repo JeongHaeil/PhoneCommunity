@@ -23,3 +23,4 @@ public interface UserDAO {
     // 최근 로그인 시간 업데이트 메서드 추가
     int updateLastLogin(String userId);
 
+}

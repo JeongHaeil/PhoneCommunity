@@ -30,7 +30,7 @@ public interface BoardService {
     Board getBoardDetail(int boardPostIdx, int boardCode);
 
 
-    Board getRnDown(Map<String, Object> map);
+
 
     List<Board> getNoiceBoardList();
     List<Board> getPopularBoardByViewCount();
