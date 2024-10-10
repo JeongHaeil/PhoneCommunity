@@ -60,7 +60,7 @@
    
 <!-- WebSocket 핸들러 매핑 -->
 <websocket:handlers>
-    <websocket:mapping path="/chat" handler="chatWebSocketHandler"/>
+    <websocket:mapping path="/ws/chat" handler="chatWebSocketHandler"/>
      <websocket:handshake-interceptors>
         <beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
     </websocket:handshake-interceptors>

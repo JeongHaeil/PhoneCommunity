@@ -3,6 +3,8 @@ package xyz.itwill.service;
 import java.util.Map;
 
 import xyz.itwill.dto.ChatRooms;
+import xyz.itwill.dto.Product;
+import xyz.itwill.dto.User;
 
 public interface ChatRoomsService {
 
@@ -15,5 +17,6 @@ public interface ChatRoomsService {
 	int getLastInsertedRoomId();
 	
 	int generateNewRoomId();
+
 	
 }

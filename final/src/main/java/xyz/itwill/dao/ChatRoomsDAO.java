@@ -15,4 +15,5 @@ public interface ChatRoomsDAO {
 	int generateNewRoomId();
 	
 	int getSellerIdByProductId(String productId);
+
 }
