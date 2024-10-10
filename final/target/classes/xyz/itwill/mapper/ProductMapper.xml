@@ -16,11 +16,20 @@
         )
     </insert>
 
-    <update id="updateProduct">
-        UPDATE product 
-        SET product_subject = #{productSubject}, product_content = #{productContent} 
-        WHERE product_idx = #{productIdx}
-    </update>
+  <update id="updateProduct" parameterType="product">
+  UPDATE product  <!-- 'products'에서 'product'로 수정 -->
+  SET 
+      product_subject = #{productSubject},
+      product_price = #{productPrice},
+      product_model_status = #{productModelStatus},
+      product_content = #{productContent},
+      product_image = #{productImage},
+      product_mode = #{productMode},
+      product_delivery = #{productDelivery},
+      product_category = #{productCategory}
+  WHERE product_idx = #{productIdx}
+</update>
+
     
     <update id="updateProductCount">
     UPDATE product
@@ -33,7 +42,7 @@
     </delete>
 
     <select id="selectProductByNum" resultType="Product">
-        SELECT product_user_id AS productUserid, product_subject AS productSubject, 
+        SELECT product_user_id AS productUserid, product_idx AS productIdx ,product_subject AS productSubject, 
                product_content AS productContent, product_image AS productImage, 
                product_count AS productCount, product_mode AS productMode, 
                product_price AS productPrice, product_model_status AS productModelStatus, 
@@ -60,7 +69,7 @@
             SELECT product_idx AS productIdx, product_user_id,
                    product_subject AS productSubject, product_register_date AS productRegisterDate,
                    product_count AS productCount, product_mode AS productMode,
-                   product_price AS productPrice
+                   product_price AS productPrice, PRODUCT_IMAGE  as productImage
             FROM product
             <if test="keyword != null and keyword != ''">
                 <bind name="word" value="'%' + keyword + '%'" />

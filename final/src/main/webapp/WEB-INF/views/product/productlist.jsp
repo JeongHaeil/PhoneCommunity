@@ -87,6 +87,7 @@ body {
 .sidebar {
 	flex: 1;
 }
+
 /* 상품목록 스타일 */
 .product-list {
 	margin-top: 20px;
@@ -99,13 +100,13 @@ body {
 	background-color: #fff;
 	transition: transform 0.3s ease, box-shadow 0.3s ease;
 	height: auto;
-	max-width:220px;
+	max-width: 220px;
 }
 
-
 .img-fluid {
-	width: 100%;
-	height: auto;
+	width: 100%; /* 가로 크기는 100%로 설정하여 카드의 전체 폭에 맞춤 */
+	height: 400px; /* 고정된 세로 크기 설정 */
+	object-fit: cover; /* 이미지 비율을 유지하면서 공간에 맞춤 */
 }
 
 .product-card:hover {
@@ -155,6 +156,7 @@ body {
 		margin-bottom: 20px;
 	}
 }
+
 /* Pagination 스타일 */
 .pagination-wrapper {
 	display: flex;
@@ -192,6 +194,7 @@ body {
 	color: blue;
 }
 </style>
+
 </head>
 <body>
 	<div class="container my-4">
@@ -246,8 +249,8 @@ body {
 										style="font-size: 12px; margin-bottom: 5px;">글 번호:
 										${product.productIdx}</div>
 									<img
-										src="${pageContext.request.contextPath}/upload/${product.productImage}"
-										alt="상품 이미지" class="img-fluid">
+										src="${pageContext.request.contextPath}/resources/images/${product.productImage}"
+										alt="상품 이미지" width="100px">
 									<div class="product-meta">
 										<span class="text-muted">판매</span>, <span>${product.productRegisterdate}</span>
 									</div>
@@ -266,14 +269,13 @@ body {
 									<div
 										class="product-footer d-flex align-items-center justify-content-between">
 										<div class="profile-info">
-											
 											<span> 작성자 : ${product.productUsernickname}</span>
-
 										</div>
 										<div class="stats">
-											<span>💬 0</span> <span>👁️ ${product.productCount}</span>
+											<span>👁️ ${product.productCount}</span>
 										</div>
 									</div>
+
 								</div>
 							</a>
 
