@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -49,6 +50,10 @@
             font-size: 1rem;
             color: #999;
         }
+        a.disabled {
+            color: #999;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -69,23 +74,60 @@
                 <th>날짜</th>
                 <th>조회 수</th>
                 <th>추천 수</th>
+                <th>상태</th>
             </tr>
         </thead>
         <tbody>
             <c:choose>
                 <c:when test="${empty postList}">
                     <tr>
-                        <td colspan="5" class="no-post-message">작성한 글이 없습니다.</td>
+                        <td colspan="6" class="no-post-message">작성한 글이 없습니다.</td>
                     </tr>
                 </c:when>
                 <c:otherwise>
                     <c:forEach var="post" items="${postList}" varStatus="status">
                         <tr class="post-item">
-                            <td>${status.index + 1}</td>
-                            <td><a href="/post/${post.boardPostIdx}?${_csrf.parameterName}=${_csrf.token}">${post.boardTitle}</a></td>
+                            <td>${(pager.pageNum - 1) * pager.pageSize + status.index + 1}</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${post.boardStatus == 1}">
+                                        <a href="${pageContext.request.contextPath}/board/boarddetail/${post.boardCode != 0 ? post.boardCode : 10}/${post.boardPostIdx}?pageNum=${pager.pageNum}&search=board_user_id&keyword=">
+                                            ${post.boardTitle}
+                                        </a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="disabled">게시글 삭제 또는 제재로 접근 불가</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
                             <td>${post.boardRegisterDate}</td>
-                            <td>${post.boardCount}</td>
-                            <td>${post.boardStarup}</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${post.boardCount > 0}">
+                                        ${post.boardCount}
+                                    </c:when>
+                                    <c:otherwise>
+                                        없음
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${post.boardStarup > 0}">
+                                        ${post.boardStarup}
+                                    </c:when>
+                                    <c:otherwise>
+                                        없음
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${post.boardStatus == 1}">정상</c:when>
+                                    <c:when test="${post.boardStatus == 0}">삭제됨</c:when>
+                                    <c:when test="${post.boardStatus == 3}">제재 상태</c:when>
+                                </c:choose>
+                            </td>
                         </tr>
                     </c:forEach>
                 </c:otherwise>

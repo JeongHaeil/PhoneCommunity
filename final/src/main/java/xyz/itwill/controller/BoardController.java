@@ -29,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import lombok.RequiredArgsConstructor;
 import xyz.itwill.auth.CustomUserDetails;
 import xyz.itwill.dto.Board;
+import xyz.itwill.dto.Comments;
 import xyz.itwill.service.BoardService;
 import xyz.itwill.service.CommentsService;
 
@@ -258,4 +259,58 @@ public class BoardController {
 		}
 		return "redirect:/board/boardlist/"+boardCode;
 	}
+	
+	// 마이페이지 작성 글 제목 클릭시 이동 경로 수정
+	@RequestMapping("/post/{boardCode}/{boardPostIdx}")
+	public String showPostDetail(@PathVariable int boardCode, @PathVariable int boardPostIdx, Model model) {
+	    // boardCode가 0일 경우 기본값 설정
+	    if (boardCode == 0) {
+	        boardCode = 10; // 예시로 기본값 설정
+	    }
+
+	    // 게시물 정보를 가져옵니다.
+	    Board post = boardService.getboard(boardPostIdx);
+
+	    // 게시물이 없을 경우 NullPointerException 방지
+	    if (post == null) {
+	        return "redirect:/error"; // 게시물이 없을 경우 에러 페이지로 리다이렉트
+	    }
+
+	    model.addAttribute("post", post);
+	    model.addAttribute("boardCode", boardCode);
+
+	    return "board/boarddetail"; // 게시물 상세보기로 이동
+	}
+	
+	// 댓글 클릭 시 게시글로 이동하는 메소드 수정
+	@RequestMapping("/comment/{commentIdx}")
+	public String viewCommentPost(@PathVariable int commentIdx, Model model) {
+	    // 댓글 정보를 가져옵니다.
+	    Comments comment = commentsService.getCommentByNum(commentIdx);
+	    
+	    // 댓글이 존재하지 않으면 에러 페이지로 리다이렉트
+	    if (comment == null) {
+	        return "redirect:/error";
+	    }
+
+	    // 댓글이 달린 게시글의 번호를 가져옵니다.
+	    int boardPostIdx = comment.getCommentBoardIdx();
+
+	    // 게시글의 boardCode를 가져옵니다.
+	    Board board = boardService.getboard(boardPostIdx);
+
+	    // 게시글이 존재하지 않으면 에러 페이지로 리다이렉트
+	    if (board == null) {
+	        return "redirect:/error"; // 게시글이 없을 경우 에러 페이지로 이동
+	    }
+
+	    // 여기서 부모 댓글의 상태를 무시하고 계속 진행
+	    int boardCode = board.getBoardCode();
+
+	    // 게시글 상세 페이지로 리다이렉트
+	    return "redirect:/board/boarddetail/" + boardCode + "/" + boardPostIdx;
+	}
+
+
+
 }

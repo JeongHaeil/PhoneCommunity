@@ -12,9 +12,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+
+import lombok.RequiredArgsConstructor;
 import xyz.itwill.dao.UserDAO; // UserDAO 임포트 추가
 import xyz.itwill.dto.User; // User DTO 임포트 추가
-import lombok.RequiredArgsConstructor;
 
 // 인증 성공 후 실행될 기능을 제공하기 위한 클래스
 @Component
@@ -46,15 +47,20 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
         String username = authentication.getName();
         User user = userDAO.selectUserByUserId(username); // UserDAO를 통해 사용자 정보 조회
 
-     // 사용자 정보 및 권한을 세션에 저장
+        // 사용자 정보 및 권한을 세션에 저장
         if (user != null) {
             request.getSession().setAttribute("userLevel", user.getUserLevel()); // 사용자 레벨 저장
             request.getSession().setAttribute("roleNames", roleNames.toArray(new String[0])); // 권한 배열 저장
             
+            // 최근 로그인 시간 업데이트
+            userDAO.updateLastLogin(user.getUserId()); // 최근 로그인 시간 업데이트 메서드 호출
+            
             // 디버깅 로그 추가
             System.out.println("User Level: " + user.getUserLevel());
             System.out.println("User Roles: " + roleNames);
+            System.out.println("Last Login Time Updated for User: " + user.getUserId());
         }
+
         // 권한에 따라 리다이렉트
         if (roleNames.contains("ROLE_SUPER_ADMIN")) {
             response.sendRedirect(request.getContextPath() + "/super_admin/");
