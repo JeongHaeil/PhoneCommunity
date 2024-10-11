@@ -106,9 +106,10 @@
 
 <update id="updateUserExperience">
     UPDATE users
-    SET user_experience = #{userExperience}
+    SET user_experience = #{userExperience}, user_level = #{userLevel}
     WHERE user_id = #{userId}
 </update>
+
 
 <update id="updateLastLogin" parameterType="string">
     UPDATE users 
