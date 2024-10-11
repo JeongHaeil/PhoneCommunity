@@ -17,7 +17,7 @@
 		 	<when test="keyword != null and keyword != ''">
 		 		<choose>
 		 			<when test="boardCode==1">
-		 		JOIN users ON board_user_id = user_id WHERE ${search} like '%'||#{keyword}||'%' and boardStatus=1
+		 		JOIN users ON board_user_id = user_id WHERE ${search} like '%'||#{keyword}||'%' and board_status=1
 		 			</when>
 		 			<otherwise>
 		 		JOIN users ON board_user_id = user_id WHERE ${search} like '%'||#{keyword}||'%' and board_code=#{boardCode} and board_status=1
@@ -56,9 +56,18 @@
 			<otherwise>
 				<choose>
 					<when test="boardCode==1">
-					select * from (select rownum rn, uxb.*,(SELECT COUNT(*) FROM comments WHERE comment_board_idx = uxb.board_post_idx AND comment_status >= 1)cocain from (select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam 
-					,user_nickname from Board join users on board_user_id=user_id where ${search} like '%'||#{keyword}||'%' and board_status=1 order by board_post_idx desc) uxb)
-					 where rn between #{startRow} and #{endRow}	
+						<choose>
+							<when test="search=='user_nickname'">
+								select * from (select rownum rn, uxb.*,(SELECT COUNT(*) FROM comments WHERE comment_board_idx = uxb.board_post_idx AND comment_status >= 1)cocain from (select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam 
+								,user_nickname from Board join users on board_user_id=user_id where ${search}=#{keyword} and board_status=1 order by board_post_idx desc) uxb)
+								 where rn between #{startRow} and #{endRow}								
+							</when>
+							<otherwise>							
+								select * from (select rownum rn, uxb.*,(SELECT COUNT(*) FROM comments WHERE comment_board_idx = uxb.board_post_idx AND comment_status >= 1)cocain from (select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam 
+								,user_nickname from Board join users on board_user_id=user_id where ${search} like '%'||#{keyword}||'%' and board_status=1 order by board_post_idx desc) uxb)
+								 where rn between #{startRow} and #{endRow}	
+							</otherwise>
+						</choose>
 					</when>
 					<otherwise>
 					select * from (select rownum rn, uxb.*,(SELECT COUNT(*) FROM comments WHERE comment_board_idx = uxb.board_post_idx AND comment_status >= 1)cocain from (select board_post_idx, board_user_id, board_title, board_content, board_image, board_register_date, board_update_date, board_ip , board_count, board_starup, board_stardown, board_status, board_code, board_spam 
