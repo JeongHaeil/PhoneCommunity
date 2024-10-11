@@ -134,7 +134,7 @@ public class ProductController {
 				product.setProductImage(existingProduct.getProductImage());
 			}
 			productService.modifyProduct(product); // 상품 정보 수정
-		}
+		} 
 
 		return "redirect:/product/detail?productIdx=" + product.getProductIdx();
 	}
