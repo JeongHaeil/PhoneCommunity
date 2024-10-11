@@ -48,6 +48,13 @@ public class ChatRoomsDAOImpl implements ChatRoomsDAO{
 	}
 
 
+	@Override
+	public int findExistingRoom(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return sqlSession.getMapper(ChatRoomsMapper.class).findExistingRoom(params);
+	}
+
+
 	
 
 }

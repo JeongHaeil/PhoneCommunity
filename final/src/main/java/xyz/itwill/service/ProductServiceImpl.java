@@ -80,5 +80,6 @@ public class ProductServiceImpl implements ProductService {
         productDAO.updateProductCount(productIdx);
     }
 
+	
  
 }

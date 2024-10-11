@@ -15,8 +15,9 @@ public interface ChatRoomsService {
 	ChatRooms getChatRooms(Map<String, Object> map);
 	
 	int getLastInsertedRoomId();
+
 	
 	int generateNewRoomId();
 
-	
+	int findExistingRoom(String buyerId, String sellerId, int productId);
 }
