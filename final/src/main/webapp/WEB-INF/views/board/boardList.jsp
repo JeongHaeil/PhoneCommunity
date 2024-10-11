@@ -8,6 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <title>게시판</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style type="text/css">
     #BoardTitleLabel {
       font-family: 'Arial', sans-serif;
@@ -44,7 +45,7 @@
    	 		max-width: 1320px;
  		}
  	}
- 	@media (max-width: 900px) {
+ 	@media (max-width: 1200px) {
 	    .sideHotboardList {
 	        display: none; 
    		 }
@@ -120,7 +121,10 @@
         right: 40px; 
         z-index: 1000;
         box-sizing: border-box;
+        border: 1px solid #ddd;
+        padding: 4px;     
     }
+
     .sideHotboard {
         white-space: nowrap;       
         overflow: hidden;          
@@ -133,9 +137,38 @@
     }
     .tdboardWriter {
         white-space: nowrap;       
-        overflow: hidden;          
+        /* overflow: hidden;  */         
         text-overflow: ellipsis;
     }
+    
+<!--작성자 클릭시 드랍다운 관련 시작 css--> 
+     #WriterdropDiv {
+        position: relative;  /* 부모 요소에 position: relative 추가 */
+    }
+        #WriterdropUl {
+        width:60px;
+        position: absolute;  /* 드롭다운 메뉴를 다른 요소들 위에 절대적으로 배치 */
+        z-index: 1050;       /* 기본 Bootstrap z-index보다 높게 설정 */
+    }
+    /* 화살표를 숨기기 */
+.Wirterbtn::after {
+    display: none !important;  /* 중요도를 높여서 강제로 숨깁니다 */
+}
+
+/* 다른 방법: 화살표 스타일을 없애기 */
+.Wirterbtn {
+    padding-right: 0; /* 오른쪽 패딩을 없애서 화살표 공간을 제거 */
+}
+
+ .Wirterbtn {
+    text-decoration: none !important;  /* 밑줄 제거 */ 
+    font-size: 12px !important;
+}
+
+.Wirterbtn:hover, .Wirterbtn:focus {
+    text-decoration: none !important;  /* 호버 및 포커스 상태에서 밑줄 제거 */
+}
+<!--작성자 클릭시 드랍다운 관련 끝 css-->
 </style>
 </head>
 <body>
@@ -143,7 +176,21 @@
 	
 	<%-- =========타이틀 출력(시작)===== --%>
 	<div class="mt-10">
-	<h1 class=text-center id="BoardTitleLabel">${boardCodeTitle }</h1>
+	<c:choose>
+		<c:when test="${boardCode==1 }">
+			<c:choose>
+				<c:when test="${search=='user_nickname' }">
+					<h1 class=text-center id="BoardTitleLabel">${keyword}님의 작성글</h1>										
+				</c:when>
+				<c:otherwise>
+					<h1 class=text-center id="BoardTitleLabel">전체글</h1>						
+				</c:otherwise>
+			</c:choose>
+		</c:when>
+		<c:otherwise>
+			<h1 class=text-center id="BoardTitleLabel">${boardCodeTitle }</h1>		
+		</c:otherwise>
+	</c:choose>
     </div>
 	<%-- =========타이틀 출력(끝)===== --%>
     
@@ -182,9 +229,9 @@
 				        <form id="searchForm" method="get" class="d-flex "> 
 				            <input id="code" type="hidden" name="boardCode" value="${boardCode }" disabled="disabled">
 				            <select name="search" id="searchSelect" class="">
-				                <option value="user_nickname" <c:if test="${search }=='user_nickname'"> selected </c:if>>&nbsp;작성자&nbsp;</option>
-				                <option value="board_title" <c:if test="${search }=='board_title'"> selected </c:if>>&nbsp;제목&nbsp;</option>
-				                <option value="board_content" <c:if test="${search }=='board_content'"> selected </c:if>>&nbsp;내용&nbsp;</option>
+				                <option value="user_nickname" <c:if test="${search =='user_nickname' }"> selected </c:if>>&nbsp;작성자&nbsp;</option>
+				                <option value="board_title" <c:if test="${search=='board_title' }"> selected </c:if>>&nbsp;제목&nbsp;</option>
+				                <option value="board_content" <c:if test="${search=='board_content' }"> selected </c:if>>&nbsp;내용&nbsp;</option>
 				            </select>
 				            <input type="text" name="keyword" value="${keyword }" id="keywordInput" placeholder="검색..">
 				            <button id="boardSearchBtn" class="btn btn-dark btn-sm"  type="submit">검색</button>
@@ -223,9 +270,20 @@
 		    								</c:choose>
 		    								<td class="tdboardTitle" style="color: #333; cursor: pointer;" 
 											    onclick="location.href='<c:url value='/board/boarddetail/${boards.boardCode }/${boards.boardPostIdx }'/>?pageNum=${pager.pageNum}&search=${search }&keyword=${keyword }'">
-											    &nbsp;&nbsp;${boards.boardTitle}<c:if test="${boards.cocain !=0}"> &nbsp;[${boards.cocain }]</c:if>
+											    &nbsp;&nbsp;${boards.boardTitle}<c:if test="${boards.cocain !=0}"><span style="color: #A566FF;"> &nbsp;[${boards.cocain }]</span></c:if>
 											</td>
-		    								<td class="tdboardWriter">${boards.userNickname }</td>
+		    								 <td class="tdboardWriter">
+					                                <!-- 작성자 클릭 시 드롭다운 표시 -->
+					                                <div class="dropdown" id='WriterdropDiv'>
+					                                    <button class="btn btn-link dropdown-toggle Wirterbtn" style="color: black;" type="button" id="dropdownMenuButton-${boards.boardPostIdx}" data-bs-toggle="dropdown" aria-expanded="false">
+					                                        ${boards.userNickname}
+					                                    </button>
+					                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-${boards.boardPostIdx}" id="WriterdropUl">					                                       					                                       
+					                                        <li><a class="dropdown-item" href="<c:url value='/board/boardlist/1'/>?&search=user_nickname&keyword=${boards.userNickname }">작성글 전체보기</a></li>
+															<%--추가 하려면 위에꺼 복 붙 --%>	
+					                                    </ul>
+					                                </div>
+					                            </td>
 		    								<td>${boards.boardRegisterDate }</td>
 		    								<td>${boards.boardCount }</td>
 		    							</tr>
@@ -282,9 +340,9 @@
 				        <form id="searchForm" method="get" class="d-flex "> 
 				            <input id="code" type="hidden" name="boardCode" value="${boardCode }" disabled="disabled">
 				            <select name="search" id="searchSelect" class="">
-				                <option value="user_nickname" <c:if test="${search }=='user_nickname'"> selected </c:if>>&nbsp;작성자&nbsp;</option>
-				                <option value="board_title" <c:if test="${search }=='board_title'"> selected </c:if>>&nbsp;제목&nbsp;</option>
-				                <option value="board_content" <c:if test="${search }=='board_content'"> selected </c:if>>&nbsp;내용&nbsp;</option>
+				                <option value="user_nickname" <c:if test="${search =='user_nickname' }"> selected </c:if>>&nbsp;작성자&nbsp;</option>
+				                <option value="board_title" <c:if test="${search=='board_title' }"> selected </c:if>>&nbsp;제목&nbsp;</option>
+				                <option value="board_content" <c:if test="${search=='board_content' }"> selected </c:if>>&nbsp;내용&nbsp;</option>
 				            </select>
 				            <input type="text" name="keyword" value="${keyword }" id="keywordInput" placeholder="검색..">
 				            <button id="boardSearchBtn" class="btn btn-dark btn-sm"  type="submit">검색</button>
@@ -295,17 +353,17 @@
         </div>
         <%-- 사이드  --%>
         <div class="col-md-3 sideHotboardList">
-            <h2>오늘의 인기글</h2>
-            <ul class="list-group" id="popularSideBoard">
-            </ul>
+            <h2><i class="fas fa-fire" style="font-size: 50px; color: orange;"></i>오늘의 인기글</h2>
+            <div class="" id="popularSideBoard">
+            </div>
         </div>
 		
         
     </div>
 </div>
 
-<!--  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --> 
 <!--  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script> -->
 <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 
@@ -332,7 +390,7 @@ function popularSideBoard() {
 		    return;
 		}else{
 			$(result.popularBoardList).each(function(index) {
-			html +="<li class='list-group-item sideHotboard'>["+(index+1)+"]. <a href='<c:url value='/board/boarddetail/"+this.boardCode+"/"+this.boardPostIdx+"'/>'>"+this.boardTitle+"</a> </li>";
+			html +="<li class='list-group-item sideHotboard'>"+(index+1)+". <a class='	' href='<c:url value='/board/boarddetail/"+this.boardCode+"/"+this.boardPostIdx+"'/>'>"+this.boardTitle+"</a> </li>";
 			});
 		}
 		$("#popularSideBoard").html(html);

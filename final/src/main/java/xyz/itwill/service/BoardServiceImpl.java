@@ -36,7 +36,9 @@ public class BoardServiceImpl implements BoardService {
 		Map<String, Object> pageMap=new HashMap<String, Object>();
 		pageMap.put("boardCode", boardCode);
 		pageMap.put("startRow", pager.getStartRow());
-		pageMap.put("endRow", pager.getEndRow());		
+		pageMap.put("endRow", pager.getEndRow());
+		pageMap.put("search", search);
+		pageMap.put("keyword", keyword);
 		List<Board> boardLists=boardDAO.selectBoardList(pageMap);
 		List<Board> boardList=new ArrayList<Board>();
 		if(boardLists!=null) {
