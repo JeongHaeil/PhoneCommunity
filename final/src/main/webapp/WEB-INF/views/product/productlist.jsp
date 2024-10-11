@@ -240,7 +240,7 @@ body {
 				<div class="row product-list">
 					<c:forEach var="product" items="${result.productList}">
 						<div class="col-md-3 col-sm-6 mb-4">
-							<a
+							<a 
 								href="${pageContext.request.contextPath}/product/detail?productIdx=${product.productIdx}"
 								class="text-decoration-none">
 								<div class="product-card">
