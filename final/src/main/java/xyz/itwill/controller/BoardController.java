@@ -32,6 +32,7 @@ import xyz.itwill.dto.Board;
 import xyz.itwill.dto.Comments;
 import xyz.itwill.service.BoardService;
 import xyz.itwill.service.CommentsService;
+import xyz.itwill.service.UserService;
 
 @Controller
 @RequestMapping("/board")
@@ -40,6 +41,7 @@ public class BoardController {
 	private final BoardService boardService;
 	private final CommentsService commentsService;
 	private final WebApplicationContext context;
+	private final UserService userService;
 	
 	
 	@RequestMapping("/boardlist/{boardCode}")
@@ -148,38 +150,43 @@ public class BoardController {
 	
 	@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_SUPER_ADMIN')")
 	@RequestMapping(value ="/boardwrite/{boardCode}", method = RequestMethod.POST)
-	public String boardwrite(@PathVariable int boardCode, @ModelAttribute Board board,@RequestParam String boardtag, List<MultipartFile> uploaderFileList,HttpServletRequest request,Authentication authentication,RedirectAttributes attributes) throws IllegalStateException, IOException {
-		if(authentication != null) {			
-			CustomUserDetails user=(CustomUserDetails)authentication.getPrincipal();
-			board.setBoardUserId(user.getUserId());
-			
-			String uploadDirectory=context.getServletContext().getRealPath("/resources/images/uploadFile/board");
-			List<String> filenameList=new ArrayList<String>();
-			for(MultipartFile multipartFile : uploaderFileList) {
-				if(!multipartFile.isEmpty()) {
-					String uploadFilename=UUID.randomUUID().toString()+"_"+multipartFile.getOriginalFilename();
-					File file=new File(uploadDirectory,uploadFilename);
-					multipartFile.transferTo(file);
-					filenameList.add(uploadFilename);
-				}			
-			}
-			if(!filenameList.isEmpty()) {			
-				board.setBoardImage(filenameList.toString());
-			}
-			board.setBoardIp(request.getRemoteAddr());
-			board.setBoardCode(boardCode);
+	public String boardwrite(@PathVariable int boardCode, @ModelAttribute Board board, @RequestParam String boardtag, List<MultipartFile> uploaderFileList, HttpServletRequest request, Authentication authentication, RedirectAttributes attributes) throws IllegalStateException, IOException {
+	    if (authentication != null) {            
+	        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
+	        board.setBoardUserId(user.getUserId());
+	        
+	        String uploadDirectory = context.getServletContext().getRealPath("/resources/images/uploadFile/board");
+	        List<String> filenameList = new ArrayList<String>();
+	        for (MultipartFile multipartFile : uploaderFileList) {
+	            if (!multipartFile.isEmpty()) {
+	                String uploadFilename = UUID.randomUUID().toString() + "_" + multipartFile.getOriginalFilename();
+	                File file = new File(uploadDirectory, uploadFilename);
+	                multipartFile.transferTo(file);
+	                filenameList.add(uploadFilename);
+	            }            
+	        }
+	        if (!filenameList.isEmpty()) {            
+	            board.setBoardImage(filenameList.toString());
+	        }
+	        board.setBoardIp(request.getRemoteAddr());
+	        board.setBoardCode(boardCode);
 			//board.setBoardContent(board.getBoardContent().replace("<","&lt;").replace(">","&gt;").replace("\n", "<br>"));
-			board.setBoardTitle(boardtag+" "+board.getBoardTitle().replace("<","&lt;").replace(">","&gt;"));
-			if(board.getBoardContent().length()<=1300) {
-				boardService.addFreeboard(board);							
-			}else {
-				attributes.addAttribute("regetmessage","최대 허용 글자수를 초과하였습니다.");
-				return "redirect:/board/boardwrite/"+boardCode;
-			}
-		}else {
-			return "redirect:/user/login";	
-		}
-		return "redirect:/board/boardlist/"+boardCode;
+	        board.setBoardTitle(boardtag + " " + board.getBoardTitle().replace("<", "&lt;").replace(">", "&gt;"));
+	        if (board.getBoardContent().length() <= 1300) {
+	            boardService.addFreeboard(board); // 게시글 추가 로직
+	            
+	            // 게시글 작성 후 경험치 추가
+	            userService.increaseExperience(user.getUserId(), 10); // 경험치 10점 추가
+	            System.out.println("User " + user.getUserId() + " has gained 10 experience points for posting.");
+	            
+	        } else {
+	            attributes.addAttribute("regetmessage", "최대 허용 글자수를 초과하였습니다.");
+	            return "redirect:/board/boardwrite/" + boardCode;
+	        }
+	    } else {
+	        return "redirect:/user/login";    
+	    }
+	    return "redirect:/board/boardlist/" + boardCode;
 	}
 	
 	
