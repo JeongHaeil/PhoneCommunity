@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xyz.itwill.mapper.ProductMapper">
+
+    <!-- 상품 등록 -->
     <insert id="insertProduct">
         <selectKey resultType="int" keyProperty="productIdx" order="BEFORE">
             SELECT product_seq.NEXTVAL FROM dual
@@ -8,53 +10,60 @@
         INSERT INTO product (
             product_idx, product_user_id, product_subject, product_content, product_image,
             product_register_date, product_mode, product_price, product_model_status,
-            product_delivery, product_category
+            product_delivery, product_category, product_status  <!-- product_status 추가 -->
         ) VALUES (
-            #{productIdx}, #{productUserid}, #{productSubject}, #{productContent}, #{productImage},
-            SYSDATE, #{productMode}, #{productPrice}, #{productModelStatus},
-            #{productDelivery}, #{productCategory}
+            #{productIdx}, #{productUserid}, #{productSubject}, #{productContent}, 
+            #{productImage}, SYSDATE, #{productMode}, #{productPrice}, 
+            #{productModelStatus}, #{productDelivery}, #{productCategory}, 1 <!-- 기본값으로 1 설정 -->
         )
     </insert>
 
-  <update id="updateProduct" parameterType="product">
-  UPDATE product  <!-- 'products'에서 'product'로 수정 -->
-  SET 
-      product_subject = #{productSubject},
-      product_price = #{productPrice},
-      product_model_status = #{productModelStatus},
-      product_content = #{productContent},
-      product_image = #{productImage},
-      product_mode = #{productMode},
-      product_delivery = #{productDelivery},
-      product_category = #{productCategory}
-  WHERE product_idx = #{productIdx}
-</update>
+    <!-- 상품 수정 -->
+    <update id="updateProduct">
+        UPDATE product
+        SET 
+            product_subject = #{productSubject},
+            product_price = #{productPrice},
+            product_model_status = #{productModelStatus},
+            product_content = #{productContent},
+            product_image = #{productImage},
+            product_mode = #{productMode},
+            product_delivery = #{productDelivery},
+            product_category = #{productCategory}
+        WHERE product_idx = #{productIdx}
+    </update>
 
-    
+    <!-- 조회수 증가 -->
     <update id="updateProductCount">
-    UPDATE product
-    SET product_count = product_count + 1
-    WHERE product_idx = #{productIdx}
-</update>
+        UPDATE product
+        SET product_count = product_count + 1
+        WHERE product_idx = #{productIdx}
+    </update>
 
-    <delete id="deleteProduct">
-        DELETE FROM product WHERE product_idx = #{productIdx}
-    </delete>
+    <!-- 글 상태 변경 (삭제 처리) -->
+    <update id="updateProductStatus">
+        UPDATE product
+        SET product_status = 0
+        WHERE product_idx = #{productIdx}
+    </update>
 
+    <!-- 상품 상세 조회 -->
     <select id="selectProductByNum" resultType="Product">
-        SELECT product_user_id AS productUserid, product_idx AS productIdx ,product_subject AS productSubject, 
-               product_content AS productContent, product_image AS productImage, 
-               product_count AS productCount, product_mode AS productMode, 
-               product_price AS productPrice, product_model_status AS productModelStatus, 
-               product_delivery AS productDelivery, product_category AS productCategory
-        FROM product 
-        JOIN users ON product_user_id = user_id 
+        SELECT product_user_id AS productUserid, product_idx AS productIdx, product_subject AS productSubject,
+               product_content AS productContent, product_image AS productImage,
+               product_count AS productCount, product_mode AS productMode,
+               product_price AS productPrice, product_model_status AS productModelStatus,
+               product_delivery AS productDelivery, product_category AS productCategory,
+               users.user_nickname AS productUsernickname  <!-- 사용자 닉네임 추가 -->
+        FROM product
+        JOIN users ON product_user_id = users.user_id
         WHERE product_idx = #{productIdx}
     </select>
 
+    <!-- 상품 개수 조회 (검색 포함) -->
     <select id="selectProductCount" resultType="int">
-        SELECT COUNT(*) 
-        FROM product 
+        SELECT COUNT(*)
+        FROM product
         JOIN users ON product_user_id = user_id
         <if test="keyword != null and keyword != ''">
             <bind name="word" value="'%' + keyword + '%'" />
@@ -62,23 +71,25 @@
         </if>
     </select>
 
-<select id="selectProductList" resultType="Product">
-    SELECT * FROM (
-        SELECT rownum rn, product.*, users.user_nickname AS productUsernickname
-        FROM (
-            SELECT product_idx AS productIdx, product_user_id,
-                   product_subject AS productSubject, product_register_date AS productRegisterDate,
-                   product_count AS productCount, product_mode AS productMode,
-                   product_price AS productPrice, PRODUCT_IMAGE  as productImage
-            FROM product
-            <if test="keyword != null and keyword != ''">
-                <bind name="word" value="'%' + keyword + '%'" />
-                WHERE ${column} LIKE #{word}
-            </if>
-            ORDER BY product_idx DESC
-        ) product
-        JOIN users ON product.product_user_id = users.user_id
-    ) WHERE rn BETWEEN #{startRow} AND #{endRow}
-</select>
+    <!-- 상품 리스트 조회 -->
+    <select id="selectProductList" resultType="Product">
+        SELECT * FROM (
+            SELECT rownum rn, product.*, users.user_nickname AS productUsernickname
+            FROM (
+                SELECT product_idx AS productIdx, product_user_id,
+                       product_subject AS productSubject, product_register_date AS productRegisterDate,
+                       product_count AS productCount, product_mode AS productMode,
+                       product_price AS productPrice, product_image as productImage
+                FROM product
+                WHERE product_status = 1  <!-- 글 상태가 1인 글만 조회 -->
+                <if test="keyword != null and keyword != ''">
+                    <bind name="word" value="'%' + keyword + '%'" />
+                    AND ${column} LIKE #{word} <!-- 검색어가 있을 경우 검색 필터링 -->
+                </if>
+                ORDER BY product_idx DESC
+            ) product
+            JOIN users ON product.product_user_id = users.user_id
+        ) WHERE rn BETWEEN #{startRow} AND #{endRow}
+    </select>
 
 </mapper>

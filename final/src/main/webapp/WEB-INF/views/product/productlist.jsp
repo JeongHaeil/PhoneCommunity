@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%> <!-- functions 라이브러리 추가 -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -212,7 +213,7 @@ body {
 			class="d-flex justify-content-between align-items-center filter-buttons mt-3">
 			<div>
 				<button class="btn btn-dark btn-sm">분류</button>
-				<button class="btn btn-dark btn-sm">정렬</button>
+				<button class="btn btn-dark btn-sm">최신순</button>
 			</div>
 			<div>
 				<button class="btn btn-primary btn-sm"
@@ -249,8 +250,8 @@ body {
 										style="font-size: 12px; margin-bottom: 5px;">글 번호:
 										${product.productIdx}</div>
 									<img
-										src="${pageContext.request.contextPath}/resources/images/${product.productImage}"
-										alt="상품 이미지" width="100px">
+										src="${pageContext.request.contextPath}/resources/images/${fn:split(product.productImage, ',')[0]}"
+										alt="상품 이미지" class="img-fluid">
 									<div class="product-meta">
 										<span class="text-muted">판매</span>, <span>${product.productRegisterdate}</span>
 									</div>
