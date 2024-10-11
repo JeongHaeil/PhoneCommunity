@@ -155,9 +155,9 @@
     
              
              	<div class="row justify-content-between align-items-center m-1" >
-             	<div>
+             	<!-- <div>
 			        <h3>게시글 목록</h3>
-			    </div>
+			    </div> -->
 			        <div class="d-flex justify-content-end align-items-center">
 					    <button type="button" class="btn btn-dark btn-sm" onclick="hideAndShowSearch()">검색</button>&nbsp;
 					    <c:choose>
