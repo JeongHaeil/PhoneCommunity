@@ -532,19 +532,21 @@ public class UserController {
     public String login(@ModelAttribute User user, HttpSession session, Model model, Authentication authcation) {
         // loginAuth() 메서드를 사용해 로그인 처리
         User loggedInUser = userService.loginAuth(user);  // user 객체를 사용한 로그인 처리
-        CustomUserDetails chatuser=(CustomUserDetails)authcation.getPrincipal();
+      
+        CustomUserDetails chatuser = (CustomUserDetails) authcation.getPrincipal();
         
         if (loggedInUser != null) {
             // 로그인 성공 시 userId를 세션에 저장
             session.setAttribute("userId", chatuser.getUserId());
+            model.addAttribute("userId", chatuser.getUserId());  // 모델에도 저장 가능
             return "redirect:/main";  // 로그인 성공 후 리다이렉트
         } else {
             model.addAttribute("error", "로그인 정보가 올바르지 않습니다.");
             return "user/login";  // 로그인 실패 시 로그인 페이지로 다시 이동
         }
+    
+    
+    
     }
-    
-    
-    
 }
 

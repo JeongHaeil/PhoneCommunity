@@ -1,5 +1,6 @@
 package xyz.itwill.service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -9,8 +10,6 @@ import xyz.itwill.dao.ChatRoomsDAO;
 import xyz.itwill.dao.ProductDAO;
 import xyz.itwill.dao.UserDAO;
 import xyz.itwill.dto.ChatRooms;
-import xyz.itwill.dto.Product;
-import xyz.itwill.dto.User;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +23,6 @@ public class ChatRoomsServiceImpl implements ChatRoomsService{
 	@Override
 	public void createChatRooms(ChatRooms chatRooms) {
 		chatRoomsDAO.createChatRooms(chatRooms);
-		
 	}
 
 	@Override
@@ -51,10 +49,16 @@ public class ChatRoomsServiceImpl implements ChatRoomsService{
 		return chatRoomsDAO.generateNewRoomId();
 	}
 
+	@Override
+	public int findExistingRoom(String buyerId, String sellerId, int productId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("buyerId", buyerId);
+        params.put("sellerId", sellerId);
+        params.put("productId", productId);
+        return chatRoomsDAO.findExistingRoom(params);
+	}
 
 	
-
-
    
 
 }

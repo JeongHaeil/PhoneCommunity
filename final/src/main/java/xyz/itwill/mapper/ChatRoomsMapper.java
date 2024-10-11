@@ -16,5 +16,8 @@ public interface ChatRoomsMapper {
 	
 	int generateNewRoomId();
 	
+	
+	int findExistingRoom(Map<String, Object> params);
+	
 
 }

@@ -55,6 +55,8 @@ public class ProductController {
 		}
 		return "product/productregister";
 	}
+	
+	
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String register(@ModelAttribute Product product, List<MultipartFile> productImage2,
@@ -175,5 +177,13 @@ public class ProductController {
 
         return "redirect:/product/list";  // 상품 목록 페이지로 리다이렉트
     }
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    public String getProductDetail(@RequestParam("productIdx") int productIdx, Model model) {
+        Product product = productService.getProductByNum(productIdx);  // 서비스에서 제품 정보 가져옴
+        model.addAttribute("product", product);  // 모델에 제품 정보 추가
+        return "product/productdetail";  // JSP 파일 이름
+    }
+    
+    
 	
 }

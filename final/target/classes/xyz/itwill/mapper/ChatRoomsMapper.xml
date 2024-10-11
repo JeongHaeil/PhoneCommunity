@@ -17,7 +17,7 @@
     WHERE seller_id = #{sellerId} 
     AND buyer_id = #{buyerId} 
     AND product_id = #{productId}
-    And room_id =${roomId}
+    And room_id = ${roomId}
  		AND ROWNUM = 1
  	</select>
   
@@ -39,6 +39,19 @@
   	<select id="generateNewRoomId" resultType="int">
         SELECT chat_room_seq.NEXTVAL FROM dual
     </select>
+  
+  
+  <select id="findExistingRoom" resultType="int" parameterType="map">
+    SELECT room_id 
+    FROM chatrooms
+    WHERE seller_id = #{sellerId}
+    AND buyer_id = #{buyerId}
+    AND product_id = #{productId}
+    AND ROWNUM = 1
+</select>
+  
+  
+ 
   
   
   

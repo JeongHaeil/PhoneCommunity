@@ -11,5 +11,6 @@ public interface ProductService {
    void increaseProductCount(int productIdx);
    Product getProductByNum(int productIdx);
    Map<String, Object> getProductList(Map<String, Object> map);
+  
    
 }
