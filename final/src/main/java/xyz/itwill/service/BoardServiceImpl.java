@@ -14,12 +14,14 @@ import lombok.RequiredArgsConstructor;
 import xyz.itwill.dao.BoardDAO;
 import xyz.itwill.dto.BBallot;
 import xyz.itwill.dto.Board;
+import xyz.itwill.mapper.BoardMapper;
 import xyz.itwill.util.Pager;
 
 @Service
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 	private final BoardDAO boardDAO;
+	private BoardMapper boardMapper; // MyBatis 매퍼 주입
 	
 	@Override 
 	public Map<String, Object> getBoardList(int boardCode, int pageNum, int pagaSize, String search, String keyword) throws Exception {
@@ -159,20 +161,27 @@ public class BoardServiceImpl implements BoardService {
 		return boardDAO.getRnDown(map);
 	}
 
-	@Override
-	public List<Board> getNoiceBoardList() {
-		return boardDAO.selectNoticeList();
-	}
+	//마이페이지
+	 @Override
+	 public Board getBoardDetail(int boardPostIdx, int boardCode) {
+		    // 게시글을 조회하고 반환
+		    return boardMapper.selectBoardDetail(boardPostIdx, boardCode);
+	    }
+	 
+	 @Override
+		public List<Board> getNoiceBoardList() {
+			return boardDAO.selectNoticeList();
+		}
 
-	@Override
-	public List<Board> getPopularBoardByViewCount() {
-		return boardDAO.selectPopularView();
-	}
+		@Override
+		public List<Board> getPopularBoardByViewCount() {
+			return boardDAO.selectPopularView();
+		}
 
-	@Override
-	public List<Board> getPopularBoardByStartUp() {
-		return boardDAO.selectPopularStar();
-	}
-	
+		@Override
+		public List<Board> getPopularBoardByStartUp() {
+			return boardDAO.selectPopularStar();
+		}
+
 	
 }

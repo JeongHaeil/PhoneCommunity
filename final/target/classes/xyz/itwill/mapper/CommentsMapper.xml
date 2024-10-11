@@ -62,29 +62,31 @@
 	</select>
 	
 	<!-- 작성한 댓글 조회 -->
-    <select id="selectCommentsByUserId" parameterType="string" resultType="Comments">
-        SELECT COMMENT_IDX AS commentIdx,
-               COMMENT_BOARD_IDX AS commentBoardIdx,
-               COMMENT_USER_ID AS commentUserId,
-               CONTENT AS content,
-               COMMENT_IMAGE AS commentImage,
-               TO_CHAR(COMMENT_REG_DATE, 'YYYY-MM-DD HH24:MI:SS') AS commentRegDate,
-               TO_CHAR(COMMENT_UP_DATE, 'YYYY-MM-DD HH24:MI:SS') AS commentUpDate,
-               COMMENT_USER_IP AS commentUserIp,
-               COMMENT_REF AS commentRef,
-               COMMENT_RESTEP AS commentRestep,
-               COMMENT_LEVEL AS commentLevel,
-               COMMENT_STATUS AS commentStatus,
-               COMMENT_STARUP AS commentStarup,
-               COMMENT_STARDOWN AS commentStardown,
-               COMMENT_SPAM AS commentSpam,
-               COMMENT_REUSER AS commentReuser,
-               (SELECT USER_NICKNAME FROM USERS WHERE USER_ID = COMMENT_USER_ID) AS userNickname
-        FROM COMMENTS
-        WHERE COMMENT_USER_ID = #{userId}
-        ORDER BY COMMENT_REG_DATE DESC
-    </select>
-	
+<select id="selectCommentsByUserId" parameterType="string" resultType="Comments">
+    SELECT c.COMMENT_IDX AS commentIdx,
+           c.COMMENT_BOARD_IDX AS commentBoardIdx,
+           c.COMMENT_USER_ID AS commentUserId,
+           c.CONTENT AS content,
+           c.COMMENT_IMAGE AS commentImage,
+           TO_CHAR(c.COMMENT_REG_DATE, 'YYYY-MM-DD HH24:MI:SS') AS commentRegDate,
+           TO_CHAR(c.COMMENT_UP_DATE, 'YYYY-MM-DD HH24:MI:SS') AS commentUpDate,
+           c.COMMENT_USER_IP AS commentUserIp,
+           c.COMMENT_REF AS commentRef,
+           c.COMMENT_RESTEP AS commentRestep,
+           c.COMMENT_LEVEL AS commentLevel,
+           c.COMMENT_STATUS AS commentStatus,
+           c.COMMENT_STARUP AS commentStarup,
+           c.COMMENT_STARDOWN AS commentStardown,
+           c.COMMENT_SPAM AS commentSpam,
+           (SELECT USER_NICKNAME FROM USERS WHERE USER_ID = c.COMMENT_USER_ID) AS userNickname,
+           (SELECT BOARD_STATUS FROM BOARD WHERE BOARD_POST_IDX = c.COMMENT_BOARD_IDX) AS boardStatus -- 게시글 상태 가져오기
+    FROM COMMENTS c
+    WHERE c.COMMENT_USER_ID = #{userId}
+    ORDER BY c.COMMENT_REG_DATE DESC
+</select>
+
+
+
 	<update id="UpdatCommentStatus3">
 		update comments set comment_status=3 where comment_idx=#{commentIdx}
 	</update>

@@ -15,4 +15,6 @@ public interface ChatRoomsMapper {
 	int getSellerIdByProductId(String productId);
 	
 	int generateNewRoomId();
+	
+
 }

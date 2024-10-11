@@ -10,11 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -157,4 +160,20 @@ public class ProductController {
 		productService.removeProduct(productIdx);
 		return "redirect:/product/list";
 	}
+	
+	   // 상품 등록 처리
+    @PostMapping("/chat")
+    public String registerProduct(@ModelAttribute Product product, HttpSession session) {
+        // 현재 로그인한 사용자 정보를 세션에서 가져옴
+        String sellerId = (String) session.getAttribute("userId");
+
+        // 상품에 판매자 ID 저장
+        product.setProductUserid(sellerId);
+
+        // 상품 등록 처리
+        productService.addProduct(product);
+
+        return "redirect:/product/list";  // 상품 목록 페이지로 리다이렉트
+    }
+	
 }

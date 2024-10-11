@@ -167,5 +167,14 @@ public class UserServiceImpl implements UserService {
 
         // 비밀번호 업데이트
         userDAO.updateUser(user);
+
+    }
+
+ // 최근 로그인 시간을 업데이트하는 메서드 구현
+
+    @Transactional
+    @Override
+    public void updateLastLoginTime(String userId) {
+        userDAO.updateLastLogin(userId); // UserDAO에서 이 메서드를 호출
     }
 }
