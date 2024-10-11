@@ -92,7 +92,7 @@ public class ProductController {
 		// 제품 정보 조회
 		model.addAttribute("product", productService.getProductByNum(productIdx));
 		model.addAttribute("searchMap", map);
-
+ 
 		// 현재 로그인한 사용자 정보 전달
 		if (authentication != null) {
 			CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
