@@ -330,24 +330,57 @@ public class UserController {
     public String updateNickname(
             @RequestParam("nickname") String nickname, 
             Authentication authentication, 
+            RedirectAttributes redirectAttributes, 
             Model model) {
         
+        // 인증되지 않은 사용자는 로그인 페이지로 리다이렉트
         if (authentication == null) {
-            return "redirect:/user/login";  // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+            return "redirect:/user/login";
         }
 
+        // 현재 로그인된 사용자의 ID 가져오기
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         String userId = userDetails.getUserId();
+
+        // 닉네임 중복 확인
+        User existingUser = userService.getUser(nickname);
+        
+        if (existingUser != null && !existingUser.getUserId().equals(userId)) {
+            // 중복된 닉네임이 있고, 그 닉네임이 현재 사용자의 것이 아니면 오류 메시지 출력
+            model.addAttribute("errorMessage", "이미 사용중인 닉네임입니다.");
+            
+            // 기존 사용자 정보를 다시 모델에 담아 JSP로 전달
+            User loginUser = userService.getUser(userId);
+            model.addAttribute("user", loginUser);
+            model.addAttribute("currentExperience", loginUser.getUserExperience());
+            model.addAttribute("experienceForNextLevel", ExperienceUtil.getExperienceForNextLevel(loginUser.getUserLevel()));
+            model.addAttribute("progressPercentage", ExperienceUtil.calculateProgressPercentage(loginUser.getUserExperience(), ExperienceUtil.getExperienceForNextLevel(loginUser.getUserLevel())));
+            
+            return "user/mypage"; // 오류 시 다시 마이페이지로 이동
+        }
 
         try {
             // 닉네임 수정
             userService.modifyUserNickname(userId, nickname);
+            
+            // 성공 메시지 전달
+            redirectAttributes.addFlashAttribute("successMessage", "닉네임이 성공적으로 변경되었습니다.");
             return "redirect:/user/profile";  // 닉네임 변경 후 마이페이지로 리다이렉트
         } catch (Exception e) {
+            // 예외 발생 시 오류 메시지 출력
             model.addAttribute("error", "닉네임 업데이트 중 오류가 발생했습니다.");
-            return "user/userUpdate";  // 오류 시 수정 페이지 유지
+            
+            // 기존 사용자 정보를 다시 모델에 담아 JSP로 전달
+            User loginUser = userService.getUser(userId);
+            model.addAttribute("user", loginUser);
+            model.addAttribute("currentExperience", loginUser.getUserExperience());
+            model.addAttribute("experienceForNextLevel", ExperienceUtil.getExperienceForNextLevel(loginUser.getUserLevel()));
+            model.addAttribute("progressPercentage", ExperienceUtil.calculateProgressPercentage(loginUser.getUserExperience(), ExperienceUtil.getExperienceForNextLevel(loginUser.getUserLevel())));
+            
+            return "user/mypage";  // 오류 시 수정 페이지 유지
         }
     }
+
 
  // 비밀번호 변경 페이지로 이동 (GET 요청)
     @RequestMapping(value = "/passwordUpdate", method = RequestMethod.GET)
