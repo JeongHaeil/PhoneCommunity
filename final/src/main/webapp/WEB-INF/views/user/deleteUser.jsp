@@ -5,67 +5,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원 탈퇴</title>
-    <!-- 부트스트랩 CSS -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body#withdraw-body {
+        body {
             background-color: #f8f9fa;
             font-family: 'Noto Sans KR', sans-serif;
         }
-        div#withdraw-container {
-            max-width: 600px;
+        .withdraw-container {
+            max-width: 400px;
             margin: 50px auto;
             padding: 20px;
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        h3#withdraw-header {
+        .withdraw-header {
             font-weight: bold;
             margin-bottom: 20px;
+            text-align: center;
         }
-        button#withdraw-btn {
+        .withdraw-btn-custom {
             background-color: #f86d6d;
             color: white;
             border-radius: 5px;
             padding: 10px 15px;
-            margin-right: 5px;
+            width: 100%;
         }
-        button#withdraw-btn:hover {
+        .withdraw-btn-custom:hover {
             background-color: #f75c5c;
         }
-        label#withdraw-label {
-            font-weight: bold;
-        }
     </style>
-    <script>
-        // 탈퇴 버튼을 눌렀을 때 실행되는 함수
-        function confirmWithdrawal() {
-            return confirm("정말로 탈퇴하시겠습니까?");
-        }
-    </script>
 </head>
-<body id="withdraw-body">
+<body>
 
-<div id="withdraw-container">
-    <h3 id="withdraw-header">회원 탈퇴</h3>
-    <form action="/userDelete" method="post" onsubmit="return confirmWithdrawal();">
-        <div class="mb-3">
-            <label for="userId" id="withdraw-label" class="form-label">아이디</label>
-            <!-- 로그인된 사용자의 아이디 표시 및 수정 불가능하게 설정 -->
-            <input type="text" class="form-control" id="userId" name="userId" value="${userId}" readonly>
-        </div>
+<div class="withdraw-container">
+    <h3 class="withdraw-header">회원 탈퇴</h3>
+    <!-- 탈퇴 요청을 처리할 form -->
+    <form id="withdrawForm" action="${pageContext.request.contextPath}/user/userDelete" method="post">
+        <!-- CSRF 토큰 추가 -->
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
+        <!-- 비밀번호 -->
         <div class="mb-3">
-            <label for="password" id="withdraw-label" class="form-label">비밀번호</label>
+            <label for="password" class="form-label">비밀번호</label>
             <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
         </div>
 
-        <button type="submit" class="btn" id="withdraw-btn">탈퇴</button>
+        <!-- 탈퇴 버튼 -->
+        <button type="submit" class="btn withdraw-btn-custom">탈퇴</button>
     </form>
 </div>
 
-<!-- 부트스트랩 JS -->
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

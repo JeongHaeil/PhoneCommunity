@@ -378,33 +378,42 @@ public class UserController {
     public String deleteUser(
         Authentication authentication,
         @RequestParam("password") String password, 
-        HttpServletRequest request,  // HttpServletRequest 추가
-        HttpServletResponse response, // HttpServletResponse 추가
+        HttpServletRequest request, 
+        HttpServletResponse response, 
         Model model) {
 
+        // 현재 사용자가 인증되었는지 확인
         if (authentication == null) {
-            return "redirect:/user/login";  // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+            return "redirect:/user/login";  // 인증되지 않았으면 로그인 페이지로 리다이렉트
         }
 
+        // 현재 사용자 정보 가져오기
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         User loginUser = userService.getUser(userDetails.getUserId());
 
-        // 비밀번호 확인
+        // 입력된 비밀번호와 DB에 저장된 비밀번호 로그로 출력 (디버깅용)
+        log.info("입력된 비밀번호: " + password);
+        log.info("DB에 저장된 암호화된 비밀번호: " + loginUser.getUserPassword());
+
+        // 입력된 비밀번호와 DB에 저장된 비밀번호를 비교
         if (!passwordEncoder.matches(password, loginUser.getUserPassword())) {
+            log.warn("비밀번호 불일치");
             model.addAttribute("error", "비밀번호가 일치하지 않습니다.");
-            return "user/userDelete";
+            return "user/deleteUser";  // 비밀번호가 틀리면 탈퇴 페이지로 다시 이동
         }
 
-        // user_status를 0으로 변경하여 계정 비활성화
-        loginUser.setUserStatus(0);
-        userService.modifyUser(loginUser);  // 상태 업데이트
+        log.info("비밀번호 일치, 회원 탈퇴 진행");
 
-        // 인증 상태 해제 및 로그아웃 처리
+        // user_status를 0으로 변경하는 메서드를 호출
+        userService.updateUserStatus(loginUser.getUserId(), 0);  // 상태 변경 후 DB에 반영
+
+        // 로그아웃 처리 및 세션 해제
         new SecurityContextLogoutHandler().logout(request, response, authentication);
 
-        model.addAttribute("message", "회원 탈퇴가 완료되었습니다.");
-        return "redirect:/user/login";  // 로그인 페이지로 리다이렉트
+        return "redirect:/user/login";  // 탈퇴 후 로그인 페이지로 리다이렉트
     }
+
+
     
     // 스크랩 보기 페이지로 이동
     @RequestMapping(value = "/myScrap", method = RequestMethod.GET)

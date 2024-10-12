@@ -29,4 +29,7 @@ public interface UserMapper {
     int updateLastLogin(@Param("userId") String userId);
  // 닉네임만 업데이트하는 쿼리 추가
     int updateNickname(@Param("userId") String userId, @Param("nickname") String nickname);
-}
+    // user_status 업데이트 (탈퇴 처리)
+    int updateUserStatus(@Param("userId") String userId, @Param("status") int status);
+   }
+

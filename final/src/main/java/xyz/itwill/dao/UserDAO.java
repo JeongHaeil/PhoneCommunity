@@ -24,5 +24,6 @@ public interface UserDAO {
     int updateLastLogin(String userId);
     
     int updateNickname(String userId, String nickname);
-
+    // 추가된 메서드: user_status 업데이트
+    int updateUserStatus(String userId, int status);  // user_status를 0으로 변경하는 메서드 추가
 }

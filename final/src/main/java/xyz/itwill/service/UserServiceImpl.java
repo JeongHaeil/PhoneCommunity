@@ -188,4 +188,10 @@ public class UserServiceImpl implements UserService {
     public void updateLastLoginTime(String userId) {
         userDAO.updateLastLogin(userId); // UserDAO에서 이 메서드를 호출
     }
+ // user_status 업데이트를 통한 탈퇴 처리 구현
+    @Override
+    @Transactional
+    public void updateUserStatus(String userId, int status) {
+        userDAO.updateUserStatus(userId, status);  // user_status를 0으로 설정하여 탈퇴 처리
+    }
 }
