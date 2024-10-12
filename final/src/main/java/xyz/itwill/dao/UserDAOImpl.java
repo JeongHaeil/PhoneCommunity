@@ -86,5 +86,9 @@ public class UserDAOImpl implements UserDAO {
     public int updateLastLogin(String userId) {
         return sqlSession.getMapper(UserMapper.class).updateLastLogin(userId);
     }
+    @Override
+    public int updateNickname(String userId, String nickname) {
+        return sqlSession.getMapper(UserMapper.class).updateNickname(userId, nickname);
+    }
 
 }

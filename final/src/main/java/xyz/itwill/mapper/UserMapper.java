@@ -27,5 +27,6 @@ public interface UserMapper {
 
  // 최근 로그인 시간 업데이트 쿼리 추가
     int updateLastLogin(@Param("userId") String userId);
-    
+ // 닉네임만 업데이트하는 쿼리 추가
+    int updateNickname(@Param("userId") String userId, @Param("nickname") String nickname);
 }

@@ -304,24 +304,28 @@ public class UserController {
         return "user/userUpdate";  // userUpdate.jsp로 이동
     }
 
-    // 회원정보 수정 처리 (POST 방식)
-    @RequestMapping(value = "/userUpdate", method = RequestMethod.POST)
-    public String updateUser(
-            @ModelAttribute User user, 
+ // 회원정보 수정 처리 (POST 방식) - 닉네임 변경
+    @RequestMapping(value = "/updateNickname", method = RequestMethod.POST)
+    public String updateNickname(
+            @RequestParam("nickname") String nickname, 
             Authentication authentication, 
             Model model) {
+        
         if (authentication == null) {
             return "redirect:/user/login";  // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
         }
 
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String userId = userDetails.getUserId();
+
         try {
-            userService.modifyUser(user);
-            model.addAttribute("message", "회원 정보가 성공적으로 업데이트되었습니다.");
+            // 닉네임 수정
+            userService.modifyUserNickname(userId, nickname);
+            return "redirect:/user/profile";  // 닉네임 변경 후 마이페이지로 리다이렉트
         } catch (Exception e) {
-            model.addAttribute("error", "회원 정보 업데이트 중 오류가 발생했습니다.");
+            model.addAttribute("error", "닉네임 업데이트 중 오류가 발생했습니다.");
+            return "user/userUpdate";  // 오류 시 수정 페이지 유지
         }
-        
-        return "user/userUpdate";
     }
 
  // 비밀번호 변경 페이지로 이동 (GET 요청)

@@ -49,6 +49,7 @@ public class UserServiceImpl implements UserService {
 
         userDAO.updateUser(user);
     }
+    
 
 
     @Transactional
@@ -77,7 +78,17 @@ public class UserServiceImpl implements UserService {
         }
         return authUser;
     }
-
+    
+    @Transactional
+    @Override
+    public void modifyUserNickname(String userId, String newNickname) {
+        // 사용자 정보를 가져와 닉네임을 수정 후 저장
+        User user = userDAO.selectUser(userId);
+        if (user != null) {
+            user.setUserNickname(newNickname);
+            userDAO.updateUser(user);
+        }
+    }
 
     @Override
     public boolean isUserIdAvailable(String userId) {
