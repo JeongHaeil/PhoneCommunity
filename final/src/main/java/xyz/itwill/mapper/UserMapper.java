@@ -12,7 +12,7 @@ public interface UserMapper {
     int deleteUser(String userId);
     User selectUser(String userId);
     List<User> selectUserList();
-    User selectUserByNickname(String nickname);
+    User selectUserByNickname(String userNickname);
     User selectUserByUserId(String userId);
     String selectUserIdByEmailAndName(@Param("email") String email, @Param("name") String name);
  // 아이디, 이메일, 이름으로 사용자 조회
@@ -31,5 +31,7 @@ public interface UserMapper {
     int updateNickname(@Param("userId") String userId, @Param("nickname") String nickname);
     // user_status 업데이트 (탈퇴 처리)
     int updateUserStatus(@Param("userId") String userId, @Param("status") int status);
-   }
+ // 이메일로 사용자 조회
+    User selectUserByEmail(@Param("userEmail") String userEmail); // 이메일 중복 확인 추가
+}
 

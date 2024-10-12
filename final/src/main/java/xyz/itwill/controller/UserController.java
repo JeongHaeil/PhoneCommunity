@@ -224,6 +224,22 @@ public class UserController {
         User user = userService.getUser(userId);
         return (user == null) ? "AVAILABLE" : "EXISTS";
     }
+    // 이메일 중복 확인
+    @RequestMapping(value = "/checkEmail", method = RequestMethod.GET)
+    @ResponseBody
+    public String checkEmail(@RequestParam("userEmail") String userEmail) {
+        User user = userService.getUser(userEmail);
+        return (user == null) ? "AVAILABLE" : "EXISTS";
+    }
+
+    // 닉네임 중복 확인
+    @RequestMapping(value = "/checkNickname", method = RequestMethod.GET)
+    @ResponseBody
+    public String checkNickname(@RequestParam("userNickname") String userNickname) {
+        User user = userService.getUser(userNickname);
+        return (user == null) ? "AVAILABLE" : "EXISTS";
+    }
+    
 
     
     // 아이디 찾기 페이지 요청 (GET 요청)
@@ -231,6 +247,7 @@ public class UserController {
     public String showIdFindPage() {
         return "user/idfind"; // idfind.jsp 파일로 이동
     }
+    
 
     // 아이디 찾기 요청 처리
     @RequestMapping(value = "/displayUserId", method = RequestMethod.POST)

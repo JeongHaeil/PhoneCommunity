@@ -65,53 +65,68 @@
     <h4>회원가입</h4>
     <form id="signupForm" action="${pageContext.request.contextPath}/user/register" method="post">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        
+        <!-- 아이디 -->
         <div class="mb-3">
             <label for="user_id" class="form-label">아이디</label>
             <input type="text" class="form-control" id="user_id" name="userId" placeholder="아이디를 입력하세요" required>
             <div id="userIdCheck" class="validation-message"></div>
         </div>
+
+        <!-- 비밀번호 -->
         <div class="mb-3">
             <label for="user_password" class="form-label">비밀번호</label>
             <input type="password" class="form-control" id="user_password" name="userPassword" placeholder="비밀번호를 입력하세요" required>
             <div id="passwordValidation" class="validation-message"></div>
         </div>
+
+        <!-- 비밀번호 확인 -->
         <div class="mb-3">
             <label for="user_password_confirm" class="form-label">비밀번호 확인</label>
             <input type="password" class="form-control" id="user_password_confirm" placeholder="비밀번호를 다시 입력하세요" required>
             <div id="passwordConfirmValidation" class="validation-message"></div>
         </div>
+
+        <!-- 이름 -->
         <div class="mb-3">
-    <label for="user_name" class="form-label">이름</label>
-    <input type="text" class="form-control" id="user_name" name="userName" placeholder="이름을 입력하세요" required>
-    <div id="nameValidation" class="validation-message"></div>
-	</div>
+            <label for="user_name" class="form-label">이름</label>
+            <input type="text" class="form-control" id="user_name" name="userName" placeholder="이름을 입력하세요" required>
+            <div id="nameValidation" class="validation-message"></div>
+        </div>
+
+        <!-- 이메일 -->
         <div class="mb-3">
             <label for="user_email" class="form-label">이메일</label>
             <input type="text" class="form-control" id="user_email" name="userEmail" placeholder="이메일 주소를 입력하세요" required>
             <div id="emailCheck" class="validation-message"></div>
         </div>
-       <div class="mb-3">
-    <label for="user_phone_number" class="form-label">핸드폰 번호</label>
-    <div class="phone-number-container">
-        <select class="form-control" id="phone_first" name="phone_first" required> <!-- name 속성 추가 -->
-            <option value="010" selected>010</option>
-            <option value="011">011</option>
-            <option value="016">016</option>
-            <option value="017">017</option>
-            <option value="018">018</option>
-            <option value="019">019</option>
-        </select>
-        <input type="text" class="form-control" id="phone_middle" name="phone_middle" maxlength="4" placeholder="0000" required> <!-- name 속성 추가 -->
-        <input type="text" class="form-control" id="phone_last" name="phone_last" maxlength="4" placeholder="0000" required> <!-- name 속성 추가 -->
-    </div>
-    <input type="hidden" id="user_phone_number" name="userPhoneNumber">
-    <div id="phoneValidation" class="validation-message"></div>
-</div>
+
+        <!-- 핸드폰 번호 -->
+        <div class="mb-3">
+            <label for="user_phone_number" class="form-label">핸드폰 번호</label>
+            <div class="phone-number-container">
+                <select class="form-control" id="phone_first" name="phone_first" required>
+                    <option value="010" selected>010</option>
+                    <option value="011">011</option>
+                    <option value="016">016</option>
+                    <option value="017">017</option>
+                    <option value="018">018</option>
+                    <option value="019">019</option>
+                </select>
+                <input type="text" class="form-control" id="phone_middle" name="phone_middle" maxlength="4" placeholder="0000" required>
+                <input type="text" class="form-control" id="phone_last" name="phone_last" maxlength="4" placeholder="0000" required>
+            </div>
+            <input type="hidden" id="user_phone_number" name="userPhoneNumber">
+            <div id="phoneValidation" class="validation-message"></div>
+        </div>
+
+        <!-- 닉네임 -->
         <div class="mb-3">
             <label for="user_nickname" class="form-label">닉네임</label>
             <input type="text" class="form-control" id="user_nickname" name="userNickname" placeholder="닉네임을 입력하세요" required>
             <div id="nicknameCheck" class="validation-message"></div>
         </div>
+
         <button type="submit" class="btn btn-signup">가입하기</button>
     </form>
 </div>
@@ -149,10 +164,23 @@ $(document).ready(function() {
         });
     });
 
+    // 비밀번호 확인 기능
+    $("#user_password_confirm").on("keyup", function() {
+        var password = $("#user_password").val();
+        var passwordConfirm = $(this).val();
+
+        if (password !== passwordConfirm) {
+            $("#passwordConfirmValidation").text("비밀번호가 일치하지 않습니다.").css("color", "red");
+        } else {
+            $("#passwordConfirmValidation").text("비밀번호가 일치합니다.").css("color", "green");
+        }
+    });
+
     // 이메일 중복 체크 및 정규식 검사
     $("#user_email").on("keyup", function() {
         var userEmail = $(this).val();
         var emailReg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
         if (!emailReg.test(userEmail)) {
             $("#emailCheck").text("유효하지 않은 이메일 형식입니다.").css("color", "red");
             return;
@@ -175,26 +203,12 @@ $(document).ready(function() {
         });
     });
 
-    $(document).ready(function() {
-        // 폼이 제출되기 전에 전화번호 필드를 합쳐서 hidden 필드에 넣음
-        $("#signupForm").on("submit", function() {
-            var phoneFirst = $("#phone_first").val();
-            var phoneMiddle = $("#phone_middle").val();
-            var phoneLast = $("#phone_last").val();
-            var fullPhoneNumber = phoneFirst + phoneMiddle + phoneLast;
-            
-            // hidden 필드에 병합된 전화번호 저장
-            $("#user_phone_number").val(fullPhoneNumber);
-        });
-    });
-
-    // 닉네임 중복 체크 및 정규식 검사 (한글, 영어, 숫자, 특수문자 허용, ㅁㄴㅇㄹ 금지)
-    var restrictedNicknames = ["ㅁㄴㅇㄹ", "ㄱㄴㄷㄹ", "ㅇㄹㅁㄴ"];
+    // 닉네임 중복 체크 및 정규식 검사
     $("#user_nickname").on("keyup", function() {
         var userNickname = $(this).val();
         var nicknameReg = /^[a-zA-Z가-힣0-9!@#$%^&*()_+-=]{2,20}$/;
 
-        if (!nicknameReg.test(userNickname) || restrictedNicknames.includes(userNickname)) {
+        if (!nicknameReg.test(userNickname)) {
             $("#nicknameCheck").text("유효하지 않은 닉네임입니다.").css("color", "red");
             return;
         }
@@ -214,6 +228,15 @@ $(document).ready(function() {
                 $("#nicknameCheck").text("닉네임 확인 중 오류가 발생했습니다.").css("color", "red");
             }
         });
+    });
+
+    // 전화번호 필드를 합쳐서 hidden 필드에 저장
+    $("#signupForm").on("submit", function() {
+        var phoneFirst = $("#phone_first").val();
+        var phoneMiddle = $("#phone_middle").val();
+        var phoneLast = $("#phone_last").val();
+        var fullPhoneNumber = phoneFirst + phoneMiddle + phoneLast;
+        $("#user_phone_number").val(fullPhoneNumber);
     });
 });
 </script>

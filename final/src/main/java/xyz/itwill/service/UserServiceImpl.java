@@ -37,6 +37,10 @@ public class UserServiceImpl implements UserService {
         securityAuth.setAuth("ROLE_USER"); // 기본 권한 설정
         securityAuthService.addSecurityAuth(securityAuth);
     }
+    @Override
+    public User getUserByEmail(String email) {
+        return userDAO.selectUserByEmail(email);
+    }
     
     @Transactional
     @Override
@@ -97,7 +101,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isNicknameAvailable(String nickname) {
-        return userDAO.selectUserByNickname(nickname) == null;
+        return userDAO.selectUser(nickname) == null;
     }
 
     @Override
