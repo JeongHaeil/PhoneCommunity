@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -272,23 +273,26 @@ public class UserController {
     @RequestMapping(value = "/findPassword", method = RequestMethod.POST)
     public String findPassword(@RequestParam("userId") String userId,
                                @RequestParam("userName") String userName,
-                               @RequestParam("userEmail") String userEmail, Model model) {
+                               @RequestParam("userEmail") String userEmail, 
+                               RedirectAttributes redirectAttributes) {
         User user = userService.findUserByIdNameAndEmail(userId, userName, userEmail);
 
         if (user == null || !user.getUserId().equals(userId) || !user.getUserName().equals(userName)) {
-            model.addAttribute("error", "입력하신 정보와 일치하는 사용자가 없습니다.");
-            return "user/passwordfind";
+            // FlashAttribute에 오류 메시지 추가
+            redirectAttributes.addFlashAttribute("error", "입력하신 정보와 일치하는 사용자가 없습니다.");
+            return "redirect:/user/passwordfind"; // 리다이렉트를 사용하여 새로고침 시 메시지가 남지 않게 처리
         }
 
         // 서비스에서 임시 비밀번호 생성 및 비밀번호 업데이트 처리
         userService.updatePassword(user);
 
-        // 성공 메시지를 Model에 추가
-        model.addAttribute("message", "임시 비밀번호가 이메일로 전송되었습니다.");
+        // 성공 메시지를 FlashAttribute에 추가
+        redirectAttributes.addFlashAttribute("successMessage", "임시 비밀번호가 이메일로 전송되었습니다.");
 
-        // 비밀번호가 전송되었다는 페이지로 이동
-        return "user/displayUserpw";
+        // 팝업 후 로그인 페이지로 리다이렉트
+        return "redirect:/user/passwordfind"; // 팝업이 뜬 후 로그인 페이지로 이동
     }
+
     
  // 회원정보 수정 페이지로 이동 (GET 방식)
     @RequestMapping(value = "/userUpdate", method = RequestMethod.GET)
