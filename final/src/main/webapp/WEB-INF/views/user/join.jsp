@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -135,6 +136,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
+
     // 아이디 중복 체크 및 정규식 검사
     $("#user_id").on("keyup", function() {
         var userId = $(this).val();
@@ -231,12 +233,42 @@ $(document).ready(function() {
     });
 
     // 전화번호 필드를 합쳐서 hidden 필드에 저장
-    $("#signupForm").on("submit", function() {
+    $("#signupForm").on("submit", function(e) {
         var phoneFirst = $("#phone_first").val();
         var phoneMiddle = $("#phone_middle").val();
         var phoneLast = $("#phone_last").val();
         var fullPhoneNumber = phoneFirst + phoneMiddle + phoneLast;
         $("#user_phone_number").val(fullPhoneNumber);
+
+        var hasError = false;
+
+        // 아이디 중복 체크
+        if ($("#userIdCheck").text().includes("이미 존재하는")) {
+            $("#user_id").focus();
+            hasError = true;
+        }
+
+        // 이메일 중복 체크
+        if ($("#emailCheck").text().includes("이미 존재하는")) {
+            $("#user_email").focus();
+            hasError = true;
+        }
+
+        // 닉네임 중복 체크
+        if ($("#nicknameCheck").text().includes("이미 존재하는")) {
+            $("#user_nickname").focus();
+            hasError = true;
+        }
+
+        // 비밀번호 확인 체크
+        if ($("#passwordConfirmValidation").text().includes("일치하지 않습니다")) {
+            $("#user_password_confirm").focus();
+            hasError = true;
+        }
+
+        if (hasError) {
+            e.preventDefault(); // 폼 제출 방지
+        }
     });
 });
 </script>
