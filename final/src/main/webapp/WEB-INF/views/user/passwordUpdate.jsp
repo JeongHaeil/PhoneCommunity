@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -38,18 +39,30 @@
         .form-label {
             font-weight: bold;
         }
+        .error-text {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
     </style>
     <script>
         // 비밀번호 확인 검증 함수
         function validateForm() {
             var newPassword = document.getElementById("newPassword").value;
             var confirmNewPassword = document.getElementById("confirmNewPassword").value;
+            var errorMessage = document.getElementById("errorMessage");
 
             if (newPassword !== confirmNewPassword) {
-                alert("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+                errorMessage.textContent = "비밀번호가 일치하지 않습니다.";
                 return false; // 폼 제출 중단
             }
             return true; // 폼 제출 허용
+        }
+
+        // 비밀번호 변경 성공 후 팝업창 띄우기
+        function showSuccessPopup() {
+            alert("비밀번호가 성공적으로 변경되었습니다.");
+            window.location.href = "/final/user/profile"; // 마이페이지로 리다이렉트
         }
     </script>
 </head>
@@ -75,9 +88,19 @@
             <input type="password" class="form-control" id="confirmNewPassword" name="confirmNewPassword" required>
         </div>
 
+        <!-- 오류 메시지 표시 -->
+        <div id="errorMessage" class="error-text"></div>
+
         <button type="submit" class="btn btn-primary">비밀번호 변경</button>
     </form>
 </div>
+
+<!-- 비밀번호 변경 성공 시 팝업창 -->
+<c:if test="${not empty successMessage}">
+    <script>
+        showSuccessPopup(); // 성공 팝업창 띄우고 마이페이지로 리다이렉트
+    </script>
+</c:if>
 
 </body>
 </html>
