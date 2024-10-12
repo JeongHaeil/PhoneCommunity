@@ -42,7 +42,7 @@
 <div class="withdraw-container">
     <h3 class="withdraw-header">회원 탈퇴</h3>
     <!-- 탈퇴 요청을 처리할 form -->
-    <form id="withdrawForm" action="${pageContext.request.contextPath}/user/userDelete" method="post">
+    <form id="withdrawForm" action="${pageContext.request.contextPath}/user/userDelete" method="post" onsubmit="return confirmWithdrawal()">
         <!-- CSRF 토큰 추가 -->
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
@@ -59,5 +59,13 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- JavaScript로 팝업 구현 -->
+<script>
+    function confirmWithdrawal() {
+        return confirm("정말 탈퇴하겠습니까?");
+    }
+</script>
+
 </body>
 </html>
