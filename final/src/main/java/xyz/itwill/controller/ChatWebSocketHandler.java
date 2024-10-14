@@ -1,11 +1,14 @@
 package xyz.itwill.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import xyz.itwill.dto.ChatMessages;
@@ -16,7 +19,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     private Map<String, Map<String, WebSocketSession>> roomSessionMap = new ConcurrentHashMap<>();
     private final ChatMessageService chatMessageService;
-    
+    private Map<String, WebSocketSession> sellerSessions = new ConcurrentHashMap<>();
     
     
     @Override
@@ -42,6 +45,14 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         System.out.println("메시지 전송: roomId = " + roomId + ", sellerId = " + sellerId);
         System.out.println("Buyer ID: " + buyerId);
         System.out.println("Seller ID: " + sellerId);
+        
+        String payload = message.getPayload();
+        Map<String, Object> messageData = new HashMap<>();
+        messageData.put("message", payload);
+        messageData.put("senderId", senderId);
+        
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonMessage = objectMapper.writeValueAsString(messageData);
 
         ChatMessages chatMessage = new ChatMessages();
         chatMessage.setRoomId(Integer.parseInt(roomId));
@@ -98,30 +109,20 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         session.getAttributes().put("sellerId", sellerId);
         session.getAttributes().put("roomId", roomId);
         session.getAttributes().put("userId", senderId);
-        System.out.println("WebSocket 연결 시 URL: " + session.getUri().toString());
-
-        //System.out.println("WebSocket 연결된 userId: " + userId);
-        System.out.println("roomId: " + roomId + ", buyerId: " + buyerId + ", sellerId: " + sellerId + ", senderId: " + senderId);
         
-        // 채팅방에 사용자 세션 추가
-        roomSessionMap.computeIfAbsent(roomId, k -> new ConcurrentHashMap<>()).put(session.getId(), session);
-    }
-	/*
-    private void saveChatMessage(String roomId, String message, String senderId) {
-        ChatMessages chatMessage = new ChatMessages();
-        chatMessage.setRoomId(Integer.parseInt(roomId));
-        try {
-            // senderId가 숫자인지 확인하고 변환, 예외가 발생하면 로그 출력
-            chatMessage.setSenderId(Integer.parseInt(senderId));  
-        } catch (NumberFormatException e) {
-            System.out.println("Error converting senderId: " + senderId);
-            // 예외가 발생한 경우 DB에 저장하지 않거나, 기본값을 설정할 수 있습니다.
-            return;  // 또는 기본값 설정: chatMessage.setSenderId(0);
+        // 판매자 세션 저장
+        if (buyerId.equals(senderId)) {
+            // 구매자의 WebSocket 세션
+            roomSessionMap.computeIfAbsent(roomId, k -> new ConcurrentHashMap<>()).put(session.getId(), session);
+        } else if (sellerId.equals(senderId)) {
+            // 판매자의 WebSocket 세션
+            sellerSessions.put(sellerId, session);
         }
-        chatMessage.setMessage(message);
-        chatMessageService.saveChatMessage(chatMessage);  // DB에 저장
+
+        System.out.println("WebSocket 연결 시 URL: " + session.getUri().toString());
+        System.out.println("roomId: " + roomId + ", buyerId: " + buyerId + ", sellerId: " + sellerId + ", senderId: " + senderId);
     }
-	*/
+	
     private String extractQueryParam(String uri, String paramName) {
           String[] queryParams = uri.split("\\?");
         if (queryParams.length > 1) {
@@ -136,6 +137,13 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         return null;
     }
     
+    public void notifySeller(String sellerId, String roomId) throws Exception {
+        WebSocketSession sellerSession = sellerSessions.get(sellerId);
+        if (sellerSession != null && sellerSession.isOpen()) {
+            sellerSession.sendMessage(new TextMessage("New Chat Room: " + roomId));
+        }
+    }
+
   
 
 }

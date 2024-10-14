@@ -24,7 +24,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import xyz.itwill.auth.CustomUserDetails;
+import xyz.itwill.dto.ChatRooms;
 import xyz.itwill.dto.Product;
+import xyz.itwill.service.ChatRoomsService;
 import xyz.itwill.service.ProductService;
 
 @Controller
@@ -33,7 +35,8 @@ import xyz.itwill.service.ProductService;
 public class ProductController {
 	private final ProductService productService;
 	private final WebApplicationContext context;
-
+	private final ChatRoomsService chatRoomsService;
+	
 	private static final String UPLOAD_DIR = "/resources/images/";
 
     @RequestMapping("/list")
@@ -86,8 +89,9 @@ public class ProductController {
                 filenameList.add(uploadFilename); // 파일명을 리스트에 저장
             }
         }
-
+        
         product.setProductImage(String.join(",", filenameList)); // 여러 이미지 파일명을 콤마로 연결해서 저장
+        int productIdx = productService.createProductAndChatRoom(product);
         productService.addProduct(product);
         return "redirect:/product/list";
     }
@@ -193,6 +197,5 @@ public class ProductController {
         return "product/productdetail";  // JSP 파일 이름
     }
     
-    
-	
+   
 }

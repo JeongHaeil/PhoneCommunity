@@ -62,7 +62,10 @@
     </servlet-mapping>
     
     
-    
+   <session-config>
+    <session-timeout>30</session-timeout> <!-- 세션 타임아웃을 30분으로 설정 -->
+</session-config>
+
 
 	 
     
