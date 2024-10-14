@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -152,32 +153,50 @@ public class UserController {
         return "user/email";  // 이메일 인증 페이지로 이동 (email.jsp)
     }
 
-    // 이메일 인증 코드 검증 및 회원가입 완료 처리
+ // 이메일 인증 코드 검증 및 회원가입 완료 처리
     @RequestMapping(value = "/verify", method = RequestMethod.POST)
-    public String verifyEmail(@RequestParam("emailCode") int emailCode, HttpSession session, Model model) {
+    public String verifyEmail(
+        @RequestParam("emailCode") int emailCode, 
+        HttpSession session, 
+        Model model, 
+        RedirectAttributes redirectAttributes) {
+
         User user = (User) session.getAttribute("tempUser");
 
         if (user == null) {
-            return "redirect:/user/register";
+            return "redirect:/user/register"; // 세션에 사용자가 없으면 회원가입 페이지로 리다이렉트
         }
 
         Email emailVerification = emailService.getEmailByCode(emailCode);
 
+        // 인증 코드가 유효하지 않거나 만료된 경우
         if (emailVerification == null || emailVerification.isExpired()) {
-            model.addAttribute("error", "유효하지 않은 인증 코드입니다. 다시 시도하세요.");
-            return "user/email";
+            model.addAttribute("errorMessage", "유효하지 않은 인증 코드입니다. 다시 시도하세요.");
+            return "user/email"; // 오류 메시지를 출력하고 현재 페이지 유지
         }
 
+        // 인증이 성공한 경우 회원 가입 진행
         userService.addUser(user);
-
         User savedUser = userService.getUser(user.getUserId());
+
+        // 인증 정보를 업데이트
         emailVerification.setEmailUserNum(savedUser.getUserNum());
         emailVerification.setEmailAuth(true);
         emailService.updateEmail(emailVerification);
 
         session.removeAttribute("tempUser");
 
-        return "redirect:/user/login";
+        // 회원가입 완료 메시지 전달
+        redirectAttributes.addFlashAttribute("successMessage", "회원가입이 완료되었습니다.");
+        
+        // 팝업을 띄울 페이지로 리다이렉트
+        return "redirect:/user/email";
+    }
+    
+    // 회원가입 완료 후 팝업을 띄우는 페이지로 리다이렉트 처리
+    @RequestMapping(value = "/registrationSuccess", method = RequestMethod.GET)
+    public String showRegistrationSuccessPage() {
+        return "user/registrationSuccess";  // 회원가입 완료 팝업을 띄울 페이지
     }
 
     // 로그인 페이지로 이동 (GET 요청)
@@ -223,6 +242,56 @@ public class UserController {
         User user = userService.getUser(userId);
         return (user == null) ? "AVAILABLE" : "EXISTS";
     }
+    // 이메일 중복 확인
+    @RequestMapping(value = "/checkEmail", method = RequestMethod.GET)
+    @ResponseBody
+    public String checkEmail(@RequestParam("userEmail") String userEmail) {
+        User user = userService.getUser(userEmail);
+        return (user == null) ? "AVAILABLE" : "EXISTS";
+    }
+
+    // 닉네임 중복 확인
+    @RequestMapping(value = "/checkNickname", method = RequestMethod.GET)
+    @ResponseBody
+    public String checkNickname(@RequestParam("userNickname") String userNickname) {
+        User user = userService.getUser(userNickname);
+        return (user == null) ? "AVAILABLE" : "EXISTS";
+    }
+ // 이메일 인증 코드 재발송 처리 (POST 요청)
+    @RequestMapping(value = "/email/resend", method = RequestMethod.POST)
+    public String resendVerificationEmail(HttpSession session, Model model) {
+        // 세션에서 tempUser를 가져옴 (회원가입 시 입력한 이메일 정보가 포함된 User 객체)
+        User tempUser = (User) session.getAttribute("tempUser");
+
+        // tempUser가 없으면 오류 메시지를 반환하도록 수정
+        if (tempUser == null) {
+            model.addAttribute("errorMessage", "세션이 만료되었습니다. 다시 회원가입을 진행해주세요.");
+            return "user/email";  // 로그인 페이지로 리다이렉트하지 않고 인증 페이지로 유지
+        }
+
+        try {
+            // 새로운 이메일 인증 코드 생성
+            int emailCode = (int) (Math.random() * 1000000); // 6자리 인증 코드 생성
+            emailService.sendVerificationEmail(tempUser.getUserEmail(), emailCode); // 인증 코드 전송
+
+            // 새로운 이메일 인증 정보 생성 및 저장
+            Email newEmailVerification = new Email();
+            newEmailVerification.setEmailUserNum(tempUser.getUserNum()); // 해당 사용자의 userNum으로 설정
+            newEmailVerification.setEmailCode(emailCode); // 새로운 인증 코드 설정
+            newEmailVerification.setEmailExpiration(emailService.calculateExpirationDate()); // 새로운 만료 시간 설정
+            emailService.addEmail(newEmailVerification); // 새로운 이메일 인증 정보 DB에 저장
+
+            // 인증 페이지로 리다이렉트
+            model.addAttribute("resendMessage", "인증 코드가 이메일로 다시 전송되었습니다.");
+            return "user/email";  // 인증 페이지로 유지
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "인증 코드 재발송 중 오류가 발생했습니다. 다시 시도해주세요.");
+            return "user/email"; // 오류 시 다시 인증 페이지로 이동
+        }
+    }
+
+
+    
 
     
     // 아이디 찾기 페이지 요청 (GET 요청)
@@ -230,6 +299,7 @@ public class UserController {
     public String showIdFindPage() {
         return "user/idfind"; // idfind.jsp 파일로 이동
     }
+    
 
     // 아이디 찾기 요청 처리
     @RequestMapping(value = "/displayUserId", method = RequestMethod.POST)
@@ -272,23 +342,26 @@ public class UserController {
     @RequestMapping(value = "/findPassword", method = RequestMethod.POST)
     public String findPassword(@RequestParam("userId") String userId,
                                @RequestParam("userName") String userName,
-                               @RequestParam("userEmail") String userEmail, Model model) {
+                               @RequestParam("userEmail") String userEmail, 
+                               RedirectAttributes redirectAttributes) {
         User user = userService.findUserByIdNameAndEmail(userId, userName, userEmail);
 
         if (user == null || !user.getUserId().equals(userId) || !user.getUserName().equals(userName)) {
-            model.addAttribute("error", "입력하신 정보와 일치하는 사용자가 없습니다.");
-            return "user/passwordfind";
+            // FlashAttribute에 오류 메시지 추가
+            redirectAttributes.addFlashAttribute("error", "입력하신 정보와 일치하는 사용자가 없습니다.");
+            return "redirect:/user/passwordfind"; // 리다이렉트를 사용하여 새로고침 시 메시지가 남지 않게 처리
         }
 
         // 서비스에서 임시 비밀번호 생성 및 비밀번호 업데이트 처리
         userService.updatePassword(user);
 
-        // 성공 메시지를 Model에 추가
-        model.addAttribute("message", "임시 비밀번호가 이메일로 전송되었습니다.");
+        // 성공 메시지를 FlashAttribute에 추가
+        redirectAttributes.addFlashAttribute("successMessage", "임시 비밀번호가 이메일로 전송되었습니다.");
 
-        // 비밀번호가 전송되었다는 페이지로 이동
-        return "user/displayUserpw";
+        // 팝업 후 로그인 페이지로 리다이렉트
+        return "redirect:/user/passwordfind"; // 팝업이 뜬 후 로그인 페이지로 이동
     }
+
     
  // 회원정보 수정 페이지로 이동 (GET 방식)
     @RequestMapping(value = "/userUpdate", method = RequestMethod.GET)
@@ -304,25 +377,62 @@ public class UserController {
         return "user/userUpdate";  // userUpdate.jsp로 이동
     }
 
-    // 회원정보 수정 처리 (POST 방식)
-    @RequestMapping(value = "/userUpdate", method = RequestMethod.POST)
-    public String updateUser(
-            @ModelAttribute User user, 
+ // 회원정보 수정 처리 (POST 방식) - 닉네임 변경
+    @RequestMapping(value = "/updateNickname", method = RequestMethod.POST)
+    public String updateNickname(
+            @RequestParam("nickname") String nickname, 
             Authentication authentication, 
+            RedirectAttributes redirectAttributes, 
             Model model) {
+        
+        // 인증되지 않은 사용자는 로그인 페이지로 리다이렉트
         if (authentication == null) {
-            return "redirect:/user/login";  // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+            return "redirect:/user/login";
+        }
+
+        // 현재 로그인된 사용자의 ID 가져오기
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String userId = userDetails.getUserId();
+
+        // 닉네임 중복 확인
+        User existingUser = userService.getUser(nickname);
+        
+        if (existingUser != null && !existingUser.getUserId().equals(userId)) {
+            // 중복된 닉네임이 있고, 그 닉네임이 현재 사용자의 것이 아니면 오류 메시지 출력
+            model.addAttribute("errorMessage", "이미 사용중인 닉네임입니다.");
+            
+            // 기존 사용자 정보를 다시 모델에 담아 JSP로 전달
+            User loginUser = userService.getUser(userId);
+            model.addAttribute("user", loginUser);
+            model.addAttribute("currentExperience", loginUser.getUserExperience());
+            model.addAttribute("experienceForNextLevel", ExperienceUtil.getExperienceForNextLevel(loginUser.getUserLevel()));
+            model.addAttribute("progressPercentage", ExperienceUtil.calculateProgressPercentage(loginUser.getUserExperience(), ExperienceUtil.getExperienceForNextLevel(loginUser.getUserLevel())));
+            
+            return "user/mypage"; // 오류 시 다시 마이페이지로 이동
         }
 
         try {
-            userService.modifyUser(user);
-            model.addAttribute("message", "회원 정보가 성공적으로 업데이트되었습니다.");
+            // 닉네임 수정
+            userService.modifyUserNickname(userId, nickname);
+            
+            // 성공 메시지 전달
+            redirectAttributes.addFlashAttribute("successMessage", "닉네임이 성공적으로 변경되었습니다.");
+            return "redirect:/user/profile";  // 닉네임 변경 후 마이페이지로 리다이렉트
         } catch (Exception e) {
-            model.addAttribute("error", "회원 정보 업데이트 중 오류가 발생했습니다.");
+            // 예외 발생 시 오류 메시지 출력
+            model.addAttribute("error", "닉네임 업데이트 중 오류가 발생했습니다.");
+            
+            // 기존 사용자 정보를 다시 모델에 담아 JSP로 전달
+            User loginUser = userService.getUser(userId);
+            model.addAttribute("user", loginUser);
+            model.addAttribute("currentExperience", loginUser.getUserExperience());
+            model.addAttribute("experienceForNextLevel", ExperienceUtil.getExperienceForNextLevel(loginUser.getUserLevel()));
+            model.addAttribute("progressPercentage", ExperienceUtil.calculateProgressPercentage(loginUser.getUserExperience(), ExperienceUtil.getExperienceForNextLevel(loginUser.getUserLevel())));
+            
+            return "user/mypage";  // 오류 시 수정 페이지 유지
         }
-        
-        return "user/userUpdate";
     }
+
 
  // 비밀번호 변경 페이지로 이동 (GET 요청)
     @RequestMapping(value = "/passwordUpdate", method = RequestMethod.GET)
@@ -335,29 +445,32 @@ public class UserController {
         return "user/passwordUpdate"; // 비밀번호 변경 페이지로 이동
     }
 
-    // 비밀번호 변경 처리 (POST 요청)
+ // 비밀번호 변경 처리 (POST 요청)
     @RequestMapping(value = "/passwordUpdate", method = RequestMethod.POST)
     public String updatePassword(
         @RequestParam("newPassword") String newPassword,
         @RequestParam("confirmNewPassword") String confirmNewPassword,
         Authentication authentication, 
-        Model model) {
+        RedirectAttributes redirectAttributes) {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         User loginUser = userService.getUser(userDetails.getUserId());
 
         // 새 비밀번호와 확인 비밀번호가 일치하는지 확인
         if (!newPassword.equals(confirmNewPassword)) {
-            model.addAttribute("error", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
-            return "user/passwordUpdate";
+            redirectAttributes.addFlashAttribute("error", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+            return "redirect:/user/passwordUpdate";
         }
 
         // 새 비밀번호로 업데이트
-        userService.updateUserPassword(loginUser, newPassword);  // 새로 추가한 메서드 사용
+        userService.updateUserPassword(loginUser, newPassword);
 
-        model.addAttribute("message", "비밀번호가 성공적으로 변경되었습니다.");
-        return "user/passwordUpdate";
+        // 성공 메시지 전달 (리다이렉트 후 JSP에서 메시지를 확인해 팝업 표시)
+        redirectAttributes.addFlashAttribute("successMessage", "비밀번호가 성공적으로 변경되었습니다.");
+        
+        return "redirect:/user/passwordUpdate";
     }
+
  
  // 회원 탈퇴 확인 페이지로 이동 (GET 요청)
     @RequestMapping(value = "/userDelete", method = RequestMethod.GET)
@@ -374,33 +487,42 @@ public class UserController {
     public String deleteUser(
         Authentication authentication,
         @RequestParam("password") String password, 
-        HttpServletRequest request,  // HttpServletRequest 추가
-        HttpServletResponse response, // HttpServletResponse 추가
+        HttpServletRequest request, 
+        HttpServletResponse response, 
         Model model) {
 
+        // 현재 사용자가 인증되었는지 확인
         if (authentication == null) {
-            return "redirect:/user/login";  // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+            return "redirect:/user/login";  // 인증되지 않았으면 로그인 페이지로 리다이렉트
         }
 
+        // 현재 사용자 정보 가져오기
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         User loginUser = userService.getUser(userDetails.getUserId());
 
-        // 비밀번호 확인
+        // 입력된 비밀번호와 DB에 저장된 비밀번호 로그로 출력 (디버깅용)
+        log.info("입력된 비밀번호: " + password);
+        log.info("DB에 저장된 암호화된 비밀번호: " + loginUser.getUserPassword());
+
+        // 입력된 비밀번호와 DB에 저장된 비밀번호를 비교
         if (!passwordEncoder.matches(password, loginUser.getUserPassword())) {
+            log.warn("비밀번호 불일치");
             model.addAttribute("error", "비밀번호가 일치하지 않습니다.");
-            return "user/userDelete";
+            return "user/deleteUser";  // 비밀번호가 틀리면 탈퇴 페이지로 다시 이동
         }
 
-        // user_status를 0으로 변경하여 계정 비활성화
-        loginUser.setUserStatus(0);
-        userService.modifyUser(loginUser);  // 상태 업데이트
+        log.info("비밀번호 일치, 회원 탈퇴 진행");
 
-        // 인증 상태 해제 및 로그아웃 처리
+        // user_status를 0으로 변경하는 메서드를 호출
+        userService.updateUserStatus(loginUser.getUserId(), 0);  // 상태 변경 후 DB에 반영
+
+        // 로그아웃 처리 및 세션 해제
         new SecurityContextLogoutHandler().logout(request, response, authentication);
 
-        model.addAttribute("message", "회원 탈퇴가 완료되었습니다.");
-        return "redirect:/user/login";  // 로그인 페이지로 리다이렉트
+        return "redirect:/user/login";  // 탈퇴 후 로그인 페이지로 리다이렉트
     }
+
+
     
     // 스크랩 보기 페이지로 이동
     @RequestMapping(value = "/myScrap", method = RequestMethod.GET)
@@ -515,7 +637,16 @@ public class UserController {
 
         // 사용자가 작성한 중고장터 게시물 목록을 가져옴
         Map<String, Object> productListMap = productService.getProductList(paramMap);
-        List<Product> productList = (List<Product>) productListMap.get("productList"); // 게시물 목록 추출
+
+        // Type safety 경고를 없애기 위한 방법
+        Object productListObj = productListMap.get("productList");
+        List<Product> productList = null;
+        if (productListObj instanceof List<?>) {
+            // 리스트 안의 객체가 Product 타입인지 확인 후 안전하게 캐스팅
+            if (!((List<?>) productListObj).isEmpty() && ((List<?>) productListObj).get(0) instanceof Product) {
+                productList = (List<Product>) productListObj;
+            }
+        }
 
         // 데이터 확인을 위해 로그 추가
         log.info("중고장터 게시물 목록: " + productList);
@@ -524,6 +655,8 @@ public class UserController {
 
         return "user/myProduct"; // myProduct.jsp로 이동
     }
+
+
 
     
 
