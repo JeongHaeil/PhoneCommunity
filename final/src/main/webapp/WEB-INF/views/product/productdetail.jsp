@@ -535,8 +535,8 @@
    	
    			 $("#openChatRoomBtn").click(function () {
    				 
-   				 alert("sellerId before sending request: " + sellerId);  // sellerId 값 확인
-   				    alert("buyerId before sending request: " + loggedInUserId);  // buyerId 값 확인
+   				 //alert("sellerId before sending request: " + sellerId);  // sellerId 값 확인
+   				   // alert("buyerId before sending request: " + loggedInUserId);  // buyerId 값 확인
    				    console.log("Creating room with buyerId: " + loggedInUserId + ", sellerId: " + sellerId);  // 로그로 값 확인
 
    			        $.ajax({
@@ -583,7 +583,6 @@
                    sellerId: sellerId,
                  
                }),
-
                success: function (response) {
                	
                    // 생성된 채팅방으로 이동

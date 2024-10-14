@@ -171,7 +171,7 @@ public class ProductController {
 	    return "redirect:/product/list";
 	}
 	
-	   // 상품 등록 처리
+	// 상품 등록 처리
     @PostMapping("/chat")
     public String registerProduct(@ModelAttribute Product product, HttpSession session) {
         // 현재 로그인한 사용자 정보를 세션에서 가져옴
