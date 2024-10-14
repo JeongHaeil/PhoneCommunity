@@ -158,12 +158,12 @@ public class ProductController {
 	        }
 
 	        productService.modifyProduct(product);  // 상품 정보 수정
-	    }
+	    } 
 
 	    return "redirect:/product/detail?productIdx=" + product.getProductIdx();
 	}
 
-	// 상품 삭제 처리 (로그인된 사용자만 가능)
+	// 상품 삭제 처리 (로그인된 사용자만 가능) 
 	@PreAuthorize("hasRole('ROLE_ADMIN') or principal.userid eq #productUserid")
 	@RequestMapping("/remove")
 	public String remove(@RequestParam("productIdx") int productIdx, @RequestParam("productUserid") String productUserid) {
