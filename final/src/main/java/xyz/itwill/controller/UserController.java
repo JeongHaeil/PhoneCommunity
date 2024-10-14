@@ -239,6 +239,39 @@ public class UserController {
         User user = userService.getUser(userNickname);
         return (user == null) ? "AVAILABLE" : "EXISTS";
     }
+ // 이메일 인증 코드 재발송 처리 (POST 요청)
+    @RequestMapping(value = "/resend", method = RequestMethod.POST)
+    public String resendVerificationEmail(HttpSession session, Model model) {
+        // 세션에서 tempUser를 가져옴 (회원가입 시 입력한 이메일 정보가 포함된 User 객체)
+        User tempUser = (User) session.getAttribute("tempUser");
+
+        // 만약 세션에 tempUser가 없으면, 다시 회원가입 페이지로 리다이렉트
+        if (tempUser == null) {
+            return "redirect:/user/register";
+        }
+
+        try {
+            // 새로운 이메일 인증 코드 생성
+            int emailCode = (int) (Math.random() * 1000000); // 6자리 인증 코드 생성
+            emailService.sendVerificationEmail(tempUser.getUserEmail(), emailCode); // 인증 코드 전송
+
+            // 새로운 이메일 인증 정보 생성 및 저장
+            Email newEmailVerification = new Email();
+            newEmailVerification.setEmailUserNum(tempUser.getUserNum()); // 해당 사용자의 userNum으로 설정
+            newEmailVerification.setEmailCode(emailCode); // 새로운 인증 코드 설정
+            newEmailVerification.setEmailExpiration(emailService.calculateExpirationDate()); // 새로운 만료 시간 설정
+            emailService.addEmail(newEmailVerification); // 새로운 이메일 인증 정보 DB에 저장
+
+            // 인증 페이지로 리다이렉트
+            model.addAttribute("successMessage", "인증 코드가 이메일로 다시 전송되었습니다.");
+            return "user/email";  // 이메일 인증 페이지로 이동
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "인증 코드 재발송 중 오류가 발생했습니다. 다시 시도해주세요.");
+            return "user/email"; // 오류 시 다시 인증 페이지로 이동
+        }
+    }
+
+
     
 
     
