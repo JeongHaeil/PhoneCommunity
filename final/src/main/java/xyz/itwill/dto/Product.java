@@ -16,7 +16,7 @@ public class Product {
     private int productCount; // 조회수 (오타 수정)
     private int productSold; // 판매상태 1: 판매중, 2: 예약중, 3: 판매완료 (숫자로 변경)
     private String productMode; // 거래방법 1: 직거래, 2: 안전거래, 3: 택배 (숫자로 변경)
-    private int productStatus; // 글상태
+    private int productStatus; // 글상태 
     private int productPurchid; // 구매자 id
     private Date productSolddate; // 판매날짜
     private int productPrice; // 판매가격

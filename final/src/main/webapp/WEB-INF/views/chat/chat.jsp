@@ -19,7 +19,9 @@
 <h2>채팅방 ID: ${roomId}</h2>
 
 <h2>구매자 ID: ${buyerId}</h2>
+<h2>구매자 ID: ${loggedInUserId}</h2>
 <h2>판매자 ID: ${sellerId}</h2>
+<h2>판매자 ID: ${product.productUserid}</h2>
 <div id="chatWindow" style="height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
     <!-- 여기에 메시지들이 추가됩니다 -->
 </div>

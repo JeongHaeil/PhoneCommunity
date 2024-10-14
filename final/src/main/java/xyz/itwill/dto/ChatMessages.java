@@ -16,7 +16,7 @@ import lombok.Data;
 public class ChatMessages {
 	private int messageId;
 	private int roomId;
-	private int senderId;
+	private String senderId;
 	private String message;
 	private Date sentAt;
 }
