@@ -581,7 +581,7 @@ body {
 		    //var sellerId = "${sellerId}";  // 판매자 ID (서버에서 전달된 값 확인)
 		    console.log("Start Chat with Seller IDddddddddddddd: " + sellerId + " and Buyer ID: " + buyerId);
 		    console.log("Starting chat with roomIdddddddddddddd: " + roomId + ", buyerId: " + buyerId + ", sellerId: " + sellerId);  // 로그 추가
-		   
+		    
         $.ajax({
             url: "${pageContext.request.contextPath}/chatroom/start",  // 채팅 시작 URL
             type: "POST",
