@@ -389,7 +389,7 @@ body {
 
 				<!-- 버튼 -->
 				<div class="buttons">
-					<button id="openChatRoomBtn"class="btn btn-chat" onclick="startChat ('${product.productUserid}', '${loginUser.userId}')">채팅하기</button>
+					<button id="openChatRoomBtn"class="btn btn-chat" >채팅하기</button>
 					<div id="chatRoomContainer"></div> <!-- 채팅방 UI가 로드될 곳 -->
 					<button class="btn btn-safe">안전거래</button>
 				</div>
@@ -529,6 +529,7 @@ body {
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 	<script type="text/javascript">
+	
 	 $(document).ready(function () {
 		 var loggedInUserId = "${loginUser.userId}";   //"${loginUser.userId}";  // 로그인한 사용자 (구매자) ID
 		 var sellerId = "${product.productUserid}";  // 판매자 ID (상품의 소유자)
@@ -543,11 +544,11 @@ body {
 		 
 	
 			 $("#openChatRoomBtn").click(function () {
-				 
+				 	
 				 alert("sellerId before sending request: " + sellerId);  // sellerId 값 확인
 				    alert("buyerId before sending request: " + loggedInUserId);  // buyerId 값 확인
 				    console.log("Creating room with buyerId: " + loggedInUserId + ", sellerId: " + sellerId);  // 로그로 값 확인
-
+				   
 			        $.ajax({
 			            url: "${pageContext.request.contextPath}/chatroom/createRoom",   // 방 번호를 생성하는 서버 URL
 			            type: "POST",             // 새로운 방 번호 생성은 POST 방식으로 요청
@@ -572,8 +573,8 @@ body {
 			            }
 			        });
 			    });
-
-				// startChat() 함수로 채팅 시작 요청
+			 
+		
 		//function startChat(roomId) {
 		function startChat(roomId) {
 			var buyerId = loggedInUserId;  // 이미 상단에서 설정된 buyerId 값 사용
@@ -592,9 +593,7 @@ body {
                 sellerId: sellerId,
               
             }),
-
             success: function (response) {
-            	
                 // 생성된 채팅방으로 이동
                 window.location.href = "${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId;
             },
@@ -625,7 +624,64 @@ body {
 	    }); 
 	    		
 	
-	 
+	/*
+	$(document).ready(function () {
+	    var loggedInUserId = "${loginUser.userId}";   // 로그인한 사용자 (구매자) ID
+	    var sellerId = "${product.productUserid}";  // 판매자 ID (상품의 소유자)
+	    var buyerId = loggedInUserId;
+
+	    console.log("buyerId: " + buyerId);
+	    console.log("sellerId: " + sellerId);
+
+	    $("#openChatRoomBtn").click(function () {
+	        // 새로운 방 생성
+	        $.ajax({
+	            url: "${pageContext.request.contextPath}/chatroom/createRoom",
+	            type: "POST",
+	            contentType: "application/json",
+	            data: JSON.stringify({
+	                buyerId: buyerId,
+	                sellerId: sellerId
+	            }),
+	            beforeSend: function(xhr) {
+	                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");  // CSRF 토큰 설정
+	            },
+	            success: function (newRoomId) {
+	                console.log("새로운 방 생성됨, roomId: " + newRoomId);
+	                startChat(newRoomId);  // 방 번호를 사용하여 채팅 시작
+	            },
+	            error: function (xhr, status, error) {
+	                console.error('Error creating chat room:', error);
+	            }
+	        });
+	    });
+
+	    function startChat(roomId) {
+	        console.log("채팅 시작, roomId: " + roomId);
+	        $.ajax({
+	            url: "${pageContext.request.contextPath}/chatroom/start",
+	            type: "POST",
+	            contentType: "application/json",
+	            data: JSON.stringify({
+	                roomId: roomId,
+	                buyerId: buyerId,
+	                sellerId: sellerId
+	            }),
+	            beforeSend: function(xhr) {
+	                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");  // CSRF 토큰 설정
+	            },
+	            success: function () {
+	                window.location.href = "${pageContext.request.contextPath}/chatroom/room/" + roomId;
+	            },
+	            error: function (xhr, status, error) {
+	                console.error("Error starting chat:", error);
+	            }
+	        });
+	    }
+	});
+
+*/
+
 	 
 	</script>
 </body>

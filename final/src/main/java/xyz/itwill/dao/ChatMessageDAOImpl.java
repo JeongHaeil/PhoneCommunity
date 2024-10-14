@@ -26,4 +26,10 @@ public class ChatMessageDAOImpl implements ChatMessageDAO{
 		return sqlSession.getMapper(ChatMessageMapper.class).getMessagesByRoomId(roomId);
 	}
 
+	@Override
+	public void saveChatMessage(ChatMessages messages) {
+		sqlSession.getMapper(ChatMessageMapper.class).insertChatMessage(messages);
+		
+	}
+
 }

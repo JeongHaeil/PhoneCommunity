@@ -1,11 +1,12 @@
 package xyz.itwill.controller;
 
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -93,8 +94,8 @@ public class ChatController  {
 	    	        model.addAttribute("buyerId", buyerId);
 	    	        model.addAttribute("sellerId", sellerId);
 	    	        model.addAttribute("roomId", roomId);
-	    	        return "redirect:/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId;
-	    	        //return "chat/chat";  // JSP로 이동
+	    	        //return "redirect:/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId;
+	    	       return "chat/chat";  // JSP로 이동
 
 	    	    } catch (NumberFormatException e) {
 	    	        e.printStackTrace();
@@ -123,19 +124,7 @@ public class ChatController  {
 		       
 		         return "chat/chat";  // 채팅방 JSP로 이동
 		    }
-		  
-		    
-		    
-	    
-	    // 새로운 방 번호 생성
-		    /*
-		    @PostMapping("/createRoom")
-		    @ResponseBody
-	    public int createRoom() {
-	    	int newRoomId = chatRoomsService.generateNewRoomId();  // 서비스에서 새로운 방 번호 생성
-	    	return newRoomId;  // 생성된 방 번호를 클라이언트로 반환
-	    }
-	 */
+
 		@PostMapping("/createRoom")
 		@ResponseBody
 	    public int createRoom(@RequestBody Map<String, Object> requestData) {
@@ -145,18 +134,20 @@ public class ChatController  {
 			 String buyerId = requestData.get("buyerId").toString();
 			 String sellerId = requestData.get("sellerId").toString();
 
-			    ChatRooms chatRoom = new ChatRooms();
-			    chatRoom.setBuyerId(buyerId);  // String으로 설정
-			    chatRoom.setSellerId(sellerId);  // String으로 설정
-			    
+			 
+			 
+			 ChatRooms newRoom = new ChatRooms();
+			    newRoom.setBuyerId(buyerId);
+			    newRoom.setSellerId(sellerId);
+			    int roomId = chatRoomsService.createChatRooms(newRoom);  // 방을 생성하고 방 번호 반환
+			  
 			   // int roomId = chatRoomsService.createChatRooms(chatRoom);
 			   // Map<String, Object> response = new HashMap<>();
 			   // response.put("roomId", roomId);
 			   // return response;
-			    
-			    
-			    
-			    return chatRoomsService.createChatRooms(chatRoom);  // 방 번호 반환
+		
+			    //return chatRoomsService.createChatRooms(chatRoom);  // 방 번호 반환
+			    return roomId;
 	    }
 
 	    
@@ -174,7 +165,5 @@ public class ChatController  {
 	        model.addAttribute("loggedInUserId", loggedInUserId);
 	        return "chat/chat"; // 채팅 페이지로 이동
 	    }
-	    
-	    
 	
 }
