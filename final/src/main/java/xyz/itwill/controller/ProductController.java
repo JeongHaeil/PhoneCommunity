@@ -32,15 +32,25 @@ public class ProductController {
 	private final WebApplicationContext context;
 
 	private static final String UPLOAD_DIR = "/resources/images/";
-	@RequestMapping("/list")
-	public String list(@RequestParam Map<String, Object> map, Model model) {
-	    map.put("productStatus", 1);  // 기본적으로 product_status가 1인 상태의 글만 보여줌
-	    Map<String, Object> resultMap = productService.getProductList(map);
-	    model.addAttribute("result", resultMap);
-	    model.addAttribute("searchMap", map);
-	    return "product/productlist";
-	}
 
+    @RequestMapping("/list")
+    public String list(@RequestParam Map<String, Object> map, Model model) {
+        map.put("productStatus", 1);  // 기본적으로 product_status가 1인 상태의 글만 보여줌
+
+        // 검색 키워드 받기
+        String keyword = (String) map.get("keyword");
+        String column = (String) map.get("column");
+
+        if (keyword != null && !keyword.isEmpty()) {
+            map.put("keyword", keyword);
+            map.put("column", column);
+        }
+
+        Map<String, Object> resultMap = productService.getProductList(map);
+        model.addAttribute("result", resultMap);
+        model.addAttribute("searchMap", map); // 검색 조건도 함께 넘김
+        return "product/productlist";
+    }
 
 	// 상품 등록 페이지로 이동
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
