@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -200,6 +201,10 @@
             </div>
             <button type="submit" class="btn btn-login-custom">로그인</button>
         </form>
+        
+			<a href="<c:url value="/naver/login"/>">
+				<img alt="네이버 로그인" src="<c:url value="/resources/images/btnW_naver.png"/>" style="width: 340px; height: 60px;">
+			</a>	
 
         <div class="text-center mt-3">
             <p>아직 회원이 아니신가요? <a href="${pageContext.request.contextPath}/user/terms" class="register-link-custom">회원가입 하기</a></p>
