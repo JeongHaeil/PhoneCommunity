@@ -70,6 +70,14 @@ public class ChatRoomsDAOImpl implements ChatRoomsDAO{
 	        params.put("sellerId", sellerId);
 	        return sqlSession.selectOne("findExistingRoom", params);
 	}
+
+
+
+	@Override
+	public void insertChatRoom(ChatRooms chatRoom) {
+		 sqlSession.getMapper(ChatRoomsMapper.class).insertChatRoom(chatRoom);
+		
+	}
 	
 
 }

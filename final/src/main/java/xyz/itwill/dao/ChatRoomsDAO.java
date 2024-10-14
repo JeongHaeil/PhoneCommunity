@@ -21,4 +21,7 @@ public interface ChatRoomsDAO {
 	
 	int createChatRooms(ChatRooms chatRooms);
 	Integer findExistingRoom(@Param("buyerId") String buyerId, @Param("sellerId") String sellerId);
+	
+	
+	void insertChatRoom(ChatRooms chatRoom);
 }

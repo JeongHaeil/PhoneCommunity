@@ -69,7 +69,10 @@
 </select>
   
  
-  
+  <insert id="insertChatRoom" parameterType="ChatRooms">
+    INSERT INTO chatrooms (room_id, seller_id, product_id, created_at, chat_status)
+    VALUES (chatrooms_seq.NEXTVAL, #{sellerId}, #{productId}, SYSDATE, 'active')
+</insert>
   
   
   

@@ -76,8 +76,8 @@ public class ChatController  {
 	    	        String buyerId = requestData.get("buyerId").toString();
 	    	        String sellerId = requestData.get("sellerId").toString();
 	    	        //Integer roomId = requestData.containsKey("roomId") ? Integer.parseInt(requestData.get("roomId").toString()) : null;
-
 	    	        Integer  roomId = chatRoomsService.findExistingRoom(buyerId, sellerId);
+	    	        //Integer roomId = 100;
 	    	        System.out.println("buyerId: " + buyerId);
 	    	        System.out.println("sellerId: " + sellerId);
 	    	        System.out.println("roomId: " + roomId);

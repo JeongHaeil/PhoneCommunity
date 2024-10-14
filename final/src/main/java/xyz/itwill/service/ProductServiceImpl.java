@@ -1,20 +1,29 @@
 
 package xyz.itwill.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import lombok.RequiredArgsConstructor;
-import xyz.itwill.dao.ProductDAO;
-import xyz.itwill.dto.Product;
-import xyz.itwill.util.Pager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
+import xyz.itwill.dao.ChatRoomsDAO;
+import xyz.itwill.dao.ProductDAO;
+import xyz.itwill.dto.ChatRooms;
+import xyz.itwill.dto.Product;
+import xyz.itwill.mapper.ChatRoomsMapper;
+import xyz.itwill.mapper.ProductMapper;
+import xyz.itwill.util.Pager;
 
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final ProductDAO productDAO;
+    private final ChatRoomsDAO chatRoomsDAO;
+    
+    
 
     @Transactional
     @Override
@@ -74,5 +83,22 @@ public class ProductServiceImpl implements ProductService {
 		
 	}
 
+	
+	 @Override
+	    public int createProductAndChatRoom(Product product) {
+	        // 1. 상품 등록 (productIdx 자동 생성)
+	        productDAO.insertProduct(product); // 상품 등록
+	        int productIdx = product.getProductIdx();  // 생성된 productIdx 가져오기
 
+	        // 2. 채팅방 생성, roomId를 productIdx로 설정
+	        ChatRooms chatRoom = new ChatRooms();
+	        chatRoom.setRoomId(productIdx);  // roomId를 productIdx와 동일하게 설정
+	        chatRoom.setProductIdx(productIdx);  // 상품과 연동
+	        chatRoom.setBuyerId(null);  // 아직 구매자가 없음
+	        chatRoom.setSellerId(product.getProductUserid());  // 판매자 정보 추가
+	        chatRoomsDAO.createChatRooms(chatRoom);  // 채팅방 생성
+
+	        return productIdx;  // 생성된 productIdx 반환
+	    }
+	
 }
