@@ -41,6 +41,7 @@ var socket;
 $(document).ready(function () {
 	
 		 var loggedInUserId ="${loginUser.userId}"; //"${loginUser.userId}";  // 로그인한 사용자 (구매자) ID
+		 //var sellerId = "${sellerId}"	//"${product.productUserid}";  // 판매자 ID (상품의 소유자)
 		 var sellerId = "${sellerId}"	//"${product.productUserid}";  // 판매자 ID (상품의 소유자)
 		 var buyerId = loggedInUserId;
 		 var roomId = "${roomId}";  // 채팅방 ID (이미 생성된 채팅방의 ID)
@@ -61,10 +62,16 @@ $(document).ready(function () {
 		// WebSocket 메시지 수신 시
 		socket.onmessage = function(event) {
 	    console.log("Received from WebSocket: " + event.data);
-	    var chatMessages = document.getElementById("chatMessages");
+	    console.log("Received from WebSocket: " + event.data);
+	    
+	    // chatMessages 대신 chatWindow 사용
+	    var chatWindow = document.getElementById("chatWindow");
 	    var newMessage = document.createElement("p");
 	    newMessage.textContent = event.data;
-	    chatMessages.appendChild(newMessage);  // 메시지를 채팅창에 추가
+	    chatWindow.appendChild(newMessage);  // 메시지를 채팅창에 추가
+
+	    // 스크롤을 최신 메시지로 이동
+	    chatWindow.scrollTop = chatWindow.scrollHeight;
 };
 		
 		// WebSocket 연결 종료 시

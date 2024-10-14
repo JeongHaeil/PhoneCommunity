@@ -3,23 +3,34 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
   <mapper namespace="xyz.itwill.mapper.ChatRoomsMapper">
-  
+  <!-- 
   	<insert id="createChatRooms" parameterType="ChatRooms"> 
 		 		INSERT INTO chatrooms (room_id, seller_id, buyer_id, product_id, created_at)
     VALUES (room_id_seq.NEXTVAL, #{sellerId}, #{buyerId}, #{productId}, SYSDATE)
     
  	</insert>
- 	
+ 	 -->
+ 	<insert id="createChatRooms" parameterType="ChatRooms">
+    <selectKey keyProperty="roomId" resultType="int" order="BEFORE">
+        SELECT chatroom_seq.NEXTVAL FROM dual
+    </selectKey>
+    INSERT INTO chatrooms (room_id, seller_id, buyer_id, created_at)
+    VALUES (#{roomId}, #{sellerId}, #{buyerId}, SYSDATE)
+</insert>
+
+ 	 
+ 	 
  	
  	<select id="getChatRooms" resultType="ChatRooms" parameterType="map">
-	 	SELECT room_id, seller_id, buyer_id, product_id, created_at
+	 	SELECT room_id, seller_id, buyer_id, created_at
     FROM chatrooms
     WHERE seller_id = #{sellerId} 
     AND buyer_id = #{buyerId} 
-    AND product_id = #{productId}
-    And room_id = ${roomId}
+    And room_id = #{roomId}
  		AND ROWNUM = 1
  	</select>
+ 	
+ 
   
   
 	  <select id="getLastInsertedRoomId" resultType="int">
@@ -41,15 +52,21 @@
     </select>
   
   
-  <select id="findExistingRoom" resultType="int" parameterType="map">
+<!--   <select id="findExistingRoom" resultType="int" parameterType="map">
     SELECT room_id 
     FROM chatrooms
     WHERE seller_id = #{sellerId}
     AND buyer_id = #{buyerId}
     AND product_id = #{productId}
     AND ROWNUM = 1
+</select> -->
+    <select id="findExistingRoom" resultType="int" parameterType="map">
+    SELECT room_id 
+    FROM chatrooms
+       WHERE buyer_id = #{buyerId, jdbcType=VARCHAR}
+      AND seller_id = #{sellerId, jdbcType=VARCHAR}
+      AND ROWNUM = 1
 </select>
-  
   
  
   
