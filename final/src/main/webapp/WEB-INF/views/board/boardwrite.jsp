@@ -53,6 +53,8 @@
 					<div class="me-2">
 						<select name="boardtag" class="form-select">
 							<option value="[공지]" <c:if test="${boardtag  == '공지'}"> selected </c:if>>공지</option>
+							<option value="[업데이트]" <c:if test="${boardtag  == '업데이트'}"> selected </c:if>>업데이트</option>
+							<option value="[이벤트]" <c:if test="${boardtag  == '이벤트'}"> selected </c:if>>이벤트</option>
 						</select>
 					</div>
 				</c:when>

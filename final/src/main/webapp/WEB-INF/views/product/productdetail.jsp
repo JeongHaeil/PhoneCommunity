@@ -373,6 +373,7 @@
                         </c:forEach>
                     </div>
 
+<<<<<<< HEAD
                     <!-- 이전/다음 버튼 -->
                     <div class="swiper-button-next"></div>
                     <div class="swiper-button-prev"></div>
@@ -396,6 +397,99 @@
                         <tr>
                             <td>${product.productModelStatus}</td>
                             <td><c:choose>
+=======
+				<!-- 추가 정보 -->
+				<div class="extra-info">
+					<ul>
+						<li>결제혜택: 페이코 최대 4만원 즉시할인, KB국민카드 18개월 6% 특별 할부 수수료</li>
+                        <li>무이자혜택: 1만원 이상 무이자 할부</li>
+					</ul>
+				</div>
+
+				<!-- 버튼 -->
+				<div class="buttons">
+					<button id="openChatRoomBtn"class="btn btn-chat" onclick="startChat ('${product.productUserid}', '${loginUser.userId}')">채팅하기</button>
+					<div id="chatRoomContainer"></div> <!-- 채팅방 UI가 로드될 곳 -->
+					<button class="btn btn-safe">안전거래</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- 상품 정보 및 가게 정보 -->
+		<div class="product-store-info">
+			<!-- 상품 정보 -->
+			<div class="product-info-left">
+				<h4 style="font-weight: bold;">상품 정보</h4>
+				<div class="left-wrap" style="border-top: 1px solid #e1e1e1; margin-top: 25px;">
+					<ul style="margin-top: 25px;">
+						<li>- 상품명: ${product.productSubject}</li>
+						<li>- 가격: ${product.productPrice}원</li>
+						<li>- 상품상태: ${product.productModelStatus}</li>
+						<li>- 내용: ${product.productContent}</li>
+					</ul>
+				</div>
+			</div>
+
+			<!-- 가게 정보 -->
+			<div class="store-info-right">
+				<h4 style="font-weight: bold;">프로필 정보</h4>
+				<div class="left-wrap" style="border-top: 1px solid #e1e1e1; margin-top: 25px;">
+					<div class="store-name-container" style="margin-top: 30px;">
+						<div class="store-name">${product.productUsernickname}</div>
+						<img src="https://via.placeholder.com/50" alt="프로필 사진" width="70px;">
+					</div>
+
+					<!-- 두 번째 테이블 -->
+					<table class="info-table-2">
+						<thead>
+							<tr>
+								<th>안전거래</th>
+								<th>거래후기</th>
+								<th>단골</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td>0</td>
+								<td>2</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div class="posted-product">
+						<img src="https://via.placeholder.com/60" alt="아이폰 13미니">
+						<div class="posted-product-info">
+							${product.productSubject}<br> ${product.productPrice}원
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+        <!-- 다른 상품 목록 추가 -->
+        <div class="other-products-section">
+          
+            <div class="other-products-section">
+    <h3>전체 상품 목록 </h3>
+    <div class="row product-list">
+        <c:forEach var="product" items="${otherProductList}">
+            <div class="col-md-3 col-sm-6 mb-4">
+                <a href="${pageContext.request.contextPath}/detail?productIdx=${product.productIdx}" class="text-decoration-none">
+                    <div class="product-card">
+                        <!-- 글 번호 표시 -->
+                        <div class="product-meta text-muted" style="font-size: 12px; margin-bottom: 5px;">
+                            글 번호: ${product.productIdx}
+                        </div>
+                        <img src="${pageContext.request.contextPath}/upload/${product.productImage}" alt="상품 이미지" class="img-fluid">
+                        <div class="product-meta">
+                            <span class="text-muted">판매</span>, <span>${product.productRegisterdate}</span>
+                        </div>
+                        <p class="product-title">${product.productSubject}</p>
+                        <div class="product-details">
+                            <p>· 배송 방법:
+                                <c:choose>
+>>>>>>> branch 'dev' of https://github.com/JeongHaeil/final.git
                                     <c:when test="${product.productMode == '직거래'}">직거래</c:when>
                                     <c:when test="${product.productMode == '안전거래'}">안전거래</c:when>
                                     <c:otherwise>택배</c:otherwise>
@@ -420,9 +514,21 @@
                     <button class="btn btn-safe">안전거래</button>
                 </div>
 
+<<<<<<< HEAD
+=======
+                <c:choose>
+                    <c:when test="${pager.endPage != pager.totalPage}">
+                        <a href="${pageContext.request.contextPath}/detail?productIdx=${product.productIdx}&pageNum=${pager.nextPage}&pageSize=${pager.pageSize}">[다음]</a>
+                    </c:when>
+                    <c:otherwise>
+                        [다음] 
+                    </c:otherwise>
+                </c:choose>
+>>>>>>> branch 'dev' of https://github.com/JeongHaeil/final.git
             </div>
         </div>
 
+<<<<<<< HEAD
         <!-- 상품 정보 및 가게 정보 -->
         <div class="product-store-info">
             <!-- 상품 정보 -->
@@ -505,6 +611,109 @@
             },
         });
     </script>
+=======
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+	<script type="text/javascript">
+	 $(document).ready(function () {
+		 var loggedInUserId = "${loginUser.userId}";   //"${loginUser.userId}";  // 로그인한 사용자 (구매자) ID
+		 var sellerId = "${product.productUserid}";  // 판매자 ID (상품의 소유자)
+		 var roomId = "${roomId}";  // 채팅방 ID (이미 생성된 채팅방의 ID)
+		 var buyerId = loggedInUserId;
+		 var newRoomId;
+		 
+		    console.log("buyerId: " + loggedInUserId);
+		    console.log("sellerId: " + sellerId);
+		    console.log("roomId: " + roomId);	
+		    console.log("loggedInUserId: " + loggedInUserId);	
+		 
+	
+			 $("#openChatRoomBtn").click(function () {
+				 
+				 alert("sellerId before sending request: " + sellerId);  // sellerId 값 확인
+				    alert("buyerId before sending request: " + loggedInUserId);  // buyerId 값 확인
+				    console.log("Creating room with buyerId: " + loggedInUserId + ", sellerId: " + sellerId);  // 로그로 값 확인
+
+			        $.ajax({
+			            url: "${pageContext.request.contextPath}/chatroom/createRoom",   // 방 번호를 생성하는 서버 URL
+			            type: "POST",             // 새로운 방 번호 생성은 POST 방식으로 요청
+			            contentType: "application/json",
+			            data: JSON.stringify({
+			               
+			                buyerId: loggedInUserId,
+			                sellerId: sellerId,
+			              
+			            }),
+			            
+			            beforeSend: function(xhr) {
+			                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");  // CSRF 토큰 설정
+			            },
+			            success: function (newRoomId) {
+			                // 새로운 방 번호를 받아온 후, 채팅방으로 이동
+			                console.log("Created roomId: " + newRoomId);  // 방 번호 확인
+			                startChat(newRoomId);  // startChat 호출
+			            },
+			            error: function (xhr, status, error) {
+			                console.error('Error creating chat room:', error);
+			            }
+			        });
+			    });
+
+				// startChat() 함수로 채팅 시작 요청
+		//function startChat(roomId) {
+		function startChat(roomId) {
+			var buyerId = loggedInUserId;  // 이미 상단에서 설정된 buyerId 값 사용
+		    var sellerId = "${product.productUserid}";  // 판매자 ID (서버에서 전달된 값 확인)
+		    //var sellerId = "${sellerId}";  // 판매자 ID (서버에서 전달된 값 확인)
+		    console.log("Start Chat with Seller IDddddddddddddd: " + sellerId + " and Buyer ID: " + buyerId);
+		    console.log("Starting chat with roomIdddddddddddddd: " + roomId + ", buyerId: " + buyerId + ", sellerId: " + sellerId);  // 로그 추가
+		    
+        $.ajax({
+            url: "${pageContext.request.contextPath}/chatroom/start",  // 채팅 시작 URL
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+              	roomId: roomId,
+                buyerId: loggedInUserId,
+                sellerId: sellerId,
+              
+            }),
+
+            success: function (response) {
+            	
+                // 생성된 채팅방으로 이동
+                window.location.href = "${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId;
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");  // CSRF 토큰 설정
+            },
+            error: function (xhr, status, error) {
+                console.error("Error starting chat:", error);
+            }
+        });
+    }
+			 
+	        // 방 번호를 받아 해당 방의 채팅방 UI를 로드하는 함수
+	        function loadChatRoom(newRoomId) {
+	        	console.log("Loaded roomId: " + newRoomId); // roomId 값 출력
+	            $.ajax({
+	                url: "${pageContext.request.contextPath}/chatroom/room/" + newRoomId,  // 생성된 방 번호로 채팅방 UI를 요청
+	                type: "GET",
+	                success: function (data) {
+	                    $("#chatRoomContainer").html(data);  // 성공 시 채팅방 UI 로드
+	                },
+	                error: function (xhr, status, error) {
+	                    console.error("Error loading chat room:", error);
+	                }
+	            });
+	        } 
+	        
+	    }); 
+	    		
+	
+	 
+	 
+	</script>
+>>>>>>> branch 'dev' of https://github.com/JeongHaeil/final.git
 </body>
 
 </html>

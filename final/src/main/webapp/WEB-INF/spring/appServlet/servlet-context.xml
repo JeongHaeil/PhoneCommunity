@@ -60,10 +60,15 @@
    
 <!-- WebSocket 핸들러 매핑 -->
 <websocket:handlers>
+<<<<<<< HEAD
     <websocket:mapping path="/chat" handler="chatWebSocketHandler"/>
+=======
+    <websocket:mapping path="/ws/chat/{roomId}" handler="chatWebSocketHandler"/>
+>>>>>>> branch 'dev' of https://github.com/JeongHaeil/final.git
      <websocket:handshake-interceptors>
         <beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
     </websocket:handshake-interceptors>
+    
 </websocket:handlers>
 
 <!-- WebSocket 핸들러 빈 등록 -->

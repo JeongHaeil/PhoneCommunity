@@ -2,11 +2,14 @@ package xyz.itwill.dao;
 
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import xyz.itwill.dto.ChatRooms;
 
 public interface ChatRoomsDAO {
 	
-	void createChatRooms(ChatRooms chatRooms);
+	//void createChatRooms(ChatRooms chatRooms);
+	//int findExistingRoom(Map<String, Object> params);
 	
 	ChatRooms getChatRooms(Map<String, Object> map); 
 	
@@ -15,4 +18,10 @@ public interface ChatRoomsDAO {
 	int generateNewRoomId();
 	
 	int getSellerIdByProductId(String productId);
+<<<<<<< HEAD
+=======
+	
+	int createChatRooms(ChatRooms chatRooms);
+	Integer findExistingRoom(@Param("buyerId") String buyerId, @Param("sellerId") String sellerId);
+>>>>>>> branch 'dev' of https://github.com/JeongHaeil/final.git
 }

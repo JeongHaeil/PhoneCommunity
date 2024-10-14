@@ -1,5 +1,6 @@
 package xyz.itwill.service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,10 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import xyz.itwill.dao.ChatRoomsDAO;
 import xyz.itwill.dto.ChatRooms;
+<<<<<<< HEAD
 import xyz.itwill.mapper.ChatRoomsMapper;
+=======
+>>>>>>> branch 'dev' of https://github.com/JeongHaeil/final.git
 
 @Service
 @RequiredArgsConstructor
@@ -16,13 +20,27 @@ public class ChatRoomsServiceImpl implements ChatRoomsService{
 		
 	
 	private final ChatRoomsDAO chatRoomsDAO;
+<<<<<<< HEAD
 
+=======
+	private final UserDAO userDAO;  // 새로운 DAO 추가 (혹은 서비스)
+    private final ProductDAO productDAO; 
+/*
+>>>>>>> branch 'dev' of https://github.com/JeongHaeil/final.git
 	@Override
 	public void createChatRooms(ChatRooms chatRooms) {
 		chatRoomsDAO.createChatRooms(chatRooms);
-		
 	}
-
+*/
+    @Override
+    public int createChatRooms(ChatRooms chatRooms) {
+    	 return chatRoomsDAO.createChatRooms(chatRooms);  
+    }
+    
+    
+    
+    
+    
 	@Override
 	public ChatRooms getChatRooms(Map<String, Object> map) {
 		// TODO Auto-generated method stub
@@ -46,7 +64,28 @@ public class ChatRoomsServiceImpl implements ChatRoomsService{
 		
 		return chatRoomsDAO.generateNewRoomId();
 	}
+<<<<<<< HEAD
 
+=======
+/*
+	@Override
+	public int findExistingRoom(String buyerId, String sellerId, int productId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("buyerId", buyerId);
+        params.put("sellerId", sellerId);
+        params.put("productId", productId);
+        return chatRoomsDAO.findExistingRoom(params);
+	}
+*/
+	@Override
+	public int findExistingRoom(String buyerId, String sellerId) {
+		Integer roomId = chatRoomsDAO.findExistingRoom(buyerId, sellerId); 
+        return roomId != null ? roomId : 0;
+		
+		
+		//return chatRoomsDAO.findExistingRoom(buyerId, sellerId);
+	}
+>>>>>>> branch 'dev' of https://github.com/JeongHaeil/final.git
    
 
 }

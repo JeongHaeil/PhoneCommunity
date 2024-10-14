@@ -48,12 +48,14 @@
     <delete id="deleteUser">
         DELETE FROM USERS WHERE USER_ID = #{userId}
     </delete>
-
-    <!-- Select a User by userId -->
-   <select id="selectUser" parameterType="String" resultMap="userResultMap">
-    SELECT USER_NUM, USER_ID, USER_PASSWORD, USER_EMAIL, USER_PHONE_NUM, USER_NAME, USER_UPDATE_DATE, USER_LAST_LOGIN, USER_REGISTER_DATE, USER_LEVEL, USER_STATUS, USER_NICKNAME, USER_EXPERIENCE
+<!-- ID, 이메일 또는 닉네임으로 사용자 조회 -->
+<select id="selectUser" parameterType="String" resultMap="userResultMap">
+    SELECT USER_NUM, USER_ID, USER_PASSWORD, USER_EMAIL, USER_PHONE_NUM, USER_NAME, USER_UPDATE_DATE, 
+           USER_LAST_LOGIN, USER_REGISTER_DATE, USER_LEVEL, USER_STATUS, USER_NICKNAME, USER_EXPERIENCE
     FROM USERS
-    WHERE USER_ID = #{userId}
+    WHERE USER_ID = #{param} 
+       OR USER_EMAIL = #{param} 
+       OR USER_NICKNAME = #{param}
 </select>
 
 
@@ -65,11 +67,10 @@
 
 
    <!-- 닉네임으로 사용자 조회 -->
-    <select id="selectUserByNickname" parameterType="string" resultMap="userResultMap">
-    SELECT USER_NUM, USER_ID, USER_PASSWORD, USER_EMAIL, USER_PHONE_NUM, USER_NAME, USER_UPDATE_DATE, USER_LAST_LOGIN, USER_REGISTER_DATE, USER_LEVEL, USER_STATUS, USER_NICKNAME, USER_EXPERIENCE
-    FROM USERS
-    WHERE USER_NICKNAME = #{userNickname}
+<select id="selectUserByNickname" parameterType="string" resultMap="userResultMap">
+    SELECT * FROM USERS WHERE USER_NICKNAME = #{userNickname}
 </select>
+
 
     <!-- Select a User by userId with explicit column mappings -->
     <select id="selectUserByUserId" parameterType="string" resultMap="userResultMap">
@@ -106,15 +107,44 @@
 
 <update id="updateUserExperience">
     UPDATE users
-    SET user_experience = #{userExperience}
+    SET user_experience = #{userExperience}, user_level = #{userLevel}
     WHERE user_id = #{userId}
 </update>
+
 
 <update id="updateLastLogin" parameterType="string">
     UPDATE users 
     SET user_last_login = CURRENT_TIMESTAMP 
     WHERE user_id = #{userId}
 </update>
+
+<update id="updateNickname" parameterType="map">
+    UPDATE USERS
+    SET USER_NICKNAME = #{nickname}
+    WHERE USER_ID = #{userId}
+</update>
+
+<update id="updateUserStatus">
+    UPDATE users
+    SET user_status = #{status}
+    WHERE user_id = #{userId}
+</update>
+
+
+<update id="modifyUser">
+    UPDATE USERS
+    SET 
+        USER_PASSWORD = #{userPassword}, 
+        USER_EMAIL = #{userEmail}, 
+        USER_PHONE_NUM = #{userPhoneNum}, 
+        USER_NAME = #{userName},
+        USER_UPDATE_DATE = SYSDATE,
+        USER_NICKNAME = #{userNickname},
+        USER_EXPERIENCE = #{userExperience},
+        USER_STATUS = #{userStatus}  <!-- user_status 업데이트 추가 -->
+    WHERE USER_ID = #{userId}
+</update>
+
 
 
 </mapper>

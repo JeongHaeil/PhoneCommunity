@@ -10,6 +10,10 @@ public interface ProductService {
    void increaseProductCount(int productIdx);
    Product getProductByNum(int productIdx);
    Map<String, Object> getProductList(Map<String, Object> map);
+<<<<<<< HEAD
 void updateProductStatus(int productIdx);
+=======
+  
+>>>>>>> branch 'dev' of https://github.com/JeongHaeil/final.git
    
 }

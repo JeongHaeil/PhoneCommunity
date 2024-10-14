@@ -66,6 +66,7 @@ public class ProductServiceImpl implements ProductService {
         productDAO.updateProductCount(productIdx);
     }
 
+<<<<<<< HEAD
 
 	@Override
 	public void updateProductStatus(int productIdx) {
@@ -74,4 +75,8 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 
+=======
+	
+ 
+>>>>>>> branch 'dev' of https://github.com/JeongHaeil/final.git
 }
