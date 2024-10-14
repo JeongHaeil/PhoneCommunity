@@ -51,6 +51,50 @@
 	    </if>
 	</select>
 	
+	<select id="selecttotalUserBoardList" resultType="xyz.itwill.dto.Admin">
+		SELECT * FROM (
+	        SELECT rownum rn, board.*
+	        FROM (
+	            SELECT *
+	            FROM USERS u
+	            JOIN BOARD b ON u.USER_ID = b.BOARD_USER_ID 
+	            <if test="keyword != null and keyword != ''">
+	                <choose>
+	                    <when test="search== 'userNum'">
+	                        WHERE u.USER_NUM LIKE '%' || #{keyword} || '%'
+	                    </when>
+	                    <when test="search == 'userId'">
+	                        WHERE u.USER_ID LIKE '%' || #{keyword} || '%'
+	                    </when>
+	                    <when test="search == 'userNickname'">
+	                        WHERE u.USER_NICKNAME LIKE '%' || #{keyword} || '%'
+	                    </when>
+	                </choose>
+	            </if>
+	            ORDER BY u.USER_NUM DESC
+	        ) board
+	    )
+	    WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="selecttotalUserBoardListCount" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	    FROM USERS
+	    <if test="keyword != null and keyword != ''">
+          <choose>
+              <when test="search== 'userNum'">
+                  WHERE u.USER_NUM LIKE '%' || #{keyword} || '%'
+              </when>
+              <when test="search == 'userId'">
+                  WHERE u.USER_ID LIKE '%' || #{keyword} || '%'
+              </when>
+              <when test="search == 'userNickname'">
+                  WHERE u.USER_NICKNAME LIKE '%' || #{keyword} || '%'
+              </when>
+          </choose>
+        </if>
+	</select>
+	
 	<select id="selectSpamBoardByNum" resultType="admin">
 			SELECT 
 	        b.*,

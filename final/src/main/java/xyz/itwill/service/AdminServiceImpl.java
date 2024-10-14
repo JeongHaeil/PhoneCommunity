@@ -51,7 +51,6 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	//SpamBoard 에서 글 조회
-	@Transactional
 	@Override
 	public Admin getSpamBoardByNum(int num) {
 		
@@ -65,17 +64,41 @@ public class AdminServiceImpl implements AdminService {
 		return admin;
 	}
 	
-	@Transactional
 	@Override
-	public void updateUserStatusByUserId(int userId, int status) {
+	public Map<String, Object> gettotalUserBoardList(int pageNum, int pageSize, int totalSize, int blockSize,
+			String search, String keyword) {
+		Map<String, Object> searchMap = new HashMap<String, Object>();
+		searchMap.put("search", search);
+		searchMap.put("keyword", keyword);
+		
+		totalSize = adminDAO.selecttotalUserBoardListCount(searchMap);
+		
+		Pager pager = new Pager(pageNum, pageSize, totalSize, blockSize);
+		
+		searchMap.put("startRow", pager.getStartRow());
+		searchMap.put("endRow", pager.getEndRow());	
+		
+		List<Admin> totalUserBoardList = adminDAO.selecttotalUserBoardList(searchMap);
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("pager", pager);
+		resultMap.put("totalUserBoardList", totalUserBoardList);
+		 
+		return resultMap;
+		
+		
+		
+	}
+	
+	@Override
+	public void updateUserStatusByUserId(int userNum, int status) {
 		Map<String, Object> params  = new HashMap<String, Object>();
-		params.put("userId", userId);
+		params.put("userNum", userNum);
 		params.put("status", status);
 		
 		adminDAO.updateUserStatusByUserId(params);
 	}
 	
-	@Transactional
 	@Override
 	public void updateBoardStatusByBoardPostIdx(int boardPostIdx, int status) {
 		Map<String, Object> params  = new HashMap<String, Object>();
@@ -85,6 +108,7 @@ public class AdminServiceImpl implements AdminService {
 		adminDAO.updateBoardStatusByBoardId(params);
 		
 	}
+
 
 	
 

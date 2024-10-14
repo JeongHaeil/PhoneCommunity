@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,7 +11,8 @@
 
 
 
-<a href="/final/super_admin/admin">신고 게시판</a>
+<a href="<c:url value='/super_admin/admin'/>">신고 게시판</a>
+<a href="<c:url value='/super_admin/admin'/>">신고 게시판</a>
 
 </body>
 </html>

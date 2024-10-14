@@ -22,6 +22,8 @@
 <p>전화번호: ${post.userPhoneNum}</p>
 <p>가입일: ${post.userRegisterDate}</p>
 <p>작성일: ${post.boardRegisterDate}</p>
+<p>게시물상태: ${post.boardStatus}</p>
+<p>유저상태: ${post.userStatus}</p>
 
 <div>${post.boardContent}</div>
 
@@ -31,14 +33,15 @@
 
 <script type="text/javascript">
 
-function changeUserStatus(userId, status) {
-	console.log("userId:", userId);
-	
+function changeUserStatus(userNum, userStatus) {
+	console.log("userNum:", userNum);
+	console.log("userStatus:", userStatus);
     if (confirm("사용자 상태를 변경하시겠습니까?")) {
         $.ajax({
-            type: "get",
+            type: "PUT",
             url: "<c:url value='/super_admin/admin/userStatus'/>",
-            data: { "userId": userId, "status": status },
+            data: JSON.stringify({ "userNum": userNum, "userStatus": userStatus }),
+            contentType: "application/json", 
             beforeSend: function(xhr) {
                 xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
             },
@@ -53,41 +56,18 @@ function changeUserStatus(userId, status) {
         });
     }
 }
-/*
-function changeBoardStatus(boardPostIdx, status) {
-	 
-	console.log("boardPostIdx:", boardPostIdx);
-    if (confirm("게시물 상태를 변경하시겠습니까?")) {
-        $.ajax({
-            type: "get",
-            url: "<c:url value='/super_admin/admin/boardStatus'/>",
-            data: { "boardPostIdx": boardPostIdx, "status": status },
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-            },
-            dataType: "text",
-            success: function(response) {
-                alert(response);
-                location.reload();
-            },
-            error: function(xhr) {
-                alert("에러코드 = " + xhr.status);
-            }
-        });
-    }
-}
-*/
-function changeBoardStatus(boardPostIdx, status) {
-    // 콘솔에 boardPostIdx 값을 출력하여 디버깅에 도움을 줍니다.
-    console.log("boardPostIdx:", boardPostIdx);
 
+function changeBoardStatus(boardPostIdx, boardStatus) {
+    // 콘솔에 boardPostIdx 값을 출력하여 디버깅에 도움을 줍니다.
+	console.log("boardPostIdx:", boardPostIdx);
+	console.log("status:", status);
     // 사용자에게 게시물 상태를 변경할 것인지 확인하는 대화 상자를 표시합니다.
     if (confirm("게시물 상태를 변경하시겠습니까?")) {
         // AJAX 요청을 통해 서버와 비동기적으로 통신합니다.
         $.ajax({
             type: "PUT",  // HTTP 메서드를 PUT으로 설정하여 리소스를 업데이트하도록 지정합니다.
             url: "<c:url value='/super_admin/admin/boardStatus'/>",  // 서버 측 엔드포인트 URL입니다. JSP에서 URL을 생성합니다.
-            data: JSON.stringify({ "boardPostIdx": boardPostIdx, "status": status }),  // 요청 본문에 JSON 형식으로 데이터를 포함시킵니다.
+            data: JSON.stringify({ "boardPostIdx": boardPostIdx, "boardStatus": boardStatus }),  // 요청 본문에 JSON 형식으로 데이터를 포함시킵니다.
             contentType: "application/json",  // 서버에 전송하는 데이터의 형식을 JSON으로 지정합니다.
             beforeSend: function(xhr) {
                 // 요청을 보내기 전에 CSRF 토큰을 헤더에 설정하여 보안을 강화합니다.

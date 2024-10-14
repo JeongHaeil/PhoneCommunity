@@ -83,29 +83,22 @@ public class AdminController {
 	    return "admin/view_post"; // view_post.jsp 페이지로 이동
 	}
 	
-	@GetMapping("/admin/userStatus")
-	public ResponseEntity<String> updateUserStatus(@RequestParam int userId, @RequestParam int status) {
+	@PutMapping("/admin/userStatus")
+	public ResponseEntity<String> updateUserStatus(@RequestBody Admin request) {
 		
-		adminService.updateUserStatusByUserId(userId, status);
-		
-		return ResponseEntity.ok("사용자의 상태 변경을 성공하였습니다.");
+		try {
+			adminService.updateUserStatusByUserId(request.getUserNum(), request.getUserStatus());
+			return ResponseEntity.ok("success");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating user status");
+		}
 		
 	}
 	
-	/*
-	@PutMapping("/admin/boardStatus")
-	//@GetMapping("/admin/boardStatus")
-	
-	public ResponseEntity<String> updateBoardStatus (@RequestParam int boardPostIdx, @RequestParam int status) {
-		
-		adminService.updateBoardStatusByBoardPostIdx(boardPostIdx, status);
-		
-		return ResponseEntity.ok("success");
-	}
-	*/
 	@PutMapping("/admin/boardStatus")
 	public ResponseEntity<String> updateBoardStatus(@RequestBody Admin request) {
-	    try {
+	    
+		try {
 	        adminService.updateBoardStatusByBoardPostIdx(request.getBoardPostIdx(), request.getBoardStatus());
 	        return ResponseEntity.ok("success");
 	    } catch (Exception e) {
@@ -114,5 +107,24 @@ public class AdminController {
 	    }
 	}
 	
-	
+	@GetMapping("/userList")
+	public String userListBoard(@RequestParam(defaultValue = "1") int pageNum,
+				            @RequestParam(defaultValue = "10") int pageSize,
+				            @RequestParam(defaultValue = "5") int blockSize,
+				            @RequestParam(required = false) String search,
+				            @RequestParam(required = false) String keyword,
+				            Model model) {
+		
+		int totalSize = 0;
+		
+		Map<String, Object> resultMap = adminService.gettotalUserBoardList(pageNum, pageSize, totalSize, blockSize
+				, search, keyword);
+		
+        model.addAttribute("resultMap", resultMap);
+        
+        model.addAttribute("search", search);
+        model.addAttribute("keyword", keyword);
+		
+		return "admin/user_list";
+	}
 }

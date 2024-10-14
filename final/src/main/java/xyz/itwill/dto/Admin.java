@@ -25,8 +25,7 @@ public class Admin {
     private int userLevel =1;
     private int userStatus =1;
 
-    //공통적으로 사용되는 userNickName
-    //private String userNickName;
+    //공통적으로 사용되는 userNickname
     private String userNickname;
 	
     //Board
