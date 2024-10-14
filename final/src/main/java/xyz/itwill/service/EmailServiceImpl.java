@@ -1,15 +1,18 @@
 package xyz.itwill.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import xyz.itwill.dao.EmailDAO;
-import xyz.itwill.dto.Email;
-
 import java.util.Calendar;
 import java.util.Date;
+
+import javax.mail.internet.MimeMessage;
+
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
+import xyz.itwill.dao.EmailDAO;
+import xyz.itwill.dto.Email;
 
 @Service
 @RequiredArgsConstructor
@@ -31,12 +34,13 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendVerificationEmail(String toEmail, int emailCode) {
-        // 실제 이메일 전송 로직 구현
         try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(toEmail);
-            message.setSubject("이메일 인증 코드");
-            message.setText("인증 코드는 다음과 같습니다: " + emailCode);
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setFrom("tosmreo@gmail.com", "관리자"); // 보낸 사람 이름 설정
+            helper.setTo(toEmail);
+            helper.setSubject("이메일 인증 코드");
+            helper.setText("인증 코드는 다음과 같습니다: " + emailCode);
 
             mailSender.send(message);  // 이메일 전송
             System.out.println("이메일이 성공적으로 전송되었습니다.");
@@ -61,13 +65,15 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendTemporaryPassword(String toEmail, String temporaryPassword) {
-        // 임시 비밀번호를 이메일로 전송하는 로직
         try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(toEmail);
-            message.setSubject("임시 비밀번호 안내");
-            message.setText("임시 비밀번호는 다음과 같습니다: " + temporaryPassword);
-            mailSender.send(message);
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setFrom("tosmreo@gmail.com", "관리자"); // 보낸 사람 이름 설정
+            helper.setTo(toEmail);
+            helper.setSubject("임시 비밀번호 안내");
+            helper.setText("임시 비밀번호는 다음과 같습니다: " + temporaryPassword);
+
+            mailSender.send(message);  // 이메일 전송
             System.out.println("임시 비밀번호 이메일이 성공적으로 전송되었습니다.");
         } catch (Exception e) {
             System.err.println("임시 비밀번호 이메일 전송에 실패했습니다: " + e.getMessage());
