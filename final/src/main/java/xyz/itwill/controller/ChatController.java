@@ -133,9 +133,6 @@ public class ChatController  {
 	    	//return newRoomId;  // 생성된 방 번호를 클라이언트로 반환
 			 String buyerId = requestData.get("buyerId").toString();
 			 String sellerId = requestData.get("sellerId").toString();
-
-			 
-			 
 			 ChatRooms newRoom = new ChatRooms();
 			    newRoom.setBuyerId(buyerId);
 			    newRoom.setSellerId(sellerId);

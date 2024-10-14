@@ -57,6 +57,30 @@
             color: #999;
             pointer-events: none;
         }
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .page-link, .current-page {
+            display: inline-block;
+            margin: 0 5px;
+            padding: 5px 10px;
+            font-size: 16px;
+            text-decoration: none;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            color: #007bff;
+        }
+        .page-link:hover {
+            background-color: #ddd;
+            color: #007bff;
+        }
+        .current-page {
+            font-weight: bold;
+            background-color: #007bff;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -91,20 +115,20 @@
                         <tr class="comment-item">
                             <td>
                                 <c:choose>
-    <c:when test="${comment.commentStatus == 1}">
-        <c:choose>
-            <c:when test="${comment.boardStatus == 1}">
-                <a href="${pageContext.request.contextPath}/board/comment/${comment.commentIdx}" class="enabled">${comment.content}</a>
-            </c:when>
-            <c:otherwise>
-                <span class="disabled">게시글 삭제로 댓글 확인 불가</span>
-            </c:otherwise>
-        </c:choose>
-    </c:when>
-    <c:otherwise>
-        <span class="disabled">${comment.content}</span>
-    </c:otherwise>
-</c:choose>
+                                    <c:when test="${comment.commentStatus == 1}">
+                                        <c:choose>
+                                            <c:when test="${comment.boardStatus == 1}">
+                                                <a href="${pageContext.request.contextPath}/board/comment/${comment.commentIdx}" class="enabled">${comment.content}</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="disabled">게시글 삭제로 댓글 확인 불가</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="disabled">${comment.content}</span>
+                                    </c:otherwise>
+                                </c:choose>
                             </td>
                             <td>${comment.commentRegDate}</td>
                             <td>${comment.commentStarup}/${comment.commentStardown}</td>
@@ -122,9 +146,30 @@
         </tbody>
     </table>
 
+    <!-- 페이징 처리 -->
+    <div class="pagination">
+        <c:if test="${pager.startPage > 1}">
+            <a href="?pageNum=${pager.prevPage}" class="page-link">이전</a>
+        </c:if>
+
+        <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
+            <c:choose>
+                <c:when test="${i != pager.pageNum}">
+                    <a href="?pageNum=${i}" class="page-link">${i}</a>
+                </c:when>
+                <c:otherwise>
+                    <span class="current-page">${i}</span>
+                </c:otherwise>
+            </c:choose>
+        </c:forEach>
+
+        <c:if test="${pager.endPage < pager.totalPage}">
+            <a href="?pageNum=${pager.nextPage}" class="page-link">다음</a>
+        </c:if>
+    </div>
+
 </div>
 
-<!-- 부트스트랩 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

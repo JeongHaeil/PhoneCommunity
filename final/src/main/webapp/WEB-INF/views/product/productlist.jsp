@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%> <!-- functions 라이브러리 추가 -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -87,6 +88,7 @@ body {
 .sidebar {
 	flex: 1;
 }
+
 /* 상품목록 스타일 */
 .product-list {
 	margin-top: 20px;
@@ -99,13 +101,13 @@ body {
 	background-color: #fff;
 	transition: transform 0.3s ease, box-shadow 0.3s ease;
 	height: auto;
-	max-width:220px;
+	max-width: 220px;
 }
 
-
 .img-fluid {
-	width: 100%;
-	height: auto;
+	width: 100%; /* 가로 크기는 100%로 설정하여 카드의 전체 폭에 맞춤 */
+	height: 400px; /* 고정된 세로 크기 설정 */
+	object-fit: cover; /* 이미지 비율을 유지하면서 공간에 맞춤 */
 }
 
 .product-card:hover {
@@ -155,6 +157,7 @@ body {
 		margin-bottom: 20px;
 	}
 }
+
 /* Pagination 스타일 */
 .pagination-wrapper {
 	display: flex;
@@ -192,6 +195,7 @@ body {
 	color: blue;
 }
 </style>
+
 </head>
 <body>
 	<div class="container my-4">
@@ -209,7 +213,7 @@ body {
 			class="d-flex justify-content-between align-items-center filter-buttons mt-3">
 			<div>
 				<button class="btn btn-dark btn-sm">분류</button>
-				<button class="btn btn-dark btn-sm">정렬</button>
+				<button class="btn btn-dark btn-sm">최신순</button>
 			</div>
 			<div>
 				<button class="btn btn-primary btn-sm"
@@ -237,8 +241,8 @@ body {
 				<div class="row product-list">
 					<c:forEach var="product" items="${result.productList}">
 						<div class="col-md-3 col-sm-6 mb-4">
-							<a
-								href="${pageContext.request.contextPath}/product/detail?productIdx=${product.productIdx}"
+							<a 
+								href="${pageContext.request.contextPath}/product/details?productIdx=${product.productIdx}"
 								class="text-decoration-none">
 								<div class="product-card">
 									<!-- 글 번호 표시 -->
@@ -246,7 +250,7 @@ body {
 										style="font-size: 12px; margin-bottom: 5px;">글 번호:
 										${product.productIdx}</div>
 									<img
-										src="${pageContext.request.contextPath}/upload/${product.productImage}"
+										src="${pageContext.request.contextPath}/resources/images/${fn:split(product.productImage, ',')[0]}"
 										alt="상품 이미지" class="img-fluid">
 									<div class="product-meta">
 										<span class="text-muted">판매</span>, <span>${product.productRegisterdate}</span>
@@ -266,14 +270,13 @@ body {
 									<div
 										class="product-footer d-flex align-items-center justify-content-between">
 										<div class="profile-info">
-											
 											<span> 작성자 : ${product.productUsernickname}</span>
-
 										</div>
 										<div class="stats">
-											<span>💬 0</span> <span>👁️ ${product.productCount}</span>
+											<span>👁️ ${product.productCount}</span>
 										</div>
 									</div>
+
 								</div>
 							</a>
 
