@@ -153,32 +153,50 @@ public class UserController {
         return "user/email";  // 이메일 인증 페이지로 이동 (email.jsp)
     }
 
-    // 이메일 인증 코드 검증 및 회원가입 완료 처리
+ // 이메일 인증 코드 검증 및 회원가입 완료 처리
     @RequestMapping(value = "/verify", method = RequestMethod.POST)
-    public String verifyEmail(@RequestParam("emailCode") int emailCode, HttpSession session, Model model) {
+    public String verifyEmail(
+        @RequestParam("emailCode") int emailCode, 
+        HttpSession session, 
+        Model model, 
+        RedirectAttributes redirectAttributes) {
+
         User user = (User) session.getAttribute("tempUser");
 
         if (user == null) {
-            return "redirect:/user/register";
+            return "redirect:/user/register"; // 세션에 사용자가 없으면 회원가입 페이지로 리다이렉트
         }
 
         Email emailVerification = emailService.getEmailByCode(emailCode);
 
+        // 인증 코드가 유효하지 않거나 만료된 경우
         if (emailVerification == null || emailVerification.isExpired()) {
-            model.addAttribute("error", "유효하지 않은 인증 코드입니다. 다시 시도하세요.");
-            return "user/email";
+            model.addAttribute("errorMessage", "유효하지 않은 인증 코드입니다. 다시 시도하세요.");
+            return "user/email"; // 오류 메시지를 출력하고 현재 페이지 유지
         }
 
+        // 인증이 성공한 경우 회원 가입 진행
         userService.addUser(user);
-
         User savedUser = userService.getUser(user.getUserId());
+
+        // 인증 정보를 업데이트
         emailVerification.setEmailUserNum(savedUser.getUserNum());
         emailVerification.setEmailAuth(true);
         emailService.updateEmail(emailVerification);
 
         session.removeAttribute("tempUser");
 
-        return "redirect:/user/login";
+        // 회원가입 완료 메시지 전달
+        redirectAttributes.addFlashAttribute("successMessage", "회원가입이 완료되었습니다.");
+        
+        // 팝업을 띄울 페이지로 리다이렉트
+        return "redirect:/user/email";
+    }
+    
+    // 회원가입 완료 후 팝업을 띄우는 페이지로 리다이렉트 처리
+    @RequestMapping(value = "/registrationSuccess", method = RequestMethod.GET)
+    public String showRegistrationSuccessPage() {
+        return "user/registrationSuccess";  // 회원가입 완료 팝업을 띄울 페이지
     }
 
     // 로그인 페이지로 이동 (GET 요청)
@@ -239,6 +257,40 @@ public class UserController {
         User user = userService.getUser(userNickname);
         return (user == null) ? "AVAILABLE" : "EXISTS";
     }
+ // 이메일 인증 코드 재발송 처리 (POST 요청)
+    @RequestMapping(value = "/email/resend", method = RequestMethod.POST)
+    public String resendVerificationEmail(HttpSession session, Model model) {
+        // 세션에서 tempUser를 가져옴 (회원가입 시 입력한 이메일 정보가 포함된 User 객체)
+        User tempUser = (User) session.getAttribute("tempUser");
+
+        // tempUser가 없으면 오류 메시지를 반환하도록 수정
+        if (tempUser == null) {
+            model.addAttribute("errorMessage", "세션이 만료되었습니다. 다시 회원가입을 진행해주세요.");
+            return "user/email";  // 로그인 페이지로 리다이렉트하지 않고 인증 페이지로 유지
+        }
+
+        try {
+            // 새로운 이메일 인증 코드 생성
+            int emailCode = (int) (Math.random() * 1000000); // 6자리 인증 코드 생성
+            emailService.sendVerificationEmail(tempUser.getUserEmail(), emailCode); // 인증 코드 전송
+
+            // 새로운 이메일 인증 정보 생성 및 저장
+            Email newEmailVerification = new Email();
+            newEmailVerification.setEmailUserNum(tempUser.getUserNum()); // 해당 사용자의 userNum으로 설정
+            newEmailVerification.setEmailCode(emailCode); // 새로운 인증 코드 설정
+            newEmailVerification.setEmailExpiration(emailService.calculateExpirationDate()); // 새로운 만료 시간 설정
+            emailService.addEmail(newEmailVerification); // 새로운 이메일 인증 정보 DB에 저장
+
+            // 인증 페이지로 리다이렉트
+            model.addAttribute("resendMessage", "인증 코드가 이메일로 다시 전송되었습니다.");
+            return "user/email";  // 인증 페이지로 유지
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "인증 코드 재발송 중 오류가 발생했습니다. 다시 시도해주세요.");
+            return "user/email"; // 오류 시 다시 인증 페이지로 이동
+        }
+    }
+
+
     
 
     
@@ -585,7 +637,16 @@ public class UserController {
 
         // 사용자가 작성한 중고장터 게시물 목록을 가져옴
         Map<String, Object> productListMap = productService.getProductList(paramMap);
-        List<Product> productList = (List<Product>) productListMap.get("productList"); // 게시물 목록 추출
+
+        // Type safety 경고를 없애기 위한 방법
+        Object productListObj = productListMap.get("productList");
+        List<Product> productList = null;
+        if (productListObj instanceof List<?>) {
+            // 리스트 안의 객체가 Product 타입인지 확인 후 안전하게 캐스팅
+            if (!((List<?>) productListObj).isEmpty() && ((List<?>) productListObj).get(0) instanceof Product) {
+                productList = (List<Product>) productListObj;
+            }
+        }
 
         // 데이터 확인을 위해 로그 추가
         log.info("중고장터 게시물 목록: " + productList);
@@ -594,6 +655,8 @@ public class UserController {
 
         return "user/myProduct"; // myProduct.jsp로 이동
     }
+
+
 
     
 
