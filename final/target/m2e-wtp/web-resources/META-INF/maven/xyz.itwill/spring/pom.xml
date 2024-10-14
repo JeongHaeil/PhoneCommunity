@@ -314,7 +314,12 @@
     <version>2.11.3</version>
 </dependency>
 		
-		
+		<!-- => OAuth2.0 기능을 제공하기 위한 라이브러리 -->
+		<dependency>
+		    <groupId>com.github.scribejava</groupId>
+		    <artifactId>scribejava-apis</artifactId>
+		    <version>3.3.0</version>
+		</dependency>
 		 
 		
 	</dependencies>
