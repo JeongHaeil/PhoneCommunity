@@ -158,18 +158,30 @@ public class UserServiceImpl implements UserService {
         User user = userDAO.selectUser(userId);
         if (user != null) {
             // 현재 경험치에 추가할 경험치를 더함
-            int newExperience = user.getUserExperience() + amount;
+            int currentExperience = user.getUserExperience();
+            int newExperience = currentExperience + amount;
+            int currentLevel = user.getUserLevel();
+            
+           
             
             // 경험치가 레벨업에 도달하는 경우 처리
-            while (newExperience >= ExperienceUtil.getExperienceForNextLevel(user.getUserLevel())) {
-                newExperience -= ExperienceUtil.getExperienceForNextLevel(user.getUserLevel());
-                user.setUserLevel(user.getUserLevel() + 1);  // 레벨업
+            while (newExperience >= ExperienceUtil.getExperienceForNextLevel(currentLevel)) {
+                newExperience -= ExperienceUtil.getExperienceForNextLevel(currentLevel);
+                currentLevel += 1;  // 레벨업
+                
+                
             }
             
             user.setUserExperience(newExperience);  // 경험치 갱신
+            user.setUserLevel(currentLevel);  // 레벨 갱신
+            
+            
+            
             userDAO.updateUser(user);  // 변경된 사용자 정보 저장
         }
     }
+
+
     
     @Override
     @Transactional
