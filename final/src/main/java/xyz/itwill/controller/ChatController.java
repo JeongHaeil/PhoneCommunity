@@ -1,6 +1,7 @@
 package xyz.itwill.controller;
 
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -36,6 +37,7 @@ public class ChatController  {
 		
 	    @PostMapping("/start")
 	    public String startChat(@RequestBody Map<String, Object> requestData, Model model) {
+	    	/*
 	    	try {
 	            // 요청 데이터 출력
 	            System.out.println("Request Data: " + requestData);
@@ -64,8 +66,44 @@ public class ChatController  {
 	            return "error";
 	        }
 	    }
+*/
+	    	 try {
+	    	        // 요청 데이터 출력
+	    	        System.out.println("Request Data: " + requestData);
 
-	 
+	    	        // 데이터 추출
+	    	        String buyerId = requestData.get("buyerId").toString();
+	    	        String sellerId = requestData.get("sellerId").toString();
+	    	        //Integer roomId = requestData.containsKey("roomId") ? Integer.parseInt(requestData.get("roomId").toString()) : null;
+
+	    	        Integer  roomId = chatRoomsService.findExistingRoom(buyerId, sellerId);
+	    	        System.out.println("buyerId: " + buyerId);
+	    	        System.out.println("sellerId: " + sellerId);
+	    	        System.out.println("roomId: " + roomId);
+	    	        if (roomId == null || roomId == 0) {
+	    	            // ChatRooms 객체를 생성하고 buyerId, sellerId 설정
+	    	            ChatRooms chatRoom = new ChatRooms();
+	    	            chatRoom.setSellerId(sellerId);  // String으로 설정
+	    	            chatRoom.setBuyerId(buyerId);  // String으로 설정
+	    	            //roomId = chatRoomsService.createChatRooms(chatRoom);  // ChatRooms 객체를 사용하여 생성
+	    	            roomId = chatRoomsService.createChatRooms(chatRoom);  // ChatRooms 객체를 사용하여 생성
+	    	        }
+
+	    	        // Model에 데이터 추가
+	    	        model.addAttribute("buyerId", buyerId);
+	    	        model.addAttribute("sellerId", sellerId);
+	    	        model.addAttribute("roomId", roomId);
+	    	        return "redirect:/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId;
+	    	        //return "chat/chat";  // JSP로 이동
+
+	    	    } catch (NumberFormatException e) {
+	    	        e.printStackTrace();
+	    	        return "error";
+	    	    }
+	    }	
+	    	
+	    	
+	    	
 		// 채팅방으로 이동
 		    @GetMapping("/room/{roomId}")
 		    //public String chatRoom(@PathVariable int roomId, Model model) {
@@ -90,42 +128,36 @@ public class ChatController  {
 		    
 	    
 	    // 새로운 방 번호 생성
-	    @PostMapping("/createRoom")
-	    @ResponseBody
+		    /*
+		    @PostMapping("/createRoom")
+		    @ResponseBody
 	    public int createRoom() {
 	    	int newRoomId = chatRoomsService.generateNewRoomId();  // 서비스에서 새로운 방 번호 생성
 	    	return newRoomId;  // 생성된 방 번호를 클라이언트로 반환
 	    }
-	  /*
-		 // 새로운 방을 생성하거나 기존 방을 찾는 메서드
-		    @PostMapping("/createRoom")
-		    @ResponseBody
-		    public int createRoom(@RequestParam("buyerId") String buyerId, 
-		                          @RequestParam("sellerId") String sellerId, 
-		                          @RequestParam("productId") int productId) {
+	 */
+		@PostMapping("/createRoom")
+		@ResponseBody
+	    public int createRoom(@RequestBody Map<String, Object> requestData) {
+		//public Map<String, Object> createChatRoom(@RequestBody Map<String, Object> requestData) {
+	    	//int newRoomId = chatRoomsService.generateNewRoomId();  // 서비스에서 새로운 방 번호 생성
+	    	//return newRoomId;  // 생성된 방 번호를 클라이언트로 반환
+			 String buyerId = requestData.get("buyerId").toString();
+			 String sellerId = requestData.get("sellerId").toString();
 
-		        // 기존 방이 있는지 확인
-		        int existingRoomId = chatRoomsService.findExistingRoom(buyerId, sellerId, productId);
-
-		        if (existingRoomId != 0) {
-		            // 기존 방이 존재하면 해당 방 번호를 반환
-		            return existingRoomId;
-		        } else {
-		            // 방이 없으면 새 방 생성
-		            ChatRooms newChatRoom = new ChatRooms();
-		            newChatRoom.setBuyerId(Integer.parseInt(buyerId));
-		            newChatRoom.setSellerId(Integer.parseInt(sellerId));
-		            newChatRoom.setProductId(String.valueOf(productId));  // int 값을 String으로 변환
-
-		            
-		            chatRoomsService.createChatRooms(newChatRoom);
-		            
-		            // 생성된 방의 ID 반환
-		            return chatRoomsService.getLastInsertedRoomId();
-		        }
-		    }
-		    */
-	    
+			    ChatRooms chatRoom = new ChatRooms();
+			    chatRoom.setBuyerId(buyerId);  // String으로 설정
+			    chatRoom.setSellerId(sellerId);  // String으로 설정
+			    
+			   // int roomId = chatRoomsService.createChatRooms(chatRoom);
+			   // Map<String, Object> response = new HashMap<>();
+			   // response.put("roomId", roomId);
+			   // return response;
+			    
+			    
+			    
+			    return chatRoomsService.createChatRooms(chatRoom);  // 방 번호 반환
+	    }
 
 	    
 	    @GetMapping("/chat")

@@ -389,7 +389,7 @@ body {
 
 				<!-- 버튼 -->
 				<div class="buttons">
-					<button id="openChatRoomBtn"class="btn btn-chat">채팅하기</button>
+					<button id="openChatRoomBtn"class="btn btn-chat" onclick="startChat ('${product.productUserid}', '${loginUser.userId}')">채팅하기</button>
 					<div id="chatRoomContainer"></div> <!-- 채팅방 UI가 로드될 곳 -->
 					<button class="btn btn-safe">안전거래</button>
 				</div>
@@ -544,19 +544,21 @@ body {
 	
 			 $("#openChatRoomBtn").click(function () {
 				 
-				 alert("sellerId before sending request: " + sellerId);
-			        // 서버에 새로운 방 번호 요청 (방 번호 생성)
-			        console.log("Creating room with buyerId: " + loggedInUserId + ", sellerId: " + sellerId);
-			        
+				 alert("sellerId before sending request: " + sellerId);  // sellerId 값 확인
+				    alert("buyerId before sending request: " + loggedInUserId);  // buyerId 값 확인
+				    console.log("Creating room with buyerId: " + loggedInUserId + ", sellerId: " + sellerId);  // 로그로 값 확인
+
 			        $.ajax({
 			            url: "${pageContext.request.contextPath}/chatroom/createRoom",   // 방 번호를 생성하는 서버 URL
 			            type: "POST",             // 새로운 방 번호 생성은 POST 방식으로 요청
 			            contentType: "application/json",
 			            data: JSON.stringify({
-			            	 buyerId: loggedInUserId,   // 전달된 buyerId
-			                 sellerId: sellerId,        // 전달된 sellerId
-			                
+			               
+			                buyerId: loggedInUserId,
+			                sellerId: sellerId,
+			              
 			            }),
+			            
 			            beforeSend: function(xhr) {
 			                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");  // CSRF 토큰 설정
 			            },
@@ -572,28 +574,27 @@ body {
 			    });
 
 				// startChat() 함수로 채팅 시작 요청
+		//function startChat(roomId) {
 		function startChat(roomId) {
 			var buyerId = loggedInUserId;  // 이미 상단에서 설정된 buyerId 값 사용
 		    var sellerId = "${product.productUserid}";  // 판매자 ID (서버에서 전달된 값 확인)
-		    
-		    console.log("Starting chat with roomId: " + roomId + ", buyerId: " + buyerId + ", sellerId: " + sellerId);  // 로그 추가
-        // AJAX 요청으로 startChat 호출
-		alert("sellerId start 시작 sending request: " + sellerId);
-		    	
+		    //var sellerId = "${sellerId}";  // 판매자 ID (서버에서 전달된 값 확인)
+		    console.log("Start Chat with Seller IDddddddddddddd: " + sellerId + " and Buyer ID: " + buyerId);
+		    console.log("Starting chat with roomIdddddddddddddd: " + roomId + ", buyerId: " + buyerId + ", sellerId: " + sellerId);  // 로그 추가
+		   
         $.ajax({
             url: "${pageContext.request.contextPath}/chatroom/start",  // 채팅 시작 URL
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
-                roomId: roomId,
+              	roomId: roomId,
                 buyerId: loggedInUserId,
                 sellerId: sellerId,
               
             }),
 
             success: function (response) {
-            	console.log("Chat room started successfully with roomId: " + roomId);
-                console.log("Redirecting to chat room with roomId: " + roomId);
+            	
                 // 생성된 채팅방으로 이동
                 window.location.href = "${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId;
             },
@@ -622,7 +623,9 @@ body {
 	        } 
 	        
 	    }); 
-	    
+	    		
+	
+	 
 	 
 	</script>
 </body>

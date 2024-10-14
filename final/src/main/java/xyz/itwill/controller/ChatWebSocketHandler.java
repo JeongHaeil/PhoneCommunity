@@ -30,10 +30,10 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             return;
         }
     	
-    	 session.getAttributes().put("userId", userId);
-         session.getAttributes().put("buyerId", buyerId);
-         session.getAttributes().put("sellerId", sellerId);
-         session.getAttributes().put("roomId", roomId);
+    	// session.getAttributes().put("userId", userId);
+        // session.getAttributes().put("buyerId", buyerId);
+         //session.getAttributes().put("sellerId", sellerId);
+         //session.getAttributes().put("roomId", roomId);
         // 메시지 전송 후 로그 출력
         System.out.println("메시지 전송: roomId = " + roomId + ", sellerId = " + sellerId);
         System.out.println("Buyer ID: " + buyerId);
@@ -47,16 +47,17 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             for (WebSocketSession s : roomSessionMap.get(roomId).values()) {
                 s.sendMessage(new TextMessage(message.getPayload()));
             }
+            System.out.println("메시지 전송: roomId = " + roomId + ", sellerId = " + sellerId);
         }
     }
 
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        
+    	System.out.println("WebSocket 연결이 성공적으로 수립되었습니다.");
         // URL 쿼리 파라미터에서 buyerId와 sellerId를 추출
     	//String userId = (String) session.getAttributes().get("userId");
-    	String userId = extractQueryParam(session.getUri().toString(), "userId");
+    	//String userId = extractQueryParam(session.getUri().toString(), "userId");
         String buyerId = extractQueryParam(session.getUri().toString(), "buyerId");
         String sellerId = extractQueryParam(session.getUri().toString(), "sellerId");
         String roomId = extractQueryParam(session.getUri().toString(), "roomId");  // roomId 추가
@@ -66,22 +67,22 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         System.out.println("Buyer ID: " + buyerId);
         System.out.println("Seller ID: " + sellerId);
         System.out.println("Room ID: " + roomId);
-        System.out.println("User ID: " + userId);
+        //System.out.println("User ID: " + userId);
 
         
-        if (userId == null || buyerId == null || sellerId == null || roomId == null) {
+        if (buyerId == null || sellerId == null || roomId == null) {
             System.out.println("Buyer ID 또는 Seller ID가 누락되었습니다.");
             return;
         }
 
         // 세션에 사용자 정보 저장
-        session.getAttributes().put("userId", userId);
+       // session.getAttributes().put("userId", userId);
         session.getAttributes().put("buyerId", buyerId);
         session.getAttributes().put("sellerId", sellerId);
         session.getAttributes().put("roomId", roomId);
         System.out.println("WebSocket 연결 시 URL: " + session.getUri().toString());
 
-        System.out.println("WebSocket 연결된 userId: " + userId);
+        //System.out.println("WebSocket 연결된 userId: " + userId);
         System.out.println("roomId: " + roomId + ", buyerId: " + buyerId + ", sellerId: " + sellerId);
         
         // 채팅방에 사용자 세션 추가

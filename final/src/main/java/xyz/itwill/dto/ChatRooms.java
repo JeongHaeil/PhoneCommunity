@@ -15,8 +15,8 @@ import lombok.Data;
 @Data
 public class ChatRooms {
 	private int roomId;
-	private int sellerId;
-	private int buyerId;
+	private String sellerId;
+	private String buyerId;
 	private String productId;
 	private Date createdAt;
 	private String chatStatus;
