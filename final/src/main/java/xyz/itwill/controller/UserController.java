@@ -240,7 +240,7 @@ public class UserController {
         return (user == null) ? "AVAILABLE" : "EXISTS";
     }
  // 이메일 인증 코드 재발송 처리 (POST 요청)
-    @RequestMapping(value = "/resend", method = RequestMethod.POST)
+    @RequestMapping(value = "/email/resend", method = RequestMethod.POST)
     public String resendVerificationEmail(HttpSession session, Model model) {
         // 세션에서 tempUser를 가져옴 (회원가입 시 입력한 이메일 정보가 포함된 User 객체)
         User tempUser = (User) session.getAttribute("tempUser");
@@ -618,7 +618,16 @@ public class UserController {
 
         // 사용자가 작성한 중고장터 게시물 목록을 가져옴
         Map<String, Object> productListMap = productService.getProductList(paramMap);
-        List<Product> productList = (List<Product>) productListMap.get("productList"); // 게시물 목록 추출
+
+        // Type safety 경고를 없애기 위한 방법
+        Object productListObj = productListMap.get("productList");
+        List<Product> productList = null;
+        if (productListObj instanceof List<?>) {
+            // 리스트 안의 객체가 Product 타입인지 확인 후 안전하게 캐스팅
+            if (!((List<?>) productListObj).isEmpty() && ((List<?>) productListObj).get(0) instanceof Product) {
+                productList = (List<Product>) productListObj;
+            }
+        }
 
         // 데이터 확인을 위해 로그 추가
         log.info("중고장터 게시물 목록: " + productList);
@@ -627,6 +636,8 @@ public class UserController {
 
         return "user/myProduct"; // myProduct.jsp로 이동
     }
+
+
 
     
 
