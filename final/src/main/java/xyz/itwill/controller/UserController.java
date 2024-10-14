@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -223,6 +224,22 @@ public class UserController {
         User user = userService.getUser(userId);
         return (user == null) ? "AVAILABLE" : "EXISTS";
     }
+    // 이메일 중복 확인
+    @RequestMapping(value = "/checkEmail", method = RequestMethod.GET)
+    @ResponseBody
+    public String checkEmail(@RequestParam("userEmail") String userEmail) {
+        User user = userService.getUser(userEmail);
+        return (user == null) ? "AVAILABLE" : "EXISTS";
+    }
+
+    // 닉네임 중복 확인
+    @RequestMapping(value = "/checkNickname", method = RequestMethod.GET)
+    @ResponseBody
+    public String checkNickname(@RequestParam("userNickname") String userNickname) {
+        User user = userService.getUser(userNickname);
+        return (user == null) ? "AVAILABLE" : "EXISTS";
+    }
+    
 
     
     // 아이디 찾기 페이지 요청 (GET 요청)
@@ -230,6 +247,7 @@ public class UserController {
     public String showIdFindPage() {
         return "user/idfind"; // idfind.jsp 파일로 이동
     }
+    
 
     // 아이디 찾기 요청 처리
     @RequestMapping(value = "/displayUserId", method = RequestMethod.POST)
@@ -272,23 +290,26 @@ public class UserController {
     @RequestMapping(value = "/findPassword", method = RequestMethod.POST)
     public String findPassword(@RequestParam("userId") String userId,
                                @RequestParam("userName") String userName,
-                               @RequestParam("userEmail") String userEmail, Model model) {
+                               @RequestParam("userEmail") String userEmail, 
+                               RedirectAttributes redirectAttributes) {
         User user = userService.findUserByIdNameAndEmail(userId, userName, userEmail);
 
         if (user == null || !user.getUserId().equals(userId) || !user.getUserName().equals(userName)) {
-            model.addAttribute("error", "입력하신 정보와 일치하는 사용자가 없습니다.");
-            return "user/passwordfind";
+            // FlashAttribute에 오류 메시지 추가
+            redirectAttributes.addFlashAttribute("error", "입력하신 정보와 일치하는 사용자가 없습니다.");
+            return "redirect:/user/passwordfind"; // 리다이렉트를 사용하여 새로고침 시 메시지가 남지 않게 처리
         }
 
         // 서비스에서 임시 비밀번호 생성 및 비밀번호 업데이트 처리
         userService.updatePassword(user);
 
-        // 성공 메시지를 Model에 추가
-        model.addAttribute("message", "임시 비밀번호가 이메일로 전송되었습니다.");
+        // 성공 메시지를 FlashAttribute에 추가
+        redirectAttributes.addFlashAttribute("successMessage", "임시 비밀번호가 이메일로 전송되었습니다.");
 
-        // 비밀번호가 전송되었다는 페이지로 이동
-        return "user/displayUserpw";
+        // 팝업 후 로그인 페이지로 리다이렉트
+        return "redirect:/user/passwordfind"; // 팝업이 뜬 후 로그인 페이지로 이동
     }
+
     
  // 회원정보 수정 페이지로 이동 (GET 방식)
     @RequestMapping(value = "/userUpdate", method = RequestMethod.GET)
@@ -304,25 +325,62 @@ public class UserController {
         return "user/userUpdate";  // userUpdate.jsp로 이동
     }
 
-    // 회원정보 수정 처리 (POST 방식)
-    @RequestMapping(value = "/userUpdate", method = RequestMethod.POST)
-    public String updateUser(
-            @ModelAttribute User user, 
+ // 회원정보 수정 처리 (POST 방식) - 닉네임 변경
+    @RequestMapping(value = "/updateNickname", method = RequestMethod.POST)
+    public String updateNickname(
+            @RequestParam("nickname") String nickname, 
             Authentication authentication, 
+            RedirectAttributes redirectAttributes, 
             Model model) {
+        
+        // 인증되지 않은 사용자는 로그인 페이지로 리다이렉트
         if (authentication == null) {
-            return "redirect:/user/login";  // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+            return "redirect:/user/login";
+        }
+
+        // 현재 로그인된 사용자의 ID 가져오기
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String userId = userDetails.getUserId();
+
+        // 닉네임 중복 확인
+        User existingUser = userService.getUser(nickname);
+        
+        if (existingUser != null && !existingUser.getUserId().equals(userId)) {
+            // 중복된 닉네임이 있고, 그 닉네임이 현재 사용자의 것이 아니면 오류 메시지 출력
+            model.addAttribute("errorMessage", "이미 사용중인 닉네임입니다.");
+            
+            // 기존 사용자 정보를 다시 모델에 담아 JSP로 전달
+            User loginUser = userService.getUser(userId);
+            model.addAttribute("user", loginUser);
+            model.addAttribute("currentExperience", loginUser.getUserExperience());
+            model.addAttribute("experienceForNextLevel", ExperienceUtil.getExperienceForNextLevel(loginUser.getUserLevel()));
+            model.addAttribute("progressPercentage", ExperienceUtil.calculateProgressPercentage(loginUser.getUserExperience(), ExperienceUtil.getExperienceForNextLevel(loginUser.getUserLevel())));
+            
+            return "user/mypage"; // 오류 시 다시 마이페이지로 이동
         }
 
         try {
-            userService.modifyUser(user);
-            model.addAttribute("message", "회원 정보가 성공적으로 업데이트되었습니다.");
+            // 닉네임 수정
+            userService.modifyUserNickname(userId, nickname);
+            
+            // 성공 메시지 전달
+            redirectAttributes.addFlashAttribute("successMessage", "닉네임이 성공적으로 변경되었습니다.");
+            return "redirect:/user/profile";  // 닉네임 변경 후 마이페이지로 리다이렉트
         } catch (Exception e) {
-            model.addAttribute("error", "회원 정보 업데이트 중 오류가 발생했습니다.");
+            // 예외 발생 시 오류 메시지 출력
+            model.addAttribute("error", "닉네임 업데이트 중 오류가 발생했습니다.");
+            
+            // 기존 사용자 정보를 다시 모델에 담아 JSP로 전달
+            User loginUser = userService.getUser(userId);
+            model.addAttribute("user", loginUser);
+            model.addAttribute("currentExperience", loginUser.getUserExperience());
+            model.addAttribute("experienceForNextLevel", ExperienceUtil.getExperienceForNextLevel(loginUser.getUserLevel()));
+            model.addAttribute("progressPercentage", ExperienceUtil.calculateProgressPercentage(loginUser.getUserExperience(), ExperienceUtil.getExperienceForNextLevel(loginUser.getUserLevel())));
+            
+            return "user/mypage";  // 오류 시 수정 페이지 유지
         }
-        
-        return "user/userUpdate";
     }
+
 
  // 비밀번호 변경 페이지로 이동 (GET 요청)
     @RequestMapping(value = "/passwordUpdate", method = RequestMethod.GET)
@@ -335,29 +393,32 @@ public class UserController {
         return "user/passwordUpdate"; // 비밀번호 변경 페이지로 이동
     }
 
-    // 비밀번호 변경 처리 (POST 요청)
+ // 비밀번호 변경 처리 (POST 요청)
     @RequestMapping(value = "/passwordUpdate", method = RequestMethod.POST)
     public String updatePassword(
         @RequestParam("newPassword") String newPassword,
         @RequestParam("confirmNewPassword") String confirmNewPassword,
         Authentication authentication, 
-        Model model) {
+        RedirectAttributes redirectAttributes) {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         User loginUser = userService.getUser(userDetails.getUserId());
 
         // 새 비밀번호와 확인 비밀번호가 일치하는지 확인
         if (!newPassword.equals(confirmNewPassword)) {
-            model.addAttribute("error", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
-            return "user/passwordUpdate";
+            redirectAttributes.addFlashAttribute("error", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+            return "redirect:/user/passwordUpdate";
         }
 
         // 새 비밀번호로 업데이트
-        userService.updateUserPassword(loginUser, newPassword);  // 새로 추가한 메서드 사용
+        userService.updateUserPassword(loginUser, newPassword);
 
-        model.addAttribute("message", "비밀번호가 성공적으로 변경되었습니다.");
-        return "user/passwordUpdate";
+        // 성공 메시지 전달 (리다이렉트 후 JSP에서 메시지를 확인해 팝업 표시)
+        redirectAttributes.addFlashAttribute("successMessage", "비밀번호가 성공적으로 변경되었습니다.");
+        
+        return "redirect:/user/passwordUpdate";
     }
+
  
  // 회원 탈퇴 확인 페이지로 이동 (GET 요청)
     @RequestMapping(value = "/userDelete", method = RequestMethod.GET)
@@ -374,33 +435,42 @@ public class UserController {
     public String deleteUser(
         Authentication authentication,
         @RequestParam("password") String password, 
-        HttpServletRequest request,  // HttpServletRequest 추가
-        HttpServletResponse response, // HttpServletResponse 추가
+        HttpServletRequest request, 
+        HttpServletResponse response, 
         Model model) {
 
+        // 현재 사용자가 인증되었는지 확인
         if (authentication == null) {
-            return "redirect:/user/login";  // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+            return "redirect:/user/login";  // 인증되지 않았으면 로그인 페이지로 리다이렉트
         }
 
+        // 현재 사용자 정보 가져오기
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         User loginUser = userService.getUser(userDetails.getUserId());
 
-        // 비밀번호 확인
+        // 입력된 비밀번호와 DB에 저장된 비밀번호 로그로 출력 (디버깅용)
+        log.info("입력된 비밀번호: " + password);
+        log.info("DB에 저장된 암호화된 비밀번호: " + loginUser.getUserPassword());
+
+        // 입력된 비밀번호와 DB에 저장된 비밀번호를 비교
         if (!passwordEncoder.matches(password, loginUser.getUserPassword())) {
+            log.warn("비밀번호 불일치");
             model.addAttribute("error", "비밀번호가 일치하지 않습니다.");
-            return "user/userDelete";
+            return "user/deleteUser";  // 비밀번호가 틀리면 탈퇴 페이지로 다시 이동
         }
 
-        // user_status를 0으로 변경하여 계정 비활성화
-        loginUser.setUserStatus(0);
-        userService.modifyUser(loginUser);  // 상태 업데이트
+        log.info("비밀번호 일치, 회원 탈퇴 진행");
 
-        // 인증 상태 해제 및 로그아웃 처리
+        // user_status를 0으로 변경하는 메서드를 호출
+        userService.updateUserStatus(loginUser.getUserId(), 0);  // 상태 변경 후 DB에 반영
+
+        // 로그아웃 처리 및 세션 해제
         new SecurityContextLogoutHandler().logout(request, response, authentication);
 
-        model.addAttribute("message", "회원 탈퇴가 완료되었습니다.");
-        return "redirect:/user/login";  // 로그인 페이지로 리다이렉트
+        return "redirect:/user/login";  // 탈퇴 후 로그인 페이지로 리다이렉트
     }
+
+
     
     // 스크랩 보기 페이지로 이동
     @RequestMapping(value = "/myScrap", method = RequestMethod.GET)
