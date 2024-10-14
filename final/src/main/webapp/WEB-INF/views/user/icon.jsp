@@ -55,7 +55,7 @@
             iconPath = request.getContextPath() + "/resources/images/gold.png";
         } else if (userLevel >= 16 && userLevel <= 19) {
             iconPath = request.getContextPath() + "/resources/images/emerald.png";
-        } else if (userLevel == 20) {
+        } else if (userLevel >= 20) {
             iconPath = request.getContextPath() + "/resources/images/diamond.png"; // 다이아몬드 아이콘
         } else {
             iconPath = request.getContextPath() + "/resources/images/default.png"; // 기본 아이콘 추가

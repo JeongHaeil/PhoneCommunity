@@ -34,6 +34,7 @@ import xyz.itwill.service.EmailService;
 import xyz.itwill.service.ProductService;
 import xyz.itwill.service.UserService;
 import xyz.itwill.util.ExperienceUtil;
+import xyz.itwill.util.Pager;
 
 @Slf4j
 @Controller
@@ -530,27 +531,14 @@ public class UserController {
         return "user/myScrap"; // 스크랩 보기 페이지로 이동
     }
     
- // 작성 댓글 보기 페이지로 이동
-    @RequestMapping(value = "/myComment")
-    public String showMyCommentPage(Authentication authentication, Model model) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/user/login"; // 인증되지 않은 사용자는 로그인 페이지로 리다이렉트
-        }
+ // 작성 댓글 보기 페이지로 이동 (GET 방식)
+    @RequestMapping(value = "/myComment", method = RequestMethod.GET)
+    public String showMyCommentPage(
+            Authentication authentication, 
+            Model model, 
+            @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, 
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
 
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        String userId = userDetails.getUserId(); // 로그인한 사용자의 ID 가져오기
-
-        // 사용자가 작성한 댓글 목록을 가져옴
-        List<Comments> commentList = commentsService.getCommentsByUserId(userId);
-
-        model.addAttribute("commentList", commentList); // 모델에 댓글 목록 추가
-        return "user/myComment"; // JSP 파일로 이동
-    }
-
-
- // 작성 글 보기 페이지로 이동
-    @RequestMapping(value = "/myWrite", method = RequestMethod.GET)
-    public String showMyWritePage(Authentication authentication, Model model) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/user/login";
         }
@@ -558,16 +546,62 @@ public class UserController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         String userId = userDetails.getUserId();
 
-        // 게시글 목록 가져오기
+        // 댓글 목록 가져오기 (전체 목록)
+        List<Comments> commentList = commentsService.getCommentsByUserId(userId);
+
+        // 전체 댓글 수
+        int totalSize = commentList.size();
+
+        // 페이징 객체 생성 (blockSize는 페이지 네비게이션에 보여질 페이지 번호 개수, 예: 5)
+        Pager pager = new Pager(pageNum, pageSize, totalSize, 5);
+
+        // 시작 행과 끝 행을 계산하여 부분 리스트 추출
+        List<Comments> paginatedCommentList = commentList.subList(pager.getStartRow() - 1, Math.min(pager.getEndRow(), totalSize));
+
+        // 모델에 댓글 목록 및 페이징 정보 추가
+        model.addAttribute("commentList", paginatedCommentList);
+        model.addAttribute("pager", pager);
+
+        return "user/myComment";
+    }
+
+
+
+ // 작성 글 보기 페이지로 이동 (GET 방식)
+    @RequestMapping(value = "/myWrite", method = RequestMethod.GET)
+    public String showMyWritePage(
+            Authentication authentication, 
+            Model model, 
+            @RequestParam(value = "pageNum", defaultValue = "1") int pageNum, 
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+        
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/user/login";
+        }
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String userId = userDetails.getUserId();
+
+        // 게시글 목록 가져오기 (전체 목록)
         List<Board> postList = boardService.getBoardsByUserId(userId);
-        
-        // 데이터 확인을 위해 로그 추가
-        log.info("게시글 목록: " + postList);
-        
-        model.addAttribute("postList", postList);
+
+        // 전체 게시글 수
+        int totalSize = postList.size();
+
+        // 페이징 객체 생성 (blockSize는 페이지 네비게이션에 보여질 페이지 번호 개수, 예: 5)
+        Pager pager = new Pager(pageNum, pageSize, totalSize, 5);
+
+        // 시작 행과 끝 행을 계산하여 부분 리스트 추출
+        List<Board> paginatedPostList = postList.subList(pager.getStartRow() - 1, Math.min(pager.getEndRow(), totalSize));
+
+        // 모델에 게시글 목록 및 페이징 정보 추가
+        model.addAttribute("postList", paginatedPostList);
+        model.addAttribute("pager", pager);
 
         return "user/myWrite";
     }
+
+    
     
  // 헤더에 사용자의 레벨, 경험치, 경험치 진행률을 표시하기 위한 메서드
     @RequestMapping("/someEndpoint")
