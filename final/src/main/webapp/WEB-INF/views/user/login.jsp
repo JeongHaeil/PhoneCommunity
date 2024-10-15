@@ -201,7 +201,7 @@
             </div>
             <button type="submit" class="btn btn-login-custom">로그인</button>
         </form>
-        
+       
 			<a href="<c:url value="/naver/login"/>">
 				<img alt="네이버 로그인" src="<c:url value="/resources/images/btnW_naver.png"/>" style="width: 340px; height: 60px;">
 			</a>	
