@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -88,17 +89,54 @@
             left: 0;
         }
 
+        /* 로그인 버튼 스타일 */
         .btn-login-custom {
             background-color: #f86d6d;
             color: white;
-            border-radius: 20px;
+            border-radius: 30px;
+            font-weight: bold;
             width: 100%;
             padding: 10px;
+            font-size: 18px;
             margin-top: 15px;
+            text-align: center;
+            border: none;
         }
+
         .btn-login-custom:hover {
             background-color: #f75c5c;
         }
+
+        /* 네이버 로그인 버튼 스타일 */
+        .naver-login-btn {
+            background-color: #03C75A;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 30px;
+            padding: 10px;
+            font-size: 18px;
+            display: block;
+            text-decoration: none;
+            margin-top: 10px;
+            width: 100%;
+            position: relative;
+            border: none;
+        }
+
+        .naver-login-btn img {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .naver-login-btn:hover {
+            background-color: #02b153;
+        }
+
         .divider-custom {
             display: flex;
             align-items: center;
@@ -117,9 +155,8 @@
         .divider-custom::after {
             margin-left: .5em;
         }
-        .remember-me-custom {
-            font-size: 0.9em;
-        }
+
+        /* 아이디 찾기와 비밀번호 찾기 좌우 배치 */
         .find-links-custom {
             font-size: 0.9em;
             display: flex;
@@ -134,19 +171,23 @@
             text-decoration: underline;
             color: #333;
         }
-        .register-link-custom {
-            color: #f86d6d;
-            font-weight: bold;
+
+       .register-container {
+            margin-top: 15px;
+            text-align: center;
         }
-        .register-link-custom:hover {
+
+        .register-container a {
+            color: red;
             text-decoration: underline;
+            font-weight: bold;
         }
 
         /* 로그인 실패 메시지 스타일 */
         .alert-custom {
             color: red;
             margin-bottom: 20px;
-            text-align: center; /* 가운데 정렬 */
+            text-align: center;
             font-size: 0.9rem;
         }
     </style>
@@ -173,7 +214,7 @@
                 <label for="password">비밀번호</label>
                 <div class="underline-effect-custom"></div>
 
-                <!-- 로그인 실패 시 메시지 출력 (가운데 정렬 및 줄 바꿈 적용) -->
+                <!-- 로그인 실패 시 메시지 출력 -->
                 <c:if test="${not empty sessionScope.loginError}">
                     <div class="alert-custom">
                         ${sessionScope.loginError}
@@ -185,25 +226,32 @@
                 </c:if>
             </div>
 
-            <!-- 오류 메시지가 여기에 나타날 부분 -->
+            <!-- 오류 메시지 영역 -->
             <div id="error-message" class="alert-custom"></div>
 
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="rememberMe" name="remember-me">
-                    <label class="form-check-label remember-me-custom" for="rememberMe">로그인 상태 유지</label>
+                   <label class="form-check-label remember-me-custom" for="rememberMe">로그인 상태 유지</label>
                 </div>
             </div>
+            
+            <!-- 아이디 찾기와 비밀번호 찾기 좌우 배치 -->
             <div class="find-links-custom">
                 <a href="${pageContext.request.contextPath}/user/idfind">아이디 찾기</a>
                 <a href="${pageContext.request.contextPath}/user/passwordfind">비밀번호 찾기</a>
             </div>
-            <button type="submit" class="btn btn-login-custom">로그인</button>
-        </form>
 
-        <div class="text-center mt-3">
-            <p>아직 회원이 아니신가요? <a href="${pageContext.request.contextPath}/user/terms" class="register-link-custom">회원가입 하기</a></p>
+            <!-- 로그인 버튼 -->
+            <button type="submit" class="btn-login-custom">로그인</button>
+
+            <div class="register-container">
+            아직 회원이 아니신가요? <a href="${pageContext.request.contextPath}/user/terms">회원가입 하기</a>
         </div>
+
+        <!-- 네이버 로그인 버튼 -->
+        <div class="divider-custom">또는</div>
+        <a href="<c:url value='/naver/login'/>" class="naver-login-btn">N</a>
     </div>
 </div>
 
@@ -222,17 +270,17 @@
 
         if (userId === "") {
             errorMessage.innerHTML = "아이디를 입력해주세요.";
-            document.getElementById("userId").focus(); // 아이디 필드에 포커스
-            return false; // 로그인 폼 제출 중단
+            document.getElementById("userId").focus();
+            return false;
         }
         
         if (password === "") {
             errorMessage.innerHTML = "비밀번호를 입력해주세요.";
-            document.getElementById("password").focus(); // 비밀번호 필드에 포커스
-            return false; // 로그인 폼 제출 중단
+            document.getElementById("password").focus();
+            return false;
         }
 
-        return true; // 모든 조건 만족 시 폼 제출
+        return true;
     }
 </script>
 

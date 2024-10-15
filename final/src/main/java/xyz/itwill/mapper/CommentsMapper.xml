@@ -4,9 +4,26 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xyz.itwill.mapper.CommentsMapper">
 	<select id="selectCommentsList" resultType="Comments">
-		select * from (select rownum rn, coco.* from(select comment_idx, comment_board_idx, comment_user_id, content, comment_image,comment_reg_date, comment_up_date, comment_user_ip, comment_ref
-		, comment_restep, comment_level, comment_status, comment_starup, comment_stardown, comment_spam, comment_reuser, user_nickname from comments join users on comment_user_id=user_id where comment_board_idx=#{commentBoardIdx} and comment_status&gt;=1 order by comment_ref desc,comment_restep) coco) where rn between #{startRow} and #{endRow}
-	</select>
+    select * 
+    from (
+        select rownum rn, coco.* 
+        from (
+            select comment_idx, comment_board_idx, comment_user_id, content, comment_image,
+                   comment_reg_date, comment_up_date, comment_user_ip, comment_ref,
+                   comment_restep, comment_level, comment_status, comment_starup, 
+                   comment_stardown, comment_spam, comment_reuser, user_nickname, 
+                   user_level, auth  <!-- 사용자 레벨 및 권한 추가 -->
+            from comments 
+            join users on comment_user_id = user_id
+            left join security_auth on user_id = auth_user_id  <!-- 사용자 권한 가져오기 -->
+            where comment_board_idx = #{commentBoardIdx} 
+              and comment_status >= 1 
+            order by comment_ref desc, comment_restep
+        ) coco
+    ) 
+    where rn between #{startRow} and #{endRow}
+</select>
+
 	<select id="selectCommentsCounts" resultType="int">
 		select count(*) from comments where comment_board_idx=#{commentBoardIdx} and comment_status&gt;=1 	
 	</select>
