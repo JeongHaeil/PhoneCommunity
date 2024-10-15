@@ -150,5 +150,11 @@
 	</select>
 
 
+ <!-- 사용자별 상품 조회 (마이페이지)-->
+<select id="selectProductsByUserId" parameterType="String" resultType="Product">
+    SELECT * FROM product
+    WHERE product_user_id = #{userId} AND product_status = 1
+    ORDER BY product_idx DESC
+</select>
 
 </mapper>
