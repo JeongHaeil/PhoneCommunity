@@ -55,8 +55,8 @@ public class BoardController {
 	                        @RequestParam(defaultValue = "20") int pageSize,
 	                        @RequestParam(defaultValue = "") String search, 
 	                        @RequestParam(defaultValue = "") String keyword, 
-	                        Model model) throws Exception {
-
+	                        Model model,Authentication authentication) throws Exception {
+		
 	    // 게시글 목록 조회
 	    Map<String, Object> map = boardService.getBoardList(boardCode, pageNum, pageSize, search, keyword);
 
@@ -86,7 +86,10 @@ public class BoardController {
 	    model.addAttribute("boardCode", boardCode);
 	    model.addAttribute("pager", map.get("pager"));
 	    model.addAttribute("boardList", boardList);
-
+	    if(authentication!=null) {
+			CustomUserDetails userDetails=(CustomUserDetails)authentication.getPrincipal();
+			model.addAttribute("userDetails", userDetails);
+		}
 	    return "board/boardList";
 	}
 
@@ -97,9 +100,20 @@ public class BoardController {
 	                          @RequestParam(defaultValue = "20") int pageSize,
 	                          @RequestParam(defaultValue = "") String search, 
 	                          @RequestParam(defaultValue = "") String keyword, 
-	                          Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-	    // 쿠키 저장 
-	   
+	                          Model model, HttpServletRequest request, HttpServletResponse response,Authentication authentication) throws Exception {
+		if(boardCode==3) {
+			if(authentication!=null) {
+				CustomUserDetails userDetails=(CustomUserDetails)authentication.getPrincipal();
+				Board board=boardService.getboard(boardPostIdx);
+				if(board.getBoardUserId().equals(userDetails.getUserId())||userDetails.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_BOARD_ADMIN"))) {			
+				}else {
+					return "redirect:/board/boardlist/"+boardCode+"?search="+search+"&keyword="+keyword+"&pageNum="+pageNum;	
+				}
+			}else {
+				return "redirect:/user/login";	
+			}
+		}
+	    // 쿠키 저장 	   
 	    Cookie[] cookies = request.getCookies();
 	    String oldCookiesValue = null;
 	    Cookie oldCookies = null;

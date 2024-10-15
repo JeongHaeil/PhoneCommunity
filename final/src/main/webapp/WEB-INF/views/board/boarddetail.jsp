@@ -231,12 +231,14 @@
 					</div>
 
 					<div class="container text-center mt-5">
+					<c:if test="${boardCode!=3}">
 						<button class="btn btn-outline-dark" onclick="boardstarup(${board.boardPostIdx});">
 							 추천&nbsp;<i class="fas fa-thumbs-up" style="color: #5CD1E5;"></i>
 						</button>
 						<button class="btn btn-outline-dark" onclick="boardstardown(${board.boardPostIdx});">
 							<i class="fas fa-thumbs-down" style="color: #FFB2F5;"></i> 비추천
 						</button>
+					</c:if>	
 					</div>
 
 					<div class="container mt-4">
@@ -263,8 +265,10 @@
 					<div class="row">
 						<div class="col-md-6">
 							<!-- <button class="btn btn-secondary">목록</button> -->
-							<button type="button" class="btn btn-secondary btn-sm" onclick="nextboard(${boardCode },${downboard})">다음글▲</button>
-							<button type="button" class="btn btn-secondary btn-sm" onclick="beforeboard(${boardCode },${upboard})">이전글▼</button>
+							<c:if test="${boardCode!=3}">
+								<button type="button" class="btn btn-secondary btn-sm" onclick="nextboard(${boardCode },${downboard})">다음글▲</button>
+								<button type="button" class="btn btn-secondary btn-sm" onclick="beforeboard(${boardCode },${upboard})">이전글▼</button>							
+							</c:if>							
 						</div>
 						<div
 							class="col-md-6 d-flex justify-content-end align-items-center">

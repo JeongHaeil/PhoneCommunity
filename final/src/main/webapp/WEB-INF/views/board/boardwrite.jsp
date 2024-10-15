@@ -58,6 +58,16 @@
 						</select>
 					</div>
 				</c:when>
+				<c:when test="${boardCode == 3}">
+					<div class="me-2">
+						<select name="boardtag" class="form-select">
+							<option value="[문의]" <c:if test="${boardtag  == '문의'}"> selected </c:if>>문의</option>
+							<option value="[신고]" <c:if test="${boardtag  == '신고'}"> selected </c:if>>신고</option>
+							<option value="[건의]" <c:if test="${boardtag  == '건의'}"> selected </c:if>>건의</option>
+							<option value="[버그]" <c:if test="${boardtag  == '버그'}"> selected </c:if>>버그</option>
+						</select>
+					</div>
+				</c:when>
 				<c:otherwise>
 					<div class="me-2">
 						<select name="boardtag" class="form-select">
