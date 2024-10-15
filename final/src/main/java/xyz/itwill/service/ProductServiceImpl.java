@@ -126,5 +126,10 @@ public class ProductServiceImpl implements ProductService {
 	public List<Product> getPopularProducts() {
 		 return productDAO.selectPopularProducts();
 	}
+	//마이페이지
+		 @Override
+		 public List<Product> getProductsByUserId(String userId) {
+		     return productDAO.selectProductsByUserId(userId);
+		 }
 	
 }

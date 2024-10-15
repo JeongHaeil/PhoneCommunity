@@ -14,4 +14,5 @@ public interface ProductDAO {
     int updateProductCount(int productIdx);
     List<Product> selectProductList(Map<String, Object> map);
     List<Product> selectPopularProducts(); // 인기글
+    List<Product> selectProductsByUserId(String userId);;//마이페이지 (김혜련)
 }

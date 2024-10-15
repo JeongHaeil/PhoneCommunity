@@ -23,4 +23,6 @@ public interface ProductService {
     void updateProductSoldStatus(int productIdx, int status);
     
     List<Product> getPopularProducts(); // 인기 게시글을 가져오는 메소드
+    
+    List<Product> getProductsByUserId(String userId);//마이페이지
 }
