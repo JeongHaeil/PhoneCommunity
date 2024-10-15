@@ -159,7 +159,7 @@ public class ProductController {
 	@RequestMapping(value = "/modify", method = RequestMethod.GET)
 	public String modifyForm(@RequestParam("productIdx") int productIdx, Model model) {
 		Product product = productService.getProductByNum(productIdx);
-		model.addAttribute("product", product); // 수정할 상품 정보 전달
+		model.addAttribute("product", product); // 수정할 상품 정보 전달 
 		return "product/productmodify"; // 수정 페이지로 이동
 	}
 
