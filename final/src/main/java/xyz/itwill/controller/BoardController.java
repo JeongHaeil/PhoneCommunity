@@ -13,6 +13,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -38,6 +40,9 @@ import xyz.itwill.service.UserService;
 @RequestMapping("/board")
 @RequiredArgsConstructor
 public class BoardController {
+	
+    private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
+
 	private final BoardService boardService;
 	private final CommentsService commentsService;
 	private final WebApplicationContext context;
@@ -45,98 +50,152 @@ public class BoardController {
 	
 	
 	@RequestMapping("/boardlist/{boardCode}")
-	public String boardList(@PathVariable int boardCode, @RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "20") int pageSize
-			, @RequestParam(defaultValue = "") String search, @RequestParam(defaultValue = "") String keyword, Model model) throws Exception {
-		Map<String, Object> map=boardService.getBoardList(boardCode, pageNum, pageSize, search, keyword);
-		String boardCodeTitle=boardService.getBoardCT(boardCode);
-		model.addAttribute("boardCodeTitle", boardCodeTitle);
-		model.addAttribute("search", search);
-		model.addAttribute("keyword", keyword);
-		model.addAttribute("boardCode", boardCode);
-		model.addAttribute("pager", map.get("pager"));
-		model.addAttribute("boardList", map.get("boardList"));
-		return "board/boardList";
+	public String boardList(@PathVariable int boardCode, 
+	                        @RequestParam(defaultValue = "1") int pageNum, 
+	                        @RequestParam(defaultValue = "20") int pageSize,
+	                        @RequestParam(defaultValue = "") String search, 
+	                        @RequestParam(defaultValue = "") String keyword, 
+	                        Model model) throws Exception {
+
+	    // 게시글 목록 조회
+	    Map<String, Object> map = boardService.getBoardList(boardCode, pageNum, pageSize, search, keyword);
+
+	    // 타입 안전한 방식으로 List<Board> 캐스팅
+	    List<?> listObject = (List<?>) map.get("boardList");
+
+	    List<Board> boardList = new ArrayList<>();
+	    for (Object obj : listObject) {
+	        if (obj instanceof Board) {
+	            boardList.add((Board) obj);
+	        }
+	    }
+
+	    // 게시글 작성자의 레벨 및 권한 정보 출력
+	    for (Board board : boardList) {
+	        logger.info("게시글 ID: {}, 작성자: {}, 레벨: {}, 권한: {}", 
+	                    board.getBoardPostIdx(), board.getBoardUserId(), board.getUserLevel(), board.getAuth());
+	    }
+
+	    // 게시판 코드에 따른 타이틀 설정
+	    String boardCodeTitle = boardService.getBoardCT(boardCode);
+
+	    // 모델에 데이터 추가
+	    model.addAttribute("boardCodeTitle", boardCodeTitle);
+	    model.addAttribute("search", search);
+	    model.addAttribute("keyword", keyword);
+	    model.addAttribute("boardCode", boardCode);
+	    model.addAttribute("pager", map.get("pager"));
+	    model.addAttribute("boardList", boardList);
+
+	    return "board/boardList";
 	}
+
 	
 	@RequestMapping("/boarddetail/{boardCode}/{boardPostIdx}")
-	public String boarddetail(@PathVariable int boardPostIdx,@PathVariable int boardCode,@RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "20") int pageSize
-			, @RequestParam(defaultValue = "") String search, @RequestParam(defaultValue = "") String keyword, Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		//쿠키저장
-		Cookie[] cookies=request.getCookies();
-		String oldCookiesValue=null;
-		Cookie oldCookies=null;
-		List<String> cookieList=new ArrayList<String>();
-		if(cookies!=null) {
-			for(Cookie cookie : cookies) {
-				if("viewCountCookie".equals(cookie.getName())){
-					oldCookies=cookie;
-					oldCookiesValue=cookie.getValue();
-					oldCookiesValue=oldCookiesValue.replaceAll("[\\[\\]]", ",");			
-					String[] cookieArray=oldCookiesValue.split(",");
-					for(String view :cookieArray) {
-						cookieList.add(view);
-					}					
-					break;
-				}
-			}
-		}
-		if(oldCookies!=null) {
-			if(!cookieList.contains(String.valueOf(boardPostIdx))) {
-				oldCookies.setValue(oldCookies.getValue()+"["+boardPostIdx+"]");
-				oldCookies.setPath("/final/board/");
-				oldCookies.setMaxAge(60*60*24);
-				response.addCookie(oldCookies);
-				boardService.boardViewCountUp(boardPostIdx);
-			}
-		}else {
-			Cookie newCookie=new Cookie("viewCountCookie", "["+boardPostIdx+"]");
-			newCookie.setPath("/final/board/");		
-			newCookie.setMaxAge(60 * 60 * 24);
-			response.addCookie(newCookie);
-			boardService.boardViewCountUp(boardPostIdx);
-		}
-		
-		
-		int commentCount=commentsService.getCommentsCount(boardPostIdx);
-		Map<String, Object> insertmap=new HashMap<String, Object>();
-		insertmap.put("boardPostIdx", boardPostIdx);
-		insertmap.put("boardCode", boardCode);
-		Board board=boardService.getBoardRNumber(insertmap);
-		Map<String, Object> boardmap=new HashMap<String, Object>();
-		boardmap.put("boardCode", boardCode);
-		boardmap.put("rn", board.getRn());
-		Board upboard=boardService.getRnUp(boardmap);
-		Board downboard=boardService.getRnDown(boardmap);
-		//Board boards=boardService.getboard(boardPostIdx);
-		if(upboard==null) {
-			model.addAttribute("upboard", 0);	
-		}else {
-			model.addAttribute("upboard", upboard.getBoardPostIdx());					
-		}
-		if(downboard==null) {
-			model.addAttribute("downboard", 0);	
-		}else {
-			model.addAttribute("downboard", downboard.getBoardPostIdx());					
-		}							
-		if(board.getBoardImage()!=null&&!board.getBoardImage().equals("")) {
-			String list=board.getBoardImage().replaceAll("[\\[\\]]", "");;
-			List<String> imageArray=Arrays.asList(list.split(","));
-			model.addAttribute("imageArray", imageArray);								
-		}
-		model.addAttribute("board", board);		
-		model.addAttribute("commentCount", commentCount);
-		model.addAttribute("boardCode", boardCode);
-		
-		Map<String, Object> map=boardService.getBoardList(boardCode, pageNum, pageSize, search, keyword);
-		String boardTitle=boardService.getBoardCT(boardCode);
-		model.addAttribute("boardTitle", boardTitle);
-		model.addAttribute("search", search);
-		model.addAttribute("keyword", keyword);
-		model.addAttribute("pager", map.get("pager"));
-		model.addAttribute("boardList", map.get("boardList"));
-		return "board/boarddetail";
+	public String boarddetail(@PathVariable int boardPostIdx, @PathVariable int boardCode,
+	                          @RequestParam(defaultValue = "1") int pageNum, 
+	                          @RequestParam(defaultValue = "20") int pageSize,
+	                          @RequestParam(defaultValue = "") String search, 
+	                          @RequestParam(defaultValue = "") String keyword, 
+	                          Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	    // 쿠키 저장 
+	   
+	    Cookie[] cookies = request.getCookies();
+	    String oldCookiesValue = null;
+	    Cookie oldCookies = null;
+	    List<String> cookieList = new ArrayList<String>();
+	    if (cookies != null) {
+	        for (Cookie cookie : cookies) {
+	            if ("viewCountCookie".equals(cookie.getName())) {
+	                oldCookies = cookie;
+	                oldCookiesValue = cookie.getValue();
+	                oldCookiesValue = oldCookiesValue.replaceAll("[\\[\\]]", ",");
+	                String[] cookieArray = oldCookiesValue.split(",");
+	                
+	                cookieList.addAll(Arrays.asList(cookieArray));
+	                break;
+	            }
+	        }
+	    }
+	    if (oldCookies != null) {
+	        if (!cookieList.contains(String.valueOf(boardPostIdx))) {
+	            oldCookies.setValue(oldCookies.getValue() + "[" + boardPostIdx + "]");
+	            oldCookies.setPath("/final/board/");
+	            oldCookies.setMaxAge(60 * 60 * 24);
+	            response.addCookie(oldCookies);
+	            boardService.boardViewCountUp(boardPostIdx);
+	            logger.info("쿠키 업데이트 및 조회수 증가 처리 완료 - 게시글 번호: {}", boardPostIdx);
+	        }
+	    } else {
+	        Cookie newCookie = new Cookie("viewCountCookie", "[" + boardPostIdx + "]");
+	        newCookie.setPath("/final/board/");
+	        newCookie.setMaxAge(60 * 60 * 24);
+	        response.addCookie(newCookie);
+	        boardService.boardViewCountUp(boardPostIdx);
+	        logger.info("새 쿠키 생성 및 조회수 증가 처리 완료 - 게시글 번호: {}", boardPostIdx);
+	    }
+
+	    // 댓글 수 계산
+	    int commentCount = commentsService.getCommentsCount(boardPostIdx);
+	    logger.info("댓글 수 계산 완료 - 게시글 번호: {}, 댓글 수: {}", boardPostIdx, commentCount);
+
+	    // 게시글 정보 가져오기
+	    Map<String, Object> insertmap = new HashMap<String, Object>();
+	    insertmap.put("boardPostIdx", boardPostIdx);
+	    insertmap.put("boardCode", boardCode);
+	    Board board = boardService.getBoardRNumber(insertmap);
+	    logger.info("게시글 정보 가져오기 완료 - 게시글 번호: {}", boardPostIdx);
+
+	    // 이전글/다음글 정보 가져오기
+	    Map<String, Object> boardmap = new HashMap<String, Object>();
+	    boardmap.put("boardCode", boardCode);
+	    boardmap.put("rn", board.getRn());
+	    Board upboard = boardService.getRnUp(boardmap);
+	    Board downboard = boardService.getRnDown(boardmap);
+	  //Board boards=boardService.getboard(boardPostIdx);
+	    if (upboard == null) {
+	        model.addAttribute("upboard", 0);
+	        logger.info("이전글 없음");
+	    } else {
+	        model.addAttribute("upboard", upboard.getBoardPostIdx());
+	        logger.info("이전글 정보 가져오기 완료 - 이전글 번호: {}", upboard.getBoardPostIdx());
+	    }
+
+	    if (downboard == null) {
+	        model.addAttribute("downboard", 0);
+	        logger.info("다음글 없음");
+	    } else {
+	        model.addAttribute("downboard", downboard.getBoardPostIdx());
+	        logger.info("다음글 정보 가져오기 완료 - 다음글 번호: {}", downboard.getBoardPostIdx());
+	    }
+
+	    // 이미지가 있는 경우 처리
+	    if (board.getBoardImage() != null && !board.getBoardImage().equals("")) {
+	        String list = board.getBoardImage().replaceAll("[\\[\\]]", "");
+	        List<String> imageArray = Arrays.asList(list.split(","));
+	        model.addAttribute("imageArray", imageArray);
+	        logger.info("이미지 정보 처리 완료 - 이미지 개수: {}", imageArray.size());
+	    }
+
+	    // **레벨과 권한 정보 추가** 
+	    logger.info("게시글 작성자의 레벨: {}, 권한: {}", board.getUserLevel(), board.getAuth());
+	    model.addAttribute("board", board);
+	    model.addAttribute("commentCount", commentCount);
+	    model.addAttribute("boardCode", boardCode);
+
+	    // 게시판 목록 및 검색 정보 가져오기
+	    Map<String, Object> map = boardService.getBoardList(boardCode, pageNum, pageSize, search, keyword);
+	    String boardTitle = boardService.getBoardCT(boardCode);
+	    model.addAttribute("boardTitle", boardTitle);
+	    model.addAttribute("search", search);
+	    model.addAttribute("keyword", keyword);
+	    model.addAttribute("pager", map.get("pager"));
+	    model.addAttribute("boardList", map.get("boardList"));
+	    logger.info("게시판 목록 및 검색 정보 가져오기 완료 - 게시판 코드: {}", boardCode);
+
+	    return "board/boarddetail";
 	}
-	
+
 	
 	
 	@RequestMapping(value ="/boardwrite/{boardCode}", method = RequestMethod.GET)

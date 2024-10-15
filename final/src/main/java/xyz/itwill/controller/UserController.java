@@ -39,7 +39,7 @@ import xyz.itwill.util.Pager;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/user") 
 public class UserController {
 
     private final UserService userService;

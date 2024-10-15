@@ -50,6 +50,12 @@
 	        display: none; 
    		 }
 	}
+	.user-badge {
+    width: 20px;    /* 적절한 너비로 조정 */
+    height: 20px;   /* 적절한 높이로 조정 */
+    vertical-align: middle; /* 텍스트와 이미지 수평 정렬 */
+    margin-left: 5px; /* 텍스트와 아이콘 간격 추가 */
+} 
     
     .boardsListTable th:not(.boardTitle, .boardWriter, .boardDate) {
         text-align: center;
@@ -209,8 +215,7 @@
 					    <button type="button" class="btn btn-dark btn-sm" onclick="hideAndShowSearch()">검색</button>&nbsp;
 					    <c:choose>
 					    	<c:when test="${boardCode >= 10 && boardCode <= 99 }">
-					    		<button type="button" class="btn btn-dark btn-sm" onclick="window.location.href='<c:url value="/board/boardwrite/${boardCode }"/>'">글쓰기</button>					    	
-					    	</c:when>
+					    		<button type="button" class="btn btn-dark btn-sm" onclick="window.location.href='<c:url value="/board/boardwrite/${boardCode }"/>'">글쓰기</button>					    	</c:when>
 					    	<c:otherwise>
 					    		<sec:authorize access="isAuthenticated()">
 					    			<sec:authorize access="hasRole('ROLE_BOARD_ADMIN')" var="admin"/>
@@ -265,25 +270,57 @@
 		    										<td>&lt;공지&gt;</td>
 		    									</c:when>
 		    									<c:otherwise>
-		    										<td>${boards.boardPostIdx }</td>  										    									
-		    									</c:otherwise>
+		    										<td>${boards.boardPostIdx }</td>  										    										</c:otherwise>
 		    								</c:choose>
 		    								<td class="tdboardTitle" style="color: #333; cursor: pointer;" 
 											    onclick="location.href='<c:url value='/board/boarddetail/${boards.boardCode }/${boards.boardPostIdx }'/>?pageNum=${pager.pageNum}&search=${search }&keyword=${keyword }'">
 											    &nbsp;&nbsp;${boards.boardTitle}<c:if test="${boards.cocain !=0}"><span style="color: #A566FF;"> &nbsp;[${boards.cocain }]</span></c:if>
 											</td>
-		    								 <td class="tdboardWriter">
-					                                <!-- 작성자 클릭 시 드롭다운 표시 -->
-					                                <div class="dropdown" id='WriterdropDiv'>
-					                                    <button class="btn btn-link dropdown-toggle Wirterbtn" style="color: black;" type="button" id="dropdownMenuButton-${boards.boardPostIdx}" data-bs-toggle="dropdown" aria-expanded="false">
-					                                        ${boards.userNickname}
-					                                    </button>
-					                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-${boards.boardPostIdx}" id="WriterdropUl">					                                       					                                       
-					                                        <li><a class="dropdown-item" href="<c:url value='/board/boardlist/1'/>?&search=user_nickname&keyword=${boards.userNickname }">작성글 전체보기</a></li>
-															<%--추가 하려면 위에꺼 복 붙 --%>	
-					                                    </ul>
-					                                </div>
-					                            </td>
+		    								<td class="tdboardWriter">
+    <div class="dropdown" id="WriterdropDiv">
+        <button class="btn btn-link dropdown-toggle Wirterbtn" style="color: black;" type="button" id="dropdownMenuButton-${boards.boardPostIdx}" data-bs-toggle="dropdown" aria-expanded="false">
+            ${boards.userNickname}
+        </button>
+
+        <!-- 배지(아이콘) 로직을 바로 JSP에서 처리 -->
+        <c:choose>
+            <c:when test="${boards.auth == 'ROLE_SUPER_ADMIN'}">
+                <img src="${pageContext.request.contextPath}/resources/images/crown.png" alt="Super Admin Badge" class="user-badge" />
+            </c:when>
+            <c:when test="${boards.auth == 'ROLE_BOARD_ADMIN'}">
+                <img src="${pageContext.request.contextPath}/resources/images/rainbow.png" alt="Board Admin Badge" class="user-badge" />
+            </c:when>
+            <c:otherwise>
+                <c:choose>
+                    <c:when test="${boards.userLevel >= 1 && boards.userLevel <= 5}">
+                        <img src="${pageContext.request.contextPath}/resources/images/bronze.png" alt="Bronze Badge" class="user-badge" />
+                    </c:when>
+                    <c:when test="${boards.userLevel >= 6 && boards.userLevel <= 10}">
+                        <img src="${pageContext.request.contextPath}/resources/images/silver.png" alt="Silver Badge" class="user-badge" />
+                    </c:when>
+                    <c:when test="${boards.userLevel >= 11 && boards.userLevel <= 15}">
+                        <img src="${pageContext.request.contextPath}/resources/images/gold.png" alt="Gold Badge" class="user-badge" />
+                    </c:when>
+                    <c:when test="${boards.userLevel >= 16 && boards.userLevel <= 19}">
+                        <img src="${pageContext.request.contextPath}/resources/images/emerald.png" alt="Emerald Badge" class="user-badge" />
+                    </c:when>
+                    <c:when test="${boards.userLevel >= 20}">
+                        <img src="${pageContext.request.contextPath}/resources/images/diamond.png" alt="Diamond Badge" class="user-badge" />
+                    </c:when>
+                </c:choose>
+            </c:otherwise>
+        </c:choose>
+
+        <!-- 드롭다운 메뉴 -->
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-${boards.boardPostIdx}" id="WriterdropUl">
+            <li>
+                <a class="dropdown-item" href="<c:url value='/board/boardlist/1'/>?&search=user_nickname&keyword=${boards.userNickname}">
+                    작성글 전체보기
+                </a>
+            </li>
+        </ul>
+    </div>
+</td>
 		    								<td>${boards.boardRegisterDate }</td>
 		    								<td>${boards.boardCount }</td>
 		    							</tr>
@@ -292,6 +329,7 @@
 		    				</c:choose>
 		                </tbody>
 		            </table>
+		
 	            </div>
             
 			 <div class="d-flex justify-content-end align-items-center">
