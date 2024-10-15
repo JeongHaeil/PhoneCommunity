@@ -13,6 +13,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -38,6 +40,9 @@ import xyz.itwill.service.UserService;
 @RequestMapping("/board")
 @RequiredArgsConstructor
 public class BoardController {
+	
+    private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
+
 	private final BoardService boardService;
 	private final CommentsService commentsService;
 	private final WebApplicationContext context;
@@ -45,18 +50,46 @@ public class BoardController {
 	
 	
 	@RequestMapping("/boardlist/{boardCode}")
-	public String boardList(@PathVariable int boardCode, @RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "20") int pageSize
-			, @RequestParam(defaultValue = "") String search, @RequestParam(defaultValue = "") String keyword, Model model) throws Exception {
-		Map<String, Object> map=boardService.getBoardList(boardCode, pageNum, pageSize, search, keyword);
-		String boardCodeTitle=boardService.getBoardCT(boardCode);
-		model.addAttribute("boardCodeTitle", boardCodeTitle);
-		model.addAttribute("search", search);
-		model.addAttribute("keyword", keyword);
-		model.addAttribute("boardCode", boardCode);
-		model.addAttribute("pager", map.get("pager"));
-		model.addAttribute("boardList", map.get("boardList"));
-		return "board/boardList";
+	public String boardList(@PathVariable int boardCode, 
+	                        @RequestParam(defaultValue = "1") int pageNum, 
+	                        @RequestParam(defaultValue = "20") int pageSize,
+	                        @RequestParam(defaultValue = "") String search, 
+	                        @RequestParam(defaultValue = "") String keyword, 
+	                        Model model) throws Exception {
+
+	    // 게시글 목록 조회
+	    Map<String, Object> map = boardService.getBoardList(boardCode, pageNum, pageSize, search, keyword);
+
+	    // 타입 안전한 방식으로 List<Board> 캐스팅
+	    List<?> listObject = (List<?>) map.get("boardList");
+
+	    List<Board> boardList = new ArrayList<>();
+	    for (Object obj : listObject) {
+	        if (obj instanceof Board) {
+	            boardList.add((Board) obj);
+	        }
+	    }
+
+	    // 게시글 작성자의 레벨 및 권한 정보 출력
+	    for (Board board : boardList) {
+	        logger.info("게시글 ID: {}, 작성자: {}, 레벨: {}, 권한: {}", 
+	                    board.getBoardPostIdx(), board.getBoardUserId(), board.getUserLevel(), board.getAuth());
+	    }
+
+	    // 게시판 코드에 따른 타이틀 설정
+	    String boardCodeTitle = boardService.getBoardCT(boardCode);
+
+	    // 모델에 데이터 추가
+	    model.addAttribute("boardCodeTitle", boardCodeTitle);
+	    model.addAttribute("search", search);
+	    model.addAttribute("keyword", keyword);
+	    model.addAttribute("boardCode", boardCode);
+	    model.addAttribute("pager", map.get("pager"));
+	    model.addAttribute("boardList", boardList);
+
+	    return "board/boardList";
 	}
+
 	
 	@RequestMapping("/boarddetail/{boardCode}/{boardPostIdx}")
 	public String boarddetail(@PathVariable int boardPostIdx,@PathVariable int boardCode,@RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "20") int pageSize
