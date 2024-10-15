@@ -527,6 +527,8 @@
    		 var buyerId = loggedInUserId;
    		 var newRoomId;
    		 
+   		 
+   		 
    		    console.log("buyerId: " + loggedInUserId);
    		    console.log("sellerId: " + sellerId);
    		    console.log("roomId: " + roomId);	
@@ -564,9 +566,10 @@
    			        });
    			    });
 
-   				// startChat() 함수로 채팅 시작 요청
+   				
    		//function startChat(roomId) {
    		function startChat(roomId) {
+   			var roomId= "${product.productIdx}"
    			var buyerId = loggedInUserId;  // 이미 상단에서 설정된 buyerId 값 사용
    		    var sellerId = "${product.productUserid}";  // 판매자 ID (서버에서 전달된 값 확인)
    		    //var sellerId = "${sellerId}";  // 판매자 ID (서버에서 전달된 값 확인)
@@ -597,6 +600,7 @@
            });
        }
    			 
+   	    }); 
    	        // 방 번호를 받아 해당 방의 채팅방 UI를 로드하는 함수
    	        function loadChatRoom(newRoomId) {
    	        	console.log("Loaded roomId: " + newRoomId); // roomId 값 출력
@@ -612,7 +616,6 @@
    	            });
    	        } 
    	        
-   	    }); 
     </script>
 </body>
 

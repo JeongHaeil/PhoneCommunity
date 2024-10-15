@@ -2,9 +2,11 @@ package xyz.itwill.mapper;
 
 import java.util.Map;
 
+
 import org.apache.ibatis.annotations.Param;
 
 import xyz.itwill.dto.ChatRooms;
+
 
 public interface ChatRoomsMapper {
 	
@@ -23,4 +25,9 @@ public interface ChatRoomsMapper {
 	
 	String findExistingRoom(@Param("buyerId") String buyerId, @Param("sellerId") String sellerId);
 	int createChatRooms(ChatRooms chatRooms);
+	
+	
+	void insertChatRoom(ChatRooms chatRoom);
+	
+	
 }

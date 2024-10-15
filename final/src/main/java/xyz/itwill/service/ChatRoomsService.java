@@ -29,7 +29,7 @@ public interface ChatRoomsService {
 	
 	int findExistingRoom(@Param("buyerId") String buyerId, @Param("sellerId") String sellerId);
 
-	
+	void insertChatRoom(ChatRooms chatRoom);
 
 	
 
