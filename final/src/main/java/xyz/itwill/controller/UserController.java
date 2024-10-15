@@ -1,5 +1,6 @@
 package xyz.itwill.controller;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -655,6 +656,7 @@ public class UserController {
         }
         return userInfo;
     }
+    
  // 작성한 중고장터 게시물 보기 페이지로 이동 (GET 방식)
     @RequestMapping(value = "/myProducts", method = RequestMethod.GET)
     public String showMyProductsPage(
@@ -674,13 +676,13 @@ public class UserController {
         List<Product> productList = productService.getProductsByUserId(userId);
 
         // 전체 게시물 수
-        int totalSize = productList.size();
+        int totalSize = productList != null ? productList.size() : 0;
 
         // 페이징 객체 생성 (blockSize는 페이지 네비게이션에 보여질 페이지 번호 개수, 예: 5)
         Pager pager = new Pager(pageNum, pageSize, totalSize, 5);
 
         // 시작 행과 끝 행을 계산하여 부분 리스트 추출
-        List<Product> paginatedProductList = productList.subList(pager.getStartRow() - 1, Math.min(pager.getEndRow(), totalSize));
+        List<Product> paginatedProductList = productList != null ? productList.subList(pager.getStartRow() - 1, Math.min(pager.getEndRow(), totalSize)) : Collections.emptyList();
 
         // 모델에 게시물 목록 및 페이징 정보 추가
         model.addAttribute("productList", paginatedProductList);
@@ -689,8 +691,23 @@ public class UserController {
         return "user/myProduct";
     }
 
+    // 중고장터 게시물 상세 페이지로 이동 (GET 방식)
+    @RequestMapping(value = "/details", method = RequestMethod.GET)
+    public String showMyProductDetail(
+            @RequestParam("productIdx") int productIdx,
+            Model model) {
 
-    
+        // 게시물 조회
+        Product product = productService.getProductByNum(productIdx);
+        if (product == null) {
+            return "redirect:/user/myProducts";
+        }
+
+        // 모델에 게시물 정보 추가
+        model.addAttribute("product", product);
+
+        return "user/myProductDetail";
+    }
 
     // 로그인 성공 후 세션에 userId 저장하는 부분 추가- 정해일
     @RequestMapping(value = "/login", method = RequestMethod.POST)

@@ -87,7 +87,7 @@
                     <c:forEach var="product" items="${productList}" varStatus="status">
                         <tr class="product-item">
                             <td>${status.index + 1}</td>
-                            <td><a href="/product/${product.productIdx}">${product.productSubject}</a></td>
+                            <td><a href="/final/product/details?productIdx=${product.productIdx}">${product.productSubject}</a></td>
                             <td>${product.productRegisterdate}</td>
                             <td>${product.productPrice} 원</td>
                             <td>${product.productModelStatus}</td>
