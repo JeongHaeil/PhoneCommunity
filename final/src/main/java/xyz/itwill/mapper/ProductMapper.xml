@@ -54,7 +54,7 @@
                product_count AS productCount, product_mode AS productMode,
                product_price AS productPrice, product_model_status AS productModelStatus,
                product_delivery AS productDelivery, product_category AS productCategory,
-               users.user_nickname AS productUsernickname  <!-- 사용자 닉네임 추가 -->
+               users.user_nickname AS productUsernickname, product_sold AS productSold 
         FROM product
         JOIN users ON product_user_id = users.user_id
         WHERE product_idx = #{productIdx}
@@ -79,7 +79,8 @@
                 SELECT product_idx AS productIdx, product_user_id,
                        product_subject AS productSubject, product_register_date AS productRegisterDate,
                        product_count AS productCount, product_mode AS productMode,
-                       product_price AS productPrice, product_image as productImage
+                       product_price AS productPrice, product_image as productImage,
+                        product_sold AS productSold 
                 FROM product
                 WHERE product_status = 1  <!-- 글 상태가 1인 글만 조회 -->
                 <if test="keyword != null and keyword != ''">
@@ -91,5 +92,12 @@
             JOIN users ON product.product_user_id = users.user_id
         ) WHERE rn BETWEEN #{startRow} AND #{endRow}
     </select>
+    
+ <update id="updateProductSoldStatus">
+    UPDATE product
+    SET product_sold = #{status}
+    WHERE product_idx = #{productIdx}
+</update>
+
 
 </mapper>

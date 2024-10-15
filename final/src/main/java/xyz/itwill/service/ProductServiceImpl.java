@@ -115,5 +115,11 @@ public class ProductServiceImpl implements ProductService {
 
 	        return productIdx;  // 생성된 productIdx 반환
 	    }
+
+	@Override
+	public void updateProductSoldStatus(int productIdx, int status) {
+		productDAO.updateProductSoldStatus(productIdx, status);
+		
+	}
 	
 }
