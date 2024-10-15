@@ -185,6 +185,12 @@
 .Wirterbtn:hover, .Wirterbtn:focus {
     text-decoration: none !important;  /* 호버 및 포커스 상태에서 밑줄 제거 */
 }
+
+.user-badge {
+    margin-left: 10px;
+    width: 20px;
+    height: 20px;
+}
 <!--작성자 클릭시 드랍다운 관련 끝 css-->
 
     </style>
@@ -203,6 +209,7 @@
 					<div class="card-body">
 						<h5 class="card-title" style="color:#f05d5e;">${board.boardTitle }</h5>
 						<%-- 삭제 수정은 로그인 유저와 작성자가 같을때만 출력 --%>
+						
 						<p class="card-text d-flex justify-content-between aCursorActive">
 						<small class="text-muted">작성자: ${board.userNickname} | 작성일:${board.boardRegisterDate }</small>
 							<sec:authorize access="isAuthenticated()">
@@ -342,6 +349,34 @@
 					                                    <button class="btn btn-link dropdown-toggle Wirterbtn" style="color: black;" type="button" id="dropdownMenuButton-${boards.boardPostIdx}" data-bs-toggle="dropdown" aria-expanded="false">
 					                                        ${boards.userNickname}
 					                                    </button>
+					                                    <!-- 작성자 아이콘 표시 -->
+                                                        <c:choose>
+                                                            <c:when test="${boards.auth == 'ROLE_SUPER_ADMIN'}">
+                                                                <img src="${pageContext.request.contextPath}/resources/images/crown.png" alt="Super Admin Badge" class="user-badge" />
+                                                            </c:when>
+                                                            <c:when test="${boards.auth == 'ROLE_BOARD_ADMIN'}">
+                                                                <img src="${pageContext.request.contextPath}/resources/images/rainbow.png" alt="Board Admin Badge" class="user-badge" />
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <c:choose>
+                                                                    <c:when test="${boards.userLevel >= 1 && boards.userLevel <= 5}">
+                                                                        <img src="${pageContext.request.contextPath}/resources/images/bronze.png" alt="Bronze Badge" class="user-badge" />
+                                                                    </c:when>
+                                                                    <c:when test="${boards.userLevel >= 6 && boards.userLevel <= 10}">
+                                                                        <img src="${pageContext.request.contextPath}/resources/images/silver.png" alt="Silver Badge" class="user-badge" />
+                                                                    </c:when>
+                                                                    <c:when test="${boards.userLevel >= 11 && boards.userLevel <= 15}">
+                                                                        <img src="${pageContext.request.contextPath}/resources/images/gold.png" alt="Gold Badge" class="user-badge" />
+                                                                    </c:when>
+                                                                    <c:when test="${boards.userLevel >= 16 && boards.userLevel <= 19}">
+                                                                        <img src="${pageContext.request.contextPath}/resources/images/emerald.png" alt="Emerald Badge" class="user-badge" />
+                                                                    </c:when>
+                                                                    <c:when test="${boards.userLevel >= 20}">
+                                                                        <img src="${pageContext.request.contextPath}/resources/images/diamond.png" alt="Diamond Badge" class="user-badge" />
+                                                                    </c:when>
+                                                                </c:choose>
+                                                            </c:otherwise>
+                                                        </c:choose>
 					                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-${boards.boardPostIdx}" id="WriterdropUl">					                                       					                                       
 					                                        <li><a class="dropdown-item" href="<c:url value='/board/boardlist/1'/>?&search=user_nickname&keyword=${boards.userNickname }">작성글 전체보기</a></li>
 															<%--추가 하려면 위에꺼 복 붙 --%>	
@@ -459,123 +494,154 @@
 		var cocopageNum =1;	
 		commentsListDisplay(boardCode, boardPostIdx,1);
 		popularSideBoard();
-		function commentsListDisplay(boardCode, boardPostIdx,cocopageNum) {
-			$.ajax({
-				type : "get",
-				url : "<c:url value='/rest/commentsList'/>/" + boardCode+ "/" + boardPostIdx,
-				data : {
-					"boardCode" : boardCode,
-					"boardPostIdx" : boardPostIdx,
-					"pageNum": cocopageNum
-				},
-				dataType : "json",
-				success : function(result) {
-							if (result.commentList.length == 0) {
-								var html = "<p>검색된 댓글이 없습니다.</p>";
-								$("#commentsListDiv").html(html);
-								return;
-							}
-							var html = "<p>댓글 (" + result.commentCount
-									+ ")</p>";
-							$(result.commentList)
-									.each(
-											function() {
-												if(this.commentLevel!=0){
-												html += "<div class='commentRowDiv reCommentDiv mt-1' style='margin-left:"+this.commentLevel*20+"px;'>"; 
-												}else{
-												html += "<div class='commentRowDiv mt-1' style='margin-left:"+this.commentLevel*20+"px;'>"; 				
-												}
-												html += "<div class='list-group'>";
-												html += "<div>";
-												html += "<div class='d-flex justify-content-between'>";
-												
-												html += "<div>";
-												
-												
-												if(this.commentStatus>1){
-												}else{
-													if(this.commentLevel!=0){													
-													html += "<strong>┖"+ this.userNickname+ "</strong> <small class='text-muted'>"+ this.commentRegDate+ "</small>";													
-													}else{
-													html += "<strong>"+ this.userNickname+ "</strong> <small class='text-muted'>"+ this.commentRegDate+ "</small>";
-													}							
-													if (this.commentUserId == result.board.boardUserId) {//세션에서 값 가져와서 로그인 유저와 비교 <---잘못된 작성
-														html += "<span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; margin-left: 4px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: #CC3D3D;'>작성자</span>";										
-													}
-													if(this.commentUserId == result.userId || result.boardAdmin !=null){
-														html += "<a class='aCursorActive' onclick='deleteComment("+ this.commentIdx+ ");'><span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: #0D6EFD;'>삭제</span></a>";													
-													}													
-												}
-												html += "</div>";												
-												html += "<div class='btn-group btn-group-sm aCursorActive' role='group' aria-label='Small button group'>";
-												if(this.commentStatus>1){
-													
-												}else{												
-													html += "<p><small class='text-muted'><a onclick='voteUp("+this.commentIdx+");' style='color: #F29661;'><i class='fa-solid fa-hand-holding-heart'></i>추천</a> | <a onclick='commentspam("+this.commentIdx+");' style='color: dark;'><i class='fa-solid fa-user-large-slash'></i>신고</a></small></p>";
-												}	
-												html += "</div>";
-												html += "</div>";
-												if(this.commentStatus == 2){
-													html +="<p><span style='color: pink;'>삭제된 댓글입니다.</span></p>";
-												}else if(this.commentStatus == 3){
-													html +="<p><span style='color: blue;'>신고 누적으로 블라인드 처리된 댓글 입니다.</span></p>";
-												}else{
-													if(this.commentRestep!=0){
-													html += "<p><span style='color: blue;'>@"+this.commentReuser+"&nbsp;&nbsp;&nbsp;   </span>" + this.content+ "</p>";																										
-													}else{
-													html += "<p>" + this.content+ "</p>";													
-													}													
-													if (this.commentImage
-															&& this.commentImage.length != 0) {
-														html += "<img  src='<c:url value='/resources/images/uploadFile/comment/"+this.commentImage+"'/>' width='80' >";						
-													}
-												}
-												html += "</div>";
-												html += "<div class='d-flex justify-content-between'>";
-												html += "<div></div>";
-												if(this.commentStatus>1){
-													
-												}else{
-													html += "<div class='text-drak'><a  style='font-size:15px;' onclick='writeComment("+ this.commentIdx+ ");'>답글</a></div>";													
-												}	
-												html += "</div>";
-												html += "<div id='rrDiv'></div>";
-												html += "</div>";
-												html += "</div>";
-												
-												
-												html += "<div class='card mt-4 cocoment' id='commentsNumber_"+this.commentIdx+"'>";
-												html += "<form id='commentsList_"+this.commentIdx+"'>";
-												html += "<div class='form-group'>";
-												html += "<label class='aCursorActive' for='commentText'>&nbsp;<span style='color: blue;'>@"+this.userNickname+"</span> 답글</label>";
-												html += "<textarea class='form-control' id='commentText_"+this.commentIdx+"' name='content' rows='3' required></textarea>";
-												html += "</div>";
-												html += "<div class='d-flex justify-content-between'>";
-												html += "<div>";
-												html += "<input type='file' class='form-control-file' id='commentImage_"+this.commentIdx+"' name='commentImage'>";
-												html += "</div>";
-												html += "<div>";
-												html += "<button type='button' class='btn btn-dark float-right btn-sm' onclick='insertComment("+this.commentIdx+");'>등록</button>";
-												html += "</div>";
-												html += "</div>";
-												html += "</form>";
-												html += "</div>";
-												<%-- <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNumValue">; --%>	
-											
-											});
-							html += "<input type='hidden' value='${pager.pageNum }' id='pageNumValue'>"; 
-							
-							
-							$("#commentsListDiv").html(html);
-							pageNumberDisplay(result.boardCode,result.boardPostIdx,result.pager);
-							$(".cocoment").css({ display: 'none' });
-						},
-						error : function(xhr) {
-							alert("에러코드(게시글 목록 검색) = " + xhr.status);
-						}
-					});
+		
+		function commentsListDisplay(boardCode, boardPostIdx, cocopageNum) {
+		    $.ajax({
+		        type: "get",
+		        url: "<c:url value='/rest/commentsList'/>/" + boardCode + "/" + boardPostIdx,
+		        data: {
+		            "boardCode": boardCode,
+		            "boardPostIdx": boardPostIdx,
+		            "pageNum": cocopageNum
+		        },
+		        dataType: "json",
+		        success: function(result) {
+		            if (result.commentList.length == 0) {
+		                var html = "<p>검색된 댓글이 없습니다.</p>";
+		                $("#commentsListDiv").html(html);
+		                return;
+		            }
+
+		            var contextPath = "<%=request.getContextPath()%>";
+		            var html = "<p>댓글 (" + result.commentCount + ")</p>";
+
+		            $(result.commentList).each(function() {
+		                if (this.commentLevel != 0) {
+		                    html += "<div class='commentRowDiv reCommentDiv mt-1' style='margin-left:" + this.commentLevel * 20 + "px;'>";
+		                } else {
+		                    html += "<div class='commentRowDiv mt-1' style='margin-left:" + this.commentLevel * 20 + "px;'>";
+		                }
+
+		                html += "<div class='list-group'>";
+		                html += "<div>";
+		                html += "<div class='d-flex justify-content-between'>";
+		                html += "<div>";
+
+		                if (this.commentStatus > 1) {
+		                    // 상태 처리
+		                } else {
+		                    if (this.commentLevel != 0) {
+		                        html += "<strong>┖" + this.userNickname;
+		                    } else {
+		                        html += "<strong>" + this.userNickname;
+		                    }
+
+		                    // 뱃지 추가
+		                    if (this.auth === 'ROLE_SUPER_ADMIN') {
+		                        html += "<img src='" + contextPath + "/resources/images/crown.png' alt='Super Admin Badge' class='user-badge' style='margin-left: 5px;'/>";
+		                    } else if (this.auth === 'ROLE_BOARD_ADMIN') {
+		                        html += "<img src='" + contextPath + "/resources/images/rainbow.png' alt='Board Admin Badge' class='user-badge' style='margin-left: 5px;'/>";
+		                    } else {
+		                        if (this.userLevel >= 1 && this.userLevel <= 5) {
+		                            html += "<img src='" + contextPath + "/resources/images/bronze.png' alt='Bronze Badge' class='user-badge' style='margin-left: 5px;'/>";
+		                        } else if (this.userLevel >= 6 && this.userLevel <= 10) {
+		                            html += "<img src='" + contextPath + "/resources/images/silver.png' alt='Silver Badge' class='user-badge' style='margin-left: 5px;'/>";
+		                        } else if (this.userLevel >= 11 && this.userLevel <= 15) {
+		                            html += "<img src='" + contextPath + "/resources/images/gold.png' alt='Gold Badge' class='user-badge' style='margin-left: 5px;'/>";
+		                        } else if (this.userLevel >= 16 && this.userLevel <= 19) {
+		                            html += "<img src='" + contextPath + "/resources/images/emerald.png' alt='Emerald Badge' class='user-badge' style='margin-left: 5px;'/>";
+		                        } else if (this.userLevel >= 20) {
+		                            html += "<img src='" + contextPath + "/resources/images/diamond.png' alt='Diamond Badge' class='user-badge' style='margin-left: 5px;'/>";
+		                        }
+		                    }
+
+		                    html += "</strong> <small class='text-muted'>" + this.commentRegDate + "</small>";
+
+		                    // 작성자 표시
+		                    if (this.commentUserId == result.board.boardUserId) {
+		                        html += "<span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; margin-left: 4px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: #CC3D3D;'>작성자</span>";
+		                    }
+
+		                    // 삭제 버튼
+		                    if (this.commentUserId == result.userId || result.boardAdmin != null) {
+		                        html += "<a class='aCursorActive' onclick='deleteComment(" + this.commentIdx + ");'><span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: #0D6EFD;'>삭제</span></a>";
+		                    }
+		                }
+
+		                html += "</div>";
+		                html += "<div class='btn-group btn-group-sm aCursorActive' role='group' aria-label='Small button group'>";
+		                if (this.commentStatus > 1) {
+		                    // 상태에 따른 처리
+		                } else {
+		                    html += "<p><small class='text-muted'><a onclick='voteUp(" + this.commentIdx + ");' style='color: #F29661;'><i class='fa-solid fa-hand-holding-heart'></i>추천</a> | <a onclick='commentspam(" + this.commentIdx + ");' style='color: dark;'><i class='fa-solid fa-user-large-slash'></i>신고</a></small></p>";
+		                }
+		                html += "</div>";
+		                html += "</div>";
+
+		                if (this.commentStatus == 2) {
+		                    html += "<p><span style='color: pink;'>삭제된 댓글입니다.</span></p>";
+		                } else if (this.commentStatus == 3) {
+		                    html += "<p><span style='color: blue;'>신고 누적으로 블라인드 처리된 댓글 입니다.</span></p>";
+		                } else {
+		                    if (this.commentRestep != 0) {
+		                        html += "<p><span style='color: blue;'>@" + this.commentReuser + "&nbsp;&nbsp;&nbsp;</span>" + this.content + "</p>";
+		                    } else {
+		                        html += "<p>" + this.content + "</p>";
+		                    }
+
+		                    if (this.commentImage && this.commentImage.length != 0) {
+		                        html += "<img src='" + contextPath + "/resources/images/uploadFile/comment/" + this.commentImage + "' width='80'>";
+		                    }
+		                }
+
+		                html += "</div>";
+		                html += "<div class='d-flex justify-content-between'>";
+		                html += "<div></div>";
+		                if (this.commentStatus > 1) {
+		                    // 상태에 따른 처리
+		                } else {
+		                    html += "<div class='text-drak'><a style='font-size:15px;' onclick='writeComment(" + this.commentIdx + ");'>답글</a></div>";
+		                }
+		                html += "</div>";
+		                html += "<div id='rrDiv'></div>";
+		                html += "</div>";
+		                html += "</div>";
+		                
+		                // 대댓글 입력란 추가
+		                html += "<div class='card mt-4 cocoment' id='commentsNumber_" + this.commentIdx + "' style='display:none;'>"; // 답글 폼 숨김
+		                html += "<form id='commentsList_" + this.commentIdx + "'>";
+		                html += "<div class='form-group'>";
+		                html += "<label for='commentText_" + this.commentIdx + "'>&nbsp;<span style='color: blue;'>@" + this.userNickname + "</span> 답글</label>";
+		                html += "<textarea class='form-control' id='commentText_" + this.commentIdx + "' name='content' rows='3' required></textarea>";
+		                html += "</div>";
+		                html += "<div class='d-flex justify-content-between'>";
+		                html += "<div>";
+		                html += "<input type='file' class='form-control-file' id='commentImage_" + this.commentIdx + "' name='commentImage'>";
+		                html += "</div>";
+		                html += "<div>";
+		                html += "<button type='button' class='btn btn-dark float-right btn-sm' onclick='insertComment(" + this.commentIdx + ");'>등록</button>";
+		                html += "</div>";
+		                html += "</div>";
+		                html += "</form>";
+		                html += "</div>"; // cocoment 끝
+		                html += "</div>"; // commentRowDiv 끝
+		         
+		            });
+
+		            html += "<input type='hidden' value='" + result.pager.pageNum + "' id='pageNumValue'>";
+
+		            $("#commentsListDiv").html(html);
+		            pageNumberDisplay(result.boardCode, result.boardPostIdx, result.pager);
+		            $(".cocoment").css({ display: 'none' });
+		        },
+		        error: function(xhr) {
+		            alert("에러코드(게시글 목록 검색) = " + xhr.status);
+		        }
+		    });
 		}
-	
+
+
+
 		//=========댓글 삭제버튼
 		function deleteComment(commentIdx) {
 			checkLogin();
@@ -597,6 +663,7 @@
 				});
 			}
 		}
+
 		
 		//게시글 삭제버튼
 		function deleteFreeboard(){
@@ -840,6 +907,7 @@
 		window.location.href = "<c:url value='/board/boarddetail/"+boardCode+"/"+boardPostIdx+"'/>"; 					
 		}
 	}
+	
 	//SideBoard 출력
 	function popularSideBoard() {
 	 $.ajax({

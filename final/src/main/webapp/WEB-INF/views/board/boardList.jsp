@@ -304,7 +304,7 @@
                     <c:when test="${boards.userLevel >= 16 && boards.userLevel <= 19}">
                         <img src="${pageContext.request.contextPath}/resources/images/emerald.png" alt="Emerald Badge" class="user-badge" />
                     </c:when>
-                    <c:when test="${boards.userLevel == 20}">
+                    <c:when test="${boards.userLevel >= 20}">
                         <img src="${pageContext.request.contextPath}/resources/images/diamond.png" alt="Diamond Badge" class="user-badge" />
                     </c:when>
                 </c:choose>

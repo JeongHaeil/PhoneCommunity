@@ -30,4 +30,7 @@ public class Comments {
 	// 추가: 게시글 상태
 	private int boardStatus;
 	
+	private int userLevel;  // 작성자의 레벨
+    private String auth;    // 작성자의 권한
+	
 }
