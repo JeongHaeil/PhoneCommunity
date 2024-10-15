@@ -211,7 +211,7 @@
 					    	<c:when test="${boardCode >= 10 && boardCode <= 99 }">
 					    		<button type="button" class="btn btn-dark btn-sm" onclick="window.location.href='<c:url value="/board/boardwrite/${boardCode }"/>'">글쓰기</button>					    	
 					    	</c:when>					    		
-					    	<c:otherwise>
+					    	<c:otherwise> 
 					    		<sec:authorize access="isAuthenticated()">
 					    			<sec:authorize access="hasRole('ROLE_BOARD_ADMIN')" var="admin"/>
 					    			<c:if test="${admin||boardCode==3}"><button type="button" class="btn btn-dark btn-sm" onclick="window.location.href='<c:url value="/board/boardwrite/${boardCode }"/>'">글쓰기</button></c:if>
