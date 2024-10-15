@@ -165,7 +165,7 @@ public class ProductController {
 
 
 	
-	// 상품 수정 처리 (로그인된 사용자만 가능)
+	// 상품 수정 처리 (로그인된 사용자만 가능) 
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
 	public String modifyProduct(@ModelAttribute Product product,
 	        @RequestParam("productImage2") List<MultipartFile> productImages, 
