@@ -343,7 +343,8 @@
                 flex-direction: column;
             }
         }
-    </style>
+ 
+ </style>
 </head>
 
 <body>
@@ -416,13 +417,17 @@
 
                 <!-- 버튼 -->
 				<div class="buttons">
-					<button id="openChatRoomBtn"class="btn btn-chat" onclick="startChat ('${product.productUserid}', '${loginUser.userId}')">채팅하기</button>
-					<div id="chatRoomContainer"></div> <!-- 채팅방 UI가 로드될 곳 -->
+					<button id="openChatRoomBtn" class="btn btn-chat" >채팅하기</button>
+            		<div id="chatRoomContainer"></div> 
 					<button class="btn btn-safe">안전거래</button>
 				</div>
 
             </div>
         </div>
+         
+        
+        
+        
 
         <!-- 상품 정보 및 가게 정보 -->
         <div class="product-store-info">
@@ -518,7 +523,7 @@
                 clickable: true,
             },
         });
-        
+   
         
         $(document).ready(function () {
    		 var loggedInUserId = "${loginUser.userId}";   //"${loginUser.userId}";  // 로그인한 사용자 (구매자) ID
@@ -540,7 +545,7 @@
    				 //alert("sellerId before sending request: " + sellerId);  // sellerId 값 확인
    				   // alert("buyerId before sending request: " + loggedInUserId);  // buyerId 값 확인
    				    console.log("Creating room with buyerId: " + loggedInUserId + ", sellerId: " + sellerId);  // 로그로 값 확인
-
+   				 
    			        $.ajax({
    			            url: "${pageContext.request.contextPath}/chatroom/createRoom",   // 방 번호를 생성하는 서버 URL
    			            type: "POST",             // 새로운 방 번호 생성은 POST 방식으로 요청
@@ -589,7 +594,11 @@
                success: function (response) {
                	
                    // 생성된 채팅방으로 이동
-                   window.location.href = "${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId;
+                   //window.location.href = "${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId;
+            	   //var chatUrl = "${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId;
+                   //window.open(chatUrl, '_blank', 'width=600,height=700,scrollbars=yes');
+            	   window.open("${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId, "_blank", "width=400,height=600");
+
                },
                beforeSend: function(xhr) {
                    xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");  // CSRF 토큰 설정
@@ -599,8 +608,8 @@
                }
            });
        }
-   			 
-   	    }); 
+        });			 
+  
    	        // 방 번호를 받아 해당 방의 채팅방 UI를 로드하는 함수
    	        function loadChatRoom(newRoomId) {
    	        	console.log("Loaded roomId: " + newRoomId); // roomId 값 출력
@@ -614,8 +623,10 @@
    	                    console.error("Error loading chat room:", error);
    	                }
    	            });
-   	        } 
-   	        
+   	         
+   	        }  
+   	
+   	   
     </script>
 </body>
 
