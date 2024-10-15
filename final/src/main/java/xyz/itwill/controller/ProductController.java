@@ -162,7 +162,7 @@ public class ProductController {
 		model.addAttribute("product", product); // 수정할 상품 정보 전달 
 		return "product/productmodify"; // 수정 페이지로 이동
 	}
-
+ 
 
 	
 	// 상품 수정 처리 (로그인된 사용자만 가능) 
