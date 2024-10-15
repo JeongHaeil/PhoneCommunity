@@ -38,36 +38,7 @@ public class ChatController  {
 		
 	    @PostMapping("/start")
 	    public String startChat(@RequestBody Map<String, Object> requestData, Model model) {
-	    	/*
-	    	try {
-	            // 요청 데이터 출력
-	            System.out.println("Request Data: " + requestData);
-
-	            // 데이터 추출
-	            String buyerId = requestData.get("buyerId").toString();
-	            String sellerId = requestData.get("sellerId").toString();
-	            Integer roomId = requestData.containsKey("roomId") ? Integer.parseInt(requestData.get("roomId").toString()) : null;
-	            
-	            System.out.println("buyerId222: " + buyerId);
-	            System.out.println("sellerId222아니한글인데?: " + sellerId);
-	            System.out.println("roomId222: " + roomId);
-	            
-	            
-	            
-	            
-	            // Model에 데이터 추가
-	            model.addAttribute("buyerId", buyerId);
-	            model.addAttribute("sellerId", sellerId);
-	            model.addAttribute("roomId", roomId);
-	            
-	            return "chat/chat";  // JSP로 이동
-
-	        } catch (NumberFormatException e) {
-	            e.printStackTrace();
-	            return "error";
-	        }
-	    }
-*/
+	    
 	    	 try {
 	    	        // 요청 데이터 출력
 	    	        System.out.println("Request Data: " + requestData);
@@ -95,7 +66,7 @@ public class ChatController  {
 	    	        model.addAttribute("sellerId", sellerId);
 	    	        model.addAttribute("roomId", roomId);
 	    	        //return "redirect:/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId;
-	    	       return "chat/chat";  // JSP로 이동
+	    	       return "chat";  // JSP로 이동
 
 	    	    } catch (NumberFormatException e) {
 	    	        e.printStackTrace();
@@ -122,7 +93,7 @@ public class ChatController  {
 		    	    System.out.println("Buyer 123213ID: " + buyerId);
 		    	    System.out.println("Seller12312312 ID: " + sellerId);   
 		       
-		         return "chat/chat";  // 채팅방 JSP로 이동
+		         return "chat";  // 채팅방 JSP로 이동
 		    }
 
 		@PostMapping("/createRoom")
@@ -160,7 +131,15 @@ public class ChatController  {
 
 	        model.addAttribute("sellerId", sellerId);
 	        model.addAttribute("loggedInUserId", loggedInUserId);
-	        return "chat/chat"; // 채팅 페이지로 이동
+	        return "chat"; // 채팅 페이지로 이동
 	    }
+	    
+	    
+	    @GetMapping("/loadChat")
+	    public String loadChat(Model model) {
+	      // 필요한 모델 속성 추가
+	      return "chat";  // chat.jsp 반환
+	    }
+
 	
 }
