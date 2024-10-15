@@ -44,22 +44,28 @@ public class ProductController {
 
 	// 상품 목록과 검색 처리
 	@RequestMapping("/list")
-	public String list(@RequestParam Map<String, Object> map, Model model) {
-		map.put("productStatus", 1); // 기본적으로 상태가 1인 상품만 보여줌
+	public String list(@RequestParam Map<String, Object> map, @RequestParam(required = false) Integer productSold, Model model) {
+	    map.put("productStatus", 1); // 기본적으로 상태가 1인 상품만 보여줌
 
-		// 검색 키워드 처리
-		String keyword = (String) map.get("keyword");
-		if (keyword != null && !keyword.isEmpty()) {
-			map.put("keyword", keyword); // 검색어가 있으면 검색 조건에 추가
-		}
+	    // 검색 키워드 처리
+	    String keyword = (String) map.get("keyword");
+	    if (keyword != null && !keyword.isEmpty()) {
+	        map.put("keyword", keyword); // 검색어가 있으면 검색 조건에 추가
+	    }
 
-		// 상품 목록을 서비스에서 가져옴
-		Map<String, Object> resultMap = productService.getProductList(map);
-		model.addAttribute("result", resultMap);
-		model.addAttribute("searchMap", map); // 검색 조건도 뷰에 전달
+	    // 상품 판매 상태 필터링
+	    if (productSold != null) {
+	        map.put("productSold", productSold); // 드랍다운에서 선택된 판매 상태에 따른 필터링
+	    }
 
-		return "product/productlist"; // 상품 목록 JSP로 이동
+	    // 상품 목록을 서비스에서 가져옴
+	    Map<String, Object> resultMap = productService.getProductList(map);
+	    model.addAttribute("result", resultMap);
+	    model.addAttribute("searchMap", map); // 검색 조건도 뷰에 전달
+
+	    return "product/productlist"; // 상품 목록 JSP로 이동
 	}
+
 
 	// 상품 등록 페이지로 이동
 	@RequestMapping(value = "/register", method = RequestMethod.GET)

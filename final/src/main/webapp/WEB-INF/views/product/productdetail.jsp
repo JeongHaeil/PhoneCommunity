@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -9,9 +9,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>제품 페이지</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+	rel="stylesheet">
 <!-- Swiper CSS -->
-<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+<link rel="stylesheet"
+	href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 <style>
 * {
 	list-style: none;
@@ -351,35 +354,38 @@ body {
 	<div class="container">
 		<!-- 제품명 -->
 		<div class="product-title">
-			${product.productSubject}
-			<span style="font-size: 1.2rem; font-weight: bold; color:
+			${product.productSubject} <span
+				style="font-size: 1.2rem; font-weight: bold; color:
 			    <c:choose>
 				    <c:when test="${product.productSold == 1}">
 				        green;">판매중
-				    </c:when>
-				    <c:when test="${product.productSold == 2}">
+				</c:when> <c:when test="${product.productSold == 2}">
 				        orange;">예약중
-				    </c:when>
-				    <c:when test="${product.productSold == 3}">
+				    </c:when> <c:when test="${product.productSold == 3}">
 				        red;">판매완료
-				    </c:when>
-				    <c:otherwise>
+				    </c:when> <c:otherwise>
 				        black;">대기중
-				    </c:otherwise>
-			    </c:choose>
+				    </c:otherwise> </c:choose>
 			</span>
 		</div>
 
-		<div class="price">${product.productPrice}원</div>
+		<div class="price"> ₩ <fmt:formatNumber value="${product.productPrice}" type="number" pattern="#,###"/>원</div>
 
 		<div class="status-buttons">
-			<button class="status-button" onclick="updateProductStatus(${product.productIdx}, 1)">판매</button>
-			<button class="status-button" onclick="updateProductStatus(${product.productIdx}, 2)">예약</button>
-			<button class="status-button" onclick="updateProductStatus(${product.productIdx}, 3)">판매완료</button>
+			<c:if test="${currentUserId eq product.productUserid}">
+				<button class="status-button"
+					onclick="updateProductStatus(${product.productIdx}, 1)">판매</button>
+				<button class="status-button"
+					onclick="updateProductStatus(${product.productIdx}, 2)">예약</button>
+				<button class="status-button"
+					onclick="updateProductStatus(${product.productIdx}, 3)">판매완료</button>
+			</c:if>
 		</div>
 
+
 		<!-- 시간 정보 -->
-		<div class="time-info" style="font-size: 15px;">${product.productRegisterdate}·조회 ${product.productCount}</div>
+		<div class="time-info" style="font-size: 15px;">${product.productRegisterdate}·조회
+			${product.productCount}</div>
 
 		<!-- 제품 이미지와 정보 -->
 		<div class="product-details">
@@ -388,7 +394,9 @@ body {
 					<div class="swiper-wrapper">
 						<c:forEach var="image" items="${productImages}">
 							<div class="swiper-slide">
-								<img src="${pageContext.request.contextPath}/resources/images/${product.productImage != null ? fn:split(product.productImage, ',')[0] : '150.png'}" alt="상품 이미지" class="img-fluid">
+								<img
+									src="${pageContext.request.contextPath}/resources/images/${product.productImage != null ? fn:split(product.productImage, ',')[0] : '150.png'}"
+									alt="상품 이미지" class="img-fluid">
 							</div>
 						</c:forEach>
 					</div>
@@ -405,7 +413,7 @@ body {
 							<th>제품상태</th>
 							<th>거래방식</th>
 							<th>배송비</th>
-							  <th>${session.roomId}카테고리</th>
+							<th>${session.roomId}카테고리</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -428,7 +436,8 @@ body {
 					</ul>
 				</div>
 				<div class="buttons" style="display: flex; justify-content: center;">
-					<button id="openChatRoomBtn" class="btn btn-chat" >채팅하기</button>
+					<button id="openChatRoomBtn" class="btn btn-chat"
+						onclick="startChat('${product.productUserid}', '${loginUser.userId}')">채팅하기</button>
 					<div id="chatRoomContainer"></div>
 				</div>
 			</div>
@@ -438,7 +447,8 @@ body {
 		<div class="product-store-info">
 			<div class="product-info-left">
 				<h4 class="info-header" style="font-weight: bold;">상품 정보</h4>
-				<div class="left-wrap" style="border-top: 1px solid #e1e1e1; margin-top: 25px; padding: 20px; background-color: #f9f9f9; border-radius: 8px;">
+				<div class="left-wrap"
+					style="border-top: 1px solid #e1e1e1; margin-top: 25px; padding: 20px; background-color: #f9f9f9; border-radius: 8px;">
 					<ul style="margin-top: 25px; list-style: none; padding: 0;">
 						<li style="padding: 10px 0;"><strong>내용:</strong>
 							<div style="max-height: 200px; overflow-y: auto;">${product.productContent}</div>
@@ -448,18 +458,28 @@ body {
 
 				<!-- 수정 및 삭제 버튼 배치 -->
 				<c:if test="${currentUserId eq product.productUserid}">
-					<a href="${pageContext.request.contextPath}/product/modify?productIdx=${product.productIdx}" class="btn btn-outline-secondary btn-sm" style="display: inline-block; margin-top: 20px; padding: 10px 20px; font-size: 1rem;">게시글 수정 </a>
-					<a href="${pageContext.request.contextPath}/product/remove?productIdx=${product.productIdx}&productUserid=${product.productUserid}" class="btn btn-outline-danger btn-sm" style="display: inline-block; margin-top: 20px; margin-left: 10px; padding: 10px 20px; font-size: 1rem;" onclick="return confirm('정말로 이 글을 삭제하시겠습니까?');">게시글 삭제</a>
+					<a
+						href="${pageContext.request.contextPath}/product/modify?productIdx=${product.productIdx}"
+						class="btn btn-outline-secondary btn-sm"
+						style="display: inline-block; margin-top: 20px; padding: 10px 20px; font-size: 1rem;">게시글
+						수정 </a>
+					<a
+						href="${pageContext.request.contextPath}/product/remove?productIdx=${product.productIdx}&productUserid=${product.productUserid}"
+						class="btn btn-outline-danger btn-sm"
+						style="display: inline-block; margin-top: 20px; margin-left: 10px; padding: 10px 20px; font-size: 1rem;"
+						onclick="return confirm('정말로 이 글을 삭제하시겠습니까?');">게시글 삭제</a>
 				</c:if>
 			</div>
 
 			<!-- 가게 정보 -->
 			<div class="store-info-right">
 				<h4 style="font-weight: bold;">프로필 정보</h4>
-				<div class="left-wrap" style="border-top: 1px solid #e1e1e1; margin-top: 25px;">
+				<div class="left-wrap"
+					style="border-top: 1px solid #e1e1e1; margin-top: 25px;">
 					<div class="store-name-container" style="margin-top: 30px;">
 						<div class="store-name">${product.productUsernickname}</div>
-						<img src="https://via.placeholder.com/50" alt="프로필 사진" width="70px;">
+						<img src="https://via.placeholder.com/50" alt="프로필 사진"
+							width="70px;">
 					</div>
 
 					<table class="info-table-2">
@@ -489,9 +509,9 @@ body {
 		</div>
 	</div>
 
-    <!-- Swiper JS -->
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    <script>
+	<!-- Swiper JS -->
+	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+	<script>
         var swiper = new Swiper(".mySwiper", {
             spaceBetween: 30,
             centeredSlides: true,
@@ -507,72 +527,89 @@ body {
    
         
         $(document).ready(function () {
-            var loggedInUserId = "${loginUser.userId}";  // 로그인한 사용자 (구매자) ID
-            var sellerId = "${product.productUserid}";   // 판매자 ID (상품의 소유자)
-            var roomId = "${roomId}";                    // 채팅방 ID (이미 생성된 채팅방의 ID)
-            var buyerId = loggedInUserId;                // 구매자 ID
+   		 var loggedInUserId = "${loginUser.userId}";   //"${loginUser.userId}";  // 로그인한 사용자 (구매자) ID
+   		 var sellerId = "${product.productUserid}";  // 판매자 ID (상품의 소유자)
+   		 var roomId = "${roomId}";  // 채팅방 ID (이미 생성된 채팅방의 ID)
+   		 var buyerId = loggedInUserId;
+   		 var newRoomId;
+   		 
+   		 
+   		 
+   		    console.log("buyerId: " + loggedInUserId);
+   		    console.log("sellerId: " + sellerId);
+   		    console.log("roomId: " + roomId);	
+   		    console.log("loggedInUserId: " + loggedInUserId);	
+   		 
+   	
+   			 $("#openChatRoomBtn").click(function () {
+   				 
+   				 //alert("sellerId before sending request: " + sellerId);  // sellerId 값 확인
+   				   // alert("buyerId before sending request: " + loggedInUserId);  // buyerId 값 확인
+   				    console.log("Creating room with buyerId: " + loggedInUserId + ", sellerId: " + sellerId);  // 로그로 값 확인
+   				 
+   			        $.ajax({
+   			            url: "${pageContext.request.contextPath}/chatroom/createRoom",   // 방 번호를 생성하는 서버 URL
+   			            type: "POST",             // 새로운 방 번호 생성은 POST 방식으로 요청
+   			            contentType: "application/json",
+   			            data: JSON.stringify({
+   			               
+   			                buyerId: loggedInUserId,
+   			                sellerId: sellerId,
+   			              
+   			            }),
+   			            
+   			            beforeSend: function(xhr) {
+   			                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");  // CSRF 토큰 설정
+   			            },
+   			            success: function (newRoomId) {
+   			                // 새로운 방 번호를 받아온 후, 채팅방으로 이동
+   			                console.log("Created roomId: " + newRoomId);  // 방 번호 확인
+   			                startChat(newRoomId);  // startChat 호출
+   			            },
+   			            error: function (xhr, status, error) {
+   			                console.error('Error creating chat room:', error);
+   			            }
+   			        });
+   			    });
 
-            console.log("buyerId: " + loggedInUserId);
-            console.log("sellerId: " + sellerId);
-            console.log("roomId: " + roomId);	
-            console.log("loggedInUserId: " + loggedInUserId);	
+   				
+   		//function startChat(roomId) {
+   		function startChat(roomId) {
+   			var roomId= "${product.productIdx}"
+   			var buyerId = loggedInUserId;  // 이미 상단에서 설정된 buyerId 값 사용
+   		    var sellerId = "${product.productUserid}";  // 판매자 ID (서버에서 전달된 값 확인)
+   		    //var sellerId = "${sellerId}";  // 판매자 ID (서버에서 전달된 값 확인)
+   		    console.log("Start Chat with Seller IDddddddddddddd: " + sellerId + " and Buyer ID: " + buyerId);
+   		    console.log("Starting chat with roomIdddddddddddddd: " + roomId + ", buyerId: " + buyerId + ", sellerId: " + sellerId);  // 로그 추가
+   		    
+           $.ajax({
+               url: "${pageContext.request.contextPath}/chatroom/start",  // 채팅 시작 URL
+               type: "POST",
+               contentType: "application/json",
+               data: JSON.stringify({
+                 	roomId: roomId,
+                   buyerId: loggedInUserId,
+                   sellerId: sellerId,
+                 
+               }),
+               success: function (response) {
+               	
+                   // 생성된 채팅방으로 이동
+                   //window.location.href = "${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId;
+            	   //var chatUrl = "${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId;
+                   //window.open(chatUrl, '_blank', 'width=600,height=700,scrollbars=yes');
+            	   window.open("${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId, "_blank", "width=400,height=600");
 
-            $("#openChatRoomBtn").click(function () {
-                console.log("Creating room with buyerId: " + loggedInUserId + ", sellerId: " + sellerId);  // 로그로 값 확인
-
-                $.ajax({
-                    url: "${pageContext.request.contextPath}/chatroom/createRoom",   // 방 번호를 생성하는 서버 URL
-                    type: "POST",                                                    // 새로운 방 번호 생성은 POST 방식으로 요청
-                    contentType: "application/json",
-                    data: JSON.stringify({
-                        buyerId: loggedInUserId,
-                        sellerId: sellerId,
-                    }),
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");  // CSRF 토큰 설정
-                    },
-                    success: function (newRoomId) {
-                        // 새로운 방 번호를 받아온 후, 채팅방으로 이동
-                        console.log("Created roomId: " + newRoomId);  // 방 번호 확인
-                        startChat(newRoomId);  // startChat 호출
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Error creating chat room:', error);
-                    }
-                });
-            });
-
-            function startChat(roomId) {
-                var buyerId = loggedInUserId;  // 이미 상단에서 설정된 buyerId 값 사용
-                var sellerId = "${product.productUserid}";  // 판매자 ID (서버에서 전달된 값 확인)
-                var roomId= "${product.productIdx}";
-                
-                console.log("Start Chat with Seller ID: " + sellerId + " and Buyer ID: " + buyerId);
-                console.log("Starting chat with roomId: " + roomId + ", buyerId: " + buyerId + ", sellerId: " + sellerId);  // 로그 추가
-
-                $.ajax({
-                    url: "${pageContext.request.contextPath}/chatroom/start",  // 채팅 시작 URL
-                    type: "POST",
-                    contentType: "application/json",
-                    data: JSON.stringify({
-                        roomId: roomId,
-                        buyerId: loggedInUserId,
-                        sellerId: sellerId,
-                    }),
-                    success: function (response) {
-                        // 새로운 방 번호를 받아 채팅방을 새 창으로 열기
-                        window.open("${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId, "_blank", "width=400,height=600");
-                    },
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");  // CSRF 토큰 설정
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error starting chat:", error);
-                    }
-                });
-            }
-        });
-	 
+               },
+               beforeSend: function(xhr) {
+                   xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");  // CSRF 토큰 설정
+               },
+               error: function (xhr, status, error) {
+                   console.error("Error starting chat:", error);
+               }
+           });
+       }
+        });			 
   
    	        // 방 번호를 받아 해당 방의 채팅방 UI를 로드하는 함수
    	        function loadChatRoom(newRoomId) {
