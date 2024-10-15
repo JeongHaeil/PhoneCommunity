@@ -1,11 +1,14 @@
 package xyz.itwill.service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +19,7 @@ import xyz.itwill.util.Pager;
 
 @Service
 @RequiredArgsConstructor
+@EnableScheduling
 public class AdminServiceImpl implements AdminService {
 	
 	private final AdminDAO adminDAO;
@@ -26,7 +30,7 @@ public class AdminServiceImpl implements AdminService {
 			String keyword) {		
 		
 		// 검색 조건 설정
-	    Map<String, Object> searchMap = new HashMap<>();
+	    Map<String, Object> searchMap = new HashMap<String, Object>();
 	    searchMap.put("search", search);
 	    searchMap.put("keyword", keyword);
 
@@ -43,7 +47,7 @@ public class AdminServiceImpl implements AdminService {
 	    List<Admin> spamBoardList = adminDAO.selectSpamBoardList(searchMap);
 
 	    // 결과를 저장할 맵 생성
-	    Map<String, Object> resultMap = new HashMap<>();
+	    Map<String, Object> resultMap = new HashMap<String, Object>();
 	    resultMap.put("pager", pager);
 	    resultMap.put("spamBoardList", spamBoardList);
 
@@ -91,12 +95,13 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
-	public void updateUserStatusByUserId(int userNum, int status) {
+	public void updateUserStatusByUserNum(int userNum, int status, LocalDateTime expiryDate) {
 		Map<String, Object> params  = new HashMap<String, Object>();
 		params.put("userNum", userNum);
 		params.put("status", status);
+		params.put("expiryDate", expiryDate);
 		
-		adminDAO.updateUserStatusByUserId(params);
+		adminDAO.updateUserStatusByUserNum(params);
 	}
 	
 	@Override
@@ -107,6 +112,21 @@ public class AdminServiceImpl implements AdminService {
 		
 		adminDAO.updateBoardStatusByBoardId(params);
 		
+	}
+
+	 @Scheduled(fixedRate = 10000) // 10초마다 실행 (테스트용)
+	    public void resetExpiredStatuses() {
+	        Map<String, Object> params = new HashMap<String, Object>();
+	        params.put("currentTime", LocalDateTime.now());
+
+	        List<Admin> expiredUsers = adminDAO.findUsersWithExpiredStatuses(params);
+
+	        for (Admin admin : expiredUsers) {
+	            Map<String, Object> updateParams = new HashMap<String, Object>();
+	            updateParams.put("userNum", admin.getUserNum());
+	            updateParams.put("status", 1); // 기본 상태로 복구
+	            adminDAO.updateUserStatusByUserNum(updateParams);
+	        }
 	}
 
 

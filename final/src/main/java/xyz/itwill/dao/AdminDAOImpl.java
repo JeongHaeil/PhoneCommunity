@@ -1,5 +1,6 @@
 package xyz.itwill.dao;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +44,7 @@ public class AdminDAOImpl implements AdminDAO {
 	}
 
 	@Override
-	public void updateUserStatusByUserId(Map<String, Object> map) {
+	public void updateUserStatusByUserNum(Map<String, Object> map) {
 		sqlSession.getMapper(AdminMapper.class).updateUserStatusByUserId(map);
 	}
 
@@ -53,7 +54,12 @@ public class AdminDAOImpl implements AdminDAO {
 		
 	}
 
+	@Override
+	public List<Admin> findUsersWithExpiredStatuses(Map<String, Object> map) {
+		return sqlSession.getMapper(AdminMapper.class).findUsersWithExpiredStatuses(map);
+	}
 
+	
 	
 
 

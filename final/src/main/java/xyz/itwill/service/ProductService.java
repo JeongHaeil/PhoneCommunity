@@ -7,9 +7,10 @@ import java.util.Map;
 public interface ProductService {
     void addProduct(Product product);
    void modifyProduct(Product product);
-   void removeProduct(int productIdx);
    void increaseProductCount(int productIdx);
    Product getProductByNum(int productIdx);
    Map<String, Object> getProductList(Map<String, Object> map);
+void updateProductStatus(int productIdx);
+int createProductAndChatRoom(Product product);
    
 }

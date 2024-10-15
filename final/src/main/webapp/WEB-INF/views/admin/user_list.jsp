@@ -7,7 +7,6 @@
 <meta charset="UTF-8">
 <title>사용자 목록</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 </head>
 <body>
     <div class="container mt-5">
@@ -50,13 +49,23 @@
                                         <!-- 유저상태 -->
                                         <td>${user.userStatus}</td>
                                         <!-- 상태변경 버튼들 -->
+                                        
+                                        <!--  
                                         <td>
-                                            <!-- 0~3 상태 버튼 추가 -->
-                                            <button class="btn btn-sm btn-secondary" onclick="changeUserStatus(${user.userNum}, 0)">삭제상태 0</button>
-                                            <button class="btn btn-sm btn-secondary" onclick="changeUserStatus(${user.userNum}, 1)">기본상태 1</button>
-                                            <button class="btn btn-sm btn-secondary" onclick="changeUserStatus(${user.userNum}, 2)">대댓글상태 2</button>
-                                            <button class="btn btn-sm btn-secondary" onclick="changeUserStatus(${user.userNum}, 3)">제제상태 3</button>
+                                            <button class="btn btn-sm btn-secondary" onclick="openStatusModal(${user.userNum})">상태 변경</button>
+                                            <input type="number" id="duration${user.userNum}" placeholder="일수 입력" min="1">
                                         </td> 
+                                        -->
+                                        
+                                        <td>
+										    <button class="btn btn-sm btn-secondary" onclick="changeUserStatus(${user.userNum}, 0)">삭제상태 0</button>
+										    <button class="btn btn-sm btn-secondary" onclick="changeUserStatus(${user.userNum}, 1)">기본상태 1</button>
+										    <button class="btn btn-sm btn-secondary" onclick="changeUserStatus(${user.userNum}, 2)">대댓글상태 2</button>
+										    <button class="btn btn-sm btn-secondary" onclick="changeUserStatus(${user.userNum}, 3)">제제상태 3</button>
+										    <!-- 기간을 초 단위로 설정 (30초 = 0.00034722일) -->
+										    <input type="hidden" id="duration${user.userNum}" value="0.00034722">
+										</td>
+                                        
                                     </tr>
                                 </c:forEach>
                             </tbody>
@@ -108,31 +117,60 @@
             </div>
         </div>
     </div>
+
+    <!-- 상태 변경 모달 창 스크립트 -->
     <script type="text/javascript">
-    function changeUserStatus(userNum, userStatus) {
-    	console.log("userNum:", userNum);
-    	console.log("userStatus:", userStatus);
-        if (confirm("사용자 상태를 변경하시겠습니까?")) {
+    var selectedUserNum; // 선택된 사용자 번호 저장
+	/*
+    function openStatusModal(userNum) {
+        selectedUserNum = userNum; // 선택된 사용자 번호 저장
+        $('#statusModal').modal('show'); // 모달 창 표시
+    }
+
+    function changeUserStatus() {
+        var newStatus = prompt("새로운 유저 상태를 입력하세요 (0~3):");
+        var duration = $('#duration' + selectedUserNum).val(); // 기간 입력값 가져오기
+
+        if (newStatus !== null && newStatus >= 0 && newStatus <= 3 && duration > 0) {
             $.ajax({
                 type: "PUT",
                 url: "<c:url value='/super_admin/admin/userStatus'/>",
-                data: JSON.stringify({ "userNum": userNum, "userStatus": userStatus }),
-                contentType: "application/json", 
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-                },
-                dataType: "text",
+                data: JSON.stringify({"userNum": selectedUserNum, "userStatus": newStatus, "duration": duration}),
+                contentType: "application/json",
                 success: function(response) {
-                    alert(response);
-                    location.reload();
+                    alert("유저 상태가 성공적으로 변경되었습니다.");
+                    location.reload(); // 페이지 새로고침
                 },
                 error: function(xhr) {
-                    alert("에러코드 = " + xhr.status);
+                    alert("에러코드 = " + xhr.status + ": " + xhr.responseText);
                 }
             });
+        } else {
+            alert("잘못된 입력입니다. 유효한 상태와 기간을 입력하세요.");
         }
     }
-</script>
+    */
+    function changeUserStatus(userNum, userStatus) {
+        var duration = $('#duration' + userNum).val(); // 기간 값을 가져옴
+
+        $.ajax({
+            type: "PUT",
+            url: "<c:url value='/super_admin/admin/userStatus'/>",
+            data: JSON.stringify({"userNum": userNum, "userStatus": userStatus, "duration": duration}),
+            contentType: "application/json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            },
+            success: function(response) {
+                alert("유저 상태가 성공적으로 변경되었습니다.");
+                location.reload(); // 페이지 새로고침
+            },
+            error: function(xhr) {
+                alert("에러코드 = " + xhr.status + ": " + xhr.responseText);
+            }
+        });
+    }
+    </script>
 
 </body>
 </html>

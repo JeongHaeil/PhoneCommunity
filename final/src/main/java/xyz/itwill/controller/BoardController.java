@@ -29,8 +29,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import lombok.RequiredArgsConstructor;
 import xyz.itwill.auth.CustomUserDetails;
 import xyz.itwill.dto.Board;
+import xyz.itwill.dto.Comments;
 import xyz.itwill.service.BoardService;
 import xyz.itwill.service.CommentsService;
+import xyz.itwill.service.UserService;
 
 @Controller
 @RequestMapping("/board")
@@ -39,11 +41,12 @@ public class BoardController {
 	private final BoardService boardService;
 	private final CommentsService commentsService;
 	private final WebApplicationContext context;
+	private final UserService userService;
 	
 	
 	@RequestMapping("/boardlist/{boardCode}")
 	public String boardList(@PathVariable int boardCode, @RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "20") int pageSize
-			, @RequestParam(defaultValue = "board_user_id") String search, @RequestParam(defaultValue = "") String keyword, Model model) throws Exception {
+			, @RequestParam(defaultValue = "") String search, @RequestParam(defaultValue = "") String keyword, Model model) throws Exception {
 		Map<String, Object> map=boardService.getBoardList(boardCode, pageNum, pageSize, search, keyword);
 		String boardCodeTitle=boardService.getBoardCT(boardCode);
 		model.addAttribute("boardCodeTitle", boardCodeTitle);
@@ -57,7 +60,7 @@ public class BoardController {
 	
 	@RequestMapping("/boarddetail/{boardCode}/{boardPostIdx}")
 	public String boarddetail(@PathVariable int boardPostIdx,@PathVariable int boardCode,@RequestParam(defaultValue = "1") int pageNum, @RequestParam(defaultValue = "20") int pageSize
-			, @RequestParam(defaultValue = "board_user_id") String search, @RequestParam(defaultValue = "") String keyword, Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+			, @RequestParam(defaultValue = "") String search, @RequestParam(defaultValue = "") String keyword, Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//쿠키저장
 		Cookie[] cookies=request.getCookies();
 		String oldCookiesValue=null;
@@ -147,38 +150,43 @@ public class BoardController {
 	
 	@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_SUPER_ADMIN')")
 	@RequestMapping(value ="/boardwrite/{boardCode}", method = RequestMethod.POST)
-	public String boardwrite(@PathVariable int boardCode, @ModelAttribute Board board,@RequestParam String boardtag, List<MultipartFile> uploaderFileList,HttpServletRequest request,Authentication authentication,RedirectAttributes attributes) throws IllegalStateException, IOException {
-		if(authentication != null) {			
-			CustomUserDetails user=(CustomUserDetails)authentication.getPrincipal();
-			board.setBoardUserId(user.getUserId());
-			
-			String uploadDirectory=context.getServletContext().getRealPath("/resources/images/uploadFile/board");
-			List<String> filenameList=new ArrayList<String>();
-			for(MultipartFile multipartFile : uploaderFileList) {
-				if(!multipartFile.isEmpty()) {
-					String uploadFilename=UUID.randomUUID().toString()+"_"+multipartFile.getOriginalFilename();
-					File file=new File(uploadDirectory,uploadFilename);
-					multipartFile.transferTo(file);
-					filenameList.add(uploadFilename);
-				}			
-			}
-			if(!filenameList.isEmpty()) {			
-				board.setBoardImage(filenameList.toString());
-			}
-			board.setBoardIp(request.getRemoteAddr());
-			board.setBoardCode(boardCode);
+	public String boardwrite(@PathVariable int boardCode, @ModelAttribute Board board, @RequestParam String boardtag, List<MultipartFile> uploaderFileList, HttpServletRequest request, Authentication authentication, RedirectAttributes attributes) throws IllegalStateException, IOException {
+	    if (authentication != null) {            
+	        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
+	        board.setBoardUserId(user.getUserId());
+	        
+	        String uploadDirectory = context.getServletContext().getRealPath("/resources/images/uploadFile/board");
+	        List<String> filenameList = new ArrayList<String>();
+	        for (MultipartFile multipartFile : uploaderFileList) {
+	            if (!multipartFile.isEmpty()) {
+	                String uploadFilename = UUID.randomUUID().toString() + "_" + multipartFile.getOriginalFilename();
+	                File file = new File(uploadDirectory, uploadFilename);
+	                multipartFile.transferTo(file);
+	                filenameList.add(uploadFilename);
+	            }            
+	        }
+	        if (!filenameList.isEmpty()) {            
+	            board.setBoardImage(filenameList.toString());
+	        }
+	        board.setBoardIp(request.getRemoteAddr());
+	        board.setBoardCode(boardCode);
 			//board.setBoardContent(board.getBoardContent().replace("<","&lt;").replace(">","&gt;").replace("\n", "<br>"));
-			board.setBoardTitle(boardtag+" "+board.getBoardTitle().replace("<","&lt;").replace(">","&gt;"));
-			if(board.getBoardContent().length()<=1300) {
-				boardService.addFreeboard(board);							
-			}else {
-				attributes.addAttribute("regetmessage","최대 허용 글자수를 초과하였습니다.");
-				return "redirect:/board/boardwrite/"+boardCode;
-			}
-		}else {
-			return "redirect:/user/login";	
-		}
-		return "redirect:/board/boardlist/"+boardCode;
+	        board.setBoardTitle(boardtag + " " + board.getBoardTitle().replace("<", "&lt;").replace(">", "&gt;"));
+	        if (board.getBoardContent().length() <= 1300) {
+	            boardService.addFreeboard(board); // 게시글 추가 로직
+	            
+	            // 게시글 작성 후 경험치 추가
+	            userService.increaseExperience(user.getUserId(), 10); // 경험치 10점 추가
+	            System.out.println("User " + user.getUserId() + " has gained 10 experience points for posting.");
+	            
+	        } else {
+	            attributes.addAttribute("regetmessage", "최대 허용 글자수를 초과하였습니다.");
+	            return "redirect:/board/boardwrite/" + boardCode;
+	        }
+	    } else {
+	        return "redirect:/user/login";    
+	    }
+	    return "redirect:/board/boardlist/" + boardCode;
 	}
 	
 	
@@ -258,4 +266,58 @@ public class BoardController {
 		}
 		return "redirect:/board/boardlist/"+boardCode;
 	}
+	
+	// 마이페이지 작성 글 제목 클릭시 이동 경로 수정
+	@RequestMapping("/post/{boardCode}/{boardPostIdx}")
+	public String showPostDetail(@PathVariable int boardCode, @PathVariable int boardPostIdx, Model model) {
+	    // boardCode가 0일 경우 기본값 설정
+	    if (boardCode == 0) {
+	        boardCode = 10; // 예시로 기본값 설정
+	    }
+
+	    // 게시물 정보를 가져옵니다.
+	    Board post = boardService.getboard(boardPostIdx);
+
+	    // 게시물이 없을 경우 NullPointerException 방지
+	    if (post == null) {
+	        return "redirect:/error"; // 게시물이 없을 경우 에러 페이지로 리다이렉트
+	    }
+
+	    model.addAttribute("post", post);
+	    model.addAttribute("boardCode", boardCode);
+
+	    return "board/boarddetail"; // 게시물 상세보기로 이동
+	}
+	
+	// 댓글 클릭 시 게시글로 이동하는 메소드 수정
+	@RequestMapping("/comment/{commentIdx}")
+	public String viewCommentPost(@PathVariable int commentIdx, Model model) {
+	    // 댓글 정보를 가져옵니다.
+	    Comments comment = commentsService.getCommentByNum(commentIdx);
+	    
+	    // 댓글이 존재하지 않으면 에러 페이지로 리다이렉트
+	    if (comment == null) {
+	        return "redirect:/error";
+	    }
+
+	    // 댓글이 달린 게시글의 번호를 가져옵니다.
+	    int boardPostIdx = comment.getCommentBoardIdx();
+
+	    // 게시글의 boardCode를 가져옵니다.
+	    Board board = boardService.getboard(boardPostIdx);
+
+	    // 게시글이 존재하지 않으면 에러 페이지로 리다이렉트
+	    if (board == null) {
+	        return "redirect:/error"; // 게시글이 없을 경우 에러 페이지로 이동
+	    }
+
+	    // 여기서 부모 댓글의 상태를 무시하고 계속 진행
+	    int boardCode = board.getBoardCode();
+
+	    // 게시글 상세 페이지로 리다이렉트
+	    return "redirect:/board/boarddetail/" + boardCode + "/" + boardPostIdx;
+	}
+
+
+
 }

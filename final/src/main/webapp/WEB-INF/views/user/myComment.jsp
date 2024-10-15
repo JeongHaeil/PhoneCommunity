@@ -1,12 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  <!-- JSTL 코어 태그 선언 -->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>작성 댓글 보기</title>
-    <!-- 부트스트랩 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -48,24 +47,60 @@
             padding: 20px;
             font-size: 1rem;
         }
+        a {
+            text-decoration: none;
+        }
+        a.enabled {
+            color: #007bff;
+        }
+        a.disabled {
+            color: #999;
+            pointer-events: none;
+        }
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .page-link, .current-page {
+            display: inline-block;
+            margin: 0 5px;
+            padding: 5px 10px;
+            font-size: 16px;
+            text-decoration: none;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            color: #007bff;
+        }
+        .page-link:hover {
+            background-color: #ddd;
+            color: #007bff;
+        }
+        .current-page {
+            font-weight: bold;
+            background-color: #007bff;
+            color: white;
+        }
     </style>
 </head>
 <body>
+
+<div class="container">
     <!-- 탭 include -->
     <jsp:include page="/WEB-INF/views/user/mypageTabs.jsp">
         <jsp:param name="activeTab" value="myComment" />
     </jsp:include>
 
-<div class="container">
     <h3 class="header-title">작성 댓글 보기</h3>
     
+    <!-- 작성한 댓글 조회 -->
     <table class="comment-table">
         <thead>
             <tr>
                 <th>댓글</th>
-                <th>삭제</th>
                 <th>날짜</th>
                 <th>추천/비추천</th>
+                <th>상태</th>
             </tr>
         </thead>
         <tbody>
@@ -76,18 +111,34 @@
                     </tr>
                 </c:when>
                 <c:otherwise>
-                    <c:forEach var="comment" items="${commentList}" varStatus="status">
+                    <c:forEach var="comment" items="${commentList}">
                         <tr class="comment-item">
-                            <td>${comment.content}</td>
                             <td>
-                                <form action="/final/comment/delete" method="post">
-                                    <input type="hidden" name="commentIdx" value="${comment.commentIdx}">
-                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"> <!-- CSRF 토큰 추가 -->
-                                    <button type="submit" class="btn btn-danger btn-sm">삭제</button>
-                                </form>
+                                <c:choose>
+                                    <c:when test="${comment.commentStatus == 1}">
+                                        <c:choose>
+                                            <c:when test="${comment.boardStatus == 1}">
+                                                <a href="${pageContext.request.contextPath}/board/comment/${comment.commentIdx}" class="enabled">${comment.content}</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="disabled">게시글 삭제로 댓글 확인 불가</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="disabled">${comment.content}</span>
+                                    </c:otherwise>
+                                </c:choose>
                             </td>
                             <td>${comment.commentRegDate}</td>
-                            <td>${comment.commentStarup}/${comment.commentStardown}</td> <!-- 수정된 부분 -->
+                            <td>${comment.commentStarup}/${comment.commentStardown}</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${comment.commentStatus == 1}">정상</c:when>
+                                    <c:when test="${comment.commentStatus == 0}">삭제됨</c:when>
+                                    <c:when test="${comment.commentStatus == 3}">제재 상태</c:when>
+                                </c:choose>
+                            </td>
                         </tr>
                     </c:forEach>
                 </c:otherwise>
@@ -95,9 +146,30 @@
         </tbody>
     </table>
 
+    <!-- 페이징 처리 -->
+    <div class="pagination">
+        <c:if test="${pager.startPage > 1}">
+            <a href="?pageNum=${pager.prevPage}" class="page-link">이전</a>
+        </c:if>
+
+        <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
+            <c:choose>
+                <c:when test="${i != pager.pageNum}">
+                    <a href="?pageNum=${i}" class="page-link">${i}</a>
+                </c:when>
+                <c:otherwise>
+                    <span class="current-page">${i}</span>
+                </c:otherwise>
+            </c:choose>
+        </c:forEach>
+
+        <c:if test="${pager.endPage < pager.totalPage}">
+            <a href="?pageNum=${pager.nextPage}" class="page-link">다음</a>
+        </c:if>
+    </div>
+
 </div>
 
-<!-- 부트스트랩 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

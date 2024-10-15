@@ -37,6 +37,10 @@ public class UserServiceImpl implements UserService {
         securityAuth.setAuth("ROLE_USER"); // 기본 권한 설정
         securityAuthService.addSecurityAuth(securityAuth);
     }
+    @Override
+    public User getUserByEmail(String email) {
+        return userDAO.selectUserByEmail(email);
+    }
     
     @Transactional
     @Override
@@ -49,6 +53,7 @@ public class UserServiceImpl implements UserService {
 
         userDAO.updateUser(user);
     }
+    
 
 
     @Transactional
@@ -77,7 +82,17 @@ public class UserServiceImpl implements UserService {
         }
         return authUser;
     }
-
+    
+    @Transactional
+    @Override
+    public void modifyUserNickname(String userId, String newNickname) {
+        // 사용자 정보를 가져와 닉네임을 수정 후 저장
+        User user = userDAO.selectUser(userId);
+        if (user != null) {
+            user.setUserNickname(newNickname);
+            userDAO.updateUser(user);
+        }
+    }
 
     @Override
     public boolean isUserIdAvailable(String userId) {
@@ -86,7 +101,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isNicknameAvailable(String nickname) {
-        return userDAO.selectUserByNickname(nickname) == null;
+        return userDAO.selectUser(nickname) == null;
     }
 
     @Override
@@ -143,18 +158,30 @@ public class UserServiceImpl implements UserService {
         User user = userDAO.selectUser(userId);
         if (user != null) {
             // 현재 경험치에 추가할 경험치를 더함
-            int newExperience = user.getUserExperience() + amount;
+            int currentExperience = user.getUserExperience();
+            int newExperience = currentExperience + amount;
+            int currentLevel = user.getUserLevel();
+            
+           
             
             // 경험치가 레벨업에 도달하는 경우 처리
-            while (newExperience >= ExperienceUtil.getExperienceForNextLevel(user.getUserLevel())) {
-                newExperience -= ExperienceUtil.getExperienceForNextLevel(user.getUserLevel());
-                user.setUserLevel(user.getUserLevel() + 1);  // 레벨업
+            while (newExperience >= ExperienceUtil.getExperienceForNextLevel(currentLevel)) {
+                newExperience -= ExperienceUtil.getExperienceForNextLevel(currentLevel);
+                currentLevel += 1;  // 레벨업
+                
+                
             }
             
             user.setUserExperience(newExperience);  // 경험치 갱신
+            user.setUserLevel(currentLevel);  // 레벨 갱신
+            
+            
+            
             userDAO.updateUser(user);  // 변경된 사용자 정보 저장
         }
     }
+
+
     
     @Override
     @Transactional
@@ -167,5 +194,20 @@ public class UserServiceImpl implements UserService {
 
         // 비밀번호 업데이트
         userDAO.updateUser(user);
+
+    }
+
+ // 최근 로그인 시간을 업데이트하는 메서드 구현
+
+    @Transactional
+    @Override
+    public void updateLastLoginTime(String userId) {
+        userDAO.updateLastLogin(userId); // UserDAO에서 이 메서드를 호출
+    }
+ // user_status 업데이트를 통한 탈퇴 처리 구현
+    @Override
+    @Transactional
+    public void updateUserStatus(String userId, int status) {
+        userDAO.updateUserStatus(userId, status);  // user_status를 0으로 설정하여 탈퇴 처리
     }
 }

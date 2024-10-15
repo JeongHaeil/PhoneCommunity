@@ -27,6 +27,7 @@
    <context:component-scan base-package="xyz.itwill.dao" />
    
    
+   
       <resources mapping="/images/**" location="/resources/images/" />
    <resources mapping="/css/**" location="/resources/css/" />
    <resources mapping="/js/**" location="/resources/js/" />
@@ -60,10 +61,11 @@
    
 <!-- WebSocket 핸들러 매핑 -->
 <websocket:handlers>
-    <websocket:mapping path="/chat" handler="chatWebSocketHandler"/>
+    <websocket:mapping path="/ws/chat/{roomId}" handler="chatWebSocketHandler"/>
      <websocket:handshake-interceptors>
         <beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
     </websocket:handshake-interceptors>
+    
 </websocket:handlers>
 
 <!-- WebSocket 핸들러 빈 등록 -->

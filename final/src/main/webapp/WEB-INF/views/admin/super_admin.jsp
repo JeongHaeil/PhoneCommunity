@@ -12,7 +12,7 @@
 
 
 <a href="<c:url value='/super_admin/admin'/>">신고 게시판</a>
-<a href="<c:url value='/super_admin/admin'/>">신고 게시판</a>
+<a href="<c:url value='/super_admin/userList'/>">유저 목록</a>
 
 </body>
 </html>

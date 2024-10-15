@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -47,10 +47,8 @@
     <h3>비밀번호 찾기 완료</h3>
     <p>해당 이메일로 임시 비밀번호가 발급되었습니다.</p>
 
-    <form action="/user/login" method="get">
-        <!-- CSRF 토큰 추가 -->
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-
+    <!-- 로그인 페이지로 이동하는 버튼 -->
+    <form action="${pageContext.request.contextPath}/user/login" method="get">
         <button type="submit" class="btn btn-custom">로그인창으로 돌아가기</button>
     </form>
 </div>

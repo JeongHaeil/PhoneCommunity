@@ -10,4 +10,7 @@ public interface ChatMessageService {
 	void insertChatMessage(ChatMessages chatMessages);
 	
 	List<ChatMessages> getMessagesByRoomId(int roomId);
+	
+	void saveChatMessage(ChatMessages messages);
+	
 }

@@ -16,4 +16,7 @@ public interface AdminMapper {
 	
 	int selectSpamBoardCount(Map<String, Object> map);
 	int selecttotalUserBoardListCount(Map<String, Object> map);
+	
+	List<Admin> findUsersWithExpiredStatuses(Map<String, Object> map);
+	
 }

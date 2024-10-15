@@ -79,7 +79,7 @@
 	
 	<select id="selecttotalUserBoardListCount" parameterType="map" resultType="int">
 	    SELECT COUNT(*)
-	    FROM USERS
+	    FROM users
 	    <if test="keyword != null and keyword != ''">
           <choose>
               <when test="search== 'userNum'">
@@ -108,9 +108,17 @@
 	        b.board_post_idx = #{boardPostIdx}
 	</select>
   	
+  	<!-- 
   	<update id="updateUserStatusByUserId">
 	    UPDATE users 
 	    SET user_status = #{status} 
+	    WHERE user_num = #{userNum}
+	</update>
+	 -->
+	 
+	<update id="updateUserStatusByUserId">
+	    UPDATE users 
+	    SET user_status = #{status}, status_expiry_date = #{expiryDate}
 	    WHERE user_num = #{userNum}
 	</update>
 	
@@ -119,6 +127,11 @@
 	    SET board_status = #{status} 
 	    WHERE board_post_idx = #{boardPostIdx}
 	</update>
-  
+	
+	<select id="findUsersWithExpiredStatuses" parameterType="map" resultType="xyz.itwill.dto.Admin">
+		SELECT * FROM users WHERE status_expiry_date &lt;= #{currentTime}
+	</select>
+
+  	
   	
   </mapper>

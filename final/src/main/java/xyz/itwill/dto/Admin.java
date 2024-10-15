@@ -1,16 +1,11 @@
 package xyz.itwill.dto;
 
+import java.time.LocalDateTime;
+
 import lombok.Data;
 
 @Data
 public class Admin {
-	
-	
-	/*
-	private User user;
-	private Board board;
-	private Comments comments;
-	*/
 	
 	//User
 	private int userNum;
@@ -24,6 +19,8 @@ public class Admin {
     private String userRegisterDate;
     private int userLevel =1;
     private int userStatus =1;
+    private LocalDateTime expiryDate;
+    private double duration;
 
     //공통적으로 사용되는 userNickname
     private String userNickname;

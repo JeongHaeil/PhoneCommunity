@@ -31,6 +31,7 @@ import xyz.itwill.dto.CBallot;
 import xyz.itwill.dto.Comments;
 import xyz.itwill.service.BoardService;
 import xyz.itwill.service.CommentsService;
+import xyz.itwill.service.UserService;
 import xyz.itwill.util.Pager;
 
 @RestController
@@ -40,6 +41,8 @@ public class BoardJsonController {
 	private final BoardService boardService;
 	private final CommentsService commentsService;
 	private final WebApplicationContext context;
+    private final UserService userService; // 사용자 서비스 추가
+
 	
 	@GetMapping("/commentsList/{boardCode}/{boardPostIdx}")
 	public Map<String, Object> CommentsList(@PathVariable int boardCode,@PathVariable int boardPostIdx,@RequestParam(defaultValue = "1") int pageNum,Authentication authentication) {
@@ -72,60 +75,72 @@ public class BoardJsonController {
 	
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/comment_insert/{commentBoardIdx}/{commentIdx}")
-	public String commentInsert(@PathVariable int commentBoardIdx, @PathVariable int commentIdx, @RequestParam(value = "commentImage", required = false) MultipartFile commentImage,@RequestParam String content , HttpServletRequest request, Authentication authentication) throws IllegalStateException, IOException {		
-		if(commentIdx!=0) {
-			CustomUserDetails user=(CustomUserDetails)authentication.getPrincipal();
-			Comments getcomment=new Comments();
-			getcomment=commentsService.getCommentByNum(commentIdx);
-			commentsService.updateCommentRef(getcomment);
-			int num=commentsService.getCommentNextNum();
-			int restep=getcomment.getCommentRestep();
-			int relevel=getcomment.getCommentLevel();
-			int ref=getcomment.getCommentRef();			
-			relevel++;
-			restep++;
-			
-			Comments putcomment=new Comments();
-			putcomment.setCommentIdx(num);
-			putcomment.setCommentBoardIdx(commentBoardIdx);
-			putcomment.setCommentUserId(user.getUserId());	
-			putcomment.setContent(content.replace("<","&lt;").replace(">","&gt;").replace("\n", "<br>"));
-			if (commentImage != null && !commentImage.isEmpty()) {
-				String uploadDirectory=context.getServletContext().getRealPath("/resources/images/uploadFile/comment");
-				String uploadFilename=UUID.randomUUID().toString()+"_"+commentImage.getOriginalFilename();
-				File file=new File(uploadDirectory, uploadFilename);
-				commentImage.transferTo(file);
-				putcomment.setCommentImage(uploadFilename);
-			}
-			
-			putcomment.setCommentUserIp(request.getRemoteAddr());
-			putcomment.setCommentRef(ref);
-			putcomment.setCommentRestep(restep);
-			putcomment.setCommentLevel(relevel);
-			putcomment.setCommentReuser(getcomment.getUserNickname());//
-			commentsService.insertComment(putcomment);															
-		}else {
-			CustomUserDetails user=(CustomUserDetails)authentication.getPrincipal();
-			Comments putcomment=new Comments();
-			int num=commentsService.getCommentNextNum();
-			putcomment.setCommentIdx(num);
-			putcomment.setCommentBoardIdx(commentBoardIdx);
-			putcomment.setCommentUserId(user.getUserId());
-			putcomment.setContent(content.replace("<","&lt;").replace(">","&gt;").replace("\n", "<br>"));
-			if (commentImage != null && !commentImage.isEmpty()) {
-				String uploadDirectory=context.getServletContext().getRealPath("/resources/images/uploadFile/comment");
-				String uploadFilename=UUID.randomUUID().toString()+"_"+commentImage.getOriginalFilename();
-				File file=new File(uploadDirectory, uploadFilename);
-				commentImage.transferTo(file);
-				putcomment.setCommentImage(uploadFilename);//이미지설정
-			}
-			putcomment.setCommentUserIp(request.getRemoteAddr());
-			putcomment.setCommentRef(num);
-			putcomment.setCommentRestep(0);
-			putcomment.setCommentLevel(0);
-			commentsService.insertComment(putcomment);	
-		}
-		return "success";
+	public String commentInsert(@PathVariable int commentBoardIdx, @PathVariable int commentIdx, 
+	    @RequestParam(value = "commentImage", required = false) MultipartFile commentImage,
+	    @RequestParam String content, HttpServletRequest request, Authentication authentication) 
+	    throws IllegalStateException, IOException {		
+
+	    // 사용자 정보는 블록 외부에서 선언
+	    CustomUserDetails user = (CustomUserDetails)authentication.getPrincipal();
+
+	    if(commentIdx != 0) {
+	        Comments getcomment = commentsService.getCommentByNum(commentIdx);
+	        commentsService.updateCommentRef(getcomment);
+	        int num = commentsService.getCommentNextNum();
+	        int restep = getcomment.getCommentRestep();
+	        int relevel = getcomment.getCommentLevel();
+	        int ref = getcomment.getCommentRef();			
+	        relevel++;
+	        restep++;
+
+	        Comments putcomment = new Comments();
+	        putcomment.setCommentIdx(num);
+	        putcomment.setCommentBoardIdx(commentBoardIdx);
+	        putcomment.setCommentUserId(user.getUserId());	
+	        putcomment.setContent(content.replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
+	        if (commentImage != null && !commentImage.isEmpty()) {
+	            String uploadDirectory = context.getServletContext().getRealPath("/resources/images/uploadFile/comment");
+	            String uploadFilename = UUID.randomUUID().toString() + "_" + commentImage.getOriginalFilename();
+	            File file = new File(uploadDirectory, uploadFilename);
+	            commentImage.transferTo(file);
+	            putcomment.setCommentImage(uploadFilename);
+	        }
+
+	        putcomment.setCommentUserIp(request.getRemoteAddr());
+	        putcomment.setCommentRef(ref);
+	        putcomment.setCommentRestep(restep);
+	        putcomment.setCommentLevel(relevel);
+	        putcomment.setCommentReuser(getcomment.getUserNickname());
+	        commentsService.insertComment(putcomment);
+	    } else {
+	        Comments putcomment = new Comments();
+	        int num = commentsService.getCommentNextNum();
+	        putcomment.setCommentIdx(num);
+	        putcomment.setCommentBoardIdx(commentBoardIdx);
+	        putcomment.setCommentUserId(user.getUserId());
+	        putcomment.setContent(content.replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>"));
+	        if (commentImage != null && !commentImage.isEmpty()) {
+	            String uploadDirectory = context.getServletContext().getRealPath("/resources/images/uploadFile/comment");
+	            String uploadFilename = UUID.randomUUID().toString() + "_" + commentImage.getOriginalFilename();
+	            File file = new File(uploadDirectory, uploadFilename);
+	            commentImage.transferTo(file);
+	            putcomment.setCommentImage(uploadFilename);  // 이미지 설정
+	        }
+	        putcomment.setCommentUserIp(request.getRemoteAddr());
+	        putcomment.setCommentRef(num);
+	        putcomment.setCommentRestep(0);
+	        putcomment.setCommentLevel(0);
+	        commentsService.insertComment(putcomment);
+	    }
+
+	    // 댓글 작성 후 경험치 추가
+	    if (user != null) {
+	        userService.increaseExperience(user.getUserId(), 5);
+	        // 로그 기록
+	        System.out.println("User " + user.getUserId() + " has gained 5 experience points for commenting.");
+	    }
+
+	    return "success";
 	}
 	
 	@PreAuthorize("isAuthenticated()")

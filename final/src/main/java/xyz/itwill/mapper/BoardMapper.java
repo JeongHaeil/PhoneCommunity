@@ -3,6 +3,8 @@ package xyz.itwill.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import xyz.itwill.dto.BBallot;
 import xyz.itwill.dto.Board;
 
@@ -27,7 +29,11 @@ public interface BoardMapper {
 	Board getBoardRN(Map<String, Object> map);
 	Board getRnUp(Map<String, Object> map);
 	Board getRnDown(Map<String, Object> map);
-	List<Board> selectNoticeList();
-	List<Board> selectPopularView();
-	List<Board> selectPopularStar();
+
+	// 게시글 상세 정보를 가져오는 쿼리 메서드 마이페이지
+	 Board selectBoardDetail(@Param("boardPostIdx") int boardPostIdx, @Param("boardCode") int boardCode);
+	 List<Board> selectNoticeList();
+		List<Board> selectPopularView();
+		List<Board> selectPopularStar();
+
 }

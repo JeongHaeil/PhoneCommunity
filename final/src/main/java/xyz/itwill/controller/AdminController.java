@@ -1,5 +1,6 @@
 package xyz.itwill.controller;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -82,17 +83,42 @@ public class AdminController {
 	    
 	    return "admin/view_post"; // view_post.jsp 페이지로 이동
 	}
-	
+	/*
 	@PutMapping("/admin/userStatus")
 	public ResponseEntity<String> updateUserStatus(@RequestBody Admin request) {
 		
 		try {
-			adminService.updateUserStatusByUserId(request.getUserNum(), request.getUserStatus());
+			adminService.updateUserStatusByUserNum(request.getUserNum(), request.getUserStatus());
 			return ResponseEntity.ok("success");
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating user status");
 		}
 		
+	}
+	*/
+	/*
+	@PutMapping("/admin/userStatus")
+	public ResponseEntity<String> updateUserStatus(@RequestBody Admin request) {
+	    try {
+	        // 기간을 초 단위로 변환하여 만료 날짜 설정
+	        LocalDateTime expiryDate = LocalDateTime.now().plusSeconds((long)(request.getDuration() * 24 * 60 * 60));
+	        adminService.updateUserStatusByUserNum(request.getUserNum(), request.getUserStatus(), expiryDate);
+	        return ResponseEntity.ok("success");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating user status");
+	    }
+	}
+*/
+	@PutMapping("/admin/userStatus")
+	public ResponseEntity<String> updateUserStatus(@RequestBody Admin request) {
+	    try {
+	        // 기간을 초 단위로 변환하여 만료 날짜 설정
+	        LocalDateTime expiryDate = LocalDateTime.now().plusSeconds((long)(request.getDuration() * 24 * 60 * 60));
+	        adminService.updateUserStatusByUserNum(request.getUserNum(), request.getUserStatus(), expiryDate);
+	        return ResponseEntity.ok("success");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating user status");
+	    }
 	}
 	
 	@PutMapping("/admin/boardStatus")

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%> 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -8,11 +8,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>부트스트랩 예제</title>
-
+<title>게시글</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 <!-- <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
     <style type="text/css">
+    #BoardTitleLabel {
+      font-family: 'Arial', sans-serif;
+      font-size: 48px;
+      font-weight: bold;
+      color: #f0f8ff; /* 연한 하늘색 글자 */
+      background: linear-gradient(45deg, #2c3e50, #34495e, #2f4050); /* 어두운 그라데이션 배경 */
+      padding: 20px 40px;
+      border-radius: 15px;
+      text-align: center;
+      display: inline-block;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6); /* 강한 배경 그림자 */
+      text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5), 0px 0px 15px rgba(255, 255, 255, 0.7); /* 입체적인 텍스트 그림자 */
+      transition: all 0.3s ease;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+
     .boardDiv{
 		padding: 0;
 		margin: 0 auto;
@@ -29,7 +49,7 @@
    	 		max-width: 1320px;
  		}
  	}
- 	@media (max-width: 900px) {
+ 	@media (max-width: 1200px) {
 	    .sideHotboardList {
 	        display: none; 
    		 }
@@ -64,6 +84,7 @@
         text-align: center;
         padding: 3.5px 2px;
         line-height: 1.5;
+        vertical-align: middle;
     }
     .pagebtn{
    	    border-radius: 32px;
@@ -99,10 +120,10 @@
      .apagebtn:hover{
      	color: #fff;
     } 
-	.row{
+	/*  .row{
 		margin-left: 0px;
 		margin-right: 0px;										
-	}
+	} */
 	
 	.commentRowDiv{
 		border-top: 1px solid #e5e5e5;
@@ -115,11 +136,12 @@
 	}
 	.sideHotboardList {
     position: fixed;
-    top: 110px; 
+    top: 190px; 
     right: 40px; 
     z-index: 1000;
     box-sizing: border-box;
-      
+    border: 1px solid #ddd;
+    padding: 4px;   
 	}
 	.sideHotboard{
 	white-space: nowrap;       
@@ -133,20 +155,49 @@
     }
     .tdboardWriter {
         white-space: nowrap;       
-        overflow: hidden;          
+        /* overflow: hidden;   */        
         text-overflow: ellipsis;
     }
+    <!--작성자 클릭시 드랍다운 관련 시작 css--> 
+     #WriterdropDiv {
+        position: relative;  /* 부모 요소에 position: relative 추가 */
+    }
+        #WriterdropUl {
+        width:60px;
+        position: absolute;  /* 드롭다운 메뉴를 다른 요소들 위에 절대적으로 배치 */
+        z-index: 1050;       /* 기본 Bootstrap z-index보다 높게 설정 */
+    }
+    /* 화살표를 숨기기 */
+.Wirterbtn::after {
+    display: none !important;  /* 중요도를 높여서 강제로 숨깁니다 */
+}
+
+/* 다른 방법: 화살표 스타일을 없애기 */
+.Wirterbtn {
+    padding-right: 0; /* 오른쪽 패딩을 없애서 화살표 공간을 제거 */
+}
+
+ .Wirterbtn {
+    text-decoration: none !important;  /* 밑줄 제거 */ 
+    font-size: 12px !important;
+}
+
+.Wirterbtn:hover, .Wirterbtn:focus {
+    text-decoration: none !important;  /* 호버 및 포커스 상태에서 밑줄 제거 */
+}
+<!--작성자 클릭시 드랍다운 관련 끝 css-->
+
     </style>
 
 </head>
 <body>
 	<div class="container mt-5">
-		<h1 class=text-center>${boardTitle }</h1>
+		<h1 class=text-center id="BoardTitleLabel">${boardTitle }</h1>
 		<input type="hidden" value="${boardCode }" name="boardCode"
 			id="freeCodeValue"> <input type="hidden"
 			value="${board.boardPostIdx }" name="boardPostIdx"
 			id="freePostIdxValue">
-		<div class="row">
+		<div class="row no-gutters">
 			<div class="col-md-9">
 				<div class="card mb-3">
 					<div class="card-body">
@@ -155,7 +206,7 @@
 						<p class="card-text d-flex justify-content-between aCursorActive">
 						<small class="text-muted">작성자: ${board.userNickname} | 작성일:${board.boardRegisterDate }</small>
 							<sec:authorize access="isAuthenticated()">
-								<sec:authorize access="hasRole('ROLE_SUPER_ADMIN')" var="admin"/>
+								<sec:authorize access="hasRole('ROLE_BOARD_ADMIN')" var="admin"/>
 								<sec:authentication property="principal" var="userinfo"/>	
 								<c:if test="${admin || userinfo.userId eq board.boardUserId }"><small class="text-muted"><a onclick="deleteFreeboard();" style="color: red;">삭제</a> | <a onclick="modifyFreeboard();">수정</a></small></c:if>					
 							</sec:authorize>
@@ -174,33 +225,28 @@
 
 					<div class="container text-center mt-5">
 						<button class="btn btn-outline-dark" onclick="boardstarup(${board.boardPostIdx});">
-							<i class="fas fa-heart"></i> 추천
+							 추천&nbsp;<i class="fas fa-thumbs-up" style="color: #5CD1E5;"></i>
 						</button>
 						<button class="btn btn-outline-dark" onclick="boardstardown(${board.boardPostIdx});">
-							<i class="fas fa-heart" ></i> 비추천
+							<i class="fas fa-thumbs-down" style="color: #FFB2F5;"></i> 비추천
 						</button>
 					</div>
 
 					<div class="container mt-4">
-						<div class="row">
-							<div class="col-md-6">
-								<p>
-									<c:choose>
-										<c:when test="${pageNum}!=null">
-											<a href="<c:url value="/board/boardlist/${boardCode }"/>?search=${search }&keyword=${keyword }&pageNum=${pageNum}" style="color: #333;">목록</a>
-										</c:when>
-										<c:otherwise>
-											<a href="<c:url value="/board/boardlist/${boardCode }"/>?search=${search }&keyword=${keyword }&pageNum=1" style="color: #333;">목록</a>									
-										</c:otherwise>
-									</c:choose>											
-								</p>
-								
-							</div>
-							<div class="col-md-6 text-right">
-								<p>
-									<a class="" style="color: #333;" onclick="boardspam(${board.boardPostIdx});">신고하기</a>
-								</p>
-							</div>
+						<div class="d-flex justify-content-between">
+							<p>
+								<c:choose>
+									<c:when test="${pageNum}!=null">
+										<a href="<c:url value="/board/boardlist/${boardCode }"/>?search=${search }&keyword=${keyword }&pageNum=${pageNum}" style="color: #333;">목록</a>
+									</c:when>
+									<c:otherwise>
+										<a href="<c:url value="/board/boardlist/${boardCode }"/>?search=${search }&keyword=${keyword }&pageNum=1" style="color: #333;">목록</a>									
+									</c:otherwise>
+								</c:choose>											
+							</p>
+							<p>
+								<a style="color: #333; cursor: pointer;" onclick="boardspam(${board.boardPostIdx});"> <i class="fas fa-flag"></i>신고하기</a>
+							</p>
 						</div>
 					</div>
 				</div>
@@ -215,7 +261,7 @@
 						</div>
 						<div
 							class="col-md-6 d-flex justify-content-end align-items-center">
-							<div class="mr-3">
+							<div class="m-3">
 								<a href="#" class="link-height text-dark">맨위로</a>
 							</div>
 							<button type="button" class="btn btn-dark btn-sm" onclick="window.location.href='<c:url value="/board/boardwrite/${boardCode }"/>'">글쓰기</button>
@@ -227,11 +273,12 @@
 				
 				<div class="card mt-3">
 					<%--================ 댓글 출력 태그 시작============ --%>
-					<div id="commentsListDiv"></div>
+					<div class="m-2" id="commentsListDiv"></div>
 					<%--================ 댓글 출력 태그 끝============ --%>
 				</div>
-
-
+					<%--=================댓글 페이지 처리 시작 =========   --%>
+					<div id='cocopageNumDiv' class='row justify-content-center mt-2'></div>
+					<%--=================댓글 페이지 처리 끝 =========   --%>
 
 				<%-- =============================게시글 전둉 댓글 작성창 시작===================== --%>			
 				<div class="card mt-4" id="commentsNumber_0">
@@ -287,9 +334,20 @@
 			    								<td>${boards.boardPostIdx }</td>  								
 			    								<td class="tdboardTitle" style="color: #333; cursor: pointer;" 
 												    onclick="location.href='<c:url value='/board/boarddetail/${boards.boardCode }/${boards.boardPostIdx }'/>?pageNum=${pager.pageNum}&search=${search }&keyword=${keyword }'">
-												    &nbsp;&nbsp;${boards.boardTitle}<c:if test="${boards.cocain !=0}"> &nbsp;[${boards.cocain }]</c:if>
+												    &nbsp;&nbsp;${boards.boardTitle}<c:if test="${boards.cocain !=0}"><span style="color: #A566FF;"> &nbsp;[${boards.cocain }]</span></c:if>
 												</td>
-			    								<td class="tdboardWriter">${boards.userNickname }</td>
+			    								<td class="tdboardWriter">
+					                                <!-- 작성자 클릭 시 드롭다운 표시 -->
+					                                <div class="dropdown" id='WriterdropDiv'>
+					                                    <button class="btn btn-link dropdown-toggle Wirterbtn" style="color: black;" type="button" id="dropdownMenuButton-${boards.boardPostIdx}" data-bs-toggle="dropdown" aria-expanded="false">
+					                                        ${boards.userNickname}
+					                                    </button>
+					                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-${boards.boardPostIdx}" id="WriterdropUl">					                                       					                                       
+					                                        <li><a class="dropdown-item" href="<c:url value='/board/boardlist/1'/>?&search=user_nickname&keyword=${boards.userNickname }">작성글 전체보기</a></li>
+															<%--추가 하려면 위에꺼 복 붙 --%>	
+					                                    </ul>
+					                                </div>
+					                            </td>
 			    								<td>${boards.boardRegisterDate }</td>
 			    								<td>${boards.boardCount }</td>
 			    							</tr>
@@ -303,7 +361,7 @@
 					
 					<%-- 2, 게시글 페이징 (시작) --%>
 					 <div id="pageNumDiv" class="row justify-content-center">
-					 	 <div class="col-auto">           
+					 	 <div class="col-auto " style="margin: 5px;">           
 						 <c:choose>
 							<c:when test="${pager.startPage > pager.blockSize }">
 								<a class="pagebtn" href="<c:url value="/board/boardlist/${boardCode }"/>?search=${search }&keyword=${keyword }&pageNum=${pager.prevPage}">◀</a>
@@ -339,9 +397,9 @@
 						        <form id="searchForm" method="get" class="d-flex "> 
 						            <input id="code" type="hidden" name="boardCode" value="${boardCode }" disabled="disabled">
 						            <select name="search" id="searchSelect" class="">
-						                <option value="user_nickname" <c:if test="${search }=='user_nickname'"> selected </c:if>>&nbsp;작성자&nbsp;</option>
-						                <option value="board_title" <c:if test="${search }=='board_title'"> selected </c:if>>&nbsp;제목&nbsp;</option>
-						                <option value="board_content" <c:if test="${search }=='board_content'"> selected </c:if>>&nbsp;내용&nbsp;</option>
+						                <option value="user_nickname" <c:if test="${search =='user_nickname' }"> selected </c:if>>&nbsp;작성자&nbsp;</option>
+						                <option value="board_title" <c:if test="${search=='board_title' }"> selected </c:if>>&nbsp;제목&nbsp;</option>
+						                <option value="board_content" <c:if test="${search=='board_content' }"> selected </c:if>>&nbsp;내용&nbsp;</option>
 						            </select>
 						            <input type="text" name="keyword" value="${keyword }" id="keywordInput" placeholder="검색..">
 						            <button id="boardSearchBtn" class="btn btn-dark btn-sm"  type="submit">검색</button>
@@ -378,12 +436,11 @@
 
 
 			<!-- 사이드 광고 및 인기글  -->
-			<div class="col-md-3 sideHotboardList" >
-				<h2>오늘의 인기글</h2>
-				<ul class="list-group" id="popularSideBoard">
-				
-				</ul>
-			</div>
+			<div class="col-md-3 sideHotboardList">
+		            <h2><i class="fas fa-fire" style="font-size: 50px; color: orange;"></i>오늘의 인기글</h2>
+		            <div class="" id="popularSideBoard">
+	            </div>
+	        </div>
 		</div>
 	</div>
 
@@ -392,7 +449,7 @@
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 	<script
 		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 	<script type="text/javascript">
 		var Codetag = document.getElementById("freeCodeValue");
 		var PostIdxtag = document.getElementById("freePostIdxValue");
@@ -418,17 +475,17 @@
 								$("#commentsListDiv").html(html);
 								return;
 							}
-							var html = "<h4>댓글 (" + result.commentCount
-									+ ")</h4>";
+							var html = "<p>댓글 (" + result.commentCount
+									+ ")</p>";
 							$(result.commentList)
 									.each(
 											function() {
 												if(this.commentLevel!=0){
-												html += "<div class='row commentRowDiv reCommentDiv mt-1' style='margin-left:"+this.commentLevel*20+"px;'>"; 
+												html += "<div class='commentRowDiv reCommentDiv mt-1' style='margin-left:"+this.commentLevel*20+"px;'>"; 
 												}else{
-												html += "<div class='row commentRowDiv mt-1' style='margin-left:"+this.commentLevel*20+"px;'>"; 				
+												html += "<div class='commentRowDiv mt-1' style='margin-left:"+this.commentLevel*20+"px;'>"; 				
 												}
-												html += "<div class='list-group w-100'>";
+												html += "<div class='list-group'>";
 												html += "<div>";
 												html += "<div class='d-flex justify-content-between'>";
 												
@@ -443,10 +500,10 @@
 													html += "<strong>"+ this.userNickname+ "</strong> <small class='text-muted'>"+ this.commentRegDate+ "</small>";
 													}							
 													if (this.commentUserId == result.board.boardUserId) {//세션에서 값 가져와서 로그인 유저와 비교 <---잘못된 작성
-														html += "<span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: blue;'>작성자</span>";										
+														html += "<span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; margin-left: 4px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: #CC3D3D;'>작성자</span>";										
 													}
 													if(this.commentUserId == result.userId || result.boardAdmin !=null){
-														html += "<a class='aCursorActive' onclick='deleteComment("+ this.commentIdx+ ");'><span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: red;'>삭제</span></a>";													
+														html += "<a class='aCursorActive' onclick='deleteComment("+ this.commentIdx+ ");'><span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: #0D6EFD;'>삭제</span></a>";													
 													}													
 												}
 												html += "</div>";												
@@ -454,7 +511,7 @@
 												if(this.commentStatus>1){
 													
 												}else{												
-													html += "<p><small class='text-muted'><a onclick='voteUp("+this.commentIdx+");' style='color: red;'>추천▲</a> | <a onclick='commentspam("+this.commentIdx+");' style='color: dark;'>신고</a></small></p>";
+													html += "<p><small class='text-muted'><a onclick='voteUp("+this.commentIdx+");' style='color: #F29661;'><i class='fa-solid fa-hand-holding-heart'></i>추천</a> | <a onclick='commentspam("+this.commentIdx+");' style='color: dark;'><i class='fa-solid fa-user-large-slash'></i>신고</a></small></p>";
 												}	
 												html += "</div>";
 												html += "</div>";
@@ -507,7 +564,7 @@
 											
 											});
 							html += "<input type='hidden' value='${pager.pageNum }' id='pageNumValue'>"; 
-							html += "<div id='cocopageNumDiv' class='row justify-content-center'></div>"; 
+							
 							
 							$("#commentsListDiv").html(html);
 							pageNumberDisplay(result.boardCode,result.boardPostIdx,result.pager);
@@ -796,7 +853,7 @@
 			    return;
 			}else{
 				$(result.popularBoardList).each(function(index) {
-				html +="<li class='list-group-item sideHotboard'>["+(index+1)+"]. <a href='<c:url value='/board/boarddetail/"+this.boardCode+"/"+this.boardPostIdx+"'/>'>"+this.boardTitle+"</a> </li>";
+				html +="<li class='list-group-item sideHotboard'>"+(index+1)+". <a href='<c:url value='/board/boarddetail/"+this.boardCode+"/"+this.boardPostIdx+"'/>'>"+this.boardTitle+"</a> </li>";
 				});
 			}
 			$("#popularSideBoard").html(html);
