@@ -13,4 +13,6 @@ public interface ProductDAO {
     int updateProductCount(int productIdx);
     List<Product> selectProductList(Map<String, Object> map);
 	
+    //마이페이지 
+    List<Product> selectProductsByUserId(String userId);;
 }

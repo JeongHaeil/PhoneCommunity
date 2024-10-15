@@ -655,9 +655,14 @@ public class UserController {
         }
         return userInfo;
     }
- // 중고장터 게시물 보기 페이지로 이동
+ // 작성한 중고장터 게시물 보기 페이지로 이동 (GET 방식)
     @RequestMapping(value = "/myProducts", method = RequestMethod.GET)
-    public String showMyProductsPage(Authentication authentication, Model model) {
+    public String showMyProductsPage(
+            Authentication authentication,
+            Model model,
+            @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/user/login"; // 인증되지 않은 사용자는 로그인 페이지로 리다이렉트
         }
@@ -665,31 +670,24 @@ public class UserController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         String userId = userDetails.getUserId(); // 로그인한 사용자의 ID 가져오기
 
-        // 사용자 ID를 Map에 추가
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("userId", userId);
+        // 게시물 목록 가져오기 (로그인된 사용자만)
+        List<Product> productList = productService.getProductsByUserId(userId);
 
-        // 사용자가 작성한 중고장터 게시물 목록을 가져옴
-        Map<String, Object> productListMap = productService.getProductList(paramMap);
+        // 전체 게시물 수
+        int totalSize = productList.size();
 
-        // Type safety 경고를 없애기 위한 방법
-        Object productListObj = productListMap.get("productList");
-        List<Product> productList = null;
-        if (productListObj instanceof List<?>) {
-            // 리스트 안의 객체가 Product 타입인지 확인 후 안전하게 캐스팅
-            if (!((List<?>) productListObj).isEmpty() && ((List<?>) productListObj).get(0) instanceof Product) {
-                productList = (List<Product>) productListObj;
-            }
-        }
+        // 페이징 객체 생성 (blockSize는 페이지 네비게이션에 보여질 페이지 번호 개수, 예: 5)
+        Pager pager = new Pager(pageNum, pageSize, totalSize, 5);
 
-        // 데이터 확인을 위해 로그 추가
-        log.info("중고장터 게시물 목록: " + productList);
+        // 시작 행과 끝 행을 계산하여 부분 리스트 추출
+        List<Product> paginatedProductList = productList.subList(pager.getStartRow() - 1, Math.min(pager.getEndRow(), totalSize));
 
-        model.addAttribute("productList", productList); // 모델에 중고장터 게시물 목록 추가
+        // 모델에 게시물 목록 및 페이징 정보 추가
+        model.addAttribute("productList", paginatedProductList);
+        model.addAttribute("pager", pager);
 
-        return "user/myProduct"; // myProduct.jsp로 이동
+        return "user/myProduct";
     }
-
 
 
     

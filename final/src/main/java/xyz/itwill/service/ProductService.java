@@ -12,5 +12,5 @@ public interface ProductService {
    Map<String, Object> getProductList(Map<String, Object> map);
 void updateProductStatus(int productIdx);
 int createProductAndChatRoom(Product product);
-   
+List<Product> getProductsByUserId(String userId);
 }

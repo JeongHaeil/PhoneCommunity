@@ -13,6 +13,7 @@ public interface ProductMapper {
 	int selectProductCount(Map<String, Object> map);
 	List<Product> selectProductList(Map<String, Object> map);
 	int updateProductCount(int productIdx);
-	
+	//마이페이지
+	List<Product> selectProductsByUserId(String userId);
 
 }

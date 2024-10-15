@@ -13,8 +13,6 @@ import xyz.itwill.dao.ChatRoomsDAO;
 import xyz.itwill.dao.ProductDAO;
 import xyz.itwill.dto.ChatRooms;
 import xyz.itwill.dto.Product;
-import xyz.itwill.mapper.ChatRoomsMapper;
-import xyz.itwill.mapper.ProductMapper;
 import xyz.itwill.util.Pager;
 
 @Service
@@ -99,6 +97,12 @@ public class ProductServiceImpl implements ProductService {
 	        chatRoomsDAO.createChatRooms(chatRoom);  // 채팅방 생성
 
 	        return productIdx;  // 생성된 productIdx 반환
-	    }
+	    } 
+	 
+	 //마이페이지
+	 @Override
+	 public List<Product> getProductsByUserId(String userId) {
+	     return productDAO.selectProductsByUserId(userId);
+	 }
 	
 }

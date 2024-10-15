@@ -50,6 +50,10 @@
             font-size: 1rem;
             color: #999;
         }
+        .pagination {
+            margin-top: 20px;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -93,6 +97,17 @@
             </c:choose>
         </tbody>
     </table>
+
+    <!-- 페이지 네비게이션 -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
+                <li class="page-item ${pager.pageNum == i ? 'active' : ''}">
+                    <a class="page-link" href="?pageNum=${i}&pageSize=${pager.pageSize}">${i}</a>
+                </li>
+            </c:forEach>
+        </ul>
+    </nav>
 </div>
 
 <!-- 부트스트랩 JS -->

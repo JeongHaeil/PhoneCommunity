@@ -50,4 +50,10 @@ public class ProductDAOImpl implements ProductDAO {
     public int updateProductStatus(int productIdx) {
         return sqlSession.getMapper(ProductMapper.class).updateProductStatus(productIdx);
     }
+    
+    //마이페이지
+    @Override
+    public List<Product> selectProductsByUserId(String userId) {
+        return sqlSession.getMapper(ProductMapper.class).selectProductsByUserId(userId);
+    }
 }
