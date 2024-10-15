@@ -57,18 +57,33 @@ public class ProductServiceImpl implements ProductService {
             pageSize = Integer.parseInt((String) map.get("pageSize"));
         }
 
+        // 검색어 필터링 로직 추가
+        String keyword = (String) map.get("keyword");
+        String column = (String) map.get("column");
+
+        if (keyword != null && !keyword.isEmpty()) {
+            map.put("keyword", keyword); // 검색어가 있을 때만 추가
+            map.put("column", column);
+        }
+
+        // 페이징 및 검색된 총 데이터 수 계산
         int totalBoard = productDAO.selectProductCount(map);
         int blockSize = 5;
         Pager pager = new Pager(pageNum, pageSize, totalBoard, blockSize);
         map.put("startRow", pager.getStartRow());
         map.put("endRow", pager.getEndRow());
+
+        // 검색어에 맞는 상품 목록 조회
         List<Product> productList = productDAO.selectProductList(map);
 
+        // 결과를 담은 Map 반환
         Map<String, Object> result = new HashMap<>();
         result.put("pager", pager);
         result.put("productList", productList);
+
         return result;
     }
+
 
     @Override
     @Transactional
@@ -100,5 +115,11 @@ public class ProductServiceImpl implements ProductService {
 
 	        return productIdx;  // 생성된 productIdx 반환
 	    }
+
+	@Override
+	public void updateProductSoldStatus(int productIdx, int status) {
+		productDAO.updateProductSoldStatus(productIdx, status);
+		
+	}
 	
 }
