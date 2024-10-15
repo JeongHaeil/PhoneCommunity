@@ -443,8 +443,7 @@
                         <li style="padding: 10px 0;"><strong>내용:</strong> ${product.productContent}</li>
                     </ul>
                 </div>
-               <p>현재 사용자 ID: ${currentUserId}</p>
-    <p>작성자 ID: ${product.productUserid}</p>
+          
                 <!-- 수정 및 삭제 버튼 배치 -->
 <c:if test="${currentUserId eq product.productUserid}">
     <a href="${pageContext.request.contextPath}/product/modify?productIdx=${product.productIdx}" 
@@ -527,8 +526,6 @@
    		 var buyerId = loggedInUserId;
    		 var newRoomId;
    		 
-   		 
-   		 
    		    console.log("buyerId: " + loggedInUserId);
    		    console.log("sellerId: " + sellerId);
    		    console.log("roomId: " + roomId);	
@@ -566,7 +563,7 @@
    			        });
    			    });
 
-   				
+   				// startChat() 함수로 채팅 시작 요청
    		//function startChat(roomId) {
    		function startChat(roomId) {
    			var roomId= "${product.productIdx}"
@@ -599,8 +596,9 @@
                }
            });
        }
+       
+      
    			 
-   	    }); 
    	        // 방 번호를 받아 해당 방의 채팅방 UI를 로드하는 함수
    	        function loadChatRoom(newRoomId) {
    	        	console.log("Loaded roomId: " + newRoomId); // roomId 값 출력
@@ -616,6 +614,7 @@
    	            });
    	        } 
    	        
+   	    }); 
     </script>
 </body>
 

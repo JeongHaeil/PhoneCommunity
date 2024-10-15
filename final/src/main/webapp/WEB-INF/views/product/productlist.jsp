@@ -219,18 +219,24 @@ body {
 				<button class="btn btn-primary btn-sm"
 					onclick="location.href='${pageContext.request.contextPath}/product/register'">쓰기</button>
 				<button class="btn btn-outline-secondary btn-sm" id="search-btn">검색</button>
-				<button class="btn btn-outline-secondary btn-sm">목록</button>
+<button class="btn btn-outline-secondary btn-sm" onclick="location.href='${pageContext.request.contextPath}/product/list'">목록</button>
+
 			</div>
 		</div>
 
 		<!-- 검색 바 -->
 		<div class="d-flex justify-content-end mt-3">
 			<div class="search-bar" id="search-bar" style="display: none;">
-				<div class="d-flex">
-					<span style="margin-top: 6px;">제목+내용 ▼</span> <input type="text"
-						class="form-control ms-2" placeholder="검색어를 입력하세요."
-						style="width: 200px;">
-				</div>
+				<form action="${pageContext.request.contextPath}/product/list" method="get">
+					<div class="input-group">
+						<select name="column" class="form-select" style="max-width: 150px; border-radius: 8px 0 0 8px;">
+							<option value="product_subject">제목</option>
+							<option value="product_content">내용</option>
+						</select>
+						<input type="text" name="keyword" class="form-control" placeholder="검색어를 입력하세요." value="${searchMap.keyword}">
+						<button type="submit" class="btn btn-outline-secondary" style="border-radius: 0 8px 8px 0;">검색</button>
+					</div>
+				</form>
 			</div>
 		</div>
 
@@ -239,49 +245,59 @@ body {
 			<div class="main-content">
 				<!-- 상품 목록 -->
 				<div class="row product-list">
-					<c:forEach var="product" items="${result.productList}">
-						<div class="col-md-3 col-sm-6 mb-4">
-							<a 
-								href="${pageContext.request.contextPath}/product/details?productIdx=${product.productIdx}"
-								class="text-decoration-none">
-								<div class="product-card">
-									<!-- 글 번호 표시 -->
-									<div class="product-meta text-muted"
-										style="font-size: 12px; margin-bottom: 5px;">글 번호:
-										${product.productIdx}</div>
-									<img
-										src="${pageContext.request.contextPath}/resources/images/${fn:split(product.productImage, ',')[0]}"
-										alt="상품 이미지" class="img-fluid">
-									<div class="product-meta">
-										<span class="text-muted">판매</span>, <span>${product.productRegisterdate}</span>
-									</div>
-									<p class="product-title">${product.productSubject}</p>
-									<div class="product-details">
-										<p>
-											· 배송 방법:
-											<c:choose>
-												<c:when test="${product.productMode == '직거래'}">직거래</c:when>
-												<c:when test="${product.productMode == '안전거래'}">안전거래</c:when>
-												<c:otherwise>택배</c:otherwise>
-											</c:choose>
-										</p>
-										<p>· 판매 가격: ₩ ${product.productPrice}원</p>
-									</div>
-									<div
-										class="product-footer d-flex align-items-center justify-content-between">
-										<div class="profile-info">
-											<span> 작성자 : ${product.productUsernickname}</span>
+					<c:choose>
+						
+						<c:when test="${not empty result.productList}">
+							<c:forEach var="product" items="${result.productList}">
+								<div class="col-md-3 col-sm-6 mb-4">
+									<a 
+										href="${pageContext.request.contextPath}/product/details?productIdx=${product.productIdx}"
+										class="text-decoration-none">
+										<div class="product-card">
+											<!-- 글 번호 표시 -->
+											<div class="product-meta text-muted"
+												style="font-size: 12px; margin-bottom: 5px;">글 번호:
+												${product.productIdx}</div>
+											<img
+												src="${pageContext.request.contextPath}/resources/images/${fn:split(product.productImage, ',')[0]}"
+												alt="상품 이미지" class="img-fluid">
+											<div class="product-meta">
+												<span class="text-muted">판매</span>, <span>${product.productRegisterdate}</span>
+											</div>
+											<p class="product-title">${product.productSubject}</p>
+											<div class="product-details">
+												<p>
+													· 배송 방법:
+													<c:choose>
+														<c:when test="${product.productMode == '직거래'}">직거래</c:when>
+														<c:when test="${product.productMode == '안전거래'}">안전거래</c:when>
+														<c:otherwise>택배</c:otherwise>
+													</c:choose>
+												</p>
+												<p>· 판매 가격: ₩ ${product.productPrice}원</p>
+											</div>
+											<div
+												class="product-footer d-flex align-items-center justify-content-between">
+												<div class="profile-info">
+													<span> 작성자 : ${product.productUsernickname}</span>
+												</div>
+												<div class="stats">
+													<span>👁️ ${product.productCount}</span>
+												</div>
+											</div>
+
 										</div>
-										<div class="stats">
-											<span>👁️ ${product.productCount}</span>
-										</div>
-									</div>
+									</a>
 
 								</div>
-							</a>
-
-						</div>
-					</c:forEach>
+							</c:forEach>
+						</c:when>
+						<c:otherwise>
+							<div class="col-12 text-center my-4">
+								<h5>검색결과가 없습니다.</h5>
+							</div>
+						</c:otherwise>
+					</c:choose>
 				</div>
 			</div>
 
