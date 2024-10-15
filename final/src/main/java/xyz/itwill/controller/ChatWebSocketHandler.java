@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import xyz.itwill.dto.ChatMessages;
 import xyz.itwill.service.ChatMessageService;
-
+ 
 @Component
 @RequiredArgsConstructor
 public class ChatWebSocketHandler extends TextWebSocketHandler {
