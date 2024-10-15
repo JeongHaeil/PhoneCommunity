@@ -44,6 +44,7 @@ public class BoardJsonController {
     private final UserService userService; // 사용자 서비스 추가
 
 	
+	@SuppressWarnings("unchecked")
 	@GetMapping("/commentsList/{boardCode}/{boardPostIdx}")
 	public Map<String, Object> CommentsList(@PathVariable int boardCode,@PathVariable int boardPostIdx,@RequestParam(defaultValue = "1") int pageNum,Authentication authentication) {
 		Map<String, Object> resultmap=new HashMap<String, Object>();
