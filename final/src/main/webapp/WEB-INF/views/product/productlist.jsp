@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!-- functions 라이브러리 추가 -->
 <!DOCTYPE html>
 <html lang="ko">
@@ -209,20 +210,19 @@ body {
 		<!-- 필터 및 버튼 -->
 		<div
 			class="d-flex justify-content-between align-items-center filter-buttons mt-3">
-			<div class="dropdown">
-				<button class="btn btn-dark btn-sm dropdown-toggle" type="button"
-					id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-					분류</button>
-				<ul class="dropdown-menu" aria-labelledby="filterDropdown"
-					style="font-size: 0.9rem; padding: 5px 0;">
-					<li><a class="dropdown-item" href="#"
-						style="padding: 5px 10px;">판매</a></li>
-					<li><hr class="dropdown-divider"></li>
-					<!-- 중앙 선 구분 -->
-					<li><a class="dropdown-item" href="#"
-						style="padding: 5px 10px;">판매완료</a></li>
-				</ul>
-			</div>
+		<div class="dropdown">
+    <button class="btn btn-dark btn-sm dropdown-toggle" type="button"
+        id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        분류
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="filterDropdown" style="font-size: 0.9rem; padding: 5px 0;">
+        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/product/list?productSold=1" style="padding: 5px 10px;">판매</a></li>
+        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/product/list?productSold=2" style="padding: 5px 10px;">예약</a></li>
+        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/product/list?productSold=3" style="padding: 5px 10px;">판매완료</a></li>
+    </ul>
+</div>
+
+
 			<div>
 				<button class="btn btn-primary btn-sm"
 					onclick="location.href='${pageContext.request.contextPath}/product/register'">쓰기</button>
@@ -303,7 +303,7 @@ body {
                             <c:otherwise>택배</c:otherwise>
                         </c:choose>
                     </p>
-                    <p>· 판매 가격: ₩ ${product.productPrice}원</p>
+                   <p>· 판매 가격: ₩ <fmt:formatNumber value="${product.productPrice}" type="number" pattern="#,###"/>원</p>
                 </div>
 
                 <div class="product-footer d-flex align-items-center justify-content-between">
@@ -392,6 +392,12 @@ body {
 				$('#search-bar').toggle();
 			});
 		});
+		
+		
+		  function filterByStatus(status) {
+		        // 해당 status 값을 가진 게시글만 출력하도록 서버에 요청
+		        window.location.href = "${pageContext.request.contextPath}/product/list?status=" + status;
+		    }
 	</script>
 </body>
 </html>
