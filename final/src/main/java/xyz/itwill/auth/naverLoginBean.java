@@ -44,8 +44,9 @@ public class naverLoginBean {
 				.callback(NAVER_REDIRECT_URI)
 				.state(state)
 				.build(naverLoginApi.instance());
-		
-		return auth20Service.getAuthorizationUrl();
+		String authorizationUrl = auth20Service.getAuthorizationUrl();
+		String authorizationUrlWithForceReauth = authorizationUrl + "&force_reauthentication=true";	
+		return authorizationUrlWithForceReauth;
 	}
 	public OAuth2AccessToken getAccessToken(HttpSession session,String code, String state) throws IOException {
 		String sessionState=getSession(session);
