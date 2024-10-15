@@ -1,59 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xmlns:tx="http://www.springframework.org/schema/tx"
-   xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-      http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd">
-   
-   
-   <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
-      <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"/>
-      <property name="url" value="jdbc:log4jdbc:oracle:thin:@www.itwill.xyz:1521:xe"/>
-      <property name="username" value="phone"/>
-      <property name="password" value="phone123"/>
-   </bean>
-   
-   <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactoryBean">
-      <property name="configLocation" value="/WEB-INF/spring/mybatis-config.xml"/> 
-      <property name="dataSource" ref="dataSource"/>
-      <property name="typeAliasesPackage" value="xyz.itwill.dto"/>
-      <property name="mapperLocations">
-         <list>
-            <value>classpath:xyz/itwill/mapper/*.xml</value>
-         </list>
-      </property>
-   </bean>   
-   
-   
-   <bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession" destroy-method="clearCache">
-      <constructor-arg ref="sqlSessionFactoryBean"/>
-   </bean>
-
-
-   <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">
-      <property name="dataSource" ref="dataSource"/>
-   </bean>
-   
-   <bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="filterMultipartResolver">
-      <property name="maxUploadSize" value="20971520"/>
-      <property name="defaultEncoding" value="utf-8"/>
-   </bean>
-   
+   xmlns:beans="http://www.springframework.org/schema/beans"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:websocket="http://www.springframework.org/schema/websocket"
+   xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
+      http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+      http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
    
-   <bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-      <property name="host" value="smtp.gmail.com"/>
-      <property name="port" value="587"/>
-      <property name="username" value="tosmreo@gmail.com"/>
-      <property name="password" value="shtp apfk mfcx fjun"/>
-      <property name="javaMailProperties">
-         <props>
-            <prop key="mail.transport.protocol">smtp</prop>
-            <prop key="mail.smtp.auth">true</prop>
-            <prop key="mail.smtp.starttls.enable">true</prop>
-            <prop key="mail.debug">true</prop>
-         </props>
-      </property>
-   </bean>
+   <annotation-driven />
 
-</beans>
+
+   <resources mapping="/resources/**" location="/resources/" />
+
+
+   <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+      <beans:property name="prefix" value="/WEB-INF/views/" />
+      <beans:property name="suffix" value=".jsp" />
+   </beans:bean>
+   
+   
+   <context:component-scan base-package="xyz.itwill.controller" />
+   <context:component-scan base-package="xyz.itwill.service" />
+   <context:component-scan base-package="xyz.itwill.dao" />
+   
+   
+   
+      <resources mapping="/images/**" location="/resources/images/" />
+   <resources mapping="/css/**" location="/resources/css/" />
+   <resources mapping="/js/**" location="/resources/js/" />
+   
+   
+   <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+      <beans:property name="prefix" value="/WEB-INF/views/" />
+      <beans:property name="suffix" value=".jsp" />
+      <beans:property name="order" value="3"/>
+   </beans:bean>
+   
+   
+   <beans:bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+      <beans:property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView"/>
+      <beans:property name="order" value="2"/>
+   </beans:bean>
+   
+   
+   <beans:bean class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+      <beans:property name="definitions">
+         <beans:list>
+            <beans:value>/WEB-INF/spring/appServlet/tiles.xml</beans:value>
+         </beans:list>
+      </beans:property>
+   </beans:bean>
+   
+   <beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+      <beans:property name="order" value="1"/>
+   </beans:bean>
+   
+   
+<!-- WebSocket 핸들러 매핑 -->
+<websocket:handlers>
+    <websocket:mapping path="/ws/chat/{roomId}" handler="chatWebSocketHandler"/>
+     <websocket:handshake-interceptors>
+        <beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
+    </websocket:handshake-interceptors>
+    
+</websocket:handlers>
+
+<!-- WebSocket 핸들러 빈 등록 -->
+<beans:bean id="chatWebSocketHandler" class="xyz.itwill.controller.ChatWebSocketHandler"/>
+
+ 
+   
+   
+</beans:beans>
