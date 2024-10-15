@@ -28,4 +28,8 @@ public class Board {
 	private String userNickname;
 	private int rn;
 	private int cocain;
+	
+	 // 추가한 필드
+	private int userLevel;  // 작성자의 레벨
+    private String auth;    // 작성자의 권한
 }
