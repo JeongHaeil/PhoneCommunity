@@ -24,7 +24,6 @@ import xyz.itwill.auth.CustomUserDetails;
 import xyz.itwill.auth.naverLoginBean;
 import xyz.itwill.dto.SecurityAuth;
 import xyz.itwill.dto.User;
-import xyz.itwill.service.SecurityAuthService;
 import xyz.itwill.service.UserService;
 
 @Controller
@@ -33,7 +32,6 @@ import xyz.itwill.service.UserService;
 public class NaverController {
 	private final naverLoginBean naverLoginBean;
 	private final UserService userService;
-	private final SecurityAuthService securityAuthService;
 	
 	//네이버 로그인 페이지 요청
 	@RequestMapping("/login")
