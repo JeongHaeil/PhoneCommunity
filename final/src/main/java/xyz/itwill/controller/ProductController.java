@@ -10,12 +10,15 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.HtmlUtils;
 
 import lombok.RequiredArgsConstructor;
 import xyz.itwill.auth.CustomUserDetails;
@@ -33,15 +37,27 @@ import xyz.itwill.dto.Product;
 import xyz.itwill.service.ChatRoomsService;
 import xyz.itwill.service.ProductService;
 
+
 @Controller
 @RequestMapping("/product")
 @RequiredArgsConstructor
 public class ProductController {
-	private final ProductService productService;
-	private final WebApplicationContext context;
+    private final ProductService productService;
+    private final WebApplicationContext context;
 
-	private static final String UPLOAD_DIR = "/resources/images/";
+    private static final String UPLOAD_DIR = "/resources/images/";
 
+    // InitBinder 메서드 추가: 모든 String 타입 입력값에 대해 HTML 이스케이프 처리
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(false) {
+            @Override
+            public void setAsText(String text) {
+                // HTML 이스케이프 처리 적용
+                setValue(text == null ? null : HtmlUtils.htmlEscape(text));
+            }
+        });
+    }
 	// 상품 목록과 검색 처리
 	@RequestMapping("/list")
 	public String list(@RequestParam Map<String, Object> map, @RequestParam(required = false) Integer productSold, Model model) {
@@ -147,38 +163,55 @@ public class ProductController {
 		return "product/productmodify"; // 수정 페이지로 이동
 	}
 
+
+	
 	// 상품 수정 처리 (로그인된 사용자만 가능)
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
 	public String modifyProduct(@ModelAttribute Product product,
-			@RequestParam("productImage2") List<MultipartFile> productImages, Authentication authentication)
-			throws IOException {
+	        @RequestParam("productImage2") List<MultipartFile> productImages, 
+	        Authentication authentication, Model model) throws IOException {
 
-		if (authentication != null) {
-			String uploadDirectory = context.getServletContext().getRealPath(UPLOAD_DIR);
+	    // 로그인된 사용자인지 확인
+	    if (authentication == null) {
+	        return "redirect:/user/login"; // 로그인하지 않은 사용자는 로그인 페이지로 리다이렉트
+	    }
 
-			// 새로운 이미지가 있을 경우 처리
-			if (!productImages.isEmpty() && productImages.get(0).getSize() > 0) {
-				List<String> uploadedImageList = new ArrayList<>();
-				for (MultipartFile file : productImages) {
-					if (!file.isEmpty()) {
-						String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-						File uploadFile = new File(uploadDirectory, fileName);
-						file.transferTo(uploadFile);
-						uploadedImageList.add(fileName); // 새 이미지 리스트 설정
-					}
-				}
-				product.setProductImage(String.join(",", uploadedImageList)); // 새 이미지 파일명 설정
-			} else {
-				// 이미지가 비어있을 경우 기존 이미지 유지
-				Product existingProduct = productService.getProductByNum(product.getProductIdx());
-				product.setProductImage(existingProduct.getProductImage()); // 기존 이미지 유지
-			}
+	    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+	    String currentUserId = userDetails.getUserId();
 
-			productService.modifyProduct(product); // 상품 정보 수정
-		}
+	    // 기존 상품 정보 가져오기
+	    Product existingProduct = productService.getProductByNum(product.getProductIdx());
 
-		return "redirect:/product/details?productIdx=" + product.getProductIdx(); // 상세 페이지로 리다이렉트
+	    // 본인이 작성한 글이 아닌 경우 수정 불가
+	    if (!existingProduct.getProductUserid().equals(currentUserId)) {
+	        return "redirect:/user/login"; // 작성자가 아니면 로그인 페이지로 리다이렉트
+	    }
+
+	    String uploadDirectory = context.getServletContext().getRealPath(UPLOAD_DIR);
+
+	    // 새로운 이미지가 있을 경우 처리
+	    if (!productImages.isEmpty() && productImages.get(0).getSize() > 0) {
+	        List<String> uploadedImageList = new ArrayList<>();
+	        for (MultipartFile file : productImages) {
+	            if (!file.isEmpty()) {
+	                String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+	                File uploadFile = new File(uploadDirectory, fileName);
+	                file.transferTo(uploadFile);
+	                uploadedImageList.add(fileName); // 새 이미지 리스트 설정
+	            }
+	        }
+	        product.setProductImage(String.join(",", uploadedImageList)); // 새 이미지 파일명 설정
+	    } else {
+	        // 이미지가 비어있을 경우 기존 이미지 유지
+	        product.setProductImage(existingProduct.getProductImage()); // 기존 이미지 유지
+	    }
+
+	    productService.modifyProduct(product); // 상품 정보 수정
+
+	    return "redirect:/product/details?productIdx=" + product.getProductIdx(); // 상세 페이지로 리다이렉트
 	}
+
+
 
 	// 상품 삭제 처리 (로그인된 사용자만 가능)
 	@PreAuthorize("hasRole('ROLE_ADMIN') or principal.userid eq #productUserid")
