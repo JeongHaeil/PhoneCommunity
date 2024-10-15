@@ -114,7 +114,7 @@ public class AdminServiceImpl implements AdminService {
 		
 	}
 
-	 @Scheduled(fixedRate = 10000) // 10초마다 실행 (테스트용)
+	 @Scheduled(fixedRate = 600000) // 10초마다 실행 (테스트용)
 	    public void resetExpiredStatuses() {
 	        Map<String, Object> params = new HashMap<String, Object>();
 	        params.put("currentTime", LocalDateTime.now());

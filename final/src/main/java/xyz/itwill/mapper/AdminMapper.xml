@@ -56,22 +56,21 @@
 	        SELECT rownum rn, board.*
 	        FROM (
 	            SELECT *
-	            FROM USERS u
-	            JOIN BOARD b ON u.USER_ID = b.BOARD_USER_ID 
+	            FROM USERS
 	            <if test="keyword != null and keyword != ''">
 	                <choose>
 	                    <when test="search== 'userNum'">
-	                        WHERE u.USER_NUM LIKE '%' || #{keyword} || '%'
+	                        WHERE USER_NUM LIKE '%' || #{keyword} || '%'
 	                    </when>
 	                    <when test="search == 'userId'">
-	                        WHERE u.USER_ID LIKE '%' || #{keyword} || '%'
+	                        WHERE USER_ID LIKE '%' || #{keyword} || '%'
 	                    </when>
 	                    <when test="search == 'userNickname'">
-	                        WHERE u.USER_NICKNAME LIKE '%' || #{keyword} || '%'
+	                        WHERE USER_NICKNAME LIKE '%' || #{keyword} || '%'
 	                    </when>
 	                </choose>
 	            </if>
-	            ORDER BY u.USER_NUM DESC
+	            ORDER BY USER_NUM DESC
 	        ) board
 	    )
 	    WHERE rn BETWEEN #{startRow} AND #{endRow}
@@ -83,13 +82,13 @@
 	    <if test="keyword != null and keyword != ''">
           <choose>
               <when test="search== 'userNum'">
-                  WHERE u.USER_NUM LIKE '%' || #{keyword} || '%'
+                  WHERE USER_NUM LIKE '%' || #{keyword} || '%'
               </when>
               <when test="search == 'userId'">
-                  WHERE u.USER_ID LIKE '%' || #{keyword} || '%'
+                  WHERE USER_ID LIKE '%' || #{keyword} || '%'
               </when>
               <when test="search == 'userNickname'">
-                  WHERE u.USER_NICKNAME LIKE '%' || #{keyword} || '%'
+                  WHERE USER_NICKNAME LIKE '%' || #{keyword} || '%'
               </when>
           </choose>
         </if>
