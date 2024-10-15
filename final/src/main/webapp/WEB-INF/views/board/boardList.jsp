@@ -55,7 +55,7 @@
     height: 20px;   /* 적절한 높이로 조정 */
     vertical-align: middle; /* 텍스트와 이미지 수평 정렬 */
     margin-left: 5px; /* 텍스트와 아이콘 간격 추가 */
-}
+} 
     
     .boardsListTable th:not(.boardTitle, .boardWriter, .boardDate) {
         text-align: center;
