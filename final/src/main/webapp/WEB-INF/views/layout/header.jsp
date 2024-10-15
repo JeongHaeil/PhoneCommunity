@@ -15,67 +15,71 @@
     <style>
         /* 네비게이션 바 스타일 */
         .eomisae-navbar nav.navbar {
-    background-color: #343a40; 
-    padding: 0 20px; 
-}
+            background-color: #343a40;
+            padding: 0 20px;
+        }
 
-.eomisae-navbar .navbar-brand, 
-.eomisae-navbar .nav-link { 
-    color: #fff !important; 
-}
+        .eomisae-navbar .navbar-brand,
+        .eomisae-navbar .nav-link {
+            color: #fff !important;
+        }
 
-/* 충돌 방지: 버튼 스타일의 고유한 클래스명 사용 */
-.eomisae-navbar .btn-login, 
-.eomisae-navbar .btn-logout { 
-    background-color: #f05d5e !important; 
-    color: #fff !important; 
-}
+        /* 충돌 방지: 버튼 스타일의 고유한 클래스명 사용 */
+        .eomisae-navbar .btn-login,
+        .eomisae-navbar .btn-logout {
+            background-color: #f05d5e !important;
+            color: #fff !important;
+        }
 
-.eomisae-navbar .btn-login:hover, 
-.eomisae-navbar .btn-logout:hover { 
-    background-color: #f75c5c !important; 
-}
+        .eomisae-navbar .btn-login:hover,
+        .eomisae-navbar .btn-logout:hover {
+            background-color: #f75c5c !important;
+        }
 
-/* 드롭다운 메뉴 스타일 */
-.eomisae-navbar .dropdown-menu { 
-    width: 300px; 
-    padding: 20px; 
-}
+        /* 드롭다운 메뉴 스타일 */
+        .eomisae-navbar .dropdown-menu {
+            width: 300px;
+            padding: 20px;
+            background-color: #ffffff;  /* 드롭다운 배경을 흰색으로 설정 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);  /* 드롭다운 그림자 추가 */
+            border: 1px solid #ddd;  /* 테두리 추가 */
+            z-index: 1050;  /* 다른 요소 위에 표시 */
+        }
 
-.eomisae-navbar .dropdown-menu .user-info h4 { 
-    font-weight: bold; 
-}
+        .eomisae-navbar .dropdown-menu .user-info h4 {
+            font-weight: bold;
+        }
 
-.eomisae-navbar .dropdown-menu .progress-bar { 
-    background-color: #f86d6d; 
-}
+        .eomisae-navbar .dropdown-menu .progress-bar {
+            background-color: #f86d6d;
+        }
 
-.eomisae-navbar .dropdown-menu .menu-list a { 
-    display: flex; 
-    align-items: center; 
-    padding: 10px; 
-    text-decoration: none; 
-    color: #333; 
-}
+        .eomisae-navbar .dropdown-menu .menu-list a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+        }
 
-.eomisae-navbar .dropdown-menu .menu-list a:hover { 
-    background-color: #f1f1f1; 
-}
+        .eomisae-navbar .dropdown-menu .menu-list a:hover {
+            background-color: #f1f1f1;
+        }
 
-.eomisae-navbar .dropdown-menu .logout-section { 
-    text-align: center; 
-    margin-top: 10px; 
-}
+        .eomisae-navbar .dropdown-menu .logout-section {
+            text-align: center;
+            margin-top: 10px;
+        }
 
-/* 부트스트랩 기본 스타일과 충돌 방지 */
-.eomisae-navbar .navbar-toggler { 
-    border-color: rgba(255, 255, 255, 0.1); 
-}
+        /* 부트스트랩 기본 스타일과 충돌 방지 */
+        .eomisae-navbar .navbar-toggler {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
 
-.eomisae-navbar .dropdown-menu-end { 
-    right: 0 !important; 
-    left: auto !important; 
-}
+        .eomisae-navbar .dropdown-menu-end {
+            right: 0 !important;
+            left: auto !important;
+        }
     </style>
 </head>
 <body>
