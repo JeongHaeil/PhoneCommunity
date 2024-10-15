@@ -16,6 +16,7 @@ public interface ProductMapper {
 	List<Product> selectProductList(Map<String, Object> map);
 	int updateProductCount(int productIdx);
 	int updateProductSoldStatus(@Param("productIdx") int productIdx, @Param("status") int status);
+	List<Product> selectPopularProducts(); // 조회수가 높은 게시글을 가져오는 메소드
 	
 
 

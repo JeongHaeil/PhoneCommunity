@@ -78,6 +78,8 @@ public class ProductController {
 	    Map<String, Object> resultMap = productService.getProductList(map);
 	    model.addAttribute("result", resultMap);
 	    model.addAttribute("searchMap", map); // 검색 조건도 뷰에 전달
+	    
+	    
 
 	    return "product/productlist"; // 상품 목록 JSP로 이동
 	}
@@ -256,5 +258,13 @@ public class ProductController {
 		model.addAttribute("product", product); // 모델에 제품 정보 추가
 		return "product/productdetail"; // JSP 파일 이름
 	}
+	
+	// 인기글 목록을 조회해서 화면에 전달
+    @RequestMapping("/popular")
+    public String getPopularProducts(Model model) {
+        List<Product> popularProducts = productService.getPopularProducts();
+        model.addAttribute("popularProducts", popularProducts);
+        return "product/productlist"; // 인기글 리스트 페이지로 이동
+    }
 
 }

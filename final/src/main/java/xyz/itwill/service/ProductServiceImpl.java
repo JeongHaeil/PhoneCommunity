@@ -121,5 +121,10 @@ public class ProductServiceImpl implements ProductService {
 		productDAO.updateProductSoldStatus(productIdx, status);
 		
 	}
+
+	@Override
+	public List<Product> getPopularProducts() {
+		 return productDAO.selectPopularProducts();
+	}
 	
 }
