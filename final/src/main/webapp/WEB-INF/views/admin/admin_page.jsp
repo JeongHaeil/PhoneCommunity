@@ -49,28 +49,16 @@
                                 <th>작성일</th>
                             </tr>
                         </thead>
-                        <!-- 
                         <tbody>
-                            <c:forEach var="article" items="${resultMap.spamBoardList}">
-                                <tr style="cursor: pointer;" onclick="location.href='admin/view?boardPostIdx=${article.boardPostIdx}'">
-                                    <td>${article.boardPostIdx}</td>
-                                    <td>${article.boardTitle}</td>
-                                    <td>${article.userNickname}</td>
-                                    <td>${article.boardRegisterDate}</td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                        -->
-                        <tbody>
-    <c:forEach var="article" items="${resultMap.spamBoardList}">
-        <tr style="cursor: pointer; <c:if test='${article.boardStatus == 4}'>background-color: #333333;</c:if>'" 
-            onclick="location.href='admin/view?boardPostIdx=${article.boardPostIdx}'">
-            <td>${article.boardPostIdx}</td>
-            <td>${article.boardTitle}</td>
-            <td>${article.userNickname}</td>
-            <td>${article.boardRegisterDate}</td>
-        </tr>
-    </c:forEach>
+						  <c:forEach var="article" items="${resultMap.spamBoardList}">
+						      <tr style="cursor: pointer; <c:if test='${article.boardStatus == 4}'>background-color: #333333;</c:if>'" 
+						          onclick="location.href='admin/view?boardPostIdx=${article.boardPostIdx}'">
+						          <td>${article.boardPostIdx}</td>
+						          <td>${article.boardTitle}</td>
+						          <td>${article.userNickname}</td>
+						          <td>${article.boardRegisterDate}</td>
+						      </tr>
+						  </c:forEach>
 </tbody>
                     </table>
                 </div>
@@ -107,5 +95,6 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -45,5 +45,6 @@
         <a href="<c:url value='/board/boardlist/3'/>" class="admin-button">건의 게시글</a>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

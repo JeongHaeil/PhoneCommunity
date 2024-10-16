@@ -1,6 +1,7 @@
 package xyz.itwill.dto;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import lombok.Data;
 
@@ -20,7 +21,7 @@ public class Admin {
     private int userLevel =1;
     private int userStatus =1;
     
-    private LocalDateTime expiryDate;
+    private Date expiryDate;
     private double duration;
 
     //공통적으로 사용되는 userNickname

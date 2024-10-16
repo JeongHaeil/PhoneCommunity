@@ -2,8 +2,42 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="xyz.itwill.mapper.AdminMapper">
   
+  <resultMap id="adminResultMap" type="xyz.itwill.dto.Admin">
+    <!-- User 테이블 매핑 -->
+    <result property="userNum" column="USER_NUM"/>
+    <result property="userId" column="USER_ID"/>
+    <result property="userPassword" column="USER_PASSWORD"/>
+    <result property="userEmail" column="USER_EMAIL"/>
+    <result property="userPhoneNum" column="USER_PHONE_NUM"/>
+    <result property="userName" column="USER_NAME"/>
+    <result property="userUpdateDate" column="USER_UPDATE_DATE"/>
+    <result property="userLastLogin" column="USER_LAST_LOGIN"/>
+    <result property="userRegisterDate" column="USER_REGISTER_DATE"/>
+    <result property="userLevel" column="USER_LEVEL"/>
+    <result property="userStatus" column="USER_STATUS"/>
+    <result property="userNickname" column="USER_NICKNAME"/>
+
+    <!-- Board 테이블 매핑 -->
+    <result property="boardPostIdx" column="BOARD_POST_IDX"/>
+    <result property="boardUserId" column="BOARD_USER_ID"/>
+    <result property="boardTitle" column="BOARD_TITLE"/>
+    <result property="boardContent" column="BOARD_CONTENT"/>
+    <result property="boardImage" column="BOARD_IMAGE"/>
+    <result property="boardRegisterDate" column="BOARD_REGISTER_DATE"/>
+    <result property="boardUpdateDate" column="BOARD_UPDATE_DATE"/>
+    <result property="boardIp" column="BOARD_IP"/>
+    <result property="boardCount" column="BOARD_COUNT"/>
+    <result property="boardStarup" column="BOARD_STARUP"/>
+    <result property="boardStardown" column="BOARD_STARDOWN"/>
+    <result property="boardStatus" column="BOARD_STATUS"/>
+    <result property="boardCode" column="BOARD_CODE"/>
+    <result property="boardSpam" column="BOARD_SPAM"/>
+
+    <result property="expiryDate" column="STATUS_EXPIRY_DATE"/>
+
+</resultMap>
   	
-	<select id="selectSpamBoardList" resultType="xyz.itwill.dto.Admin">
+	<select id="selectSpamBoardList" resultMap="adminResultMap">
 	    SELECT * FROM (
 	        SELECT rownum rn, board.*
 	        FROM (
@@ -53,7 +87,7 @@
 	    </if>
 	</select>
 	
-	<select id="selecttotalUserBoardList" resultType="xyz.itwill.dto.Admin">
+	<select id="selecttotalUserBoardList" resultMap="adminResultMap">
 		SELECT * FROM (
 	        SELECT rownum rn, board.*
 	        FROM (

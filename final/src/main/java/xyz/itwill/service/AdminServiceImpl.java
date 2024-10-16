@@ -1,6 +1,7 @@
 package xyz.itwill.service;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +93,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
-	public void updateUserStatusByUserNum(int userNum, int status, LocalDateTime expiryDate) {
+	public void updateUserStatusByUserNum(int userNum, int status, Date expiryDate) {
 		Map<String, Object> params  = new HashMap<String, Object>();
 		params.put("userNum", userNum);
 		params.put("status", status);
@@ -102,7 +103,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
-	public void updateBoardStatusByBoardPostIdx(int boardPostIdx, int status, LocalDateTime expiryDate) {
+	public void updateBoardStatusByBoardPostIdx(int boardPostIdx, int status, Date expiryDate) {
 		Map<String, Object> params  = new HashMap<String, Object>();
 		params.put("boardPostIdx", boardPostIdx);
 		params.put("status", status);
@@ -112,7 +113,7 @@ public class AdminServiceImpl implements AdminService {
 		
 	}
 	@Override
-	@Scheduled(fixedRate = 10000) // 10분마다 실행 
+	@Scheduled(fixedRate = 60000) // 10분마다 실행 
 	public void resetExpiredStatuses() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("currentTime", LocalDateTime.now());
@@ -128,7 +129,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	@Scheduled(fixedRate = 10000)
+	@Scheduled(fixedRate = 60000)
 	public void changeBoardExpiredStatuses() {
 		Map<String, Object> params = new HashMap<String, Object>();
         params.put("currentTime", LocalDateTime.now());

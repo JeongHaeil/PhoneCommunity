@@ -1,6 +1,8 @@
 package xyz.itwill.controller;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -87,7 +89,11 @@ public class AdminController {
 	@PutMapping("/admin/userStatus")
 	public ResponseEntity<String> updateUserStatus(@RequestBody Admin request) {
 	    try {
-	        LocalDateTime expiryDate = LocalDateTime.now().plusSeconds((long) request.getDuration());
+	    	// 요청에서 Duration 값을 가져와 현재 시간에 더함
+	    	LocalDateTime localExpiryDate = LocalDateTime.now().plusSeconds((long) request.getDuration());
+
+	    	// LocalDateTime을 Timestamp로 변환하고, 이를 Date로 변환
+	    	Date expiryDate = Timestamp.valueOf(localExpiryDate);
 	        adminService.updateUserStatusByUserNum(request.getUserNum(), request.getUserStatus(), expiryDate);
 	        return ResponseEntity.ok("success");
 	    } catch (Exception e) {
@@ -110,8 +116,11 @@ public class AdminController {
 	@PutMapping("/admin/boardStatus")
 	public ResponseEntity<String> updateBoardStatus(@RequestBody Admin request) {
 	    try {
-	    	// 버튼에서 전달된 초 단위의 기간을 그대로 사용
-	        LocalDateTime expiryDate = LocalDateTime.now().plusSeconds((long) request.getDuration());
+	    	// 요청에서 Duration 값을 가져와 현재 시간에 더함
+	    	LocalDateTime localExpiryDate = LocalDateTime.now().plusSeconds((long) request.getDuration());
+
+	    	// LocalDateTime을 Timestamp로 변환하고, 이를 Date로 변환
+	    	Date expiryDate = Timestamp.valueOf(localExpiryDate);
 	        adminService.updateBoardStatusByBoardPostIdx(request.getBoardPostIdx(), request.getBoardStatus(), expiryDate);
 	        return ResponseEntity.ok("success");
 	    } catch (Exception e) {

@@ -57,6 +57,7 @@
                                 <th>이름</th>
                                 <th>가입일</th>
                                 <th>유저상태</th>
+                                <th>정지종료일</th>
                                 <th>상태변경</th>
                             </tr>
                         </thead>
@@ -70,6 +71,7 @@
                                     <td>${user.userName}</td>
                                     <td>${user.userRegisterDate}</td>
                                     <td>${user.userStatus}</td>
+                                    <td>${user.expiryDate}</td>
                                     <td>
                                         <div class="d-flex flex-wrap justify-content-center">
                                             <button class="custom-btn btn btn-sm " onclick="changeUserStatus(${user.userNum}, 1, 0)">제제 해제</button>
@@ -139,6 +141,7 @@
         });
     }
     </script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
