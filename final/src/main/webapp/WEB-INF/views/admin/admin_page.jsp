@@ -6,7 +6,6 @@
 <head>
     <meta charset="UTF-8">
     <title>스팸 게시판</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .custom-bg { background-color: #f8f9fa; }
