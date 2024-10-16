@@ -12,7 +12,7 @@
 <style>
     /* 전체 페이지 높이를 100%로 설정 */
         html, body {
-            height: 100%;
+            height: 100%; 
         }
         /* Flexbox 레이아웃 사용 */
         body {
