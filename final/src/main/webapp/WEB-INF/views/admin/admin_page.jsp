@@ -11,7 +11,7 @@
     <style>
         .custom-bg { background-color: #f8f9fa; }
         .custom-container { max-width: 1200px; }
-        .custom-card { border: none; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+        .custom-card { border: none; box-shadow: 0 0 15px rgba(0,0,0,0.0); }
         .custom-table { border-collapse: separate; border-spacing: 0; }
         .custom-table th, .custom-table td { white-space: nowrap; padding: 15px; vertical-align: middle; }
         .custom-table thead th { background-color: #343a40; color: white; font-weight: 600; text-transform: uppercase; }

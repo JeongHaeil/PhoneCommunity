@@ -7,17 +7,16 @@
 <head>
     <meta charset="UTF-8">
     <title>사용자 목록</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .custom-bg { background-color: #f8f9fa; }
         .custom-container { max-width: 1200px; }
-        .custom-card { border: none; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+        .custom-card { border: none; box-shadow: 0 0 15px rgba(0,0,0,0.0); }
         .custom-table { border-collapse: separate; border-spacing: 0; }
         .custom-table th, .custom-table td { white-space: nowrap; padding: 15px; vertical-align: middle; }
         .custom-table thead th { background-color: #f05d5e; color: white; font-weight: 600; text-transform: uppercase; }
         .custom-table tbody tr:nth-child(even) { background-color: #f8f9fa; }
-        .custom-btn {
+        body .custom-btn {
             white-space: nowrap;
             border: 1px solid #f05d5e;
             color: #f05d5e;
@@ -73,7 +72,8 @@
                                     <td>${user.userStatus}</td>
                                     <td>
                                         <div class="d-flex flex-wrap justify-content-center">
-                                            <button class="btn btn-sm custom-btn" onclick="changeUserStatus(${user.userNum}, 1, 0)">제제 해제</button>
+                                            <button class="custom-btn btn btn-sm " onclick="changeUserStatus(${user.userNum}, 1, 0)">제제 해제</button>
+                                            <button class="btn btn-sm custom-btn" onclick="changeUserStatus(${user.userNum}, 3, 60)">1분 벤</button>
                                             <button class="btn btn-sm custom-btn" onclick="changeUserStatus(${user.userNum}, 3, 86400)">1일 벤</button>
                                             <button class="btn btn-sm custom-btn" onclick="changeUserStatus(${user.userNum}, 3, 259200)">3일 벤</button>
                                             <button class="btn btn-sm custom-btn" onclick="changeUserStatus(${user.userNum}, 3, 432000)">5일 벤</button>

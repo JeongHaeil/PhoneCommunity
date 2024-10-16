@@ -112,7 +112,7 @@ public class AdminServiceImpl implements AdminService {
 		
 	}
 	@Override
-	@Scheduled(fixedRate = 600000) // 10분마다 실행 
+	@Scheduled(fixedRate = 10000) // 10분마다 실행 
 	public void resetExpiredStatuses() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("currentTime", LocalDateTime.now());
@@ -128,7 +128,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	@Scheduled(fixedRate = 600000)
+	@Scheduled(fixedRate = 10000)
 	public void changeBoardExpiredStatuses() {
 		Map<String, Object> params = new HashMap<String, Object>();
         params.put("currentTime", LocalDateTime.now());
@@ -136,12 +136,10 @@ public class AdminServiceImpl implements AdminService {
         List<Admin> expiredBoard = adminDAO.findBoardWithExpiredStatuses(params);
         
         for(Admin admin : expiredBoard) {
-        	if(admin.getBoardStatus() == 3) {
         	Map<String, Object> updateParams = new HashMap<String, Object>();
         	updateParams.put("boardPostIdx", admin.getBoardPostIdx());
         	updateParams.put("status", 4);
-        	adminDAO.updateBoardStatusByBoardId(params);
-        	}
+        	adminDAO.updateBoardStatusByBoardId(updateParams);
         }
 	}
 

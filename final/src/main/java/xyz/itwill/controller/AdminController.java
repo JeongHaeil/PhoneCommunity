@@ -87,8 +87,7 @@ public class AdminController {
 	@PutMapping("/admin/userStatus")
 	public ResponseEntity<String> updateUserStatus(@RequestBody Admin request) {
 	    try {
-	        // 기간을 초 단위로 변환하여 만료 날짜 설정
-	        LocalDateTime expiryDate = LocalDateTime.now().plusSeconds((long)(request.getDuration() * 24 * 60 * 60));
+	        LocalDateTime expiryDate = LocalDateTime.now().plusSeconds((long) request.getDuration());
 	        adminService.updateUserStatusByUserNum(request.getUserNum(), request.getUserStatus(), expiryDate);
 	        return ResponseEntity.ok("success");
 	    } catch (Exception e) {
@@ -111,8 +110,8 @@ public class AdminController {
 	@PutMapping("/admin/boardStatus")
 	public ResponseEntity<String> updateBoardStatus(@RequestBody Admin request) {
 	    try {
-	        // 기간을 초 단위로 변환하여 만료 날짜 설정
-	        LocalDateTime expiryDate = LocalDateTime.now().plusSeconds((long)(request.getDuration() * 24 * 60 * 60));
+	    	// 버튼에서 전달된 초 단위의 기간을 그대로 사용
+	        LocalDateTime expiryDate = LocalDateTime.now().plusSeconds((long) request.getDuration());
 	        adminService.updateBoardStatusByBoardPostIdx(request.getBoardPostIdx(), request.getBoardStatus(), expiryDate);
 	        return ResponseEntity.ok("success");
 	    } catch (Exception e) {
