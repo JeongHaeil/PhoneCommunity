@@ -22,7 +22,7 @@
             flex: 1;
             text-align: center;
             padding: 10px;
-            background-color: #fff;
+            background-color: transparent; /* 배경색을 투명하게 설정하여 흰색 제거 */
             border: none;
             color: #495057;
             font-weight: bold;

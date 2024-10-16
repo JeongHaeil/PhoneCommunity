@@ -26,18 +26,26 @@
             text-align: center;
         }
         .withdraw-btn-custom {
-            background-color: #f86d6d;
+            background-color: #3C3D37;
             color: white;
             border-radius: 5px;
             padding: 10px 15px;
             width: 100%;
+            border: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
         }
         .withdraw-btn-custom:hover {
-            background-color: #f75c5c;
+            background-color: #33342e; /* 조금 더 어두운 색상으로 변경하여 호버 효과 */
         }
     </style>
 </head>
 <body>
+<!-- 탭 include -->
+    <jsp:include page="/WEB-INF/views/user/mypageTabs.jsp">
+        <jsp:param name="activeTab" value="profile" />
+    </jsp:include>
 
 <div class="withdraw-container">
     <h3 class="withdraw-header">회원 탈퇴</h3>
@@ -53,7 +61,7 @@
         </div>
 
         <!-- 탈퇴 버튼 -->
-        <button type="submit" class="btn withdraw-btn-custom">탈퇴</button>
+        <button type="submit" class="withdraw-btn-custom">탈퇴</button>
     </form>
 </div>
 
