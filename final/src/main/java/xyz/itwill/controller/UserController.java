@@ -625,7 +625,7 @@ public class UserController {
             model.addAttribute("progressPercentage", progressPercentage);
         }
 
-        return "header";
+        return "header"; 
     }
     // 사용자 정보를 AJAX로 제공하기 위한 메서드
     @RequestMapping(value = "/getUserInfo", method = RequestMethod.GET)
