@@ -16,9 +16,9 @@
             max-width: 400px;
             margin: 50px auto;
             padding: 20px;
-            background-color: white;
+            background-color: #f9f9f9;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            
         }
         .withdraw-header {
             font-weight: bold;
@@ -42,10 +42,7 @@
     </style>
 </head>
 <body>
-<!-- 탭 include -->
-    <jsp:include page="/WEB-INF/views/user/mypageTabs.jsp">
-        <jsp:param name="activeTab" value="profile" />
-    </jsp:include>
+
 
 <div class="withdraw-container">
     <h3 class="withdraw-header">회원 탈퇴</h3>
@@ -56,8 +53,8 @@
 
         <!-- 비밀번호 -->
         <div class="mb-3">
-            <label for="password" class="form-label">비밀번호</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+            <label for="password" class="form-label" style="text-align: center;">비밀번호</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요" required style="text-align: center;">
         </div>
 
         <!-- 탈퇴 버튼 -->

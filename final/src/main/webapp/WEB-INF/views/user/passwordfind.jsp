@@ -28,14 +28,14 @@
             text-align: center;
         }
         .password-reset-container .btn-custom {
-            background-color: #f86d6d;
-            color: white;
-            border-radius: 20px;
+            background-color: #3C3D37 !important; /* 버튼 배경색을 #3C3D37로 설정 */
+            color: white !important; /* 텍스트 색상을 흰색으로 설정 */
+            border-radius: 10px; /* 둥근 모서리 크기를 줄임 */
             width: 100%;
             padding: 10px;
         }
         .password-reset-container .btn-custom:hover {
-            background-color: #f75c5c;
+            background-color: #2E2F2A !important; /* hover 상태 배경색 */
         }
         .error-message {
             color: red;
