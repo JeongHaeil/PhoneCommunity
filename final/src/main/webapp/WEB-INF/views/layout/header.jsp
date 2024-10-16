@@ -13,7 +13,6 @@
     <title>EOMISAE</title>
 
     <style>
-        /* 네비게이션 바 스타일 */
         .eomisae-navbar nav.navbar {
             background-color: #343a40;
             padding: 10px 20px;
@@ -24,7 +23,6 @@
             color: #fff !important;
         }
 
-        /* 충돌 방지: 버튼 스타일의 고유한 클래스명 사용 */
         .eomisae-navbar .btn-login,
         .eomisae-navbar .btn-logout {
             background-color: #f05d5e !important;
@@ -36,14 +34,13 @@
             background-color: #f75c5c !important;
         }
 
-        /* 드롭다운 메뉴 스타일 */
         .eomisae-navbar .dropdown-menu {
             width: 300px;
             padding: 20px;
-            background-color: #ffffff;  /* 드롭다운 배경을 흰색으로 설정 */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);  /* 드롭다운 그림자 추가 */
-            border: 1px solid #ddd;  /* 테두리 추가 */
-            z-index: 1050;  /* 다른 요소 위에 표시 */
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            border: 1px solid #ddd;
+            z-index: 1050;
         }
 
         .eomisae-navbar .dropdown-menu .user-info h4 {
@@ -71,7 +68,6 @@
             margin-top: 10px;
         }
 
-        /* 부트스트랩 기본 스타일과 충돌 방지 */
         .eomisae-navbar .navbar-toggler {
             border-color: rgba(255, 255, 255, 0.1);
         }
@@ -106,45 +102,76 @@
                         <c:choose>
                             <c:when test="${not empty pageContext.request.userPrincipal}">
                                 <!-- 드롭다운 버튼 -->
-                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <sec:authentication property="principal.nickname"/> 님
-                                    <!-- 아이콘 표시 -->
-                                    <jsp:include page="/WEB-INF/views/user/icon.jsp" />
-                                </a>
-                                <!-- 드롭다운 메뉴 -->
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
-                                    <li class="user-info text-center">
-                                        <!-- 로그인한 회원의 닉네임 -->
-                                        <h4><sec:authentication property="principal.nickname"/></h4>
-                                    </li>
-                                    <li>
-                                        <!-- 로그인한 회원의 레벨 표시 및 경험치 바 -->
-                                        <div class="level-bar text-center mt-2">
-                                            <p id="userLevel">Loading...</p>
-                                            <div class="progress">
-                                                <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            <p class="level-text mt-2" id="experienceText">Loading...</p>
-                                        </div>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li class="menu-list">
-                                        <a class="dropdown-item" href="<c:url value='/user/profile'/>"><i class="bi bi-person"></i> 마이페이지</a>
-                                        <a class="dropdown-item" href="<c:url value='/user/myWrite'/>"><i class="bi bi-pencil-square"></i> 작성글</a>
-                                        <a class="dropdown-item" href="<c:url value='/user/myComment'/>"><i class="bi bi-chat-dots"></i> 작성 댓글</a>
-                                        <a class="dropdown-item" href="<c:url value='/final/user/myProducts'/>"><i class="bi bi-box-seam"></i> 중고장터 글</a>
-                                        <!-- <a class="dropdown-item" href="#"><i class="bi bi-moon"></i> 다크모드</a> -->
-                                    </li>
+                                <a class="btn btn-secondary dropdown-toggle text-white" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+									    <sec:authentication property="principal.nickname"/> 님
+									    <jsp:include page="/WEB-INF/views/user/icon.jsp" />
+									</a>
 
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li class="logout-section">
-                                        <form action="<c:url value='/logout'/>" method="post" style="display:inline;">
-                                            <sec:csrfInput/>
-                                            <button type="submit" class="btn btn-logout">로그아웃</button>
-                                        </form>
-                                    </li>
-                                </ul>
+                                <!-- 최고관리자일 경우 -->
+                                <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
+                                        <li class="user-info text-center">
+                                            <h4><sec:authentication property="principal.nickname"/></h4>
+                                        </li>
+                                        <li>
+                                           <!-- <div class="level-bar text-center mt-2">
+                                                <p id="userLevel">Loading...</p>
+                                                <div class="progress">
+                                                    <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <p class="level-text mt-2" id="experienceText">Loading...</p>
+                                            </div> -->
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li class="menu-list">
+                                            <a class="dropdown-item" href="<c:url value='/super_admin/'/>"><i class="bi bi-speedometer"></i> 관리자 대시보드</a>
+                                            <a class="dropdown-item" href="<c:url value='/super_admin/userList'/>"><i class="bi bi-people"></i> 회원 관리</a>
+                                            <a class="dropdown-item" href="<c:url value='/super_admin/admin'/>"><i class="bi bi-gear"></i>블라인드 게시글</a>
+                                            <a class="dropdown-item" href="<c:url value='/board/boardlist/3'/>"><i class="bi bi-gear"></i>건의 게시글</a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li class="logout-section">
+                                            <form action="<c:url value='/logout'/>" method="post" style="display:inline;">
+                                                <sec:csrfInput/>
+                                                <button type="submit" class="btn btn-logout">로그아웃</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </sec:authorize>
+
+                                <!-- 일반 회원일 경우 -->
+                                <sec:authorize access="!hasRole('ROLE_SUPER_ADMIN')">
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
+                                        <li class="user-info text-center">
+                                            <h4><sec:authentication property="principal.nickname"/></h4>
+                                        </li>
+                                        <li>
+                                            <div class="level-bar text-center mt-2">
+                                                <p id="userLevel">Loading...</p>
+                                                <div class="progress">
+                                                    <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <p class="level-text mt-2" id="experienceText">Loading...</p>
+                                            </div>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li class="menu-list">
+                                            <a class="dropdown-item" href="<c:url value='/user/profile'/>"><i class="bi bi-person"></i> 마이페이지</a>
+                                            <a class="dropdown-item" href="<c:url value='/user/myWrite'/>"><i class="bi bi-pencil-square"></i> 작성글</a>
+                                            <a class="dropdown-item" href="<c:url value='/user/myComment'/>"><i class="bi bi-chat-dots"></i> 작성 댓글</a>
+                                            <a class="dropdown-item" href="<c:url value='/final/user/myProducts'/>"><i class="bi bi-box-seam"></i> 중고장터 글</a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li class="logout-section">
+                                            <form action="<c:url value='/logout'/>" method="post" style="display:inline;">
+                                                <sec:csrfInput/>
+                                                <button type="submit" class="btn btn-logout">로그아웃</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </sec:authorize>
                             </c:when>
+                           
                             <c:otherwise>
                                 <a class="btn btn-login" id="loginButton" href ="<c:url value='/user/login'/>">로그인</a>
                             </c:otherwise>
@@ -158,7 +185,7 @@
     <script>
         $(document).ready(function() {
             $.ajax({
-                url: '/final/user/getUserInfo',  // 서버에 데이터를 요청할 URL
+                url: '/final/user/getUserInfo',  
                 method: 'GET',
                 success: function(data) {
                     if (data.userLevel) {
