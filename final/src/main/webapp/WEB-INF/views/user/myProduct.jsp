@@ -15,23 +15,29 @@
             font-family: 'Noto Sans KR', sans-serif;
         }
         .container {
-            margin-top: 30px;
+            margin-top: 0px; /* 상단 마진 완전 제거 */
         }
         .header-title {
             font-weight: bold;
             font-size: 1.5rem;
-            margin-bottom: 20px;
+            margin-bottom: 5px; /* 제목과 탭 사이 간격 최소화 */
+        }
+        .tabs-wrapper {
+            margin-bottom: 5px; /* 탭과 테이블 사이 간격 최소화 */
         }
         .product-table {
             width: 100%;
             background-color: white;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             border-collapse: collapse;
+            table-layout: fixed; /* 테이블 열 너비 고정 */
         }
         .product-table th, .product-table td {
             padding: 10px;
             text-align: center;
             border-bottom: 1px solid #dee2e6;
+            word-wrap: break-word; /* 긴 텍스트 줄바꿈 */
+            word-break: break-all;  /* 긴 단어 줄바꿈 */
         }
         .product-table th {
             background-color: #f1f1f1;
@@ -50,9 +56,45 @@
             font-size: 1rem;
             color: #999;
         }
+
+        /* 페이지네이션 스타일 추가 */
         .pagination {
             margin-top: 20px;
             justify-content: center;
+        }
+        .pagebtn {
+            border-radius: 32px;
+            min-width: 36px;
+            padding: 0 4px;
+            height: 36px;
+            line-height: 36px;
+            color: #444;
+            text-decoration: none !important;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 12px;
+            text-align: center;
+        }
+        .pagebtn:hover {
+            background-color: #444; 
+            color: #fff;
+        }
+        .apagebtn {
+            border-radius: 32px;
+            min-width: 36px;
+            padding: 0 4px;
+            height: 36px;
+            line-height: 36px;
+            color: #fff;
+            text-decoration: none !important;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 12px;
+            background-color: #444;
+            text-align: center;
+        }
+        .apagebtn:hover {
+            color: #fff;
         }
     </style>
 </head>
@@ -69,11 +111,11 @@
     <table class="product-table">
         <thead>
             <tr>
-                <th>번호</th>
-                <th>제목</th>
-                <th>날짜</th>
-                <th>가격</th>
-                <th>상태</th>
+                <th style="width: 10%;">번호</th>
+                <th style="width: 40%;">제목</th>
+                <th style="width: 15%;">날짜</th>
+                <th style="width: 15%;">가격</th>
+                <th style="width: 20%;">상태</th>
             </tr>
         </thead>
         <tbody>
@@ -101,11 +143,30 @@
     <!-- 페이지 네비게이션 -->
     <nav aria-label="Page navigation">
         <ul class="pagination">
+            <c:if test="${pager.startPage > 1}">
+                <li class="pagebtn">
+                    <a href="?pageNum=${pager.prevPage}" class="pagebtn">◀</a>
+                </li>
+            </c:if>
+
             <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
                 <li class="page-item ${pager.pageNum == i ? 'active' : ''}">
-                    <a class="page-link" href="?pageNum=${i}&pageSize=${pager.pageSize}">${i}</a>
+                    <c:choose>
+                        <c:when test="${i != pager.pageNum}">
+                            <a href="?pageNum=${i}&pageSize=${pager.pageSize}" class="pagebtn">${i}</a>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="apagebtn">${i}</span>
+                        </c:otherwise>
+                    </c:choose>
                 </li>
             </c:forEach>
+
+            <c:if test="${pager.endPage < pager.totalPage}">
+                <li class="pagebtn">
+                    <a href="?pageNum=${pager.nextPage}" class="pagebtn">▶</a>
+                </li>
+            </c:if>
         </ul>
     </nav>
 </div>

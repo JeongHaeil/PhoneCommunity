@@ -15,26 +15,29 @@
             font-family: 'Noto Sans KR', sans-serif;
         }
         .password-change-container {
-            max-width: 600px;
+            max-width: 400px; /* 가로 크기를<div class="header-with-tabs" style="text-align: center;"> <!-- 여기에 추가 --> 900px로 조정 */
             margin: 50px auto;
             padding: 20px;
-            background-color: white;
+            background-color: #f9f9f9;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+          
         }
         .password-change-header {
             font-weight: bold;
             margin-bottom: 20px;
         }
         .password-change-btn {
-            background-color: #f86d6d;
+            background-color: #3C3D37 !important; /* 요청한 버튼 색상 */
             color: white;
-            border-radius: 5px;
+            border-radius: 10px; /* 끝이 둥근 모양 */
             padding: 10px 15px;
-            margin-right: 5px;
+            width: 100%;
+            border: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
         .password-change-btn:hover {
-            background-color: #f75c5c;
+            background-color: #2e2f28 !important; /* 호버시 색상 */
         }
         .form-label {
             font-weight: bold;
@@ -43,6 +46,19 @@
             color: red;
             font-size: 0.9em;
             margin-top: 5px;
+        }
+        /* 필드 및 버튼 크기 동일하게 적용 */
+        .form-control {
+            max-width: 300px; /* 필드 가로 크기 조정 */
+            margin: 0 auto; /* 가운데 정렬 */
+        }
+        .password-change-btn {
+            max-width: 300px; /* 버튼 가로 크기 조정 */
+            margin: 0 auto; /* 가운데 정렬 */
+            display: block; /* 가운데 정렬을 위해 block 요소로 변경 */
+        }
+        .form-group {
+            text-align: center; /* 입력 필드 및 버튼을 가운데 정렬 */
         }
     </style>
     <script>
@@ -69,7 +85,8 @@
 <body>
 
 <div class="password-change-container">
-    <h3 class="password-change-header">비밀번호 변경</h3>
+
+    <h3 class="password-change-header"style="text-align: center;">비밀번호 변경</h3>
 
     <!-- 비밀번호 변경 폼 -->
     <form id="passwordChangeForm" action="/final/user/passwordUpdate" method="post" onsubmit="return validateForm();">
@@ -77,13 +94,13 @@
         <sec:csrfInput />
 
         <!-- 새 비밀번호 입력 -->
-        <div class="mb-3">
+        <div class="form-group mb-3">
             <label for="newPassword" class="form-label">새 비밀번호</label>
             <input type="password" class="form-control" id="newPassword" name="newPassword" required>
         </div>
 
         <!-- 새 비밀번호 확인 -->
-        <div class="mb-3">
+        <div class="form-group mb-3">
             <label for="confirmNewPassword" class="form-label">새 비밀번호 확인</label>
             <input type="password" class="form-control" id="confirmNewPassword" name="confirmNewPassword" required>
         </div>
@@ -91,7 +108,8 @@
         <!-- 오류 메시지 표시 -->
         <div id="errorMessage" class="error-text"></div>
 
-        <button type="submit" class="btn btn-primary">비밀번호 변경</button>
+        <!-- 비밀번호 변경 버튼 -->
+        <button type="submit" class="password-change-btn">비밀번호 변경</button>
     </form>
 </div>
 

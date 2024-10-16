@@ -525,12 +525,7 @@ public class UserController {
     }
 
 
-    
-    // 스크랩 보기 페이지로 이동
-    @RequestMapping(value = "/myScrap", method = RequestMethod.GET)
-    public String showMyScrapPage() {
-        return "user/myScrap"; // 스크랩 보기 페이지로 이동
-    }
+   
     
  // 작성 댓글 보기 페이지로 이동 (GET 방식)
     @RequestMapping(value = "/myComment", method = RequestMethod.GET)
@@ -630,7 +625,7 @@ public class UserController {
             model.addAttribute("progressPercentage", progressPercentage);
         }
 
-        return "header";
+        return "header"; 
     }
     // 사용자 정보를 AJAX로 제공하기 위한 메서드
     @RequestMapping(value = "/getUserInfo", method = RequestMethod.GET)
