@@ -574,7 +574,7 @@ body {
 
    				
    		//function startChat(roomId) {
-   		function startChat(roomId) {
+   		function startChat(roomId) {	
    			var roomId= "${product.productIdx}"
    			var buyerId = loggedInUserId;  // 이미 상단에서 설정된 buyerId 값 사용
    		    var sellerId = "${product.productUserid}";  // 판매자 ID (서버에서 전달된 값 확인)
@@ -608,7 +608,7 @@ body {
                    console.error("Error starting chat:", error);
                }
            });
-       }
+      }
         });			 
   
    	        // 방 번호를 받아 해당 방의 채팅방 UI를 로드하는 함수
