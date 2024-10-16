@@ -39,10 +39,15 @@
 		font-weight: normal;
 		overflow-x: hidden;
 		font-size: 12px;
+		background-color:#fff;
+		border: 1px solid #ddd;
+		border-radius: 8px;
 		letter-spacing: -0.03em;
+		overflow: hidden;
     }
     .boardsListTable{
  		 width: 100%;
+ 		 height: 100%;
     }
     @media (min-width: 1400px) {
   		.container {
@@ -98,6 +103,7 @@
     	font-weight: bold;
     	font-size: 12px;
     	text-align: center;
+    	margin: 0 4px;
     }
     .pagebtn:hover{
     	background-color : #3C3D37; 
@@ -203,6 +209,14 @@
 #StartBtnBoard{
 padding: 0 0px;
 }
+a{
+text-decoration: none !important;
+}
+
+#SearchFromDiv{
+	margin-left: 5px; 
+	margin-top: 7px;
+}
     </style>
 
 </head>
@@ -243,10 +257,10 @@ padding: 0 0px;
 					<div class="container text-center mt-5">
 					<c:if test="${boardCode!=3}">
 						<button class="btn btn-outline-white" onclick="boardstarup(${board.boardPostIdx});">
-							 추천&nbsp;<i class="fas fa-thumbs-up" style="color: #5CD1E5;"></i>
+							 추천&nbsp;<i class="fas fa-thumbs-up" style="color: #5CD1E5;"></i>&nbsp;<span id="boardup"></span>
 						</button>
 						<button class="btn btn-outline-white" onclick="boardstardown(${board.boardPostIdx});">
-							<i class="fas fa-thumbs-down" style="color: #FFB2F5;"></i> 비추천
+							<i class="fas fa-thumbs-down" style="color: #FFB2F5;"></i> 비추천&nbsp;<span id="boarddown"></span>
 						</button>
 					</c:if>	
 					</div>
@@ -298,32 +312,34 @@ padding: 0 0px;
 					<%--=================댓글 페이지 처리 끝 =========   --%>
 
 				<%-- =============================게시글 전둉 댓글 작성창 시작===================== --%>			
-				<div class="card mt-4" id="commentsNumber_0">
+				<div class="card mt-3" id="commentsNumber_0" style="position: relative;">
 				    <form id="commentsList_0">
-				        <div class="form-group">
+				        <div class="form-group" id="SearchFromDiv">
 				            <sec:authorize access="isAuthenticated()">
 				                <input type="hidden" id="commentwriter" value="<sec:authentication property='principal.userId'/>">
 				            </sec:authorize>
 				            <label for="commentText">댓글 작성</label>
 				            <textarea class="form-control" id="commentText_0" name="content" rows="3" onclick="checkLogin()" required></textarea>
 				        </div>
+				        
+				        <!-- 댓글 내용 및 등록 버튼 -->
 				        <div class="d-flex justify-content-between align-items-center">
-				            <div>
-				                <!-- 이미지 업로드 버튼 -->
-				                <div class="custom-file">
-				                    <input type="file" class="form-control-file" id="commentImage_0" name="commentImage" style="display: none;">
-				                    <label for="commentImage_0" class="btn btn-sm" 
-				                        style="background: #3C3D37; color: #fff; cursor: pointer; padding: 5px 15px; border-radius: 5px; transition: background 0.3s;">
-				                        이미지 업로드
-				                    </label>
-				                </div>
-				            </div>
-				            <!-- 등록 버튼 -->
-				            <div class="ms-auto">
+				            <div class="ms-auto" style="margin: 4px;">
+				                <!-- 등록 버튼 우측 정렬 -->
 				                <button type="button" class="btn btn-sm" onclick="insertComment(0);" style="background: #3C3D37; color: #fff;">등록</button>
 				            </div>
 				        </div>
 				    </form>
+				
+				    <!-- 이미지 업로드 버튼을 카드의 우측 상단에 배치 -->
+				    <div style="position: absolute; top: 5px; right: 3px;">
+				        <div class="custom-file">
+				            <input type="file" class="form-control-file" id="commentImage_0" name="commentImage" style="display: none;">
+				            <label for="commentImage_0" class="btn btn-sm" style="background: #3C3D37; color: #fff; cursor: pointer; padding: 0; width: 24px; height: 22px; border-radius: 5px; transition: background 0.3s; display: flex; justify-content: center; align-items: center;">
+				                <i class="fa-regular fa-images" style="font-size: 16px;"></i>
+				            </label>
+				        </div>
+				    </div>
 				</div>
 				<%-- =============================게시글 전둉 댓글 작성창 끝===================== --%>			
 
@@ -335,14 +351,14 @@ padding: 0 0px;
 				<%-- 1.게시글 목록 출력 , 2, 게시글 페이징, 3. 게시글 검색창      --%>		
 				<div class="mt-4">
 					<%-- 1.게시글 목록 출력 (시작) --%>
-					<div class="boardDiv card">
-			            <table class="table table-hover boardsListTable">
+					<div class="boardDiv">
+			            <table class="table table-hover boardsListTable" style="margin-bottom: 0px; ">
 			                <thead class="thead-dark">
 			                    <tr>
 			                        <th class="boardNum">번호</th>
 			                        <th class="boardTitle">제목</th>
 			                        <th class="boardWriter">작성자</th>			                        
-			                        <th class="" style="width: 20px;"></th>			                        
+			                        <th style="width: 20px !important; overflow: hidden !important;"></th>		                        
 			                        <th class="boardDate">날짜</th>
 			                        <th class="boardViewCount">조회수</th>
 			                    </tr>
@@ -373,7 +389,7 @@ padding: 0 0px;
 					                                    </ul>
 					                                </div>
 					                            </td>
-			    								<td>
+			    								<td  style="width: 20px; overflow: hidden;">
 			    								<!-- 작성자 아이콘 표시 -->
                                                         <c:choose>
                                                             <c:when test="${boards.auth == 'ROLE_SUPER_ADMIN'}">
@@ -415,39 +431,48 @@ padding: 0 0px;
 					<%-- 1.게시글 목록 출력 (끝) --%>
 					
 					<%-- 2, 게시글 페이징 (시작) --%>
-					 <div id="pageNumDiv" class="row justify-content-center">
-					 	 <div class="col-auto " style="margin: 5px;">           
-						 <c:choose>
-							<c:when test="${pager.startPage > pager.blockSize }">
-								<a class="pagebtn" href="<c:url value="/board/boardlist/${boardCode }"/>?search=${search }&keyword=${keyword }&pageNum=${pager.prevPage}">◀</a>
-							</c:when>
-							<c:otherwise>
-								
-							</c:otherwise>		
-						</c:choose>
+					 <div id="pageNumDiv" class="d-flex justify-content-center align-items-center w-100">
+    <!-- 페이지 번호 관련 내용 (중앙 정렬) -->
+    <div class="d-flex justify-content-center align-items-center" style="flex-grow: 1; margin: 5px;">
+    	<div class="col-auto">
+	        <c:choose>
+	            <c:when test="${pager.startPage > pager.blockSize }">
+	                <a class="pagebtn" href="<c:url value='/board/boardlist/${boardCode }'/>?search=${search }&keyword=${keyword }&pageNum=${pager.prevPage}">◀</a>
+	            </c:when>
+	            <c:otherwise>
+	            </c:otherwise>
+	        </c:choose>
+	
+	        <c:forEach var="i" begin="${pager.startPage }" end="${pager.endPage }" step="1">
+	            <c:choose>
+	                <c:when test="${pager.pageNum !=i }">
+	                    <a class="pagebtn" href="<c:url value='/board/boardlist/${boardCode }'/>?search=${search }&keyword=${keyword }&pageNum=${i}">${i }</a>
+	                </c:when>
+	                <c:otherwise>
+	                    <a class="apagebtn disabled" tabindex="-1">${i }</a>
+	                </c:otherwise>
+	            </c:choose>
+	        </c:forEach>
+	
+	        <c:choose>
+	            <c:when test="${pager.endPage != pager.totalPage }">
+	                <a class="pagebtn" href="<c:url value='/board/boardlist/${boardCode }'/>?search=${search }&keyword=${keyword }&pageNum=${pager.nextPage}">▶</a>
+	            </c:when>
+	            <c:otherwise>
+	            </c:otherwise>
+	        </c:choose>
+        </div>
+    </div>
+
+    <!-- '맨위로' 버튼을 우측 끝으로 배치 -->
+    <div class="ms-auto m-3">
+        <a href="#" class="link-height text-dark"><i class="fa-solid fa-angles-up"></i>맨위로</a>
+    </div>
+</div>
 						
-						<c:forEach var="i" begin="${pager.startPage }" end="${pager.endPage }" step="1">
-							<c:choose>
-								<c:when test="${pager.pageNum !=i }">
-									<a  class="pagebtn" href="<c:url value="/board/boardlist/${boardCode }"/>?search=${search }&keyword=${keyword }&pageNum=${i}">${i }</a>			
-								</c:when>
-								<c:otherwise>
-									<a class="apagebtn disabled" tabindex="-1" >${i }</a>
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>
-						
-						<c:choose>
-							<c:when test="${pager.endPage != pager.totalPage }">
-								<a class="pagebtn" href="<c:url value="/board/boardlist/${boardCode }"/>?search=${search }&keyword=${keyword }&pageNum=${pager.nextPage}">▶</a>
-							</c:when>
-							<c:otherwise>
-								
-							</c:otherwise>		
-						</c:choose>
-					</div>	
+					</div>					
 						<!-- 검색   -->
-						<div class="row justify-content-center">
+					<div class="row justify-content-center">
 						    <div class="col-auto">  
 						        <form id="searchForm" method="get" class="d-flex "> 
 						            <input id="code" type="hidden" name="boardCode" value="${boardCode }" disabled="disabled">
@@ -457,32 +482,16 @@ padding: 0 0px;
 						                <option value="board_content" <c:if test="${search=='board_content' }"> selected </c:if>>&nbsp;내용&nbsp;</option>
 						            </select>
 						            <input type="text" name="keyword" value="${keyword }" id="keywordInput" placeholder="검색..">
-						            <button id="boardSearchBtn" class="btn btn-dark btn-sm"  type="submit">검색</button>
+						            <button id="boardSearchBtn" class="btn btn-sm"  type="submit" style="background: #3C3D37; color: #fff;">검색</button>
 						        </form>
 						    </div>
 						</div>
-					</div>
 					<%-- 맨위 로가는 버튼 --%>
-					<div class="m-3" >
-								<a href="#" class="link-height text-dark"><i class="fa-solid fa-arrows-up-to-line"></i>맨위로</a>
-					</div>
+					
 					<%-- 2, 게시글 페이징 (끝) --%>
 
 					<%-- 3. 게시글 검색창 (시작) --%>
-					<%-- <div class="row  justify-content-center">
-						<form id="searchForm" method="get" action="<c:url value="/board/boardlist/${freeCode }"/>"> 
-							<input id="code" type="hidden" name="freeCode" value="${freeCode }" disabled="disabled">
-							<select name="search" id="searchSelect" class="form-select">					
-								<!-- userinfo 이기 때문에 name 으로 임시 작성 -->
-								<option value="free_user_id" <c:if test="${search }=='free_user_id'"> selected </c:if>>&nbsp;작성자&nbsp;</option>
-								<option value="free_title" <c:if test="${search }=='free_title'"> selected </c:if>>&nbsp;제목&nbsp;</option>
-								<option value="free_content" <c:if test="${search }=='free_content'"> selected </c:if>>&nbsp;내용&nbsp;</option>
-							</select>
-							<input type="text" name="keyword" value="${keyword }" id="keywordInput" placeholder="검색..">
-							<!-- <button type="button" onclick="getForm()">검색</button> -->
-							<button type="submit">검색</button>
-						</form>
-					</div> --%>
+					
 				</div>
 			</div>	
 					<%-- 3. 게시글 검색창 (끝) --%>
@@ -598,9 +607,9 @@ padding: 0 0px;
 		                } else {
 		                	// 삭제 버튼
 		                	if (this.commentUserId == result.userId || result.boardAdmin != null) {
-		                        html += "<a class='aCursorActive' onclick='deleteComment(" + this.commentIdx + ");' style='color : #5D5D5D;'><i class='fa-solid fa-trash-can'></i>삭제 |</a>";
+		                        html += "<a class='aCursorActive' onclick='deleteComment(" + this.commentIdx + ");' style='color : #5D5D5D;'><i class='fa-solid fa-trash-can' style='color : #CC3D3D;'></i>삭제 |</a>";
 		                    }
-		                    html += "<p><small class='text-muted'><a onclick='voteUp(" + this.commentIdx + ");' style='color: #F29661;'><i class='fa-solid fa-hand-holding-heart'></i>추천</a> | <a onclick='commentspam(" + this.commentIdx + ");' style='color: dark;'><i class='fa-solid fa-user-large-slash'></i>신고</a></small></p>";
+		                    html += "<p><small class='text-muted'><a onclick='voteUp(" + this.commentIdx + ");' style='color: #368AFF;'><i class='fa-solid fa-hand-holding-heart'></i>추천</a> | <a onclick='commentspam(" + this.commentIdx + ");' style='color: dark;'><i class='fa-solid fa-user-large-slash'></i>신고</a></small></p>";
 		                }
 		                html += "</div>";
 		                html += "</div>";
@@ -634,22 +643,24 @@ padding: 0 0px;
 		                html += "</div>";
 		                html += "</div>";
 		                
-		                // 대댓글 입력란 추가
-		                html += "<div class='card mt-4 cocoment' id='commentsNumber_" + this.commentIdx + "' style='display:none;'>"; // 답글 폼 숨김
+		                // 대댓글 입력란 추가				  
+		                html += "<div class='card mt-4 cocoment' id='commentsNumber_" + this.commentIdx + "' style='display:none; position: relative;'>"; // 답글 폼 숨김
 		                html += "<form id='commentsList_" + this.commentIdx + "'>";
-		                html += "<div class='form-group'>";
+		                html += "<div class='form-group' id='SearchFromDiv'>";
 		                html += "<label for='commentText_" + this.commentIdx + "'>&nbsp;<span style='color: blue;'>@" + this.userNickname + "</span> </label>";
 		                html += "<textarea class='form-control' id='commentText_" + this.commentIdx + "' name='content' rows='3' required></textarea>";
 		                html += "</div>";
-		                html += "<div class='d-flex justify-content-between'>";
-		                html += "<div>";
-		                html += "<input type='file' class='form-control-file' id='commentImage_" + this.commentIdx + "' name='commentImage'>";
-		                html += "</div>";
-		                html += "<div>";
-		                html += "<button type='button' class='btn btn-dark float-right btn-sm' onclick='insertComment(" + this.commentIdx + ");'>등록</button>";
-		                html += "</div>";
+		                html += "<div class='d-flex justify-content-between align-items-center'>";                
+		                html += "<div class='ms-auto' style='margin: 4px;'>";
+		                html += "<button type='button' class='btn btn-sm' onclick='insertComment(" + this.commentIdx + ");' style='background: #3C3D37; color: #fff;'>등록</button>";	                
+		                html += "</div>";	              	         	             
 		                html += "</div>";
 		                html += "</form>";
+		                html += "<div style='position: absolute; top: 5px; right: 3px;'>";
+		                html += "<div class='custom-file'>";
+		                html += "<input type='file' class='form-control-file' id='commentImage_" + this.commentIdx + "' name='commentImage' style='display: none;'>";
+		                html += "<label for='commentImage_0' class='btn btn-sm' style='background: #3C3D37; color: #fff; cursor: pointer; padding: 0; width: 24px; height: 22px; border-radius: 5px; transition: background 0.3s; display: flex; justify-content: center; align-items: center;'><i class='fa-regular fa-images' style='font-size: 16px;'></i></label>";
+		                html += "</div>"; 
 		                html += "</div>"; // cocoment 끝
 		                html += "</div>"; // commentRowDiv 끝
 		         
@@ -660,6 +671,12 @@ padding: 0 0px;
 		            $("#commentsListDiv").html(html);
 		            pageNumberDisplay(result.boardCode, result.boardPostIdx, result.pager);
 		            $(".cocoment").css({ display: 'none' });
+		            //추천 비추천 숫차 출력
+		            var upstar=result.board.boardStarup;
+		            $("#boardup").html(upstar);
+		            var downstar=result.board.boardStardown;
+		            $("#boarddown").html(downstar);
+		            
 		        },
 		        error: function(xhr) {
 		            alert("에러코드(게시글 목록 검색) = " + xhr.status);
@@ -711,7 +728,16 @@ padding: 0 0px;
 		
 		//=========댓글 추가
 		function insertComment(commentIdx) {
+			checkLogin();
 			var formData = new FormData(); // FormData 객체 생성
+			 // 텍스트 필드 값 가져오기
+		    var commentText = document.getElementById('commentText_' + commentIdx).value.trim();
+
+		    // 텍스트 필드가 비어있는지 확인
+		    if (commentText === "") {
+		        alert("댓글 내용을 입력해주세요.");
+		        return; // 댓글이 비어있으면 함수를 종료하고 AJAX 요청을 보내지 않음
+		    }
 
 		    // 텍스트 필드 추가
 		    var commentText = document.getElementById('commentText_'+commentIdx).value;
@@ -751,8 +777,8 @@ padding: 0 0px;
 		
 		//댓글 페이징
 		function pageNumberDisplay(boardCode,boardPostIdx,pager) {
-			var html="";		
-			 html+="<div class='col-auto'>";		
+			var html="";			
+			 html+="<div class='col-auto mt-2'>";		
 			if(pager.startPage > pager.blockSize) {
 				  html+= "<a class='pagebtn' href='javascript:commentsListDisplay("+boardCode+","+boardPostIdx+","+pager.prevPage+");'>◀</a>";
 			} else {
@@ -858,7 +884,6 @@ padding: 0 0px;
 		
 		//게시글 비추천 버튼 클릭
 		function boardstardown(boardPostIdx){
-			 checkLogin();
 			 checkLogin();
 			var confirmboardsdown = confirm("이 게시글을 비추천 하시겠습니까?");
 			if(confirmboardsdown){
