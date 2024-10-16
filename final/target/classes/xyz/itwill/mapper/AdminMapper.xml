@@ -10,7 +10,8 @@
 	            SELECT b.*, u.USER_NICKNAME
 	            FROM BOARD b
 	            JOIN USERS u ON b.BOARD_USER_ID = u.USER_ID
-	            WHERE b.BOARD_STATUS = 3
+	            WHERE b.BOARD_STATUS
+	            IN (3,4)
 	            <if test="keyword != null and keyword != ''">
 	                <choose>
 	                    <when test="search== 'boardPostIdx'">
@@ -35,7 +36,8 @@
     <select id="selectSpamBoardCount" parameterType="map" resultType="int">
 	    SELECT COUNT(*)
 	    FROM BOARD
-	    WHERE BOARD_STATUS = 3
+	    WHERE BOARD_STATUS
+	    IN (3,4)
 	    <if test="keyword != null and keyword != ''">
 	        <choose>
 	            <when test="column == 'BOARD_POST_IDX'">

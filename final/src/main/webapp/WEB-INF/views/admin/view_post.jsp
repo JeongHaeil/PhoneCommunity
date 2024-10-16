@@ -54,7 +54,7 @@
                 </div>
                 <div class="text-center mt-4">
                     <button class="btn custom-btn" onclick="changeUserStatus(${post.userNum}, 3, 86400);">사용자 상태 변경</button>
-                    <button class="btn custom-btn" onclick="changeBoardStatus(${post.boardPostIdx}, 3, 259200);">게시물 상태 변경</button>
+                    <button class="btn custom-btn" onclick="changeBoardStatus(${post.boardPostIdx}, 4, 259200);">게시물 상태 변경</button>
                     <a href="<c:url value='/super_admin/admin'/>" class="btn custom-btn">목록으로 돌아가기</a>
                 </div>
             </div>

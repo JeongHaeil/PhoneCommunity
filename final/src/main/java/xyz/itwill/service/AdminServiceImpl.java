@@ -138,7 +138,7 @@ public class AdminServiceImpl implements AdminService {
         for(Admin admin : expiredBoard) {
         	Map<String, Object> updateParams = new HashMap<String, Object>();
         	updateParams.put("boardPostIdx", admin.getBoardPostIdx());
-        	updateParams.put("status", 4);
+        	updateParams.put("status", 5);
         	adminDAO.updateBoardStatusByBoardId(updateParams);
         }
 	}
