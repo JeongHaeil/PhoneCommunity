@@ -16,7 +16,7 @@
         /* 네비게이션 바 스타일 */
         .eomisae-navbar nav.navbar {
             background-color: #343a40;
-            padding: 0 20px;
+            padding: 10px 20px;
         }
 
         .eomisae-navbar .navbar-brand,
