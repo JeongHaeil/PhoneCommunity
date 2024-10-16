@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -126,7 +126,7 @@ public class ProductController {
 		productService.addProduct(product);
 		return "redirect:/product/list";
 	}
-
+	
 	@RequestMapping("/details")
 	public String detail(@RequestParam("productIdx") int productIdx, 
 	                     @RequestParam Map<String, Object> map, 
