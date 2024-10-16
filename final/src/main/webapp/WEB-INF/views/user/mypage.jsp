@@ -61,12 +61,12 @@
     </style>
 </head>
 <body>
-
-<div class="mypage-container">
-    <!-- 탭 include -->
+<!-- 탭 include -->
     <jsp:include page="/WEB-INF/views/user/mypageTabs.jsp">
         <jsp:param name="activeTab" value="profile" />
     </jsp:include>
+<div class="mypage-container">
+    
 
     <!-- 회원 정보 섹션 -->
     <div class="mypage-info-section">

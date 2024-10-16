@@ -26,16 +26,16 @@
             font-weight: bold;
             margin-bottom: 20px;
         }
-        .password-change-btn {
-            background-color: #f86d6d;
-            color: white;
-            border-radius: 5px;
-            padding: 10px 15px;
-            margin-right: 5px;
-        }
-        .password-change-btn:hover {
-            background-color: #f75c5c;
-        }
+			        .password-change-btn {
+			    background-color: #3C3D37;
+			    color: white;
+			    border-radius: 5px;
+			    padding: 10px 15px;
+			    margin-right: 5px;
+			}
+			       .password-change-btn:hover {
+			    background-color: #33342e; /* 조금 더 어두운 색상으로 변경하여 호버 효과 */
+			}
         .form-label {
             font-weight: bold;
         }
@@ -67,8 +67,14 @@
     </script>
 </head>
 <body>
+<!-- 탭 include -->
+    <jsp:include page="/WEB-INF/views/user/mypageTabs.jsp">
+        <jsp:param name="activeTab" value="profile" />
+    </jsp:include>
 
 <div class="password-change-container">
+
+
     <h3 class="password-change-header">비밀번호 변경</h3>
 
     <!-- 비밀번호 변경 폼 -->
@@ -91,7 +97,7 @@
         <!-- 오류 메시지 표시 -->
         <div id="errorMessage" class="error-text"></div>
 
-        <button type="submit" class="btn btn-primary">비밀번호 변경</button>
+        <button type="submit" class="password-change-btn">비밀번호 변경</button>
     </form>
 </div>
 
