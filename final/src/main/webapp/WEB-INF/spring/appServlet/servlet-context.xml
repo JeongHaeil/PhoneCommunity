@@ -69,7 +69,7 @@
 </websocket:handlers>
 
 <!-- WebSocket 핸들러 빈 등록 -->
-<beans:bean id="chatWebSocketHandler" class="xyz.itwill.controller.ChatWebSocketHandler"/>
+
 
  
    

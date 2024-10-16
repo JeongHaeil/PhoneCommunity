@@ -30,8 +30,8 @@ import xyz.itwill.service.ProductService;
 @RequiredArgsConstructor
 public class ChatController  {
 		private final ChatRoomsService chatRoomsService;
-		private final ProductService productService;
-		private final ChatService chatService;
+		//private final ProductService productService;
+		//private final ChatService chatService;
 		
 	
 		// 채팅 시작 버튼을 클릭하면 호출되는 메서드
