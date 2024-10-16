@@ -327,4 +327,20 @@ public class BoardJsonController {
 		resultMap.put("popularBoardList", boardService.getPopularBoardByStartUp());
 		return resultMap;
 	}
+	
+	
+	@GetMapping("/main_board_view")
+	public Map<String, Object> ViewBoardListByNew() {
+		Map<String, Object> resultMap=new HashMap<String, Object>();
+		resultMap.put("NewBoardList", boardService.getPopularBoardByViewCount());
+		return resultMap;
+	}
+	
+	@GetMapping("/main_board_notice")
+	public Map<String, Object> NoticeBoardList() {
+		Map<String, Object> resultMap=new HashMap<String, Object>();
+		resultMap.put("NoticeBoardList", boardService.getNoiceBoardList());
+		return resultMap;
+	}
+	
 }

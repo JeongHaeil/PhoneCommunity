@@ -249,9 +249,7 @@ public class BoardController {
 	            boardService.addFreeboard(board); // 게시글 추가 로직
 	            
 	            // 게시글 작성 후 경험치 추가
-	            userService.increaseExperience(user.getUserId(), 10); // 경험치 10점 추가
-	            System.out.println("User " + user.getUserId() + " has gained 10 experience points for posting.");
-	            
+	            userService.increaseExperience(user.getUserId(), 10); // 경험치 10점 추가	           	            
 	        } else {
 	            attributes.addAttribute("regetmessage", "최대 허용 글자수를 초과하였습니다.");
 	            return "redirect:/board/boardwrite/" + boardCode;
@@ -295,7 +293,6 @@ public class BoardController {
 	@RequestMapping(value ="/boardModify/{boardCode}/{boardPostIdx}", method = RequestMethod.POST)
 	public String boardModify(@PathVariable int boardCode, @PathVariable int boardPostIdx,@RequestParam String boardtag,@ModelAttribute Board board,List<MultipartFile> uploaderFileList,HttpServletRequest request,RedirectAttributes attributes) throws IllegalStateException, IOException {
 		Board oldboard=boardService.getboard(boardPostIdx);
-		System.out.println("전달 내용길이="+oldboard.getBoardContent().length());
 		if(uploaderFileList!=null) {
 			String uploadDirectory=context.getServletContext().getRealPath("/resources/images/uploadFile/board");		
 			List<String> filenameList=new ArrayList<String>();

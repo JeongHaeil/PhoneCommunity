@@ -88,11 +88,11 @@
     }
     .pagebtn{
    	    border-radius: 32px;
-    	min-width: 36px;
+    	min-width: 30px;
     	padding: 0 4px;
-    	height: 36px;
-    	line-height: 36px;
-    	color: #444;
+    	height: 30px;
+    	line-height: 30px;
+    	color: #3C3D37;
     	text-decoration: none !important;
     	display: inline-block;
     	font-weight: bold;
@@ -100,21 +100,21 @@
     	text-align: center;
     }
     .pagebtn:hover{
-    	background-color : #444; 
+    	background-color : #3C3D37; 
    	  	color: #fff;
     }
     .apagebtn{
    	    border-radius: 32px;
-    	min-width: 36px;
+    	min-width: 30px;
     	padding: 0 4px;
-    	height: 36px;
-    	line-height: 36px;
+    	height: 30px;
+    	line-height: 30px;
     	color: #fff;
     	text-decoration: none !important;
     	display: inline-block;
     	font-weight: bold;
     	font-size: 12px;
-    	background-color : #444;
+    	background-color : #3C3D37;
     	text-align: center;
     }
      .apagebtn:hover{
@@ -192,7 +192,17 @@
     height: 20px;
 }
 <!--작성자 클릭시 드랍다운 관련 끝 css-->
+.aCursorActive {
+  text-decoration: none !important;  /* 밑줄 제거 */
+}
 
+.aCursorActive:hover {
+  text-decoration: none;  /* hover 상태에서도 밑줄 제거 */
+  color: inherit;         /* hover 시 색상 변경 없애기 */
+}
+#StartBtnBoard{
+padding: 0 0px;
+}
     </style>
 
 </head>
@@ -232,10 +242,10 @@
 
 					<div class="container text-center mt-5">
 					<c:if test="${boardCode!=3}">
-						<button class="btn btn-outline-dark" onclick="boardstarup(${board.boardPostIdx});">
+						<button class="btn btn-outline-white" onclick="boardstarup(${board.boardPostIdx});">
 							 추천&nbsp;<i class="fas fa-thumbs-up" style="color: #5CD1E5;"></i>
 						</button>
-						<button class="btn btn-outline-dark" onclick="boardstardown(${board.boardPostIdx});">
+						<button class="btn btn-outline-white" onclick="boardstardown(${board.boardPostIdx});">
 							<i class="fas fa-thumbs-down" style="color: #FFB2F5;"></i> 비추천
 						</button>
 					</c:if>	
@@ -261,24 +271,20 @@
 				</div>
 				
 				<%--============================ 편의성 버튼 시작 (위치 미정) ================= --%>
-				<div class="container mt-2">
-					<div class="row">
-						<div class="col-md-6">
+				<div class=" mt-2" id="StartBtnBoard">
+					<div class="d-flex"  style="width: 100%; justify-content: space-between;">
+						<div style="margin-left: 5px;">
 							<!-- <button class="btn btn-secondary">목록</button> -->
 							<c:if test="${boardCode!=3}">
-								<button type="button" class="btn btn-secondary btn-sm" onclick="nextboard(${boardCode },${downboard})">다음글▲</button>
-								<button type="button" class="btn btn-secondary btn-sm" onclick="beforeboard(${boardCode },${upboard})">이전글▼</button>							
+								<button type="button" class="btn btn-sm" onclick="nextboard(${boardCode },${downboard})" style="background: #3C3D37; color: #fff;">다음글▲</button>
+								<button type="button" class="btn btn-sm" onclick="beforeboard(${boardCode },${upboard})" style="background: #3C3D37; color: #fff;">이전글▼</button>							
 							</c:if>							
 						</div>
-						<div
-							class="col-md-6 d-flex justify-content-end align-items-center">
-							<div class="m-3">
-								<a href="#" class="link-height text-dark">맨위로</a>
-							</div>
-							<button type="button" class="btn btn-dark btn-sm" onclick="window.location.href='<c:url value="/board/boardwrite/${boardCode }"/>'">글쓰기</button>
+						<div style="margin-right: 5px;">
+							<button type="button" class="btn btn-sm" onclick="window.location.href='<c:url value="/board/boardwrite/${boardCode }"/>'" style="background: #3C3D37; color: #fff;">글쓰기</button>
 						</div>
 					</div>
-				</div>
+				
 				<%--============================ 편의성 버튼 끝 (위치 미정) ================= --%>
 				
 				
@@ -293,32 +299,38 @@
 
 				<%-- =============================게시글 전둉 댓글 작성창 시작===================== --%>			
 				<div class="card mt-4" id="commentsNumber_0">
-					<form id="commentsList_0">
-						<div class="form-group">
-							<sec:authorize access="isAuthenticated()">
-							<input type="hidden" id="commentwriter" value="<sec:authentication property="principal.userId"/>">
-							</sec:authorize>
-							<label for="commentText">게시글에 댓글 작성</label>
-							<textarea class="form-control" id="commentText_0"
-								name="content" rows="3"  onclick="checkLogin()" required></textarea>
-						</div>
-						<div class="d-flex justify-content-between">
-							<div>
-								<input type="file" class="form-control-file" id="commentImage_0"
-									name="commentImage">
-							</div>
-							<div>
-								<button type="button" class="btn btn-dark float-right btn-sm" onclick="insertComment(0);">등록</button>
-							</div>
-						</div>
-					</form>
+				    <form id="commentsList_0">
+				        <div class="form-group">
+				            <sec:authorize access="isAuthenticated()">
+				                <input type="hidden" id="commentwriter" value="<sec:authentication property='principal.userId'/>">
+				            </sec:authorize>
+				            <label for="commentText">댓글 작성</label>
+				            <textarea class="form-control" id="commentText_0" name="content" rows="3" onclick="checkLogin()" required></textarea>
+				        </div>
+				        <div class="d-flex justify-content-between align-items-center">
+				            <div>
+				                <!-- 이미지 업로드 버튼 -->
+				                <div class="custom-file">
+				                    <input type="file" class="form-control-file" id="commentImage_0" name="commentImage" style="display: none;">
+				                    <label for="commentImage_0" class="btn btn-sm" 
+				                        style="background: #3C3D37; color: #fff; cursor: pointer; padding: 5px 15px; border-radius: 5px; transition: background 0.3s;">
+				                        이미지 업로드
+				                    </label>
+				                </div>
+				            </div>
+				            <!-- 등록 버튼 -->
+				            <div class="ms-auto">
+				                <button type="button" class="btn btn-sm" onclick="insertComment(0);" style="background: #3C3D37; color: #fff;">등록</button>
+				            </div>
+				        </div>
+				    </form>
 				</div>
 				<%-- =============================게시글 전둉 댓글 작성창 끝===================== --%>			
 
 				
 
 
-				<hr>
+				
 				<%-- ========================하단 게시글 목록 및 검색창 시작 ========================== --%>
 				<%-- 1.게시글 목록 출력 , 2, 게시글 페이징, 3. 게시글 검색창      --%>		
 				<div class="mt-4">
@@ -329,7 +341,8 @@
 			                    <tr>
 			                        <th class="boardNum">번호</th>
 			                        <th class="boardTitle">제목</th>
-			                        <th class="boardWriter">작성자</th>
+			                        <th class="boardWriter">작성자</th>			                        
+			                        <th class="" style="width: 20px;"></th>			                        
 			                        <th class="boardDate">날짜</th>
 			                        <th class="boardViewCount">조회수</th>
 			                    </tr>
@@ -353,7 +366,15 @@
 					                                    <button class="btn btn-link dropdown-toggle Wirterbtn" style="color: black;" type="button" id="dropdownMenuButton-${boards.boardPostIdx}" data-bs-toggle="dropdown" aria-expanded="false">
 					                                        ${boards.userNickname}
 					                                    </button>
-					                                    <!-- 작성자 아이콘 표시 -->
+					                                    
+					                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-${boards.boardPostIdx}" id="WriterdropUl">					                                       					                                       
+					                                        <li><a class="dropdown-item" href="<c:url value='/board/boardlist/1'/>?&search=user_nickname&keyword=${boards.userNickname }">작성글 전체보기</a></li>
+															<%--추가 하려면 위에꺼 복 붙 --%>	
+					                                    </ul>
+					                                </div>
+					                            </td>
+			    								<td>
+			    								<!-- 작성자 아이콘 표시 -->
                                                         <c:choose>
                                                             <c:when test="${boards.auth == 'ROLE_SUPER_ADMIN'}">
                                                                 <img src="${pageContext.request.contextPath}/resources/images/crown.png" alt="Super Admin Badge" class="user-badge" />
@@ -381,12 +402,7 @@
                                                                 </c:choose>
                                                             </c:otherwise>
                                                         </c:choose>
-					                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-${boards.boardPostIdx}" id="WriterdropUl">					                                       					                                       
-					                                        <li><a class="dropdown-item" href="<c:url value='/board/boardlist/1'/>?&search=user_nickname&keyword=${boards.userNickname }">작성글 전체보기</a></li>
-															<%--추가 하려면 위에꺼 복 붙 --%>	
-					                                    </ul>
-					                                </div>
-					                            </td>
+			    								</td>
 			    								<td>${boards.boardRegisterDate }</td>
 			    								<td>${boards.boardCount }</td>
 			    							</tr>
@@ -446,6 +462,10 @@
 						    </div>
 						</div>
 					</div>
+					<%-- 맨위 로가는 버튼 --%>
+					<div class="m-3" >
+								<a href="#" class="link-height text-dark"><i class="fa-solid fa-arrows-up-to-line"></i>맨위로</a>
+					</div>
 					<%-- 2, 게시글 페이징 (끝) --%>
 
 					<%-- 3. 게시글 검색창 (시작) --%>
@@ -464,6 +484,7 @@
 						</form>
 					</div> --%>
 				</div>
+			</div>	
 					<%-- 3. 게시글 검색창 (끝) --%>
 			</div>
 
@@ -563,13 +584,11 @@
 
 		                    // 작성자 표시
 		                    if (this.commentUserId == result.board.boardUserId) {
-		                        html += "<span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; margin-left: 4px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: #CC3D3D;'>작성자</span>";
+		                        html += "<span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; margin-left: 4px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: #368AFF;'>작성자</span>";
 		                    }
 
-		                    // 삭제 버튼
-		                    if (this.commentUserId == result.userId || result.boardAdmin != null) {
-		                        html += "<a class='aCursorActive' onclick='deleteComment(" + this.commentIdx + ");'><span style='display: inline-block; width: 52px; height: 21px; margin-right: 2px; border-style: solid; border-width: 1px; border-radius: 4px;font-size: 10px; font-weight: normal; letter-spacing: -1px; line-height: 22px; text-align: center;text-indent: -1px; color: #0D6EFD;'>삭제</span></a>";
-		                    }
+		                   
+		                    
 		                }
 
 		                html += "</div>";
@@ -577,6 +596,10 @@
 		                if (this.commentStatus > 1) {
 		                    // 상태에 따른 처리
 		                } else {
+		                	// 삭제 버튼
+		                	if (this.commentUserId == result.userId || result.boardAdmin != null) {
+		                        html += "<a class='aCursorActive' onclick='deleteComment(" + this.commentIdx + ");' style='color : #5D5D5D;'><i class='fa-solid fa-trash-can'></i>삭제 |</a>";
+		                    }
 		                    html += "<p><small class='text-muted'><a onclick='voteUp(" + this.commentIdx + ");' style='color: #F29661;'><i class='fa-solid fa-hand-holding-heart'></i>추천</a> | <a onclick='commentspam(" + this.commentIdx + ");' style='color: dark;'><i class='fa-solid fa-user-large-slash'></i>신고</a></small></p>";
 		                }
 		                html += "</div>";
@@ -615,7 +638,7 @@
 		                html += "<div class='card mt-4 cocoment' id='commentsNumber_" + this.commentIdx + "' style='display:none;'>"; // 답글 폼 숨김
 		                html += "<form id='commentsList_" + this.commentIdx + "'>";
 		                html += "<div class='form-group'>";
-		                html += "<label for='commentText_" + this.commentIdx + "'>&nbsp;<span style='color: blue;'>@" + this.userNickname + "</span> 답글</label>";
+		                html += "<label for='commentText_" + this.commentIdx + "'>&nbsp;<span style='color: blue;'>@" + this.userNickname + "</span> </label>";
 		                html += "<textarea class='form-control' id='commentText_" + this.commentIdx + "' name='content' rows='3' required></textarea>";
 		                html += "</div>";
 		                html += "<div class='d-flex justify-content-between'>";
