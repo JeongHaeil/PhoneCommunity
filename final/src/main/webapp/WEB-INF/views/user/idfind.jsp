@@ -11,17 +11,14 @@
     <!-- 부트스트랩 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Noto Sans KR', sans-serif;
-        }
+       
         .id-recovery-container {
             max-width: 400px;
             margin: 100px auto;
             padding: 20px;
-            background-color: white;
+            background-color: #f8f9fa;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+           
         }
         h3 {
             font-weight: bold;
@@ -29,14 +26,14 @@
             text-align: center;
         }
         .btn-id-recovery {
-            background-color: #f86d6d;
-            color: white;
+            background-color: #3C3D37 !important; /* 버튼 배경색을 #3C3D37로 설정 */
+            color: white !important; /* 텍스트 색상 흰색으로 설정 */
             border-radius: 20px;
             width: 100%;
             padding: 10px;
         }
         .btn-id-recovery:hover {
-            background-color: #f75c5c;
+            background-color: #2E2F2A !important; /* hover 상태 배경색 */
         }
         .error-message {
             color: red;

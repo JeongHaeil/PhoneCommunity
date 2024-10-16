@@ -16,9 +16,9 @@
             max-width: 400px;
             margin: 50px auto;
             padding: 20px;
-            background-color: white;
+            background-color: #f9f9f9;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            
         }
         .withdraw-header {
             font-weight: bold;
@@ -26,18 +26,23 @@
             text-align: center;
         }
         .withdraw-btn-custom {
-            background-color: #f86d6d;
+            background-color: #3C3D37;
             color: white;
             border-radius: 5px;
             padding: 10px 15px;
             width: 100%;
+            border: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
         }
         .withdraw-btn-custom:hover {
-            background-color: #f75c5c;
+            background-color: #33342e; /* 조금 더 어두운 색상으로 변경하여 호버 효과 */
         }
     </style>
 </head>
 <body>
+
 
 <div class="withdraw-container">
     <h3 class="withdraw-header">회원 탈퇴</h3>
@@ -48,12 +53,12 @@
 
         <!-- 비밀번호 -->
         <div class="mb-3">
-            <label for="password" class="form-label">비밀번호</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+            <label for="password" class="form-label" style="text-align: center;">비밀번호</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요" required style="text-align: center;">
         </div>
 
         <!-- 탈퇴 버튼 -->
-        <button type="submit" class="btn withdraw-btn-custom">탈퇴</button>
+        <button type="submit" class="withdraw-btn-custom">탈퇴</button>
     </form>
 </div>
 
