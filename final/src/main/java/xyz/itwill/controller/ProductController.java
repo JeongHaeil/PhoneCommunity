@@ -3,16 +3,15 @@ package xyz.itwill.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -32,10 +31,11 @@ import org.springframework.web.util.HtmlUtils;
 
 import lombok.RequiredArgsConstructor;
 import xyz.itwill.auth.CustomUserDetails;
-import xyz.itwill.dto.ChatRooms;
 import xyz.itwill.dto.Product;
-import xyz.itwill.service.ChatRoomsService;
+import xyz.itwill.dto.User;
 import xyz.itwill.service.ProductService;
+import xyz.itwill.service.UserService;
+import xyz.itwill.util.ExperienceUtil;
 
 
 @Controller
@@ -46,6 +46,7 @@ public class ProductController {
     private final WebApplicationContext context;
 
     private static final String UPLOAD_DIR = "/resources/images/";
+    private final UserService userService; // UserService 추가
 
     // InitBinder 메서드 추가: 모든 String 타입 입력값에 대해 HTML 이스케이프 처리
     @InitBinder
@@ -126,35 +127,95 @@ public class ProductController {
 		return "redirect:/product/list";
 	}
 
-	// 상품 상세 페이지
 	@RequestMapping("/details")
-	public String detail(@RequestParam("productIdx") int productIdx, @RequestParam Map<String, Object> map, Model model,
-			Authentication authentication) {
+	public String detail(@RequestParam("productIdx") int productIdx, 
+	                     @RequestParam Map<String, Object> map, 
+	                     Model model, 
+	                     Authentication authentication) {
 
-		
-		// 조회수 증가
-		productService.increaseProductCount(productIdx);
-		
+	    // 로거 생성
+	    Logger logger = LoggerFactory.getLogger(ProductController.class);
 
-		// 상품 정보 조회
-		Product product = productService.getProductByNum(productIdx);
-		
+	    // 로그 추가
+	    logger.info("Entering detail method with productIdx: {}", productIdx);
 
-		// 이미지 처리 (콤마로 구분된 이미지 리스트로 변환)
-		String[] productImages = product.getProductImage().split(",");
-		model.addAttribute("productImages", productImages); // 여러 이미지 전달
-		model.addAttribute("product", product);
-		model.addAttribute("searchMap", map); // 검색 조건도 다시 전달
+	    // 조회수 증가
+	    try {
+	        productService.increaseProductCount(productIdx);
+	        logger.info("Product count increased successfully for productIdx: {}", productIdx);
+	    } catch (Exception e) {
+	        logger.error("Error increasing product count for productIdx: {}", productIdx, e);
+	        // 에러 페이지로 이동
+	        return "error/errorPage";
+	    }
 
-	
-		// 현재 로그인한 사용자 정보 전달
-		if (authentication != null) {
-			CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-			model.addAttribute("currentUserId", userDetails.getUserId()); // 로그인 사용자 ID 전달
-		}
-	
-		return "product/productdetail"; // 상세 페이지로 이동
+	    // 상품 정보 조회
+	    Product product = null;
+	    try {
+	        product = productService.getProductByNum(productIdx);
+	        if (product == null) {
+	            logger.warn("No product found for productIdx: {}", productIdx);
+	            return "error/noProductFound"; // 상품이 없을 때의 처리
+	        }
+	        logger.info("Product retrieved successfully for productIdx: {}", productIdx);
+	    } catch (Exception e) {
+	        logger.error("Error retrieving product for productIdx: {}", productIdx, e);
+	        return "error/errorPage"; // 에러 페이지로 이동
+	    }
+
+	    // 글쓴 사람의 정보 조회
+	    User seller = null;
+	    try {
+	        seller = userService.getUser(product.getProductUserid());  // 글쓴 사람의 정보 가져오기
+	        if (seller == null) {
+	            logger.warn("No seller found for userId: {}", product.getProductUserid());
+	            return "error/noSellerFound"; // 글쓴 사람이 없을 때의 처리
+	        }
+	        logger.info("Seller retrieved successfully for userId: {}", product.getProductUserid());
+	    } catch (Exception e) {
+	        logger.error("Error retrieving seller for userId: {}", product.getProductUserid(), e);
+	        return "error/errorPage"; // 에러 페이지로 이동
+	    }
+
+	    // 상품 이미지 처리 (콤마로 구분된 이미지 리스트로 변환)
+	    String[] productImages = product.getProductImage().split(",");
+	    model.addAttribute("productImages", productImages); // 여러 이미지 전달
+	    model.addAttribute("product", product); // 상품 정보 전달
+	    model.addAttribute("searchMap", map); // 검색 조건도 다시 전달
+
+	    // 글쓴 사람의 레벨, 경험치 정보 전달
+	    try {
+	        int sellerLevel = seller.getUserLevel();
+	        int sellerExperience = seller.getUserExperience();
+	        int experienceForNextLevel = ExperienceUtil.getExperienceForNextLevel(sellerLevel);
+	        int progressPercentage = ExperienceUtil.calculateProgressPercentage(sellerExperience, experienceForNextLevel);
+
+	        model.addAttribute("seller", seller); // 글쓴 사람의 전체 정보를 전달
+	        model.addAttribute("sellerLevel", sellerLevel); // 글쓴 사람의 레벨
+	        model.addAttribute("sellerExperience", sellerExperience); // 글쓴 사람의 현재 경험치
+	        model.addAttribute("experienceForNextLevel", experienceForNextLevel); // 다음 레벨업까지 필요한 경험치
+	        model.addAttribute("progressPercentage", progressPercentage); // 경험치 진행률
+
+	        logger.info("Seller Level: {}, Seller Experience: {}, Progress: {}%", sellerLevel, sellerExperience, progressPercentage);
+	    } catch (Exception e) {
+	        logger.error("Error processing seller's experience and level", e);
+	        return "error/errorPage"; // 에러 페이지로 이동
+	    }
+
+	    // 현재 로그인한 사용자 정보 전달
+	    if (authentication != null) {
+	        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+	        model.addAttribute("currentUserId", userDetails.getUserId()); // 로그인 사용자 ID 전달
+	        logger.info("Current logged-in userId: {}", userDetails.getUserId());
+	    } else {
+	        logger.warn("No user is currently logged in.");
+	    }
+
+	    return "product/productdetail"; // 상세 페이지로 이동
 	}
+
+
+
 
 	// 수정 페이지로 이동 (로그인 사용자만 가능)
 	@PreAuthorize("hasRole('ROLE_ADMIN') or principal.userid eq #map['productUserid']")

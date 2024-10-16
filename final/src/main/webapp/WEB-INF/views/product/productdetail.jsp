@@ -448,28 +448,70 @@ body {
 					</ul>
 				</div>
 			</div>
+  <!-- 글쓴 사람의 정보 표시 -->
+    <div class="store-info-right">
+        <h4 style="font-weight: bold;">프로필 정보</h4>
+        <div class="left-wrap" style="border-top: 1px solid #e1e1e1; margin-top: 25px;">
+            <div class="store-name-container" style="margin-top: 30px;">
+                <!-- 판매자 닉네임 -->
+                <div class="store-name">${seller.userNickname}</div>
 
-			<!-- 가게 정보 -->
-			<div class="store-info-right">
-				<h4 style="font-weight: bold;">프로필 정보</h4>
-				<div class="left-wrap"
-					style="border-top: 1px solid #e1e1e1; margin-top: 25px;">
-					<div class="store-name-container" style="margin-top: 30px;">
-						<div class="store-name">${product.productUsernickname}</div>
-						<div class="level-bar text-center mt-2">
-							<p id="userLevel">Loading...</p>
-							<div class="progress">
-								<div class="progress-bar" role="progressbar" style="width: 0%;"
-									aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-							</div>
-							<p class="level-text mt-2" id="experienceText">Loading...</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                <!-- 뱃지 아이콘 직접 삽입 -->
+                <div class="badge-icon custom-badge-icon">
+                    <c:choose>
+    <c:when test="${boards.auth == 'ROLE_SUPER_ADMIN'}">
+        <!-- Super Admin 뱃지 -->
+        <img src="${pageContext.request.contextPath}/resources/images/crown.png" alt="Super Admin Badge" class="user-badge" />
+    </c:when>
+    <c:when test="${boards.auth == 'ROLE_BOARD_ADMIN'}">
+        <!-- Board Admin 뱃지 -->
+        <img src="${pageContext.request.contextPath}/resources/images/rainbow.png" alt="Board Admin Badge" class="user-badge" />
+    </c:when>
+    <c:otherwise>
+        <!-- User Level에 따른 뱃지 -->
+        <c:choose>
+            <c:when test="${boards.userLevel >= 1 && boards.userLevel <= 5}">
+                <!-- Bronze 뱃지 -->
+                <img src="${pageContext.request.contextPath}/resources/images/bronze.png" alt="Bronze Badge" class="user-badge" />
+            </c:when>
+            <c:when test="${boards.userLevel >= 6 && boards.userLevel <= 10}">
+                <!-- Silver 뱃지 -->
+                <img src="${pageContext.request.contextPath}/resources/images/silver.png" alt="Silver Badge" class="user-badge" />
+            </c:when>
+            <c:when test="${boards.userLevel >= 11 && boards.userLevel <= 15}">
+                <!-- Gold 뱃지 -->
+                <img src="${pageContext.request.contextPath}/resources/images/gold.png" alt="Gold Badge" class="user-badge" />
+            </c:when>
+            <c:when test="${boards.userLevel >= 16 && boards.userLevel <= 19}">
+                <!-- Emerald 뱃지 -->
+                <img src="${pageContext.request.contextPath}/resources/images/emerald.png" alt="Emerald Badge" class="user-badge" />
+            </c:when>
+            <c:when test="${boards.userLevel >= 20}">
+                <!-- Diamond 뱃지 -->
+                <img src="${pageContext.request.contextPath}/resources/images/diamond.png" alt="Diamond Badge" class="user-badge" />
+            </c:when>
+            <c:otherwise>
+                <!-- 기본 뱃지 -->
+                <img src="${pageContext.request.contextPath}/resources/images/default.png" alt="Default Badge" class="user-badge" />
+            </c:otherwise>
+        </c:choose>
+    </c:otherwise>
+</c:choose>
 
+                </div>
+
+                <!-- 판매자의 레벨 및 경험치 바 -->
+                <div class="level-bar text-center mt-2">
+                    <p id="userLevel">${sellerLevel} 레벨</p>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: ${progressPercentage}%;" aria-valuenow="${progressPercentage}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="level-text mt-2">${sellerExperience}/${experienceForNextLevel} P (${progressPercentage}%)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 	<!-- Swiper JS -->
 	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 	<script>
