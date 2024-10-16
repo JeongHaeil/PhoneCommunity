@@ -317,6 +317,17 @@ body {
 		flex-direction: column;
 	}
 }
+
+.custom-btn {
+    padding: 5px 10px !important; /* 버튼 크기 줄임 */
+    font-size: 1rem !important; /* 폰트 크기 조정 */
+    border: none !important; /* 테두리 제거 */
+    box-shadow: none !important; /* 버튼의 그림자 제거 */
+}
+
+.button-container a {
+    white-space: nowrap; /* 텍스트가 한 줄로 유지되게 함 */
+}
 </style>
 </head>
 
@@ -425,20 +436,27 @@ body {
 		<div class="product-store-info">
 			<div class="product-info-left">
 				<!-- 상품 정보 제목과 수정/삭제 버튼을 동일한 줄에 배치 -->
-				<div style="display: flex; justify-content: space-between; align-items: center;">
+				<div
+					style="display: flex; justify-content: space-between; align-items: center;">
 					<h4 class="info-header" style="font-weight: bold;">상품 정보</h4>
 					<!-- 수정 및 삭제 버튼 -->
-					<div class="button-container" style="display: flex; justify-content: flex-end;">
+					<div class="button-container"
+						style="display: flex; justify-content: flex-end; align-items: center;">
 						<c:if test="${currentUserId eq product.productUserid}">
-							<a href="${pageContext.request.contextPath}/product/modify?productIdx=${product.productIdx}" 
-							   class="btn btn-outline-secondary btn-sm" 
-							   style="margin-right: 10px;">게시글 수정</a>
-							<a href="${pageContext.request.contextPath}/product/remove?productIdx=${product.productIdx}&productUserid=${product.productUserid}" 
-							   class="btn btn-outline-danger btn-sm" 
-							   onclick="return confirm('정말로 이 글을 삭제하시겠습니까?');">게시글 삭제</a>
+							<a
+								href="${pageContext.request.contextPath}/product/modify?productIdx=${product.productIdx}"
+								class="btn btn-outline-secondary btn-sm custom-btn"
+								style="margin-right: 10px;">게시글 수정</a>
+							<a
+								href="${pageContext.request.contextPath}/product/remove?productIdx=${product.productIdx}&productUserid=${product.productUserid}"
+								class="btn btn-outline-danger btn-sm custom-btn"
+								style="white-space: nowrap;"
+								onclick="return confirm('정말로 이 글을 삭제하시겠습니까?');">게시글 삭제</a>
 						</c:if>
 					</div>
 				</div>
+
+
 				<div class="left-wrap"
 					style="border-top: 1px solid #e1e1e1; margin-top: 25px; padding: 20px; background-color: #f9f9f9; border-radius: 8px;">
 					<ul style="margin-top: 25px; list-style: none; padding: 0;">
