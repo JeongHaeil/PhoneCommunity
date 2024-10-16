@@ -1,93 +1,104 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>게시글 상세보기</title>
-</head>
-<body>
-<h2>게시글 상태 변경 / 유저 상태 변경</h2>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<div class="container text-center mt-5">
-    <button class="btn btn-outline-dark" onclick="changeUserStatus(${post.userNum}, 1);">사용자 상태 변경</button>
-    <button class="btn btn-outline-dark" onclick="changeBoardStatus(${post.boardPostIdx}, 1);">게시물 상태 변경</button>
+<meta charset="UTF-8">
+<title>게시글 상세보기</title>
+
+<style>
+    .custom-bg { background-color: #f8f9fa; }
+    .custom-container { max-width: 800px; margin: auto; }
+    .custom-card { border: none; box-shadow: 0 0 15px rgba(0,0,0,0.1); margin-top: 20px; }
+    .custom-card-header { background-color: #343a40; color: white; padding: 15px; }
+    .custom-card-body { padding: 20px; }
+    .custom-btn {
+        white-space: nowrap;
+        border: 1px solid #343a40;
+        color: #343a40;
+        background-color: transparent;
+        transition: all 0.3s ease;
+        margin: 5px;
+        padding: 5px 10px;
+    }
+    .custom-btn:hover { background-color: #343a40; color: white; }
+    .custom-title { color: #343a40; font-weight: bold; }
+    .post-content { margin-top: 20px; border-top: 1px solid #dee2e6; padding-top: 20px; }
+    .post-info { margin-bottom: 10px; }
+    .post-info span { margin-right: 15px; }
+</style>
+
+<div class="custom-bg">
+    <div class="custom-container">
+        <div class="custom-card">
+            <div class="custom-card-header">
+                <h2 class="custom-title">${post.boardTitle}</h2>
+            </div>
+            <div class="custom-card-body">
+                <div class="post-info">
+                    <span>작성자: ${post.userNickname}</span>
+                    <span>작성일: ${post.boardRegisterDate}</span>
+                    <span>게시물 번호: ${post.boardPostIdx}</span>
+                </div>
+                <div class="post-info">
+                    <span>유저번호: ${post.userNum}</span>
+                    <span>이메일: ${post.userEmail}</span>
+                    <span>전화번호: ${post.userPhoneNum}</span>
+                </div>
+                <div class="post-info">
+                    <span>가입일: ${post.userRegisterDate}</span>
+                    <span>게시물상태: ${post.boardStatus}</span>
+                    <span>유저상태: ${post.userStatus}</span>
+                </div>
+                <div class="post-content">
+                    ${post.boardContent}
+                </div>
+                <div class="text-center mt-4">
+                    <button class="btn custom-btn" onclick="changeUserStatus(${post.userNum}, 3, 86400);">사용자 상태 변경</button>
+                    <button class="btn custom-btn" onclick="changeBoardStatus(${post.boardPostIdx}, 3, 0);">게시물 상태 변경</button>
+                    <a href="<c:url value='/super_admin/admin'/>" class="btn custom-btn">목록으로 돌아가기</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="col-8"></div>
-<h2>${post.boardTitle}</h2>
-<h2>${post.boardPostIdx }</h2>
-<p>작성자: ${post.userNickname}</p>
-<p>유저번호: ${post.userNum}</p>
-<p>이메일: ${post.userEmail}</p>
-<p>전화번호: ${post.userPhoneNum}</p>
-<p>가입일: ${post.userRegisterDate}</p>
-<p>작성일: ${post.boardRegisterDate}</p>
-<p>게시물상태: ${post.boardStatus}</p>
-<p>유저상태: ${post.userStatus}</p>
-
-<div>${post.boardContent}</div>
-
-
-<a href="<c:url value='/super_admin/admin'/>">목록으로 돌아가기</a>
-
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
-
-function changeUserStatus(userNum, userStatus) {
-	console.log("userNum:", userNum);
-	console.log("userStatus:", userStatus);
-    if (confirm("사용자 상태를 변경하시겠습니까?")) {
-        $.ajax({
-            type: "PUT",
-            url: "<c:url value='/super_admin/admin/userStatus'/>",
-            data: JSON.stringify({ "userNum": userNum, "userStatus": userStatus }),
-            contentType: "application/json", 
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-            },
-            dataType: "text",
-            success: function(response) {
-                alert(response);
-                location.reload();
-            },
-            error: function(xhr) {
-                alert("에러코드 = " + xhr.status);
-            }
-        });
-    }
+function changeUserStatus(userNum, userStatus, duration) {
+    $.ajax({
+        type: "PUT",
+        url: "<c:url value='/super_admin/admin/userStatus'/>",
+        data: JSON.stringify({"userNum": userNum, "userStatus": userStatus, "duration": duration}),
+        contentType: "application/json",
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+        },
+        success: function(response) {
+            alert("유저 상태가 성공적으로 변경되었습니다.");
+            location.reload();
+        },
+        error: function(xhr) {
+            alert("에러코드 = " + xhr.status + ": " + xhr.responseText);
+        }
+    });
 }
 
-function changeBoardStatus(boardPostIdx, boardStatus) {
-    // 콘솔에 boardPostIdx 값을 출력하여 디버깅에 도움을 줍니다.
-	console.log("boardPostIdx:", boardPostIdx);
-	console.log("status:", status);
-    // 사용자에게 게시물 상태를 변경할 것인지 확인하는 대화 상자를 표시합니다.
-    if (confirm("게시물 상태를 변경하시겠습니까?")) {
-        // AJAX 요청을 통해 서버와 비동기적으로 통신합니다.
-        $.ajax({
-            type: "PUT",  // HTTP 메서드를 PUT으로 설정하여 리소스를 업데이트하도록 지정합니다.
-            url: "<c:url value='/super_admin/admin/boardStatus'/>",  // 서버 측 엔드포인트 URL입니다. JSP에서 URL을 생성합니다.
-            data: JSON.stringify({ "boardPostIdx": boardPostIdx, "boardStatus": boardStatus }),  // 요청 본문에 JSON 형식으로 데이터를 포함시킵니다.
-            contentType: "application/json",  // 서버에 전송하는 데이터의 형식을 JSON으로 지정합니다.
-            beforeSend: function(xhr) {
-                // 요청을 보내기 전에 CSRF 토큰을 헤더에 설정하여 보안을 강화합니다.
-                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");  // CSRF 토큰이 JSP에서 올바르게 설정되었는지 확인합니다.
-            },
-            dataType: "text",  // 서버로부터 받을 데이터의 형식을 텍스트로 지정합니다.
-            success: function(response) {
-                // 요청이 성공적으로 완료되면 서버의 응답을 알림으로 표시하고 페이지를 새로고침합니다.
-                alert(response);
-                location.reload();
-            },
-            error: function(xhr) {
-                // 요청이 실패하면 오류 코드를 포함한 상세한 오류 메시지를 알림으로 표시합니다.
-                alert("에러코드 = " + xhr.status + ": " + xhr.responseText);  // 더 자세한 오류 피드백을 제공하여 문제 해결에 도움을 줍니다.
-            }
-        });
-    }
+function changeBoardStatus(boardPostIdx, boardStatus, duration) {
+    $.ajax({
+        type: "PUT",
+        url: "<c:url value='/super_admin/admin/boardStatus'/>",
+        data: JSON.stringify({"boardPostIdx": boardPostIdx, "boardStatus": boardStatus, "duration": duration}),
+        contentType: "application/json",
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+        },
+        success: function(response) {
+            alert("게시물 상태가 성공적으로 변경되었습니다.");
+            location.reload();
+        },
+        error: function(xhr) {
+            alert("에러코드 = " + xhr.status + ": " + xhr.responseText);
+        }
+    });
 }
-
 </script>
-
-</body>
-</html>

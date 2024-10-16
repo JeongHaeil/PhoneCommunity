@@ -3,6 +3,8 @@ package xyz.itwill.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import xyz.itwill.dto.Product;
 
 public interface ProductMapper {
@@ -13,6 +15,9 @@ public interface ProductMapper {
 	int selectProductCount(Map<String, Object> map);
 	List<Product> selectProductList(Map<String, Object> map);
 	int updateProductCount(int productIdx);
-	
+	int updateProductSoldStatus(@Param("productIdx") int productIdx, @Param("status") int status);
+	List<Product> selectPopularProducts(); // 조회수가 높은 게시글을 가져오는 메소드
+	List<Product> selectProductsByUserId(String userId);//마이페이지
+
 
 }

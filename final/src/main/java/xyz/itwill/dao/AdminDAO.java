@@ -19,5 +19,6 @@ public interface AdminDAO {
 	int selecttotalUserBoardListCount(Map<String, Object> map);
 	
 	List<Admin> findUsersWithExpiredStatuses(Map<String, Object> map);
+	List<Admin> findBoardWithExpiredStatuses(Map<String, Object> map);
 	
 }

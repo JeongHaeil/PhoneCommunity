@@ -89,9 +89,6 @@ public class AdminServiceImpl implements AdminService {
 		resultMap.put("totalUserBoardList", totalUserBoardList);
 		 
 		return resultMap;
-		
-		
-		
 	}
 	
 	@Override
@@ -105,28 +102,47 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
-	public void updateBoardStatusByBoardPostIdx(int boardPostIdx, int status) {
+	public void updateBoardStatusByBoardPostIdx(int boardPostIdx, int status, LocalDateTime expiryDate) {
 		Map<String, Object> params  = new HashMap<String, Object>();
 		params.put("boardPostIdx", boardPostIdx);
 		params.put("status", status);
+		params.put("expiryDate", expiryDate);
 		
 		adminDAO.updateBoardStatusByBoardId(params);
 		
 	}
+	@Override
+	@Scheduled(fixedRate = 600000) // 10분마다 실행 
+	public void resetExpiredStatuses() {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("currentTime", LocalDateTime.now());
 
-	 @Scheduled(fixedRate = 600000) // 10초마다 실행 (테스트용)
-	    public void resetExpiredStatuses() {
-	        Map<String, Object> params = new HashMap<String, Object>();
-	        params.put("currentTime", LocalDateTime.now());
+        List<Admin> expiredUsers = adminDAO.findUsersWithExpiredStatuses(params);
 
-	        List<Admin> expiredUsers = adminDAO.findUsersWithExpiredStatuses(params);
+        for (Admin admin : expiredUsers) {
+            Map<String, Object> updateParams = new HashMap<String, Object>();
+            updateParams.put("userNum", admin.getUserNum());
+            updateParams.put("status", 1); // 기본 상태로 복구
+            adminDAO.updateUserStatusByUserNum(updateParams);
+        }
+	}
 
-	        for (Admin admin : expiredUsers) {
-	            Map<String, Object> updateParams = new HashMap<String, Object>();
-	            updateParams.put("userNum", admin.getUserNum());
-	            updateParams.put("status", 1); // 기본 상태로 복구
-	            adminDAO.updateUserStatusByUserNum(updateParams);
-	        }
+	@Override
+	@Scheduled(fixedRate = 600000)
+	public void changeBoardExpiredStatuses() {
+		Map<String, Object> params = new HashMap<String, Object>();
+        params.put("currentTime", LocalDateTime.now());
+        
+        List<Admin> expiredBoard = adminDAO.findBoardWithExpiredStatuses(params);
+        
+        for(Admin admin : expiredBoard) {
+        	if(admin.getBoardStatus() == 3) {
+        	Map<String, Object> updateParams = new HashMap<String, Object>();
+        	updateParams.put("boardPostIdx", admin.getBoardPostIdx());
+        	updateParams.put("status", 4);
+        	adminDAO.updateBoardStatusByBoardId(params);
+        	}
+        }
 	}
 
 

@@ -95,7 +95,7 @@ public class AdminController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating user status");
 	    }
 	}
-	
+	/*
 	@PutMapping("/admin/boardStatus")
 	public ResponseEntity<String> updateBoardStatus(@RequestBody Admin request) {
 	    
@@ -107,7 +107,18 @@ public class AdminController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating board status");
 	    }
 	}
-	
+	*/
+	@PutMapping("/admin/boardStatus")
+	public ResponseEntity<String> updateBoardStatus(@RequestBody Admin request) {
+	    try {
+	        // 기간을 초 단위로 변환하여 만료 날짜 설정
+	        LocalDateTime expiryDate = LocalDateTime.now().plusSeconds((long)(request.getDuration() * 24 * 60 * 60));
+	        adminService.updateBoardStatusByBoardPostIdx(request.getBoardPostIdx(), request.getBoardStatus(), expiryDate);
+	        return ResponseEntity.ok("success");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating board status");
+	    }
+	}
 	@GetMapping("/userList")
 	public String userListBoard(@RequestParam(defaultValue = "1") int pageNum,
 				            @RequestParam(defaultValue = "10") int pageSize,

@@ -19,6 +19,7 @@ public class Admin {
     private String userRegisterDate;
     private int userLevel =1;
     private int userStatus =1;
+    
     private LocalDateTime expiryDate;
     private double duration;
 

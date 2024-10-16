@@ -59,6 +59,11 @@ public class AdminDAOImpl implements AdminDAO {
 		return sqlSession.getMapper(AdminMapper.class).findUsersWithExpiredStatuses(map);
 	}
 
+	@Override
+	public List<Admin> findBoardWithExpiredStatuses(Map<String, Object> map) {
+		return sqlSession.getMapper(AdminMapper.class).findBoardWithExpiredStatuses(map);
+	}
+
 	
 	
 

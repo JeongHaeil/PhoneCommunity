@@ -107,13 +107,6 @@
 	        b.board_post_idx = #{boardPostIdx}
 	</select>
   	
-  	<!-- 
-  	<update id="updateUserStatusByUserId">
-	    UPDATE users 
-	    SET user_status = #{status} 
-	    WHERE user_num = #{userNum}
-	</update>
-	 -->
 	 
 	<update id="updateUserStatusByUserId">
 	    UPDATE users 
@@ -123,14 +116,17 @@
 	
 	<update id="updateBoardStatusByBoardPostIdx">
 	    UPDATE board 
-	    SET board_status = #{status} 
+	    SET board_status = #{status}, status_expiry_date = #{expiryDate}
 	    WHERE board_post_idx = #{boardPostIdx}
 	</update>
 	
 	<select id="findUsersWithExpiredStatuses" parameterType="map" resultType="xyz.itwill.dto.Admin">
 		SELECT * FROM users WHERE status_expiry_date &lt;= #{currentTime}
 	</select>
-
+	
+	<select id="findBoardWithExpiredStatuses" parameterType="map" resultType="xyz.itwill.dto.Admin">
+		SELECT * FROM board WHERE status_expiry_date &lt;= #{currentTime}
+	</select>
   	
   	
   </mapper>

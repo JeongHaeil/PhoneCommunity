@@ -11,8 +11,9 @@ public interface AdminService {
 	
 	Admin getSpamBoardByNum(int num);
 	void updateUserStatusByUserNum(int userNum, int status, LocalDateTime expiryDate);
-	void updateBoardStatusByBoardPostIdx(int boardPostIdx, int status);
+	void updateBoardStatusByBoardPostIdx(int boardPostIdx, int status, LocalDateTime expiryDate);
 	
 	void resetExpiredStatuses();
+	void changeBoardExpiredStatuses();
 	
 }

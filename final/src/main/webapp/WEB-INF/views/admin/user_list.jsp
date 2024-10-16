@@ -35,7 +35,7 @@
         .custom-form-focus:focus { border-color: #f05d5e; box-shadow: 0 0 0 0.2rem rgba(240, 93, 94, 0.25); }
         .custom-title { color: #f05d5e; font-weight: bold; }
         .ellipsis {
-            max-width: 100px; /* 원하는 너비 설정 */
+            max-width: 100px; 
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;

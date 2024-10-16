@@ -45,9 +45,23 @@ public class ProductDAOImpl implements ProductDAO {
         return sqlSession.getMapper(ProductMapper.class).updateProductCount(productIdx);
     }
 
-
     @Override
     public int updateProductStatus(int productIdx) {
         return sqlSession.getMapper(ProductMapper.class).updateProductStatus(productIdx);
+    }
+
+    @Override
+    public int updateProductSoldStatus(int productIdx, int status) {  // 판매 상태 업데이트 구현
+        return sqlSession.getMapper(ProductMapper.class).updateProductSoldStatus(productIdx, status);
+    }
+
+	@Override
+	public List<Product> selectPopularProducts() {
+		return sqlSession.getMapper(ProductMapper.class).selectPopularProducts();
+	}
+	 //마이페이지
+    @Override
+    public List<Product> selectProductsByUserId(String userId) {
+        return sqlSession.getMapper(ProductMapper.class).selectProductsByUserId(userId);
     }
 }
