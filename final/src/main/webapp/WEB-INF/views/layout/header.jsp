@@ -97,7 +97,7 @@
                         <li class="nav-item"><a class="nav-link" href="<c:url value='/board/boardlist/11'/>">질문답변</a></li>
                         <li class="nav-item"><a class="nav-link" href="<c:url value='/phone/phone'/>">요금제비교</a></li>
                         <li class="nav-item"><a class="nav-link" href="<c:url value='/product/list'/>">중고장터</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">플리마켓</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<c:url value='/board/boardlist/3'/>">1:1문의</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">서비스</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">운영관리</a></li>
                     </ul>
@@ -133,7 +133,7 @@
                                         <a class="dropdown-item" href="<c:url value='/user/myWrite'/>"><i class="bi bi-pencil-square"></i> 작성글</a>
                                         <a class="dropdown-item" href="<c:url value='/user/myComment'/>"><i class="bi bi-chat-dots"></i> 작성 댓글</a>
                                         <a class="dropdown-item" href="<c:url value='/final/user/myProducts'/>"><i class="bi bi-box-seam"></i> 중고장터 글</a>
-                                        <a class="dropdown-item" href="#"><i class="bi bi-moon"></i> 다크모드</a>
+                                        <!-- <a class="dropdown-item" href="#"><i class="bi bi-moon"></i> 다크모드</a> -->
                                     </li>
 
                                     <li><hr class="dropdown-divider"></li>
