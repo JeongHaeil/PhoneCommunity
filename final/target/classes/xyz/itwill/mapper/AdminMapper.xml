@@ -7,7 +7,7 @@
 	    SELECT * FROM (
 	        SELECT rownum rn, board.*
 	        FROM (
-	            SELECT b.*, u.user_nickname
+	            SELECT b.*, u.USER_NICKNAME
 	            FROM BOARD b
 	            JOIN USERS u ON b.BOARD_USER_ID = u.USER_ID
 	            WHERE b.BOARD_STATUS = 3

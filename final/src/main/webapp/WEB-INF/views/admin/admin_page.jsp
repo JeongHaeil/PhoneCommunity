@@ -48,8 +48,10 @@
                                 <th>제목</th>
                                 <th>작성자</th>
                                 <th>작성일</th>
+                                <th>유통기한</th>
                             </tr>
                         </thead>
+                        <!--
                         <tbody>
                             <c:forEach var="article" items="${resultMap.spamBoardList}">
                                 <tr style="cursor: pointer;" onclick="location.href='admin/view?boardPostIdx=${article.boardPostIdx}'">
@@ -60,6 +62,19 @@
                                 </tr>
                             </c:forEach>
                         </tbody>
+                        -->
+                        <tbody>
+						    <c:forEach var="article" items="${resultMap.spamBoardList}">
+						        <tr style="cursor: pointer; background-color: ${article.expiryDate != null ? 'red' : 'transparent'};" 
+						            onclick="location.href='admin/view?boardPostIdx=${article.boardPostIdx}'">
+						            <td>${article.boardPostIdx}</td>
+						            <td>${article.boardTitle}</td>
+						            <td>${article.userNickname}</td>
+						            <td>${article.boardRegisterDate}</td>
+						            <td>${article.expiryDate}</td>
+						        </tr>
+						    </c:forEach>
+						</tbody>
                     </table>
                 </div>
 
