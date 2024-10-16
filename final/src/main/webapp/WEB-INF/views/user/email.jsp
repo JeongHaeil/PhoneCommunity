@@ -12,15 +12,15 @@
     <style>
         body {
             background-color: #f8f9fa;
-            font-family: 'Noto Sans KR', sans-serif;
+          
         }
         .verification-container {
             max-width: 400px;
             margin: 50px auto;
             padding: 20px;
-            background-color: white;
+            background-color: #f8f9fa;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+           
         }
         h4 {
             margin-bottom: 30px;
@@ -33,19 +33,25 @@
             padding: 10px;
         }
         .btn-verify {
-            background-color: #f86d6d;
-            color: white;
-            border-radius: 20px;
+            background-color: #3C3D37 !important; /* 버튼 배경색을 #3C3D37로 설정 */
+            color: white !important; /* 텍스트 색상을 흰색으로 설정 */
+            border-radius: 10px; /* 아이디 찾기 버튼과 동일하게 */
             width: 100%;
             padding: 10px;
             margin-top: 20px;
         }
         .btn-verify:hover {
-            background-color: #f75c5c;
+            background-color: #2E2F2A !important; /* hover 상태 배경색 */
         }
         .error-message {
             color: red;
             margin-top: 10px;
+        }
+        .btn-link {
+            color: #3C3D37 !important;
+        }
+        .btn-link:hover {
+            color: #2E2F2A !important;
         }
     </style>
 </head>

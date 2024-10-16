@@ -20,11 +20,11 @@
                     </div>
                     <div class="main-card-body">
                         <ul class="main-list-group" id="MainNewboardDisplay">
-                            <li class="main-list-item">1. 구뜨꾸뜨</li>
-                            <li class="main-list-item">2. 아이스아메리카노</li>
-                            <li class="main-list-item">3. 아이폰</li>
-                            <li class="main-list-item">4. 전자담배</li>
-                            <li class="main-list-item">5. 화이팅</li>
+                            <li class="main-list-item">1. </li>
+                            <li class="main-list-item">2. </li>
+                            <li class="main-list-item">3. </li>
+                            <li class="main-list-item">4. </li>
+                            <li class="main-list-item">5. </li>
                         </ul>
                     </div>
                 </div>
@@ -38,11 +38,11 @@
                     </div>
                     <div class="main-card-body">
                         <ul class="main-list-group" id="MainPopularDisplay">
-                            <li class="main-list-item">1. 취업하자</li>
-                            <li class="main-list-item">2. 2</li>
-                            <li class="main-list-item">3. 3</li>
-                            <li class="main-list-item">4. 4</li>
-                            <li class="main-list-item">5. 5</li>
+                            <li class="main-list-item">1. </li>
+                            <li class="main-list-item">2. </li>
+                            <li class="main-list-item">3. </li>
+                            <li class="main-list-item">4. </li>
+                            <li class="main-list-item">5. </li>
                         </ul>
                     </div>
                 </div>
@@ -56,11 +56,11 @@
                     </div>
                     <div class="main-card-body">
                         <ul class="main-list-group" id="MainNoticeDisplay">
-                            <li class="main-list-item">1.1</li>
-                            <li class="main-list-item">2. 2</li>
-                            <li class="main-list-item">3. 3</li>
-                            <li class="main-list-item">4. 32</li>
-                            <li class="main-list-item">5. 123</li>
+                            <li class="main-list-item">1. </li>
+                            <li class="main-list-item">2. </li>
+                            <li class="main-list-item">3. </li>
+                            <li class="main-list-item">4. </li>
+                            <li class="main-list-item">5. </li>
                         </ul>
                     </div>
                 </div>
@@ -78,19 +78,19 @@
                     <div class="main-card-body">
                         <div class="main-image-grid">
                             <div class="main-image-item">
-                                <img src="image1.jpg" alt="상품1" class="main-image">
+                                <img src=""  class="main-image">
                                 <p class="main-image-title">상품 1</p>
                             </div>
                             <div class="main-image-item">
-                                <img src="image2.jpg" alt="상품2" class="main-image">
+                                <img src=""  class="main-image">
                                 <p class="main-image-title">상품 2</p>
                             </div>
                             <div class="main-image-item">
-                                <img src="image3.jpg" alt="상품3" class="main-image">
+                                <img src=""  class="main-image">
                                 <p class="main-image-title">상품 3</p>
                             </div>
                             <div class="main-image-item">
-                                <img src="image4.jpg" alt="상품4" class="main-image">
+                                <img src="" class="main-image">
                                 <p class="main-image-title">상품 4</p>
                             </div>
                         </div>
@@ -107,11 +107,11 @@
                     </div>
                     <div class="main-card-body">
                         <ul class="main-list-group">
-                            <li class="main-list-item">1. 게시글 1</li>
-                            <li class="main-list-item">2. 게시글 2</li>
-                            <li class="main-list-item">3. 게시글 3</li>
-                            <li class="main-list-item">4. 게시글 4</li>
-                            <li class="main-list-item">5. 게시글 5</li>
+                            <li class="main-list-item">1. </li>
+                            <li class="main-list-item">2. </li>
+                            <li class="main-list-item">3. </li>
+                            <li class="main-list-item">4. </li>
+                            <li class="main-list-item">5. </li>
                         </ul>
                     </div>
                 </div>
@@ -119,6 +119,7 @@
         </div>
     </div>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="<c:url value='/js/jquery-3.7.1.min.js'/>"></script>
 	<script type="text/javascript">
     $(document).ready(function() {

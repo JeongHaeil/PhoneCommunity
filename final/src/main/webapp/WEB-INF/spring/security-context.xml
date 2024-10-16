@@ -15,8 +15,8 @@
         
         
         <!-- URL 패턴에 따른 접근 권한 설정 --> 
-		<intercept-url pattern="/Super_Admin/**" access="hasRole('ROLE_SUPER_ADMIN')" />
-        <intercept-url pattern="/Board_Admin/**" access="hasRole('ROLE_BOARD_ADMIN')" />
+		<intercept-url pattern="/super_admin/**" access="hasRole('ROLE_SUPER_ADMIN')" />
+        <!-- <intercept-url pattern="/Board_Admin/**" access="hasRole('ROLE_BOARD_ADMIN')" /> -->
         <intercept-url pattern="/phone/**" access="permitAll"/>
         <intercept-url pattern="/chat/**" access="permitAll"/>
  		<intercept-url pattern="/chat/websockets/**" access="permitAll"/>

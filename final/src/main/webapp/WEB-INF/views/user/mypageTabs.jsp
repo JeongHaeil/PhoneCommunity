@@ -22,7 +22,7 @@
             flex: 1;
             text-align: center;
             padding: 10px;
-            background-color: #fff;
+            background-color: transparent; /* 배경색을 투명하게 설정하여 흰색 제거 */
             border: none;
             color: #495057;
             font-weight: bold;
@@ -42,21 +42,24 @@
     </style>
 </head>
 <body>
-<!-- /WEB-INF/views/user/mypageTabs.jsp -->
+
 <div class="mypage-button-group">
+    <!-- 회원정보 보기 -->
     <form action="/final/user/profile" method="GET">
         <button type="submit" class="mypage-button ${activeTab == 'profile' ? 'active' : ''}">회원정보 보기</button>
     </form>
-    
+
+    <!-- 작성 글 보기 -->
     <form action="/final/user/myWrite" method="GET">
         <button type="submit" class="mypage-button ${activeTab == 'myWrite' ? 'active' : ''}">작성 글 보기</button>
     </form>
-    
+
+    <!-- 작성 댓글 보기 -->
     <form action="/final/user/myComment" method="GET">
         <button type="submit" class="mypage-button ${activeTab == 'myComment' ? 'active' : ''}">작성 댓글 보기</button>
     </form>
 
-    <!-- 중고장터 보기 버튼 추가 -->
+    <!-- 중고장터 글 보기 -->
     <form action="/final/user/myProducts" method="GET">
         <button type="submit" class="mypage-button ${activeTab == 'myProducts' ? 'active' : ''}">중고장터 글 보기</button>
     </form>

@@ -8,15 +8,15 @@
     <style>
         body {
             background-color: #f8f9fa;
-            font-family: 'Noto Sans KR', sans-serif;
+            
         }
         .signup-container {
             max-width: 500px;
             margin: 50px auto;
             padding: 20px;
-            background-color: white;
+            background-color: #f8f9fa;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            
         }
         h4 {
             margin-bottom: 30px;
@@ -37,15 +37,15 @@
             width: 32%;
         }
         .btn-signup {
-            background-color: #f86d6d;
-            color: white;
-            border-radius: 20px;
+            background-color: #3C3D37 !important; /* 버튼 배경 색상을 #3C3D37로 변경 */
+            color: white !important; /* 텍스트 색상을 흰색으로 변경 */
+            border-radius: 10px; /* 이전 스타일과 일치하게 둥글기 조정 */
             width: 100%;
             padding: 10px;
             margin-top: 20px;
         }
         .btn-signup:hover {
-            background-color: #f75c5c;
+            background-color: #2E2F2A !important; /* hover 시 색상을 변경 */
         }
         .alert-info {
             margin-top: 20px;
