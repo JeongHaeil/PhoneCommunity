@@ -1,14 +1,14 @@
 @charset "UTF-8";
 @font-face {
-    font-family: 'MapoFlowerIsland';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/MapoFlowerIslandA.woff') format('woff');
+    font-family: 'KOTRA_BOLD-Bold';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.1/KOTRA_BOLD-Bold.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
 
 body {
      background-color: #f9f9f9 !important;
-     font-family: 'MapoFlowerIsland', Arial, sans-serif !important;
+     font-family: 'KOTRA_BOLD-Bold', Arial, sans-serif !important;
      color: #333  !important;
-     font-weight: bold;;
+     font-weight: bold !important;
 }
