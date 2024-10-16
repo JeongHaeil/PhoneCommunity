@@ -1,30 +1,24 @@
-@charset "UTF-8";
-
-
-
 
 
 /* 전체 컨테이너 */
 .main-container {
     width: 100%;
-   height: 1129px;
-    max-width: 1190px;
-    margin: 0 auto;
-    padding: 20px;
-    
+   
+    max-width: 1400px;
+    margin: 10px auto;
+    margin-top: 80px;
+    margin-bottom: 80px;
     font-family: 'MapoFlowerIsland', Arial, sans-serif;
     color: #333;
-    font-size: 16px;
+    font-size: 18px;
 
-    margin-left: 250px;
-    margin-top: 50px;
 }
 
 /* 행 레이아웃 */
 .main-row {
     display: flex;
     justify-content: flex-start;
-    align-items: center; 
+    align-items: baseline; 
     flex-wrap: wrap;
     gap: 20px;
 }
@@ -34,13 +28,15 @@
     border: 1px solid #ddd;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     width: 100%;
+    height: auto;
+    min-height: 250px;
     background-color: #fff;
 }
 
 /* 카드 헤더 스타일 */
 .main-card-header {
     font-weight: bold;
-    font-size: 15px;
+    font-size: 16px;
     padding: 10px;
     display: flex;
     justify-content: space-between;
@@ -69,6 +65,8 @@
 /* 카드 본문 스타일 */
 .main-card-body {
     padding: 15px;
+    
+    
 }
 
 /* 리스트 스타일 */
@@ -80,7 +78,7 @@
 
 /* 리스트 아이템 스타일 */
 .main-list-item {
-    padding: 10px 0;
+    padding: 15px 0;
     font-size: 16px;
     border-bottom: 1px solid #eee;
     color: #333;
@@ -92,9 +90,14 @@
 
 /* 각 섹션별 칼럼 */
 .main-shopping-info, .main-community, .main-popular-posts, .main-new-board {
-    flex-basis: calc(35% - 20px); /* 최신글, 인기글, 공지사항의 너비를 30%로 설정 */
-    order: 1;  
+    flex-basis: calc(35% - 0px); /* 최신글, 인기글, 공지사항의 너비를 30%로 설정 */
+    order: 1; 
+    width: 500px;
+    min-width: 400px;
 }
+
+
+
 
 /* 자유게시판 위의 간격 */
 .main-popular-posts {
@@ -107,19 +110,51 @@
 }
 
 .main-notice {
-    flex-basis: calc(20% - 10px);
+    flex-basis: calc(25% - 10px);
     order: 2; 
-    margin-left: 15px;
+    
 }
-
-
-.main-image-item {
-    flex-basis: calc(45% - 20px); /* 한 줄에 4개의 이미지를 배치 */
-    text-align: center;
+@font-face {
+    font-family: 'MapoFlowerIsland';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/MapoFlowerIslandA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 }
 .main-image-grid {
     display: flex;
-    flex-wrap: wrap; /* 여러 줄로 나뉘게 설정 */
-    gap: 74px; /* 이미지 간의 간격 */
-    justify-content: space-between;
+    flex-wrap: wrap; /* 여러 줄로 나누기 */
+    justify-content: space-between; /* 항목들 사이에 간격 유지 */
+    gap: 20px; /* 이미지 간 간격 */
+}
+
+/* 각 이미지 아이템 설정 */
+.main-image-item {
+    flex-basis: calc(48% - 20px); /* 각 이미지가 한 줄에 4개 들어가도록 설정 */
+    box-sizing: border-box;
+    text-align: center;
+    
+    width: 300px;
+}
+
+/* 이미지 크기 조정 */
+.main-image {
+    width: 100%; /* 이미지가 부모 컨테이너에 맞게 조정됨 */
+    
+    
+    
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    
+}
+
+/* 이미지 제목 */
+.main-image-title {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.main-card-body{
+    font-size: 14px;
+
 }
