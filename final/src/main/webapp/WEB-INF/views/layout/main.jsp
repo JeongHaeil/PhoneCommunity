@@ -8,19 +8,18 @@
 </head>
 <body>
 
-    <body>
 
 
     <div class="main-container">
         <div class="main-row">
             <div class="main-shopping-info">
                 <div class="main-card">
-                    <div class="main-card-header">
+                    <div class="main-card-header" id="MainViewDisplay">
                         최신글
                         <a href="#" class="main-more-btn">더보기</a>
                     </div>
                     <div class="main-card-body">
-                        <ul class="main-list-group">
+                        <ul class="main-list-group" id="MainNewboardDisplay">
                             <li class="main-list-item">1. 구뜨꾸뜨</li>
                             <li class="main-list-item">2. 아이스아메리카노</li>
                             <li class="main-list-item">3. 아이폰</li>
@@ -38,7 +37,7 @@
                         <a href="#" class="main-more-btn">더보기</a>
                     </div>
                     <div class="main-card-body">
-                        <ul class="main-list-group">
+                        <ul class="main-list-group" id="MainPopularDisplay">
                             <li class="main-list-item">1. 취업하자</li>
                             <li class="main-list-item">2. 2</li>
                             <li class="main-list-item">3. 3</li>
@@ -56,7 +55,7 @@
                         <a href="#" class="main-more-btn">더보기</a>
                     </div>
                     <div class="main-card-body">
-                        <ul class="main-list-group">
+                        <ul class="main-list-group" id="MainNoticeDisplay">
                             <li class="main-list-item">1.1</li>
                             <li class="main-list-item">2. 2</li>
                             <li class="main-list-item">3. 3</li>
@@ -119,7 +118,82 @@
             </div>
         </div>
     </div>
-
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
     <script type="text/javascript" src="<c:url value='/js/jquery-3.7.1.min.js'/>"></script>
+	<script type="text/javascript">
+    $(document).ready(function() {
+        popularBoardList();
+        NoticeBoardList();
+        NewBoardList();
+    });
+    function popularBoardList() {	
+    	 $.ajax({
+    		type:"get",
+    		url: "<c:url value='/rest/popular_side_board'/>",
+    		dataType: "json",
+    		success : function(result) {
+    			var html="";
+    			if(result.popularBoardList.length==0){
+    			    html += " <li class='list-group-item '>인기글이 없습니다.</li>";
+    			    return;
+    			}else{
+    				$(result.popularBoardList).each(function(index) {
+    				html +="<li class='list-group-item '>"+(index+1)+". <a class='	' href='<c:url value='/board/boarddetail/"+this.boardCode+"/"+this.boardPostIdx+"'/>'>"+this.boardTitle+"</a> </li>";
+    				});
+    			}
+    			$("#MainPopularDisplay").html(html);
+    		},
+    		error : function(xhr) {
+    			alert("에러코드(게시글 검색) = " + xhr.status);
+    		}
+    	});
+    	}
+    
+    function NewBoardList() {	
+    	 $.ajax({
+    		type:"get",
+    		url: "<c:url value='/rest/main_board_view'/>",
+    		dataType: "json",
+    		success : function(result) {
+    			var html="";
+    			if(result.NewBoardList.length==0){
+    			    html += " <li class='list-group-item '>글이 없습니다.</li>";
+    			    return;
+    			}else{
+    				$(result.NewBoardList).each(function(index) {
+    				html +="<li class='list-group-item '>"+(index+1)+". <a class='	' href='<c:url value='/board/boarddetail/"+this.boardCode+"/"+this.boardPostIdx+"'/>'>"+this.boardTitle+"</a> </li>";
+    				});
+    			}
+    			$("#MainNewboardDisplay").html(html);
+    		},
+    		error : function(xhr) {
+    			alert("에러코드(게시글 검색) = " + xhr.status);
+    		}
+    	});
+    	}
+    
+    function NoticeBoardList() {  	
+    	 $.ajax({
+    		type:"get",
+    		url: "<c:url value='/rest/main_board_notice'/>",
+    		dataType: "json",
+    		success : function(result) {
+    			var html="";
+    			if(result.NoticeBoardList.length==0){
+    			    html += " <li class='list-group-item '>글이 없습니다.</li>";
+    			    return;
+    			}else{
+    				$(result.NoticeBoardList).each(function(index) {
+    				html +="<li class='list-group-item '>"+(index+1)+". <a class='	' href='<c:url value='/board/boarddetail/"+this.boardCode+"/"+this.boardPostIdx+"'/>'>"+this.boardTitle+"</a> </li>";
+    				});
+    			}
+    			$("#MainNoticeDisplay").html(html);
+    		},
+    		error : function(xhr) {
+    			alert("에러코드(게시글 검색) = " + xhr.status);
+    		}
+    	});
+    	}
+    </script>  
     
 </body>
