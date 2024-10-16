@@ -134,11 +134,11 @@
     		success : function(result) {
     			var html="";
     			if(result.popularBoardList.length==0){
-    			    html += " <li class='list-group-item '>인기글이 없습니다.</li>";
+    			    html += " <li class='main-list-item '>인기글이 없습니다.</li>";
     			    return;
     			}else{
     				$(result.popularBoardList).each(function(index) {
-    				html +="<li class='list-group-item '>"+(index+1)+". <a class='	' href='<c:url value='/board/boarddetail/"+this.boardCode+"/"+this.boardPostIdx+"'/>'>"+this.boardTitle+"</a> </li>";
+    				html +="<li class='main-list-item '>"+(index+1)+". <a class='	' href='<c:url value='/board/boarddetail/"+this.boardCode+"/"+this.boardPostIdx+"'/>'>"+this.boardTitle+"</a> </li>";
     				});
     			}
     			$("#MainPopularDisplay").html(html);
@@ -157,11 +157,11 @@
     		success : function(result) {
     			var html="";
     			if(result.NewBoardList.length==0){
-    			    html += " <li class='list-group-item '>글이 없습니다.</li>";
+    			    html += " <li class='main-list-item '>글이 없습니다.</li>";
     			    return;
     			}else{
     				$(result.NewBoardList).each(function(index) {
-    				html +="<li class='list-group-item '>"+(index+1)+". <a class='	' href='<c:url value='/board/boarddetail/"+this.boardCode+"/"+this.boardPostIdx+"'/>'>"+this.boardTitle+"</a> </li>";
+    				html +="<li class='main-list-item '>"+(index+1)+". <a class='	' href='<c:url value='/board/boarddetail/"+this.boardCode+"/"+this.boardPostIdx+"'/>'>"+this.boardTitle+"</a> </li>";
     				});
     			}
     			$("#MainNewboardDisplay").html(html);
@@ -180,11 +180,11 @@
     		success : function(result) {
     			var html="";
     			if(result.NoticeBoardList.length==0){
-    			    html += " <li class='list-group-item '>글이 없습니다.</li>";
+    			    html += " <li class='main-list-item '>글이 없습니다.</li>";
     			    return;
     			}else{
     				$(result.NoticeBoardList).each(function(index) {
-    				html +="<li class='list-group-item '>"+(index+1)+". <a class='	' href='<c:url value='/board/boarddetail/"+this.boardCode+"/"+this.boardPostIdx+"'/>'>"+this.boardTitle+"</a> </li>";
+    				html +="<li class='main-list-item '>"+(index+1)+". <a class='	' href='<c:url value='/board/boarddetail/"+this.boardCode+"/"+this.boardPostIdx+"'/>'>"+this.boardTitle+"</a> </li>";
     				});
     			}
     			$("#MainNoticeDisplay").html(html);
