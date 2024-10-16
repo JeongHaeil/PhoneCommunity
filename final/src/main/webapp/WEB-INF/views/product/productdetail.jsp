@@ -511,6 +511,35 @@ body {
             var buyerId = loggedInUserId;
             var newRoomId;
 
+<<<<<<< HEAD
+   				
+   		//function startChat(roomId) {
+   		function startChat(roomId) {	
+   			var roomId= "${product.productIdx}"
+   			var buyerId = loggedInUserId;  // 이미 상단에서 설정된 buyerId 값 사용
+   		    var sellerId = "${product.productUserid}";  // 판매자 ID (서버에서 전달된 값 확인)
+   		    //var sellerId = "${sellerId}";  // 판매자 ID (서버에서 전달된 값 확인)
+   		    console.log("Start Chat with Seller IDddddddddddddd: " + sellerId + " and Buyer ID: " + buyerId);
+   		    console.log("Starting chat with roomIdddddddddddddd: " + roomId + ", buyerId: " + buyerId + ", sellerId: " + sellerId);  // 로그 추가
+   		    
+           $.ajax({
+               url: "${pageContext.request.contextPath}/chatroom/start",  // 채팅 시작 URL
+               type: "POST",
+               contentType: "application/json",
+               data: JSON.stringify({
+                 	roomId: roomId,
+                   buyerId: loggedInUserId,
+                   sellerId: sellerId,
+                 
+               }),
+               success: function (response) {
+               	
+                   // 생성된 채팅방으로 이동
+                   //window.location.href = "${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId;
+            	   //var chatUrl = "${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId;
+                   //window.open(chatUrl, '_blank', 'width=600,height=700,scrollbars=yes');
+            	   window.open("${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId, "_blank", "width=400,height=600");
+=======
             $("#openChatRoomBtn").click(function () {
                 $.ajax({
                     url: "${pageContext.request.contextPath}/chatroom/createRoom",
@@ -531,7 +560,41 @@ body {
                     }
                 });
             });
+>>>>>>> branch 'dev' of https://github.com/JeongHaeil/final.git
 
+<<<<<<< HEAD
+               },
+               beforeSend: function(xhr) {
+                   xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");  // CSRF 토큰 설정
+               },
+               error: function (xhr, status, error) {
+                   console.error("Error starting chat:", error);
+               }
+           });
+      }
+        });			 
+  
+   	        // 방 번호를 받아 해당 방의 채팅방 UI를 로드하는 함수
+   	        function loadChatRoom(newRoomId) {
+   	        	console.log("Loaded roomId: " + newRoomId); // roomId 값 출력
+   	            $.ajax({
+   	                url: "${pageContext.request.contextPath}/chatroom/room/" + newRoomId,  // 생성된 방 번호로 채팅방 UI를 요청
+   	                type: "GET",
+   	                success: function (data) {
+   	                    $("#chatRoomContainer").html(data);  // 성공 시 채팅방 UI 로드
+   	                },
+   	                error: function (xhr, status, error) {
+   	                    console.error("Error loading chat room:", error);
+   	                }
+   	            });
+   	         
+   	        }  
+   	        
+   	        
+   	     
+   	        var csrfHeaderName = "${_csrf.headerName}";
+   	        var csrfToken = "${_csrf.token}";
+=======
             function startChat(roomId) {
                 $.ajax({
                     url: "${pageContext.request.contextPath}/chatroom/start",
@@ -554,6 +617,7 @@ body {
                 });
             }
         });
+>>>>>>> branch 'dev' of https://github.com/JeongHaeil/final.git
 
         function updateProductStatus(productIdx, status) {
             $.ajax({
