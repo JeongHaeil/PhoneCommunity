@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="xyz.itwill.mapper.AdminMapper">
+  
+  	
+	<select id="selectSpamBoardList" resultType="xyz.itwill.dto.Admin">
+	    SELECT * FROM (
+	        SELECT rownum rn, board.*
+	        FROM (
+	            SELECT b.*, u.USER_NICKNAME
+	            FROM BOARD b
+	            JOIN USERS u ON b.BOARD_USER_ID = u.USER_ID
+	            WHERE b.BOARD_STATUS
+	            IN (3,4)
+	            <if test="keyword != null and keyword != ''">
+	                <choose>
+	                    <when test="search== 'boardPostIdx'">
+	                        AND b.BOARD_POST_IDX LIKE '%' || #{keyword} || '%'
+	                    </when>
+	                    <when test="search == 'boardTitle'">
+	                        AND b.BOARD_TITLE LIKE '%' || #{keyword} || '%'
+	                    </when>
+	                    <when test="search == 'userNickname'">
+	                        AND u.USER_NICKNAME LIKE '%' || #{keyword} || '%'
+	                    </when>
+	                </choose>
+	            </if>
+	            ORDER BY b.BOARD_POST_IDX DESC
+	        ) board
+	    )
+	    WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	
+    
+    <select id="selectSpamBoardCount" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	    FROM BOARD
+	    WHERE BOARD_STATUS
+	    IN (3,4)
+	    <if test="keyword != null and keyword != ''">
+	        <choose>
+	            <when test="column == 'BOARD_POST_IDX'">
+	                AND BOARD_POST_IDX LIKE '%' || #{keyword} || '%'
+	            </when>
+	            <when test="column == 'BOARD_TITLE'">
+	                AND BOARD_TITLE LIKE '%' || #{keyword} || '%'
+	            </when>
+	            <when test="column == 'USER_NICKNAME'">
+	                AND USER_NICKNAME LIKE '%' || #{keyword} || '%'
+	            </when>
+	        </choose>
+	    </if>
+	</select>
+	
+	<select id="selecttotalUserBoardList" resultType="xyz.itwill.dto.Admin">
+		SELECT * FROM (
+	        SELECT rownum rn, board.*
+	        FROM (
+	            SELECT *
+	            FROM USERS
+	            <if test="keyword != null and keyword != ''">
+	                <choose>
+	                    <when test="search== 'userNum'">
+	                        WHERE USER_NUM LIKE '%' || #{keyword} || '%'
+	                    </when>
+	                    <when test="search == 'userId'">
+	                        WHERE USER_ID LIKE '%' || #{keyword} || '%'
+	                    </when>
+	                    <when test="search == 'userNickname'">
+	                        WHERE USER_NICKNAME LIKE '%' || #{keyword} || '%'
+	                    </when>
+	                </choose>
+	            </if>
+	            ORDER BY USER_NUM DESC
+	        ) board
+	    )
+	    WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="selecttotalUserBoardListCount" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	    FROM users
+	    <if test="keyword != null and keyword != ''">
+          <choose>
+              <when test="search== 'userNum'">
+                  WHERE USER_NUM LIKE '%' || #{keyword} || '%'
+              </when>
+              <when test="search == 'userId'">
+                  WHERE USER_ID LIKE '%' || #{keyword} || '%'
+              </when>
+              <when test="search == 'userNickname'">
+                  WHERE USER_NICKNAME LIKE '%' || #{keyword} || '%'
+              </when>
+          </choose>
+        </if>
+	</select>
+	
+	<select id="selectSpamBoardByNum" resultType="admin">
+			SELECT 
+	        b.*,
+	        u.*
+	        
+	    FROM 
+	        board b
+	    JOIN 
+	        users u ON b.board_user_id = u.user_id
+	    WHERE 
+	        b.board_post_idx = #{boardPostIdx}
+	</select>
+  	
+	 
+	<update id="updateUserStatusByUserId">
+	    UPDATE users 
+	    SET user_status = #{status}, status_expiry_date = #{expiryDate}
+	    WHERE user_num = #{userNum}
+	</update>
+	
+	<update id="updateBoardStatusByBoardPostIdx">
+	    UPDATE board 
+	    SET board_status = #{status}, status_expiry_date = #{expiryDate}
+	    WHERE board_post_idx = #{boardPostIdx}
+	</update>
+	
+	<select id="findUsersWithExpiredStatuses" parameterType="map" resultType="xyz.itwill.dto.Admin">
+		SELECT * FROM users WHERE status_expiry_date &lt;= #{currentTime}
+	</select>
+	
+	<select id="findBoardWithExpiredStatuses" parameterType="map" resultType="xyz.itwill.dto.Admin">
+		SELECT * FROM board WHERE status_expiry_date &lt;= #{currentTime}
+	</select>
+  	
+  	
+  </mapper>
