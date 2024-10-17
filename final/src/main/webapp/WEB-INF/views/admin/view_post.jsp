@@ -62,10 +62,9 @@
     </div>
 </div>
 <script type="text/javascript">
-
 function goBack() {
     var prevPage = '${prevPage}';
-    window.location.href = '<c:url value="/super_admin/dashboard"/>#spam';
+    window.location.href = '<c:url value="/super_admin/dashboard"/>#spam?page=' + prevPage;
 }
 
 function changeUserStatus(userNum, userStatus, duration) {
