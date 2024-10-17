@@ -52,7 +52,7 @@
                 <div class="main-card">
                     <div class="main-card-header">
                         공지사항
-                        <a href="#" class="main-more-btn">더보기</a>
+                        <a href="<c:url value='/board/boardlist/2'/>" class="main-more-btn">더보기</a>
                     </div>
                     <div class="main-card-body">
                         <ul class="main-list-group" id="MainNoticeDisplay">
