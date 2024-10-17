@@ -8,6 +8,49 @@
 	margin: 0;
 	font-size: 20px;
 }
+.downloadExcel{
+	
+	display: flex;
+	justify-content: flex-end;
+	    margin-right: 363px;
+	    padding-bottom: 6px;
+	    
+}
+
+.download-image {
+    
+    height: auto; /* 비율에 맞게 높이 자동 조절 */
+    cursor: pointer; /* 마우스 오버 시 커서 변경 */
+    transition: transform 0.3s ease; /* 클릭 애니메이션 효과 */
+    width: 30px;
+}
+
+.download-image:hover {
+    transform: scale(1.05); /* 마우스 오버 시 이미지 확대 */
+}
+
+
+
+.styled-btn {
+    background-color: #333; /* 배경색 */
+    border: none; /* 테두리 제거 */
+    color: white; /* 텍스트 색상 */
+    padding: 8px 8px; /* 안쪽 여백 */
+    text-align: center; /* 텍스트 가운데 정렬 */
+    text-decoration: none; /* 밑줄 제거 */
+    display: inline-block;
+    font-size: 14px; /* 글꼴 크기 */
+    margin: 10px 0; /* 외부 여백 */
+    cursor: pointer;
+    border-radius: 8px; /* 모서리 둥글게 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.styled-btn:hover {
+    background-color: #333; /* 마우스 오버 시 배경색 */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* 마우스 오버 시 그림자 효과 */
+}
 
 .plans-filter {
     margin: 20px auto;
@@ -93,7 +136,7 @@
 }
 
 .plans-summary {
-    margin: 20px auto;
+    margin: 0 auto;
     max-width: 1200px;
     background-color: #ffffff;
     padding: 15px;
@@ -139,7 +182,7 @@
 }
 
 .plans-btn:hover {
-    background-color: #0056b3;
+    background-color: #333;
     color: white;
 }
 .plans-btn-separate {

@@ -103,7 +103,11 @@
         </table>
     </section>
     
-    <button id="downloadExcelBtn">엑셀 다운로드</button>
+    <div class="downloadExcel">
+   		<a id="downloadExcelBtn">
+   			<img src="<c:url value='/resources/images/download.png'/>" alt="엑셀 다운로드" class="download-image">
+   		</a>
+    </div>
     
     
     
@@ -112,13 +116,13 @@
     <div class="plans-summary">
         <table class="plans-summary-table">
         <tr>
-        	<th>요금제 이름</th>
-        	<th>약정 구분</th>
-        	<th>데이터 용량</th>
-        	<th>추가 지원금</th>
-        	<th>월 할부금</th>
-        	<th>할부 이자</th>
-        	<th>총 월 요금</th>
+        	<th style="width: 251px;">요금제 이름</th>
+        	<th style="width: 180px;">약정 구분</th>
+        	<th style="width: 148px;">데이터 용량</th>
+        	<th style="width: 104px;">추가 지원금</th>
+        	<th style="width: 190px;">월 할부금</th>
+        	<th style="width: 104px;">할부 이자</th>
+        	<th style="width: 190px;"	>총 월 요금</th>
         </tr>	
         </table>
         <table class="plans-summary-table plans-summary-body " id="plans-summary-body">

@@ -3,7 +3,6 @@ package xyz.itwill.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -11,8 +10,6 @@ import java.util.UUID;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -32,10 +29,10 @@ import org.springframework.web.util.HtmlUtils;
 
 import lombok.RequiredArgsConstructor;
 import xyz.itwill.auth.CustomUserDetails;
-import xyz.itwill.dto.ChatRooms;
 import xyz.itwill.dto.Product;
-import xyz.itwill.service.ChatRoomsService;
+import xyz.itwill.dto.User;
 import xyz.itwill.service.ProductService;
+import xyz.itwill.service.UserService;
 
 
 @Controller
@@ -43,6 +40,7 @@ import xyz.itwill.service.ProductService;
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
+    private final UserService userService;
     private final WebApplicationContext context;
 
     private static final String UPLOAD_DIR = "/resources/images/";
@@ -127,34 +125,41 @@ public class ProductController {
 	}
 
 	// 상품 상세 페이지
-	@RequestMapping("/details")
-	public String detail(@RequestParam("productIdx") int productIdx, @RequestParam Map<String, Object> map, Model model,
-			Authentication authentication) {
+		@RequestMapping("/details")
+		public String detail(@RequestParam("productIdx") int productIdx, @RequestParam Map<String, Object> map, Model model,
+		        Authentication authentication) {
 
-		
-		// 조회수 증가
-		productService.increaseProductCount(productIdx);
-		
+		    // 조회수 증가
+		    productService.increaseProductCount(productIdx);
 
-		// 상품 정보 조회
-		Product product = productService.getProductByNum(productIdx);
-		
+		    // 상품 정보 조회
+		    Product product = productService.getProductByNum(productIdx);
 
-		// 이미지 처리 (콤마로 구분된 이미지 리스트로 변환)
-		String[] productImages = product.getProductImage().split(",");
-		model.addAttribute("productImages", productImages); // 여러 이미지 전달
-		model.addAttribute("product", product);
-		model.addAttribute("searchMap", map); // 검색 조건도 다시 전달
+		    // 이미지 처리 (콤마로 구분된 이미지 리스트로 변환)
+		    String[] productImages = product.getProductImage().split(",");
+		    model.addAttribute("productImages", productImages); // 여러 이미지 전달
+		    model.addAttribute("product", product);
+		    model.addAttribute("searchMap", map); // 검색 조건도 다시 전달
 
-	
-		// 현재 로그인한 사용자 정보 전달
-		if (authentication != null) {
-			CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-			model.addAttribute("currentUserId", userDetails.getUserId()); // 로그인 사용자 ID 전달
+		    // 판매자의 레벨과 인증 정보를 추가하여 뱃지 출력
+		    User seller = userService.getUser(product.getProductUserid()); // 글쓴 사람의 정보 가져오기
+		    if (seller != null) {
+		        int sellerLevel = seller.getUserLevel();
+		        
+
+		        model.addAttribute("seller", seller); // 글쓴 사람의 전체 정보를 전달
+		        model.addAttribute("sellerLevel", sellerLevel); // 글쓴 사람의 레벨
+		       
+		    }
+
+		    // 현재 로그인한 사용자 정보 전달
+		    if (authentication != null) {
+		        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+		        model.addAttribute("currentUserId", userDetails.getUserId()); // 로그인 사용자 ID 전달
+		    }
+
+		    return "product/productdetail"; // 상세 페이지로 이동
 		}
-	
-		return "product/productdetail"; // 상세 페이지로 이동
-	}
 
 	// 수정 페이지로 이동 (로그인 사용자만 가능)
 	@PreAuthorize("hasRole('ROLE_ADMIN') or principal.userid eq #map['productUserid']")
