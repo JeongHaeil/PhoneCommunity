@@ -16,7 +16,7 @@
                 <div class="main-card">
                     <div class="main-card-header" id="MainViewDisplay">
                         최신글
-                        <a href="#" class="main-more-btn">더보기</a>
+                        <a class="main-more-btn" href="<c:url value='/board/boardlist/10'/>">더보기</a>
                     </div>
                     <div class="main-card-body">
                         <ul class="main-list-group" id="MainNewboardDisplay">
@@ -34,7 +34,7 @@
                 <div class="main-card">
                     <div class="main-card-header">
                         인기글
-                        <a href="#" class="main-more-btn">더보기</a>
+                        <a  class="main-more-btn" href="<c:url value='/board/boardlist/10'/>">더보기</a>
                     </div>
                     <div class="main-card-body">
                         <ul class="main-list-group" id="MainPopularDisplay">
@@ -73,7 +73,7 @@
                 <div class="main-card">
                     <div class="main-card-header">
                         중고장터
-                        <a href="#" class="main-more-btn">더보기</a>
+                        <a class="main-more-btn" href="<c:url value='/product/list'/>">더보기</a>
                     </div>
                     <div class="main-card-body">
                         <div class="main-image-grid">
