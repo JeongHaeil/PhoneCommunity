@@ -141,7 +141,7 @@ $(document).ready(function () {
         });
     }
 });
-
+ 
 // WebSocket 연결 함수
 function connectWebSocket(roomId, buyerId, sellerId, loggedInUserId) {
     socket = new WebSocket("ws://www.itwill.xyz/final/ws/chat/" + roomId + "?roomId=" + roomId + "&buyerId=" + buyerId + "&sellerId=" + sellerId + "&userId=" + loggedInUserId);
