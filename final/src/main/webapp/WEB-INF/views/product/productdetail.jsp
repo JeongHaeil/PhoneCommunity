@@ -225,7 +225,7 @@ body {
 
 .store-name-container img {
 	margin-right: 10px;
-	border-radius: 50%;
+	border-radius: 0%;
 }
 
 .store-name {
@@ -469,24 +469,45 @@ body {
 
 			<!-- 가게 정보 -->
 			<div class="store-info-right">
-				<h4 style="font-weight: bold;">프로필 정보</h4>
-				<div class="left-wrap"
-					style="border-top: 1px solid #e1e1e1; margin-top: 25px;">
-					<div class="store-name-container" style="margin-top: 30px;">
-						<div class="store-name">${product.productUsernickname}</div>
-						<div class="level-bar text-center mt-2">
-							<p id="userLevel">Loading...</p>
-							<div class="progress">
-								<div class="progress-bar" role="progressbar" style="width: 0%;"
-									aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-							</div>
-							<p class="level-text mt-2" id="experienceText">Loading...</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+				 <h4 style="font-weight: bold;">프로필 정보</h4>
+    <div class="left-wrap" style="border-top: 1px solid #e1e1e1; margin-top: 25px;">
+        <!-- 판매자 닉네임 -->
+        <div class="store-name-container" style="margin-top: 30px;">
+            <div class="store-name">${product.productUsernickname}</div>
+            
+            <!-- 판매자 아이콘만 출력 -->
+            <div style="margin-top: 10px;">
+                <c:choose>
+                    <c:when test="${sellerAuth == 'ROLE_SUPER_ADMIN'}">
+                        <img src="${pageContext.request.contextPath}/resources/images/crown.png" alt="Super Admin Badge" class="user-badge" />
+                    </c:when>
+                    <c:when test="${sellerAuth == 'ROLE_BOARD_ADMIN'}">
+                        <img src="${pageContext.request.contextPath}/resources/images/rainbow.png" alt="Board Admin Badge" class="user-badge" />
+                    </c:when>
+                    <c:otherwise>
+                        <c:choose>
+                            <c:when test="${sellerLevel >= 1 && sellerLevel <= 5}">
+                                <img src="${pageContext.request.contextPath}/resources/images/bronze.png" alt="Bronze Badge" class="user-badge" />
+                            </c:when>
+                            <c:when test="${sellerLevel >= 6 && sellerLevel <= 10}">
+                                <img src="${pageContext.request.contextPath}/resources/images/silver.png" alt="Silver Badge" class="user-badge" />
+                            </c:when>
+                            <c:when test="${sellerLevel >= 11 && sellerLevel <= 15}">
+                                <img src="${pageContext.request.contextPath}/resources/images/gold.png" alt="Gold Badge" class="user-badge" />
+                            </c:when>
+                            <c:when test="${sellerLevel >= 16 && sellerLevel <= 19}">
+                                <img src="${pageContext.request.contextPath}/resources/images/emerald.png" alt="Emerald Badge" class="user-badge" />
+                            </c:when>
+                            <c:when test="${sellerLevel >= 20}">
+                                <img src="${pageContext.request.contextPath}/resources/images/diamond.png" alt="Diamond Badge" class="user-badge" />
+                            </c:when>
+                        </c:choose>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
+    </div>
+</div>
 
 	<!-- Swiper JS -->
 	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
