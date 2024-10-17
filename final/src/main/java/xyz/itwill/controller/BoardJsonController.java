@@ -83,7 +83,9 @@ public class BoardJsonController {
 
 	    // 사용자 정보는 블록 외부에서 선언
 	    CustomUserDetails user = (CustomUserDetails)authentication.getPrincipal();
-
+	    if(user.getUserStatus()>1) {
+	    	return "pass";
+	    }
 	    if(commentIdx != 0) {
 	        Comments getcomment = commentsService.getCommentByNum(commentIdx);
 	        commentsService.updateCommentRef(getcomment);
