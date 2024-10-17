@@ -100,6 +100,11 @@
         .apagebtn:hover {
             color: #fff;
         }
+
+        /* 드롭다운 충돌 방지용 CSS */
+        .dropdown-menu {
+            z-index: 1050; /* Bootstrap 기본값 */
+        }
     </style>
 </head>
 <body>
@@ -155,9 +160,9 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${comment.commentStatus == 1}">정상</c:when>
-                                        <c:when test="${comment.commentStatus == 0}">삭제됨</c:when>
+                                        <c:when test="${comment.commentStatus == 0 or empty comment.commentStatus}">삭제됨</c:when>
                                         <c:when test="${comment.commentStatus == 3}">제재 상태</c:when>
-                                         
+                                        <c:otherwise>삭제됨</c:otherwise>
                                     </c:choose>
                                 </td>
                             </tr>
@@ -191,6 +196,16 @@
 
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Bootstrap Dropdown 초기화 -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
+        var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+            return new bootstrap.Dropdown(dropdownToggleEl)
+        })
+    });
+</script>
+
 </body>
 </html>

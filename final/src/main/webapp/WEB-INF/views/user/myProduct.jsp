@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %> <!-- JSTL fmt 태그라이브러리 추가 -->
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -131,8 +132,16 @@
                             <td>${status.index + 1}</td>
                             <td><a href="/final/product/details?productIdx=${product.productIdx}">${product.productSubject}</a></td>
                             <td>${product.productRegisterdate}</td>
-                            <td>${product.productPrice} 원</td>
-                            <td>${product.productModelStatus}</td>
+                            <td><fmt:formatNumber value="${product.productPrice}" type="number" groupingUsed="true"/> 원</td>
+                            <td>
+                                <!-- 판매 상태에 따른 텍스트 출력 -->
+                                <c:choose>
+                                    <c:when test="${product.productSold == 1}">판매중</c:when>
+                                    <c:when test="${product.productSold == 2}">예약중</c:when>
+                                    <c:when test="${product.productSold == 3}">판매완료</c:when>
+                                    <c:otherwise>상태 없음</c:otherwise>
+                                </c:choose>
+                            </td>
                         </tr>
                     </c:forEach>
                 </c:otherwise>
@@ -171,8 +180,15 @@
     </nav>
 </div>
 
-<!-- 부트스트랩 JS -->
+<!-- Bootstrap Dropdown 초기화 -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
+        var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+            return new bootstrap.Dropdown(dropdownToggleEl)
+        })
+    });
+</script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -107,6 +107,12 @@
         .write-apagebtn:hover {
             color: #fff;
         }
+
+        /* 드롭다운 스타일 설정 */
+        .dropdown-menu {
+            z-index: 1050;
+            position: absolute;
+        }
     </style>
 </head>
 <body>
@@ -194,6 +200,15 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Bootstrap의 Dropdown 수동 초기화
+    document.addEventListener('DOMContentLoaded', function () {
+        var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
+        var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+            return new bootstrap.Dropdown(dropdownToggleEl)
+        })
+    });
+</script>
+
 </body>
 </html>
