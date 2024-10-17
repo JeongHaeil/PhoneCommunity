@@ -59,7 +59,9 @@ public class BoardController {
 	                        @RequestParam(defaultValue = "") String search, 
 	                        @RequestParam(defaultValue = "") String keyword, 
 	                        Model model,Authentication authentication) throws Exception {
-		
+		if(!search.equals("user_nickname")&&!search.equals("board_title")&&!search.equals("board_content")&&!search.equals("")) {
+	    	return"redirect:/";	
+	    }
 	    // 게시글 목록 조회
 	    Map<String, Object> map = boardService.getBoardList(boardCode, pageNum, pageSize, search, keyword);
 
@@ -83,7 +85,7 @@ public class BoardController {
 	    String boardCodeTitle = boardService.getBoardCT(boardCode);
 
 	    // 모델에 데이터 추가
-	    model.addAttribute("boardCodeTitle", boardCodeTitle);
+	    model.addAttribute("boardCodeTitle", boardCodeTitle);	    
 	    model.addAttribute("search", search);
 	    model.addAttribute("keyword", keyword);
 	    model.addAttribute("boardCode", boardCode);
@@ -104,6 +106,9 @@ public class BoardController {
 	                          @RequestParam(defaultValue = "") String search, 
 	                          @RequestParam(defaultValue = "") String keyword, 
 	                          Model model, HttpServletRequest request, HttpServletResponse response,Authentication authentication) throws Exception {
+		if(!search.equals("user_nickname")&&!search.equals("board_title")&&!search.equals("board_content")&&!search.equals("")) {
+	    	return"redirect:/";	
+	    }
 		if(boardCode==3) {
 			if(authentication!=null) {
 				CustomUserDetails userDetails=(CustomUserDetails)authentication.getPrincipal();
