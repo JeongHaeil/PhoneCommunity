@@ -13,6 +13,8 @@
 	display: flex;
 	justify-content: flex-end;
 	    margin-right: 363px;
+	    padding-bottom: 6px;
+	    
 }
 
 .download-image {
@@ -20,6 +22,7 @@
     height: auto; /* 비율에 맞게 높이 자동 조절 */
     cursor: pointer; /* 마우스 오버 시 커서 변경 */
     transition: transform 0.3s ease; /* 클릭 애니메이션 효과 */
+    width: 30px;
 }
 
 .download-image:hover {
@@ -133,7 +136,7 @@
 }
 
 .plans-summary {
-    margin: 20px auto;
+    margin: 0 auto;
     max-width: 1200px;
     background-color: #ffffff;
     padding: 15px;
