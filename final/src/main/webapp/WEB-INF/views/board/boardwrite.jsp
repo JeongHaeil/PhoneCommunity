@@ -88,7 +88,7 @@
    			   <input type="text" class="form-control" id="boardTitle" name="boardTitle" value="${board.boardTitle}" required maxlength="50" >
 	        </div>	
 		</div>
-		<hr>
+		
         <div class="form-group mt-2">
             <label for="content">내용</label>
             <textarea class="form-control" id="boardContent" name="boardContent" rows="5"  required oninput="checkVarchar2(this, 1300)" ></textarea>

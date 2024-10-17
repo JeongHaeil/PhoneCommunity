@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!-- functions 라이브러리 추가 -->
 <!DOCTYPE html>
 <html lang="ko">
@@ -46,13 +46,21 @@ body {
 	padding: 5px 10px;
 }
 
-.btn-primary {
-	background-color: #333;
-	border-color: #333;
+.btn {
+    background-color: #3C3D37 !important; /* 버튼 배경색을 강제로 #3C3D37로 설정 */
+    color: white !important; /* 글씨 색을 하얀색으로 강제 설정 */
+    border-color: #3C3D37 !important; /* 버튼 테두리도 같은 색상으로 강제 설정 */
 }
 
+.btn:hover {
+    ttransform: scale(1.05);
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+
+
 .popular-list ul {
-	list-style-type: none;
+	list-style-type: none; /* 리스트 점 제거 */
 	padding-left: 0;
 }
 
@@ -60,14 +68,23 @@ body {
 	font-size: 14px;
 	line-height: 1.8;
 	color: #212529;
+	white-space: nowrap; /* 긴 제목이 줄바꿈 되지 않도록 설정 */
+	overflow: hidden; /* 넘치는 텍스트를 숨김 */
+	text-overflow: ellipsis; /* 긴 제목은 ...로 표시 */
+}
+
+.popular-list ul li a {
+	text-decoration: none; /* 밑줄 제거 */
+	color: #333; /* 텍스트 색상 변경 */
+}
+
+.popular-list ul li a:hover {
+	font-weight: bold; /* 마우스를 올리면 글자 두껍게 */
+	color: #f85656; /* 마우스를 올리면 색상 변경 */
 }
 
 .popular-list ul li span {
-	color: #f85656;
-}
-
-.popular-list ul li:hover {
-	font-weight: bold;
+	color: #f85656; /* 조회수 컬러 */
 }
 
 .popular-list {
@@ -189,6 +206,15 @@ body {
 	align-items: center;
 }
 
+.pagination li a {
+	color: black; /* 링크 색상을 검정색으로 설정 */
+	text-decoration: none; /* 밑줄 없애기 */
+}
+
+.pagination li a:hover {
+	color: red; /* 마우스 오버 시 빨간색으로 변경 */
+}
+
 .pagination li span {
 	padding: 5px;
 }
@@ -196,16 +222,16 @@ body {
 .text-muted span {
 	color: blue;
 }
+
+
+
 </style>
 
 </head>
 <body>
 	<div class="container my-4">
 		<!-- 상단 네비게이션 탭 -->
-		<ul class="nav nav-tabs">
-
-		</ul>
-
+		
 
 		<!-- 필터 및 버튼 -->
 		<div
@@ -228,7 +254,6 @@ body {
 				</ul>
 			</div>
 
-
 			<div>
 				<button class="btn btn-primary btn-sm"
 					onclick="location.href='${pageContext.request.contextPath}/product/register'">쓰기</button>
@@ -237,9 +262,6 @@ body {
 					onclick="location.href='${pageContext.request.contextPath}/product/list'">목록</button>
 			</div>
 		</div>
-
-
-
 
 		<!-- 검색 바 -->
 		<div class="d-flex justify-content-end mt-3">
@@ -260,20 +282,19 @@ body {
 			</div>
 		</div>
 
-		<div class="content-wrapper mt-4">
+		<div class="content-wrapper mt-4 sidebar-fixed">
 			<!-- 메인 콘텐츠 -->
 			<div class="main-content">
 				<!-- 상품 목록 -->
 				<div class="row product-list">
 					<c:choose>
-
 						<c:when test="${not empty result.productList}">
 							<c:forEach var="product" items="${result.productList}">
 								<div class="col-md-3 col-sm-6 mb-4">
 									<a
 										href="${pageContext.request.contextPath}/product/details?productIdx=${product.productIdx}"
 										class="text-decoration-none">
-										<div class="product-card">
+											<div class="product-card">
 											<!-- 글 번호 표시 -->
 											<div class="product-meta text-muted"
 												style="font-size: 12px; margin-bottom: 5px;">글 번호:
@@ -289,116 +310,107 @@ body {
                         <c:choose>
                             <c:when test="${product.productSold == 1}">
                                 blue;">판매중
-												
-						</c:when>
-						<c:when test="${product.productSold == 2}">
+													</c:when>
+													<c:when test="${product.productSold == 2}">
                                 orange;">예약중
-                            </c:when>
-						<c:when test="${product.productSold == 3}">
+													</c:when>
+													<c:when test="${product.productSold == 3}">
                                 red;">판매완료
-                            </c:when>
-						<c:otherwise>
+													</c:when>
+													<c:otherwise>
                                 black;">대기중
-                            </c:otherwise>
+													</c:otherwise>
+												</c:choose>
+												</span>, <span>${product.productRegisterdate}</span>
+											</div>
+
+											<p class="product-title">${product.productSubject}</p>
+
+											<div class="product-details">
+												<p>
+													· 배송 방법:
+													<c:choose>
+														<c:when test="${product.productMode == '직거래'}">직거래</c:when>
+														<c:when test="${product.productMode == '안전거래'}">안전거래</c:when>
+														<c:otherwise>택배</c:otherwise>
+													</c:choose>
+												</p>
+												<p>
+													· 판매 가격: ₩
+													<fmt:formatNumber value="${product.productPrice}" type="number"
+														pattern="#,###" />
+													원
+												</p>
+											</div>
+
+											<div class="product-footer d-flex align-items-center justify-content-between">
+												<div class="profile-info">
+													<span> 작성자 : ${product.productUsernickname}</span>
+												</div>
+												<div class="stats">
+													<span>👁️ ${product.productCount}</span>
+												</div>
+											</div>
+										</div>
+									</a>
+								</div>
+							</c:forEach>
+						</c:when>
+						<c:otherwise>
+							<div class="col-12 text-center my-4">
+								<h5>검색결과가 없습니다.</h5>
+							</div>
+						</c:otherwise>
 					</c:choose>
-					</span>, <span>${product.productRegisterdate}</span>
-				</div>
-
-				<p class="product-title">${product.productSubject}</p>
-
-				<div class="product-details">
-					<p>
-						· 배송 방법:
-						<c:choose>
-							<c:when test="${product.productMode == '직거래'}">직거래</c:when>
-							<c:when test="${product.productMode == '안전거래'}">안전거래</c:when>
-							<c:otherwise>택배</c:otherwise>
-						</c:choose>
-					</p>
-					<p>
-						· 판매 가격: ₩
-						<fmt:formatNumber value="${product.productPrice}" type="number"
-							pattern="#,###" />
-						원
-					</p>
-				</div>
-
-				<div
-					class="product-footer d-flex align-items-center justify-content-between">
-					<div class="profile-info">
-						<span> 작성자 : ${product.productUsernickname}</span>
-					</div>
-					<div class="stats">
-						<span>👁️ ${product.productCount}</span>
-					</div>
 				</div>
 			</div>
-			</a>
+
+			<!-- 오른쪽 사이드바 (오늘의 인기글) -->
+			<div class="sidebar popular-list">
+				<h5>오늘의 인기글</h5>
+				<ul id="popularSideBoard"></ul> <!-- 인기글 목록을 출력할 영역 -->
+			</div>
+
 		</div>
-		</c:forEach>
 
-		</c:when>
-		<c:otherwise>
-			<div class="col-12 text-center my-4">
-				<h5>검색결과가 없습니다.</h5>
-			</div>
-		</c:otherwise>
-		</c:choose>
-	</div>
-	</div>
-
-	
-	<!-- 오른쪽 사이드바 (오늘의 인기글) -->
-	<div class="sidebar popular-list">
-		<h5>오늘의 인기글</h5>
-		<ul>
-			<c:forEach var="product" items="${popularProducts}">
-				<li>${product.productSubject}<span>조회수:
-						${product.productCount}</span></li>
-			</c:forEach>
-		</ul>
-	</div>
-
-	</div>
-
-	<!-- Pagination -->
-	<div class="pagination-wrapper">
-		<c:choose>
-			<c:when test="${result.pager.startPage > result.pager.blockSize}">
-				<a
-					href="<c:url value='/product/list'/>?pageNum=${result.pager.prevPage}&pageSize=${result.pager.pageSize}">
-					[이전] </a>
-			</c:when>
-			<c:otherwise>
-        [이전]
-      </c:otherwise>
-		</c:choose>
-
-		<c:forEach var="i" begin="${result.pager.startPage}"
-			end="${result.pager.endPage}" step="1">
+		<!-- Pagination -->
+		<div class="pagination-wrapper">
 			<c:choose>
-				<c:when test="${result.pager.pageNum != i}">
+				<c:when test="${result.pager.startPage > result.pager.blockSize}">
 					<a
-						href="<c:url value='/product/list'/>?pageNum=${i}&pageSize=${result.pager.pageSize}">
-						[${i}] </a>
+						href="<c:url value='/product/list'/>?pageNum=${result.pager.prevPage}&pageSize=${result.pager.pageSize}">
+						[이전] </a>
 				</c:when>
 				<c:otherwise>
+        [이전]
+      </c:otherwise>
+			</c:choose>
+
+			<c:forEach var="i" begin="${result.pager.startPage}"
+				end="${result.pager.endPage}" step="1">
+				<c:choose>
+					<c:when test="${result.pager.pageNum != i}">
+						<a
+							href="<c:url value='/product/list'/>?pageNum=${i}&pageSize=${result.pager.pageSize}">
+							[${i}] </a>
+					</c:when>
+					<c:otherwise>
           [${i}]
         </c:otherwise>
-			</c:choose>
-		</c:forEach>
+				</c:choose>
+			</c:forEach>
 
-		<c:choose>
-			<c:when test="${result.pager.endPage != result.pager.totalPage}">
-				<a
-					href="<c:url value='/product/list'/>?pageNum=${result.pager.nextPage}&pageSize=${result.pager.pageSize}">
-					[다음] </a>
-			</c:when>
-			<c:otherwise>
+			<c:choose>
+				<c:when test="${result.pager.endPage != result.pager.totalPage}">
+					<a
+						href="<c:url value='/product/list'/>?pageNum=${result.pager.nextPage}&pageSize=${result.pager.pageSize}">
+						[다음] </a>
+				</c:when>
+				<c:otherwise>
         [다음]
       </c:otherwise>
-		</c:choose>
-	</div>
+			</c:choose>
+		</div>
 	</div>
 
 	<script
@@ -410,12 +422,31 @@ body {
 			$('#search-btn').click(function() {
 				$('#search-bar').toggle();
 			});
-		});
 
-		function filterByStatus(status) {
-			// 해당 status 값을 가진 게시글만 출력하도록 서버에 요청
-			window.location.href = "${pageContext.request.contextPath}/product/list?status="
-					+ status;
+			// 사이드바에 인기글 출력
+		    popularSideBoard(); 
+		});
+		
+		function popularSideBoard() {
+		    $.ajax({
+		        type: "get",
+		        url: "<c:url value='/rest/popular_side_board'/>",
+		        dataType: "json",
+		        success: function(result) {
+		            var html = "";
+		            if (result.popularBoardList.length === 0) {
+		                html += "<li>인기글이 없습니다.</li>";
+		            } else {
+		                $(result.popularBoardList).each(function(index) {
+		                    html += "<li><a href='<c:url value='/board/boarddetail/" + this.boardCode + "/" + this.boardPostIdx + "'/>'>" + this.boardTitle + "</a> <span> " + this.boardCount + "</span></li>";
+		                });
+		            }
+		            $("#popularSideBoard").html(html);
+		        },
+		        error: function(xhr) {
+		            alert("에러코드(게시글 검색) = " + xhr.status);
+		        }
+		    });
 		}
 	</script>
 </body>

@@ -15,7 +15,7 @@
     <section class="plans-filter">
         <table class="plans-table">
             <thead>
-                <tr>
+                <tr class="plans-tltle">
                     <th>통신사</th>
                     <th>제조사</th>
                     <th>제품</th>
@@ -60,23 +60,23 @@
                     <td>
                         <!-- 가입 구분 추가 지원금 -->
                         <div class="plans-option-group">
-                            <h3>가입 구분</h3>
+                            <h3 class="plans-h3">가입 구분</h3>
                             <div class="plans-btn-group">
-                                <button class="plans-btn active" data-type="신규">신규</button>
-                                <button class="plans-btn" data-type="기변">기변</button>
+	                                <button class="plans-btn active" data-type="신규">신규</button>
+	                                <button class="plans-btn" data-type="기변">기변</button>
                             </div>
                         </div>
                         
                       <div class="plans-option-group">
-                            <h3>할부 개월</h3>
+                            <h3 class="plans-h3">할부 개월</h3>
                             <div class="plans-btn-group">
-                                <button class="plans-btn active" data-type="자급제">자급제</button>       
+                                <button class="plans-btn active plans-btn-separate" data-type="자급제">자급제</button>       
                             </div>
                           
                         </div> 
                         
                         <div class="plans-option-group">
-                            <h3>추가 지원금</h3>
+                            <h3 class="plans-h3">추가 지원금</h3>
                             <select id="extra-support" class="plans-select">
                                 <option >없음</option>
                                 <option value="추가지원금 0.15">추가지원금 15%</option>
@@ -94,9 +94,9 @@
 					    <input type="hidden" name="planOption" id="planOption" value="">
 					    <input type="hidden" name="planAdditional" id="planAdditional" value=""> 
 					    <input type="hidden" id="manufacturerId" name="manufacturerId" value="">
-					    
-					     <button id="calculateBtn" class="plans-calculate-btn">요금제 조회</button>
-
+					   <div class="plans-calculate">
+					    <button id="calculateBtn" class="plans-calculate-btn">요금제 조회</button>
+						</div>
                     </td>
                 </tr>
             </tbody>
@@ -131,6 +131,21 @@
 
 <script type="text/javascript" src="<c:url value='/js/jquery-3.7.1.min.js'/>"></script>
 <script type="text/javascript">
+const buttons = document.querySelectorAll('.plans-btn');
+
+buttons.forEach(button => {
+    button.addEventListener('click', () => {
+        // 모든 버튼의 active 클래스를 제거
+        buttons.forEach(btn => btn.classList.remove('active'));
+        
+        // 클릭된 버튼에만 active 클래스 추가
+        button.classList.add('active');
+    });
+});
+const separateButton = document.querySelector('.plans-btn-separate');
+separateButton.addEventListener('click', () => {
+    separateButton.classList.toggle('active'); // 자급제는 토글로 상태 전환
+});
 
 
 

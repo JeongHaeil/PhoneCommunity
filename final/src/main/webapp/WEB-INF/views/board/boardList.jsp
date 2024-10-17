@@ -29,16 +29,22 @@
       text-align: center;
     }
     
-    .boardDiv {
-        padding: 0;
-        margin: 0 auto;
-        font-weight: normal;
-        overflow-x: hidden;
-        font-size: 12px;
-        letter-spacing: -0.03em;
+    .boardDiv{
+		padding: 0;
+		margin: 0 auto;
+		font-weight: normal;
+		overflow-x: hidden;
+		font-size: 12px;
+		background-color:#fff;
+		border: 1px solid #ddd;
+		border-radius: 8px;
+		letter-spacing: -0.03em;
+		overflow: hidden;
     }
     .boardsListTable {
-        width: 100%;
+         width: 100%;
+ 		 height: 100%;
+ 		 margin-bottom: 0px !important;
     }
     @media (min-width: 1400px) {
   		.container {
@@ -175,6 +181,9 @@
     text-decoration: none !important;  /* 호버 및 포커스 상태에서 밑줄 제거 */
 }
 <!--작성자 클릭시 드랍다운 관련 끝 css-->
+a{
+text-decoration: none !important;
+}
 </style>
 </head>
 <body>
@@ -206,15 +215,30 @@
         <div class="col-md-9" >   
              	<div class="row justify-content-between align-items-center m-1" >
 			        <div class="d-flex justify-content-end align-items-center">
-					    <button type="button" class="btn btn-dark btn-sm" onclick="hideAndShowSearch()">검색</button>&nbsp;
+			        <%--검색버튼 --%>
+			        	<div class="row justify-content-center ">
+						    <div class="col-auto" style="margin: 5px;">  
+						        <form id="searchForm" method="get" class="d-flex "> 
+						            <input id="code" type="hidden" name="boardCode" value="${boardCode }" disabled="disabled">
+						            <select name="search" id="searchSelect" class="">
+						                <option value="user_nickname" <c:if test="${search =='user_nickname' }"> selected </c:if>>&nbsp;작성자&nbsp;</option>
+						                <option value="board_title" <c:if test="${search=='board_title' }"> selected </c:if>>&nbsp;제목&nbsp;</option>
+						                <option value="board_content" <c:if test="${search=='board_content' }"> selected </c:if>>&nbsp;내용&nbsp;</option>
+						            </select>
+						            <input type="text" name="keyword" value="${keyword }" id="keywordInput" placeholder="검색..">
+						            <button id="boardSearchBtn" class="btn btn-dark btn-sm"  type="submit" style="background: #3C3D37; color: #fff;">검색</button>
+						        </form>
+						    </div>
+						</div>
+					    <!-- <button type="button" class="btn btn-sm" onclick="hideAndShowSearch()" style="background: #3C3D37; color: #fff;">검색</button>&nbsp; -->
 					    <c:choose>
 					    	<c:when test="${boardCode >= 10 && boardCode <= 99 }">
-					    		<button type="button" class="btn btn-dark btn-sm" onclick="window.location.href='<c:url value="/board/boardwrite/${boardCode }"/>'">글쓰기</button>					    	
+					    		<button type="button" class="btn btn-sm" onclick="window.location.href='<c:url value="/board/boardwrite/${boardCode }"/>'" style="background: #3C3D37; color: #fff;">글쓰기</button>					    	
 					    	</c:when>					    		
 					    	<c:otherwise>
 					    		<sec:authorize access="isAuthenticated()">
 					    			<sec:authorize access="hasRole('ROLE_BOARD_ADMIN')" var="admin"/>
-					    			<c:if test="${admin||boardCode==3}"><button type="button" class="btn btn-dark btn-sm" onclick="window.location.href='<c:url value="/board/boardwrite/${boardCode }"/>'">글쓰기</button></c:if>
+					    			<c:if test="${admin||boardCode==3}"><button type="button" class="btn btn-sm" onclick="window.location.href='<c:url value="/board/boardwrite/${boardCode }"/>'" style="background: #3C3D37; color: #fff;">글쓰기</button></c:if>
 					    		</sec:authorize>
 					    	</c:otherwise>
 					    </c:choose>					 					 
@@ -225,7 +249,8 @@
 			 <%-- 상단 검색창 씨작 --%>
 			 <div id="boardSearchDiv" style="display: none;">
 			 <div class="row justify-content-end">
-				    <div class="col-auto" style="margin: 5px;">  
+				    <div class="col-auto" style="margin: 5px;">
+				    	<div class="search-bar" id="search-bar" >  
 				        <form id="searchForm" method="get" class="d-flex "> 
 				            <input id="code" type="hidden" name="boardCode" value="${boardCode }" disabled="disabled">
 				            <select name="search" id="searchSelect" class="">
@@ -236,13 +261,14 @@
 				            <input type="text" name="keyword" value="${keyword }" id="keywordInput" placeholder="검색..">
 				            <button id="boardSearchBtn" class="btn btn-dark btn-sm"  type="submit">검색</button>
 				        </form>
+				        </div>
 				    </div>
 				</div>
 			 </div>
 			 <%-- 상단 검색창 끝 --%>
 			 <c:choose>
 			 	<c:when test="${boardCode==3 }">
-		             <div class="boardDiv card">
+		             <div class="boardDiv">
 				            <table class="table table-hover boardsListTable">
 				                <thead class="thead-dark">
 				                    <tr>
@@ -405,10 +431,9 @@
 			 </c:choose>
             
 			 <div class="d-flex justify-content-end align-items-center">
-			 <div>
-				<a href="#" class="link-height text-dark">맨위로</a>
-			
-			</div>
+			 <div class="ms-auto m-3">
+			    <a href="#" class="link-height text-dark"><i class="fa-solid fa-angles-up"></i>맨위로</a>
+			 </div>
 			 <%-- <button type="button" class="btn btn-dark" onclick="window.location.href='<c:url value="/board/boardwrite/${freeCode }"/>'">글쓰기</button> --%>
 			 </div>
 			
@@ -445,7 +470,7 @@
 				</c:choose>
 			</div>	
 				<!-- 검색   -->
-				<div class="row justify-content-center ">
+				<%-- <div class="row justify-content-center ">
 				    <div class="col-auto" style="margin: 5px;">  
 				        <form id="searchForm" method="get" class="d-flex "> 
 				            <input id="code" type="hidden" name="boardCode" value="${boardCode }" disabled="disabled">
@@ -458,7 +483,7 @@
 				            <button id="boardSearchBtn" class="btn btn-dark btn-sm"  type="submit">검색</button>
 				        </form>
 				    </div>
-				</div>
+				</div> --%>
 			</div> 		
         </div>
         <%-- 사이드  --%>
