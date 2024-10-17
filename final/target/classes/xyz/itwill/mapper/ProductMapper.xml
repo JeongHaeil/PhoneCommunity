@@ -142,14 +142,21 @@
 		ORDER BY product_idx DESC
 	</select>
 	
-	<select id="selectLatestProducts" resultType="Product">
-    SELECT product_idx AS productIdx, product_subject AS productSubject, product_image AS productImage 
-    FROM product
-    WHERE product_status = 1 
-    ORDER BY product_register_date DESC 
-    FETCH FIRST 4 ROWS ONLY
+<select id="selectLatestProducts" resultType="Product">
+   SELECT product_idx AS productIdx, 
+           product_subject AS productSubject, 
+           product_image AS productImage
+    FROM (
+        SELECT product_idx, 
+               product_subject, 
+               product_image
+        FROM product
+        WHERE product_status = 1
+        ORDER BY product_register_date DESC
+    )
+    WHERE ROWNUM &lt;= 4
+    
 </select>
-	
 
 
 
