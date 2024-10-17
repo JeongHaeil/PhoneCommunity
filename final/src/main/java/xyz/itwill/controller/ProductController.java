@@ -73,7 +73,7 @@ public class ProductController {
 	    if (productSold != null) {
 	        map.put("productSold", productSold); // 드랍다운에서 선택된 판매 상태에 따른 필터링
 	    }
-
+ 
 	    // 상품 목록을 서비스에서 가져옴
 	    Map<String, Object> resultMap = productService.getProductList(map);
 	    model.addAttribute("result", resultMap);
