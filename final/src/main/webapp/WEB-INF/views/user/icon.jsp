@@ -14,10 +14,7 @@
     // 유저의 레벨과 여러 권한을 세션에서 가져옴
     Integer userLevel = (Integer) session.getAttribute("userLevel"); // 유저의 레벨
     String[] userRoles = (String[]) session.getAttribute("roleNames"); // 유저의 권한 배열
-
-    // 디버깅 로그
-    System.out.println("User Level: " + userLevel);
-    System.out.println("User Roles: " + (userRoles != null ? Arrays.toString(userRoles) : "null"));
+ 
 
     // userLevel이 null일 경우 기본값 설정 (예: 1로 설정)
     if (userLevel == null) {
