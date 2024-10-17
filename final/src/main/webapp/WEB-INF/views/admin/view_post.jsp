@@ -55,15 +55,19 @@
                 <div class="text-center mt-4">
                     <button class="btn custom-btn" onclick="changeUserStatus(${post.userNum}, 3, 86400);">사용자 상태 변경</button>
                     <button class="btn custom-btn" onclick="changeBoardStatus(${post.boardPostIdx}, 4, 259200);">게시물 상태 변경</button>
-                    <a href="<c:url value='/super_admin/admin'/>" class="btn custom-btn">목록으로 돌아가기</a>
+                	<a href="javascript:void(0);" onclick="goBack()" class="btn custom-btn">목록으로 돌아가기</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
+
+function goBack() {
+    var prevPage = '${prevPage}';
+    window.location.href = '<c:url value="/super_admin/dashboard"/>#spam';
+}
+
 function changeUserStatus(userNum, userStatus, duration) {
     $.ajax({
         type: "PUT",

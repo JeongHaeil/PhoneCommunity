@@ -5,7 +5,6 @@
 <head>
     <meta charset="UTF-8">
     <title>관리자 대시보드</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .custom-bg { background-color: #f8f9fa; }
@@ -67,11 +66,12 @@
             </div>
             <div class="tab-pane fade" id="suggestions" role="tabpanel" aria-labelledby="suggestions-tab">
                 <!-- 건의 게시글 내용 -->
+                <a href="<c:url value='/board/boardlist/3'/>">건의 게시글</a>
+                <a href="<c:url value='/board/boardlist/3'/>" target="_blank">건의 게시글</a>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function loadContent(url, targetId, page, search, keyword) {
             $.ajax({
@@ -93,13 +93,25 @@
 
         function loadSpamBoard(page, search, keyword) {
             loadContent('<c:url value="/super_admin/admin/ajax"/>', 'spam', page, search, keyword);
+            // 현재 페이지 번호를 세션 스토리지에 저장
+            sessionStorage.setItem('currentSpamBoardPage', page);
         }
 
         function loadUserList(page, search, keyword) {
             loadContent('<c:url value="/super_admin/userList/ajax"/>', 'users', page, search, keyword);
         }
 
-        // 페이지 로드 시 초기 콘텐츠 로드
+        // URL 해시가 변경될 때 실행되는 함수
+        $(window).on('hashchange', function() {
+            var hash = window.location.hash;
+            if (hash === '#spam') {
+                $('#spam-tab').tab('show');
+                var prevPage = sessionStorage.getItem('currentSpamPage') || 1;
+                loadSpamBoard(prevPage, '', '');
+            }
+        });
+
+        // 페이지 로드 시 실행
         $(document).ready(function() {
             loadSpamBoard(1, '', '');
             
@@ -116,6 +128,13 @@
                     // 건의사항 로드 로직
                 }
             });
+            
+        	// URL에 #spam이 있으면 스팸 탭을 보여주고 이전 페이지를 로드
+            if (window.location.hash === '#spam') {
+                $('#spam-tab').tab('show');
+                var prevPage = sessionStorage.getItem('currentSpamPage') || 1;
+                loadSpamBoard(prevPage, '', '');
+            }
         });
 
         // 페이징 처리를 위한 이벤트 위임
