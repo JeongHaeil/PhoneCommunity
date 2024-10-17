@@ -110,6 +110,7 @@
 	margin-bottom: 30px;
 	border-collapse: separate;
 	border-spacing: 0;
+	margin-top: 100px;
 }
 
 .detail-info-table th, .detail-info-table td {
@@ -205,7 +206,7 @@
 	color: white !important;
 	border: none !important; /* 테두리 없앰 */
 	box-shadow: none !important; /* 그림자 없앰 */
-	font-size: 1.2rem !important;
+	font-size: 1.0rem !important;
 	padding: 10px 10px !important;
 	margin-left: 75px;
 	background-color: #3C3D37 !important;
@@ -244,8 +245,11 @@
 	margin-left: 40px;
 }
 
-.detail-store-name-container img {
-	margin-right: 10px;
+.user-badge {
+	margin-right: 300px;
+	position:relative;
+	bottom:50px;
+	left:350px;
 	border-radius: 0%;
 }
 
@@ -540,7 +544,8 @@
 	</div>
 
 	<!-- Swiper JS -->
-	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+	
+   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 	<script>
         var swiper = new Swiper(".detail-swiper", {
             spaceBetween: 30,
@@ -567,7 +572,7 @@
       		    console.log("roomId: " + roomId);	
       		    console.log("loggedInUserId: " + loggedInUserId);	
       		 
-      	
+      	 
       			 $("#openChatRoomBtn").click(function () {
       				 
       			
@@ -599,6 +604,13 @@
       		function startChat(roomId) {
       			var buyerId = loggedInUserId;  // 이미 상단에서 설정된 buyerId 값 사용
       		    var sellerId = "${product.productUserid}";  // 판매자 ID (서버에서 전달된 값 확인)
+      		  var roomId= "${product.productIdx}"
+      			 if (buyerId === sellerId) {
+      		        // 현재 사용자가 판매자라면 buyerId를 임시 구매자 ID로 설정
+      		        buyerId = "tempBuyer" + roomId;  // 임시 값 설정 (예시로 방 번호와 연동)
+      		    }
+      		  
+      		  
               $.ajax({
                   url: "${pageContext.request.contextPath}/chatroom/start",  // 채팅 시작 URL
                   type: "POST",
@@ -641,31 +653,28 @@
            } 
            
        }); 
-            
-            
-            
-            function updateProductStatus(productIdx, status) {
-                $.ajax({
-                    url: '${pageContext.request.contextPath}/product/updateStatus',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ productIdx: productIdx, productSold: status }),
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-                    },
-                    success: function () {
-                        location.reload();
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Error:', error);
-                        alert('상태 변경에 실패했습니다.');
-                    }
-                });
-            }
-       
+
+        function updateProductStatus(productIdx, status) {
+            $.ajax({
+                url: '${pageContext.request.contextPath}/product/updateStatus',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ productIdx: productIdx, productSold: status }),
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+                },
+                success: function () {
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                    alert('상태 변경에 실패했습니다.');
+                }
+            });
+        }
     </script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
-</html>
+</html> 

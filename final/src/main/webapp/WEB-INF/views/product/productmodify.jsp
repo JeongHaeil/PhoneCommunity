@@ -15,6 +15,7 @@
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
 	rel="stylesheet">
+	
 <style>
 body {
 	font-family: 'Arial', sans-serif;
@@ -213,10 +214,10 @@ body {
 		<div class="mb-3 d-flex">
 			<div
 				class="product-status-btn ${product != null && product.productModelStatus == '중고' ? 'selected' : ''}"
-				id="usedBtn" data-value="중고">중고</div>
+				id="usedBtn" data-value="중고" style="background-color:#3C3D37; color:white;">중고</div>
 			<div
 				class="product-status-btn ${product != null && product.productModelStatus == '새상품' ? 'selected' : ''}"
-				id="newBtn" data-value="새상품">새상품</div>
+				id="newBtn" data-value="새상품" style="background-color:#3C3D37; color:white;">새상품</div>
 		</div>
 		<input type="hidden" name="productModelStatus" id="productCondition"
 			value="${product != null ? product.productModelStatus : '중고'}">
@@ -225,13 +226,10 @@ body {
 		<div class="mb-3 d-flex">
 			<div
 				class="product-status-btn ${product != null && product.productMode == '택배' ? 'selected' : ''}"
-				id="deliveryBtn" data-value="택배">택배</div>
-			<div
-				class="product-status-btn ${product != null && product.productMode == '안전거래' ? 'selected' : ''}"
-				id="safeBtn" data-value="안전거래">안전거래</div>
+				id="deliveryBtn" data-value="택배" style="background-color:#3C3D37; color:white;">택배</div>
 			<div
 				class="product-status-btn ${product != null && product.productMode == '직거래' ? 'selected' : ''}"
-				id="directBtn" data-value="직거래">직거래</div>
+				id="directBtn" data-value="직거래" style="background-color:#3C3D37; color:white;">직거래</div>
 		</div>
 		<input type="hidden" name="productMode" id="dealMethod"
 			value="${product != null ? product.productMode : '택배'}">

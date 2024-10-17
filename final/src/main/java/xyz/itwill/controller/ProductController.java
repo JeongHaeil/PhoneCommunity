@@ -126,7 +126,8 @@ public class ProductController {
 		
 		
 		int productIdx = productService.createProductAndChatRoom(product);
-		productService.addProduct(product);
+		//productService.addProduct(product);
+		System.out.println("Generated Product ID: " + productIdx); 
 		return "redirect:/product/list";
 	}
 
@@ -247,12 +248,7 @@ public class ProductController {
 	    return "success";
 	}
 	
-	@RequestMapping("/latest")
-	public String getLatestProducts(Model model) {
-	    List<Product> latestProducts = productService.getLatestProducts();
-	    model.addAttribute("latestProducts", latestProducts);
-	    return "product/latestProductList";
-	}
+	
 
 
 
