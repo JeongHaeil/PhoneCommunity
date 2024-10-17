@@ -525,7 +525,7 @@ text-decoration: none !important;
         </div>
         <%-- 사이드  --%>
         <div class="sideHotboardList">
-            <h2><i class="fas fa-fire" style="font-size: 50px; color: orange;"></i>오늘의 인기글</h2>
+            <h5><i class="fas fa-fire" style="color: #B70000;"></i>최신 핫글</h5>
             <ul class="" id="popularSideBoard">
             </ul>
         </div>     
