@@ -570,9 +570,7 @@
       	
       			 $("#openChatRoomBtn").click(function () {
       				 
-      				 alert("sellerId before sending request: " + sellerId);
-      			        // 서버에 새로운 방 번호 요청 (방 번호 생성)
-      			        console.log("Creating room with buyerId: " + loggedInUserId + ", sellerId: " + sellerId);
+      			
       			        
       			        $.ajax({
       			            url: "${pageContext.request.contextPath}/chatroom/createRoom",   // 방 번호를 생성하는 서버 URL
@@ -601,11 +599,6 @@
       		function startChat(roomId) {
       			var buyerId = loggedInUserId;  // 이미 상단에서 설정된 buyerId 값 사용
       		    var sellerId = "${product.productUserid}";  // 판매자 ID (서버에서 전달된 값 확인)
-      		    
-      		    console.log("Starting chat with roomId: " + roomId + ", buyerId: " + buyerId + ", sellerId: " + sellerId);  // 로그 추가
-              // AJAX 요청으로 startChat 호출
-      		alert("sellerId start 시작 sending request: " + sellerId);
-      		    	
               $.ajax({
                   url: "${pageContext.request.contextPath}/chatroom/start",  // 채팅 시작 URL
                   type: "POST",
@@ -634,7 +627,7 @@
       			 
            // 방 번호를 받아 해당 방의 채팅방 UI를 로드하는 함수
            function loadChatRoom(newRoomId) {
-           	console.log("Loaded roomId: " + newRoomId); // roomId 값 출력
+           
                $.ajax({
                    url: "${pageContext.request.contextPath}/chatroom/room/" + newRoomId,  // 생성된 방 번호로 채팅방 UI를 요청
                    type: "GET",

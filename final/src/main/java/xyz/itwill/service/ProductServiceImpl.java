@@ -9,12 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import xyz.itwill.controller.ChatWebSocketHandler;
 import xyz.itwill.dao.ChatRoomsDAO;
 import xyz.itwill.dao.ProductDAO;
 import xyz.itwill.dto.ChatRooms;
 import xyz.itwill.dto.Product;
-import xyz.itwill.mapper.ChatRoomsMapper;
-import xyz.itwill.mapper.ProductMapper;
 import xyz.itwill.util.Pager;
 
 @Service
@@ -22,6 +21,7 @@ import xyz.itwill.util.Pager;
 public class ProductServiceImpl implements ProductService {
 	private final ProductDAO productDAO;
 	private final ChatRoomsDAO chatRoomsDAO;
+	
 
 	@Transactional
 	@Override

@@ -144,7 +144,8 @@ $(document).ready(function () {
  
 // WebSocket 연결 함수
 function connectWebSocket(roomId, buyerId, sellerId, loggedInUserId) {
-    socket = new WebSocket("ws://www.itwill.xyz/final/ws/chat/" + roomId + "?roomId=" + roomId + "&buyerId=" + buyerId + "&sellerId=" + sellerId + "&userId=" + loggedInUserId);
+    //socket = new WebSocket("wss://itwill.xyz/final/ws/chat/" + roomId + "?roomId=" + roomId + "&buyerId=" + buyerId + "&sellerId=" + sellerId + "&userId=" + loggedInUserId);
+    socket = new WebSocket("ws://localhost:8000/final/ws/chat/" + roomId + "?roomId=" + roomId + "&buyerId=" + buyerId + "&sellerId=" + sellerId + "&userId=" + loggedInUserId);
     
     socket.onopen = function () {
         console.log("WebSocket connection established.");

@@ -38,11 +38,7 @@ public class ChatController  {
 		
 	    @PostMapping("/start")
 	    public String startChat(@RequestBody Map<String, Object> requestData, Model model) {
-	    
 	    	 try {
-	    	        
-	    	        
-
 	    	        // 데이터 추출
 	    	        String buyerId = requestData.get("buyerId").toString();
 	    	        String sellerId = requestData.get("sellerId").toString();

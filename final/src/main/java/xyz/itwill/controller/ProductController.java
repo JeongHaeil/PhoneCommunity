@@ -31,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 import xyz.itwill.auth.CustomUserDetails;
 import xyz.itwill.dto.Product;
 import xyz.itwill.dto.User;
+import xyz.itwill.service.ChatRoomsService;
 import xyz.itwill.service.ProductService;
 import xyz.itwill.service.UserService;
 
@@ -42,6 +43,7 @@ public class ProductController {
     private final ProductService productService;
     private final UserService userService;
     private final WebApplicationContext context;
+    private final ChatRoomsService chatRoomsService;
 
     private static final String UPLOAD_DIR = "/resources/images/";
 
@@ -118,8 +120,12 @@ public class ProductController {
 		if (filenameList.isEmpty()) {
 			filenameList.add("150.png"); // 기본 이미지 파일명
 		}
-
+        
+		
 		product.setProductImage(String.join(",", filenameList)); // 여러 이미지 파일명을 콤마로 연결해서 저장
+		
+		
+		int productIdx = productService.createProductAndChatRoom(product);
 		productService.addProduct(product);
 		return "redirect:/product/list";
 	}
