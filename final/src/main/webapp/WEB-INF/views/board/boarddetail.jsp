@@ -797,8 +797,13 @@ text-decoration: none !important;
 				processData: false, // jQuery가 데이터를 처리하지 않도록 설정
 		        contentType: false, // jQuery가 Content-Type을 설정하지 않도록 설정
 				success : function(result) {
-					document.getElementById('commentText_'+commentIdx).value = "";
-					commentsListDisplay(boardCode, boardPostIdx);
+					if(result =="success"){										;					
+						document.getElementById('commentText_'+commentIdx).value = "";
+						commentsListDisplay(boardCode, boardPostIdx);
+					}else if(result =="pass"){
+						alert("정지된 사용자입니다 1:1게시판에 문의해 주세요.");						
+						commentsListDisplay(boardCode, boardPostIdx);
+					}
 				},
 				error : function(xhr) {
 					alert("에러코드(게시글 검색) = " + xhr.status);
