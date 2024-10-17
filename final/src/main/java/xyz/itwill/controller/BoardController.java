@@ -237,10 +237,9 @@ public class BoardController {
 					SimpleDateFormat out=new SimpleDateFormat("yyyy년 MM월 dd일");
 					Date date=in.parse(rExpiryDate);
 					String userExpiryDate=out.format(date);
-					redirectAttributes.addAttribute("userExpiryDate",userExpiryDate);
-					System.out.println("정지일="+userExpiryDate);					
+					redirectAttributes.addFlashAttribute("userExpiryDate",userExpiryDate);				
 				}
-				redirectAttributes.addAttribute("message","정지된 사용자 입니다.");
+				redirectAttributes.addFlashAttribute("message","정지된 사용자 입니다.");
 				return "redirect:/board/boardlist/3";
 			}
 		}
@@ -278,7 +277,7 @@ public class BoardController {
 	            // 게시글 작성 후 경험치 추가
 	            userService.increaseExperience(user.getUserId(), 10); // 경험치 10점 추가	           	            
 	        } else {
-	            attributes.addAttribute("regetmessage", "최대 허용 글자수를 초과하였습니다.");
+	            attributes.addFlashAttribute("regetmessage", "최대 허용 글자수를 초과하였습니다.");
 	            return "redirect:/board/boardwrite/" + boardCode;
 	        }
 	    } else {

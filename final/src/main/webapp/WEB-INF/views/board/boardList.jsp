@@ -220,8 +220,8 @@ text-decoration: none !important;
 <div class="container mt-5">
 	<%-- redirect message --%>
 	<c:if test="${!empty message}">
-		<input type="hidden" id="message" value="${param.message}">
-		<input type="hidden" id="ExpiryDate" value="${param.userExpiryDate}">
+		<input type="hidden" id="message" value="${message}">
+		<input type="hidden" id="ExpiryDate" value="${userExpiryDate}">
 	</c:if> 
 	<input type="hidden" name="freeCode" value="${boardCode }" id="freeCodeValue">
 	<%-- <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNumValue"> --%>		
@@ -575,16 +575,10 @@ function messages() {
 	var message = document.getElementById("message").value; 
     var Edate = document.getElementById("ExpiryDate").value; 
 
-    // alert로 값 출력
-    alert('Message: ' + message);
-    alert('Expiry Date: ' + Edate);
-
     // 입력값이 null이 아니면 alert 실행
     if (message !== null && message !== '') {
-        alert('입력값이 존재합니다: ' + message);
-    } else {
-        alert('입력값이 없습니다.');
-    }
+        alert(message+"("+Edate+") 까지 1:1 게시판에 이의 신청 작성해 주세요.");
+    } 
 }
 </script>
 </body>
