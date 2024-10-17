@@ -179,45 +179,41 @@ body {
 
 /* Pagination 스타일 */
 .pagination-wrapper {
-	display: flex;
-	justify-content: center;
-	margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 }
 
 .pagination {
-	list-style: none;
-	padding-left: 0;
-	display: flex;
-	gap: 10px;
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    gap: 8px;
 }
 
 .pagination li {
-	cursor: pointer;
+    cursor: pointer;
+}
+
+.pagination li a,
+.pagination li span {
+    color: #333;
+    text-decoration: none;
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .pagination li.active span {
-	background-color: #333;
-	color: white;
-	border-radius: 50%;
-	width: 30px;
-	height: 30px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-.pagination li a {
-	color: black; /* 링크 색상을 검정색으로 설정 */
-	text-decoration: none; /* 밑줄 없애기 */
+    background-color: #333;
+    color: white;
 }
 
 .pagination li a:hover {
-	color: red; /* 마우스 오버 시 빨간색으로 변경 */
+    background-color: #f0f0f0;
+    color: #333;
 }
 
-.pagination li span {
-	padding: 5px;
-}
 
 .text-muted span {
 	color: blue;
@@ -236,8 +232,6 @@ body {
 </head>
 <body>
 	<div class="container my-4">
-		<!-- 상단 네비게이션 탭 -->
-
 		<!-- 필터 및 버튼 -->
 		<div class="d-flex justify-content-between align-items-center filter-buttons mt-3">
 			<div class="dropdown">
@@ -277,7 +271,8 @@ body {
 							style="max-width: 150px; border-radius: 8px 0 0 8px;">
 							<option value="product_subject">제목</option>
 							<option value="product_content">내용</option>
-						</select> <input type="text" name="keyword" class="form-control"
+						</select> 
+						<input type="text" name="keyword" class="form-control"
 							placeholder="검색어를 입력하세요." value="${searchMap.keyword}">
 						<button type="submit" class="btn btn-outline-secondary"
 							style="border-radius: 0 8px 8px 0;">검색</button>
@@ -366,49 +361,44 @@ body {
 							</div>
 						</c:otherwise>
 					</c:choose>
-				</div>
-			</div>
-
-		</div>
+				</div> <!-- row product-list 종료 -->
+			</div> <!-- main-content 종료 -->
+		</div> <!-- content-wrapper 종료 -->
 
 		<!-- Pagination -->
 		<div class="pagination-wrapper">
-			<c:choose>
-				<c:when test="${result.pager.startPage > result.pager.blockSize}">
-					<a
-						href="<c:url value='/product/list'/>?pageNum=${result.pager.prevPage}&pageSize=${result.pager.pageSize}">
-						[이전] </a>
-				</c:when>
-				<c:otherwise>
-        [이전]
-      </c:otherwise>
-			</c:choose>
+    <ul class="pagination">
+        <c:choose>
+            <c:when test="${result.pager.startPage > result.pager.blockSize}">
+                <li><a href="<c:url value='/product/list'/>?pageNum=${result.pager.prevPage}&pageSize=${result.pager.pageSize}">이전</a></li>
+            </c:when>
+            <c:otherwise>
+                <li class="disabled"><span>이전</span></li>
+            </c:otherwise>
+        </c:choose>
 
-			<c:forEach var="i" begin="${result.pager.startPage}"
-				end="${result.pager.endPage}" step="1">
-				<c:choose>
-					<c:when test="${result.pager.pageNum != i}">
-						<a
-							href="<c:url value='/product/list'/>?pageNum=${i}&pageSize=${result.pager.pageSize}">
-							[${i}] </a>
-					</c:when>
-					<c:otherwise>
-          [${i}]
-        </c:otherwise>
-				</c:choose>
-			</c:forEach>
+        <c:forEach var="i" begin="${result.pager.startPage}" end="${result.pager.endPage}" step="1">
+            <c:choose>
+                <c:when test="${result.pager.pageNum != i}">
+                    <li><a href="<c:url value='/product/list'/>?pageNum=${i}&pageSize=${result.pager.pageSize}">${i}</a></li>
+                </c:when>
+                <c:otherwise>
+                    <li class="active"><span>${i}</span></li>
+                </c:otherwise>
+            </c:choose>
+        </c:forEach>
 
-			<c:choose>
-				<c:when test="${result.pager.endPage != result.pager.totalPage}">
-					<a
-						href="<c:url value='/product/list'/>?pageNum=${result.pager.nextPage}&pageSize=${result.pager.pageSize}">
-						[다음] </a>
-				</c:when>
-				<c:otherwise>
-        [다음]
-      </c:otherwise>
-			</c:choose>
-		</div>
+        <c:choose>
+            <c:when test="${result.pager.endPage != result.pager.totalPage}">
+                <li><a href="<c:url value='/product/list'/>?pageNum=${result.pager.nextPage}&pageSize=${result.pager.pageSize}">다음</a></li>
+            </c:when>
+            <c:otherwise>
+                <li class="disabled"><span>다음</span></li>
+            </c:otherwise>
+        </c:choose>
+    </ul>
+</div>
+
 	</div>
 
 	<script

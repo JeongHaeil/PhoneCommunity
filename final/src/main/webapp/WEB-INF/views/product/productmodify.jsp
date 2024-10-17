@@ -20,16 +20,16 @@
 body {
 	font-family: 'Arial', sans-serif;
 	background-color: #fff;
-	padding: 20px;
+	
 }
 
-.container {
+.modify-container {
 	max-width: 600px;
 	margin: 0 auto;
 }
 
 /* 이미지 업로드 박스 */
-.upload-container {
+.modify-upload-container {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -46,14 +46,14 @@ body {
 	padding: 10px;
 }
 
-.upload-container img {
+.modify-upload-container img {
 	width: 100px;
 	height: 100px;
 	object-fit: cover;
 	border-radius: 8px;
 }
 
-.upload-text {
+.modify-upload-text {
 	color: #888;
 	font-size: 0.9rem;
 	text-align: center;
@@ -61,7 +61,7 @@ body {
 }
 
 /* 카테고리 선택 박스 */
-.category-select {
+.modify-category-select {
 	width: 100%;
 	padding: 10px;
 	border: 1px solid #d3d3d3;
@@ -71,7 +71,7 @@ body {
 }
 
 /* 상품상태 및 거래방식 버튼 */
-.product-status-btn {
+.modify-product-status-btn {
 	padding: 12px 25px;
 	border-radius: 30px;
 	border: 2px solid #d3d3d3;
@@ -81,14 +81,14 @@ body {
 	font-weight: bold;
 }
 
-.selected {
+.modify-selected {
 	background-color: #00c73c;
 	color: white;
 	border: 2px solid #00c73c;
 }
 
 /* 배송비 선택 박스 */
-.shipping-select {
+.modify-shipping-select {
 	width: 100%;
 	padding: 10px;
 	border: 1px solid #d3d3d3;
@@ -98,7 +98,7 @@ body {
 }
 
 /* 등록 버튼 */
-.btn-submit {
+.modify-btn-submit {
 	background-color: #000;
 	color: white;
 	padding: 15px;
@@ -111,21 +111,21 @@ body {
 	cursor: pointer;
 }
 
-.btn-submit:hover {
+.modify-btn-submit:hover {
 	background-color: #333;
 }
 
 /* 반응형 디자인 */
 @media ( max-width : 768px) {
-	.product-status-btn {
+	.modify-product-status-btn {
 		padding: 10px 20px;
 		font-size: 0.9rem;
 	}
-	.btn-submit {
+	.modify-btn-submit {
 		padding: 12px;
 		font-size: 1rem;
 	}
-	.upload-container img {
+	.modify-upload-container img {
 		width: 80px;
 		height: 80px;
 	}
@@ -135,15 +135,15 @@ body {
 
 <body>
 
-	<div class="container mt-5">
+	<div class="modify-container mt-5">
 		<c:choose>
 			<c:when test="${product != null && product.productIdx != null}">
-				<form id="productForm"
+				<form id="modify-productForm"
 					action="${pageContext.request.contextPath}/product/modify"
 					method="post" enctype="multipart/form-data">
 			</c:when>
 			<c:otherwise>
-				<form id="productForm"
+				<form id="modify-productForm"
 					action="${pageContext.request.contextPath}/product/register"
 					method="post" enctype="multipart/form-data">
 			</c:otherwise>
@@ -155,16 +155,16 @@ body {
 
 		<!-- 이미지 업로드 -->
 		<div class="mb-3">
-			<div class="upload-container" id="uploadContainer">
+			<div class="modify-upload-container" id="modify-uploadContainer">
 				<!-- 기존 이미지 표시 -->
 				<c:if test="${product != null && product.productImage != null}">
 					<img
 						src="${pageContext.request.contextPath}/resources/images/${product.productImage}"
 						alt="상품 이미지" width="100">
 				</c:if>
-				<span class="upload-text">이미지 선택 (최대 10장)</span>
+				<span class="modify-upload-text">이미지 선택 (최대 10장)</span>
 			</div>
-			<input type="file" id="fileInput" class="d-none" name="productImage2"
+			<input type="file" id="modify-fileInput" class="d-none" name="productImage2"
 				multiple="multiple">
 		</div>
 
@@ -175,13 +175,13 @@ body {
 		<!-- 상품명 입력 -->
 		<div class="mb-3">
 			<input type="text" class="form-control" name="productSubject"
-				placeholder="상품명"
+				placeholder="상품명" maxlength="20"
 				value="${product != null ? product.productSubject : ''}">
 		</div>
 
 		<!-- 카테고리 선택 -->
 		<div class="mb-3">
-			<select class="form-control category-select" name="productCategory">
+			<select class="form-control modify-category-select" name="productCategory">
 				<option value="휴대폰"
 					${product != null && product.productCategory == '휴대폰' ? 'selected' : ''}>휴대폰</option>
 				<option value="태블릿"
@@ -194,15 +194,15 @@ body {
 		</div>
 
 		<!-- 판매가격 입력 -->
-		<div class="mb-3 price-input-container">
-			<input type="text" class="form-control price-input"
+		<div class="mb-3 modify-price-input-container">
+			<input type="text" class="form-control modify-price-input"
 				name="productPrice" placeholder="₩ 판매가격"
-				value="${product != null ? product.productPrice : ''}">
+				value="${product != null ? product.productPrice : ''}" maxlength="10" pattern="\d*">
 		</div>
 
 		<!-- 배송비 선택 -->
 		<div class="mb-3">
-			<select class="form-control shipping-select" name="productDelivery">
+			<select class="form-control modify-shipping-select" name="productDelivery">
 				<option value="별도"
 					${product != null && product.productDelivery == '별도' ? 'selected' : ''}>별도</option>
 				<option value="포함"
@@ -213,42 +213,42 @@ body {
 		<!-- 제품상태 선택 -->
 		<div class="mb-3 d-flex">
 			<div
-				class="product-status-btn ${product != null && product.productModelStatus == '중고' ? 'selected' : ''}"
-				id="usedBtn" data-value="중고" style="background-color:#3C3D37; color:white;">중고</div>
+				class="modify-product-status-btn ${product != null && product.productModelStatus == '중고' ? 'modify-selected' : ''}"
+				id="modify-usedBtn" data-value="중고" style="background-color:#3C3D37; color:white;">중고</div>
 			<div
-				class="product-status-btn ${product != null && product.productModelStatus == '새상품' ? 'selected' : ''}"
-				id="newBtn" data-value="새상품" style="background-color:#3C3D37; color:white;">새상품</div>
+				class="modify-product-status-btn ${product != null && product.productModelStatus == '새상품' ? 'modify-selected' : ''}"
+				id="modify-newBtn" data-value="새상품" style="background-color:#3C3D37; color:white;">새상품</div>
 		</div>
-		<input type="hidden" name="productModelStatus" id="productCondition"
+		<input type="hidden" name="productModelStatus" id="modify-productCondition"
 			value="${product != null ? product.productModelStatus : '중고'}">
 
 		<!-- 거래방법 -->
 		<div class="mb-3 d-flex">
 			<div
-				class="product-status-btn ${product != null && product.productMode == '택배' ? 'selected' : ''}"
-				id="deliveryBtn" data-value="택배" style="background-color:#3C3D37; color:white;">택배</div>
+				class="modify-product-status-btn ${product != null && product.productMode == '택배' ? 'modify-selected' : ''}"
+				id="modify-deliveryBtn" data-value="택배" style="background-color:#3C3D37; color:white;">택배</div>
 			<div
-				class="product-status-btn ${product != null && product.productMode == '직거래' ? 'selected' : ''}"
-				id="directBtn" data-value="직거래" style="background-color:#3C3D37; color:white;">직거래</div>
+				class="modify-product-status-btn ${product != null && product.productMode == '직거래' ? 'modify-selected' : ''}"
+				id="modify-directBtn" data-value="직거래" style="background-color:#3C3D37; color:white;">직거래</div>
 		</div>
-		<input type="hidden" name="productMode" id="dealMethod"
+		<input type="hidden" name="productMode" id="modify-dealMethod"
 			value="${product != null ? product.productMode : '택배'}">
 
 		<!-- 게시글 내용 추가 -->
 		<div class="mb-3">
 			<textarea class="form-control" name="productContent" rows="5"
-				placeholder="상품 설명을 입력하세요">${product != null ? product.productContent : ''}</textarea>
+				placeholder="상품 설명을 입력하세요" maxlength="200">${product != null ? product.productContent : ''}</textarea>
 		</div>
 
-		<button type="submit" class="btn-submit">${product != null && product.productIdx != null ? '수정하기' : '등록하기'}</button>
+		<button type="submit" class="modify-btn-submit">${product != null && product.productIdx != null ? '수정하기' : '등록하기'}</button>
 		<sec:csrfInput />
 		</form>
 
 	</div>
 
 	<script>
-        const uploadContainer = document.getElementById('uploadContainer');
-        const fileInput = document.getElementById('fileInput');
+        const uploadContainer = document.getElementById('modify-uploadContainer');
+        const fileInput = document.getElementById('modify-fileInput');
 
         uploadContainer.addEventListener('click', () => {
             fileInput.click();
@@ -273,34 +273,43 @@ body {
             });
 
             if (files.length === 0) {
-                uploadContainer.innerHTML = '<span class="upload-text">이미지 선택 (최대 10장)</span>';
+                uploadContainer.innerHTML = '<span class="modify-upload-text">이미지 선택 (최대 10장)</span>';
             }
         });
 
         // 제품상태 버튼 클릭 시 색상 변경 및 선택 값 저장
-        const productConditionInput = document.getElementById('productCondition');
-        const conditionButtons = document.querySelectorAll('.product-status-btn[data-value="중고"], .product-status-btn[data-value="새상품"]');
+        const productConditionInput = document.getElementById('modify-productCondition');
+        const conditionButtons = document.querySelectorAll('.modify-product-status-btn[data-value="중고"], .modify-product-status-btn[data-value="새상품"]');
 
         conditionButtons.forEach(button => {
             button.addEventListener('click', () => {
-                conditionButtons.forEach(btn => btn.classList.remove('selected'));
-                button.classList.add('selected');
+                conditionButtons.forEach(btn => btn.classList.remove('modify-selected'));
+                button.classList.add('modify-selected');
                 productConditionInput.value = button.getAttribute('data-value');
             });
         });
 
         // 거래방법 버튼 클릭 시 색상 변경 및 선택 값 저장
-        const dealMethodInput = document.getElementById('dealMethod');
-        const dealButtons = document.querySelectorAll('.product-status-btn[data-value="택배"], .product-status-btn[data-value="안전거래"], .product-status-btn[data-value="직거래"]');
+        const dealMethodInput = document.getElementById('modify-dealMethod');
+        const dealButtons = document.querySelectorAll('.modify-product-status-btn[data-value="택배"], .modify-product-status-btn[data-value="직거래"]');
 
         dealButtons.forEach(button => {
             button.addEventListener('click', () => {
-                dealButtons.forEach(btn => btn.classList.remove('selected'));
-                button.classList.add('selected');
+                dealButtons.forEach(btn => btn.classList.remove('modify-selected'));
+                button.classList.add('modify-selected');
                 dealMethodInput.value = button.getAttribute('data-value');
             });
         });
 
+        // 가격 입력 필드 숫자만 허용 및 10억 제한
+        const priceInput = document.querySelector('.modify-price-input');
+        priceInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/[^0-9]/g, ''); // 숫자만 허용
+            if (parseInt(value, 10) > 1000000000) { // 최대 10억
+                value = '1000000000';
+            }
+            e.target.value = value;
+        });
     </script>
 
 </body>

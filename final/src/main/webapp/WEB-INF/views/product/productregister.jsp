@@ -1,229 +1,237 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+	pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 
 <!DOCTYPE html>
 <html lang="ko">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>상품 등록 페이지</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #fff;
-            padding: 20px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>상품 등록 페이지</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+	
+<style>
+body {
+	font-family: 'Arial', sans-serif;
+	background-color: #fff;
+	
+}
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
+.register-container {
+	max-width: 600px;
+	margin: 0 auto;
+}
 
-        /* 이미지 업로드 박스 */
-        .upload-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px dashed #d3d3d3;
-            width: 100%;
-            min-height: 120px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-bottom: 20px;
-            position: relative;
-            background-color: #f9f9f9;
-            flex-wrap: wrap;
-            gap: 10px;
-            padding: 10px;
-        }
+/* 이미지 업로드 박스 */
+.register-upload-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px dashed #d3d3d3;
+	width: 100%;
+	min-height: 120px;
+	border-radius: 8px;
+	cursor: pointer;
+	margin-bottom: 20px;
+	position: relative;
+	background-color: #f9f9f9;
+	flex-wrap: wrap;
+	gap: 10px;
+	padding: 10px;
+}
 
-        .upload-container img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
+.register-upload-container img {
+	width: 100px;
+	height: 100px;
+	object-fit: cover;
+	border-radius: 8px;
+}
 
-        .upload-text {
-            color: #888;
-            font-size: 0.9rem;
-            text-align: center;
-            width: 100%;
-        }
+.register-upload-text {
+	color: #888;
+	font-size: 0.9rem;
+	text-align: center;
+	width: 100%;
+}
 
-        /* 카테고리 선택 박스 */
-        .category-select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #d3d3d3;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            background-color: transparent;
-        }
+/* 카테고리 선택 박스 */
+.register-category-select {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #d3d3d3;
+	border-radius: 5px;
+	margin-bottom: 20px;
+	background-color: transparent;
+}
 
-        /* 유의사항 입력 박스 */
-        .notice-box {
-            padding: 10px;
-            border: 1px solid #d3d3d3;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            color: #666;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            background-color: #f9f9f9;
-            cursor: text;
-        }
+/* 상품상태 및 거래방식 버튼 */
+.register-product-status-btn {
+	padding: 12px 25px;
+	border-radius: 30px;
+	border: 2px solid #d3d3d3;
+	margin-right: 10px;
+	cursor: pointer;
+	font-size: 1rem;
+	font-weight: bold;
+}
 
-        /* 상품상태 및 거래방식 버튼 */
-        .product-status-btn {
-            padding: 12px 25px;
-            border-radius: 30px;
-            border: 2px solid #d3d3d3;
-            margin-right: 10px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-        }
+.register-selected {
+	background-color: #00c73c;
+	color: white;
+	border: 2px solid #00c73c;
+}
 
-        .selected {
-            background-color: #00c73c;
-            color: white;
-            border: 2px solid #00c73c;
-        }
+/* 배송비 선택 박스 */
+.register-shipping-select {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #d3d3d3;
+	border-radius: 5px;
+	margin-bottom: 20px;
+	background-color: transparent;
+}
 
-        /* 배송비 선택 박스 */
-        .shipping-select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #d3d3d3;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            background-color: transparent;
-        }
+/* 등록 버튼 */
+.register-btn-submit {
+	background-color: #000;
+	color: white;
+	padding: 15px;
+	border-radius: 30px;
+	margin-top: 30px;
+	width: 100%;
+	font-size: 1.1rem;
+	font-weight: bold;
+	border: none;
+	cursor: pointer;
+}
 
-        /* 등록 버튼 */
-        .btn-submit {
-            background-color: #000;
-            color: white;
-            padding: 15px;
-            border-radius: 30px;
-            margin-top: 30px;
-            width: 100%;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-        }
+.register-btn-submit:hover {
+	background-color: #333;
+}
 
-        .btn-submit:hover {
-            background-color: #333;
-        }
-
-        /* 반응형 디자인 */
-        @media (max-width: 768px) {
-            .product-status-btn {
-                padding: 10px 20px;
-                font-size: 0.9rem;
-            }
-
-            .btn-submit {
-                padding: 12px;
-                font-size: 1rem;
-            }
-
-            .upload-container img {
-                width: 80px;
-                height: 80px;
-            }
-        }
-    </style>
+/* 반응형 디자인 */
+@media ( max-width : 768px) {
+	.register-product-status-btn {
+		padding: 10px 20px;
+		font-size: 0.9rem;
+	}
+	.register-btn-submit {
+		padding: 12px;
+		font-size: 1rem;
+	}
+	.register-upload-container img {
+		width: 80px;
+		height: 80px;
+	}
+}
+</style>
 </head>
 
 <body>
 
-    <div class="container mt-5">
-       <form id="productForm" action="${pageContext.request.contextPath}/product/register" method="post" enctype="multipart/form-data">
-    <!-- 이미지 업로드 -->
-    <div class="mb-3">
-        <div class="upload-container" id="uploadContainer">
-            <span class="upload-text">이미지 선택 (최대 10장)</span>
-        </div>
-        <input type="file" id="fileInput" class="d-none" name="productImage2" multiple="multiple">
-    </div>
+	<div class="register-container mt-5">
+		<form id="register-productForm"
+			action="${pageContext.request.contextPath}/product/register"
+			method="post" enctype="multipart/form-data">
+			<!-- 이미지 업로드 -->
+			<div class="mb-3">
+				<div class="register-upload-container" id="register-uploadContainer">
+					<span class="register-upload-text">이미지 선택 (최대 10장)</span>
+				</div>
+				<input type="file" id="register-fileInput" class="d-none"
+					name="productImage2" multiple="multiple">
+			</div>
 
-    <!-- 상품명 입력 -->
-    <div class="mb-3">
-        <input type="text" class="form-control" name="productSubject" placeholder="상품명">
-    </div>
+			<!-- 상품명 입력 -->
+			<div class="mb-3">
+				<input type="text" class="form-control" name="productSubject"
+					placeholder="상품명" maxlength="20" required>
+			</div>
 
-    <!-- 카테고리 선택 -->
-    <div class="mb-3">
-        <select class="form-control category-select" name="productCategory">
-            <option value="" disabled selected>카테고리 선택</option>
-            <option value="휴대폰">휴대폰</option>
-            <option value="태블릿">태블릿</option>
-            <option value="노트북">노트북</option>
-            <option value="PC">PC</option>
-        </select>
-    </div>
+			<!-- 카테고리 선택 -->
+			<div class="mb-3">
+				<select class="form-control register-category-select" name="productCategory">
+					<option value="" disabled selected>카테고리 선택</option>
+					<option value="휴대폰">휴대폰</option>
+					<option value="태블릿">태블릿</option>
+					<option value="노트북">노트북</option>
+					<option value="PC">PC</option>
+				</select>
+			</div>
 
-    <!-- 판매가격 입력 -->
-    <div class="mb-3 price-input-container">
-        <input type="text" class="form-control price-input" name="productPrice" placeholder="₩ 판매가격">
-    </div>
+			<!-- 판매가격 입력 -->
+			<div class="mb-3 price-input-container">
+				<input type="text" class="form-control price-input"
+					name="productPrice" placeholder="₩ 판매가격" pattern="\d*" required
+					maxlength="10">
+			</div>
 
-    <!-- 배송비 선택 -->
-    <div class="mb-3">
-        <select class="form-control shipping-select" name="productDelivery">
-            <option value="" disabled selected>배송비 선택</option>
-            <option value="별도">별도</option>
-            <option value="포함">포함</option>
-        </select>
-    </div>
+			<!-- 배송비 선택 -->
+			<div class="mb-3">
+				<select class="form-control register-shipping-select"
+					name="productDelivery">
+					<option value="" disabled selected>배송비 선택</option>
+					<option value="별도">별도</option>
+					<option value="포함">포함</option>
+				</select>
+			</div>
 
-    <!-- 제품상태 선택 -->
-    <div class="mb-3 d-flex">
-        <div class="product-status-btn selected" id="usedBtn" data-value="중고" style="background-color:#3C3D37; color:white;">중고</div>
-        <div class="product-status-btn" id="newBtn" data-value="새상품" style="background-color:#3C3D37; color:white;">새상품</div>
-    </div>
-    <input type="hidden" name="productModelStatus" id="productCondition" value="중고">
+			<!-- 제품상태 선택 -->
+			<div class="mb-3 d-flex">
+				<div class="register-product-status-btn register-selected"
+					id="register-usedBtn" data-value="중고"
+					style="background-color:#3C3D37; color:white;">중고</div>
+				<div class="register-product-status-btn"
+					id="register-newBtn" data-value="새상품"
+					style="background-color:#3C3D37; color:white;">새상품</div>
+			</div>
+			<input type="hidden" name="productModelStatus"
+				id="register-productCondition" value="중고">
 
-    <!-- 유의사항 텍스트박스 -->
-    <div class="mb-3">
-        <textarea class="form-control notice-box" name="productContent" id="noticeBox" rows="4" onclick="clearPlaceholder(this)">
+			<!-- 유의사항 텍스트박스 -->
+			<div class="mb-3">
+				<textarea class="form-control notice-box" name="productContent"
+					id="register-noticeBox" rows="4" maxlength="200"
+					onclick="register-clearPlaceholder(this)">
 - 상품명(브랜드)
 - 구매 시기
 - 사용 기간
 - 하자 여부
 * 실제 촬영한 사진과 함께 상세 정보를 입력해주세요.
-        </textarea>
-        <div class="text-end mt-2"><span id="charCount">0</span> / 1000</div>
-    </div>
+                </textarea>
+				<div class="text-end mt-2"><span id="register-charCount">0</span> / 200</div>
+			</div>
 
-   <div class="mb-3 d-flex">
-    <div class="product-status-btn selected" id="deliveryBtn" data-value="택배" style="background-color:#3C3D37; color:white; ">택배</div>
-    <div class="product-status-btn" id="directBtn" data-value="직거래" style="background-color:#3C3D37; color:white;">직거래</div>
-</div>
-<input type="hidden" name="productMode" id="dealMethod" value="택배">
+			<div class="mb-3 d-flex">
+				<div class="register-product-status-btn register-selected"
+					id="register-deliveryBtn" data-value="택배"
+					style="background-color:#3C3D37; color:white; ">택배</div>
+				<div class="register-product-status-btn"
+					id="register-directBtn" data-value="직거래"
+					style="background-color:#3C3D37; color:white;">직거래</div>
+			</div>
+			<input type="hidden" name="productMode" id="register-dealMethod"
+				value="택배">
 
-    <button type="submit" class="btn-submit">등록</button>
-    <sec:csrfInput/>
-</form>
+			<button type="submit" class="register-btn-submit">등록</button>
+			<sec:csrfInput />
+		</form>
 
-    </div>
-    
-    <script>
-        const uploadContainer = document.getElementById('uploadContainer');
-        const fileInput = document.getElementById('fileInput');
+	</div>
+
+	<script>
+        const uploadContainer = document.getElementById('register-uploadContainer');
+        const fileInput = document.getElementById('register-fileInput');
 
         uploadContainer.addEventListener('click', () => {
             fileInput.click();
-        }); 
+        });
 
         fileInput.addEventListener('change', function () {
             uploadContainer.innerHTML = ''; // Clear previous images
@@ -245,47 +253,57 @@
 
             // Add the upload text again if no images are selected
             if (files.length === 0) {
-                uploadContainer.innerHTML = '<span class="upload-text">이미지 선택 (최대 10장)</span>';
+                uploadContainer.innerHTML = '<span class="register-upload-text">이미지 선택 (최대 10장)</span>';
             }
         });
 
         // 유의사항 박스 클릭 시 placeholder처럼 동작
-        function clearPlaceholder(element) {
+        function register-clearPlaceholder(element) {
             if (element.value.startsWith('- 상품명')) {
                 element.value = '';
             }
         }
 
         // 제품상태 버튼 클릭 시 색상 변경 및 선택 값 저장
-        const productConditionInput = document.getElementById('productCondition');
-        const conditionButtons = document.querySelectorAll('.product-status-btn[data-value="중고"], .product-status-btn[data-value="새상품"]');
+        const productConditionInput = document.getElementById('register-productCondition');
+        const conditionButtons = document.querySelectorAll('.register-product-status-btn[data-value="중고"], .register-product-status-btn[data-value="새상품"]');
 
         conditionButtons.forEach(button => {
             button.addEventListener('click', () => {
-                conditionButtons.forEach(btn => btn.classList.remove('selected'));
-                button.classList.add('selected');
+                conditionButtons.forEach(btn => btn.classList.remove('register-selected'));
+                button.classList.add('register-selected');
                 productConditionInput.value = button.getAttribute('data-value');
             });
         });
 
         // 거래방법 버튼 클릭 시 색상 변경 및 선택 값 저장
-        const dealMethodInput = document.getElementById('dealMethod');
-        const dealButtons = document.querySelectorAll('.product-status-btn[data-value="택배"], .product-status-btn[data-value="안전"], .product-status-btn[data-value="직거래"]');
+        const dealMethodInput = document.getElementById('register-dealMethod');
+        const dealButtons = document.querySelectorAll('.register-product-status-btn[data-value="택배"], .register-product-status-btn[data-value="직거래"]');
 
         dealButtons.forEach(button => {
             button.addEventListener('click', () => {
-                dealButtons.forEach(btn => btn.classList.remove('selected'));
-                button.classList.add('selected');
+                dealButtons.forEach(btn => btn.classList.remove('register-selected'));
+                button.classList.add('register-selected');
                 dealMethodInput.value = button.getAttribute('data-value');
             });
         });
 
         // 문자수 카운터
-        const textarea = document.getElementById('noticeBox');
-        const charCount = document.getElementById('charCount');
+        const textarea = document.getElementById('register-noticeBox');
+        const charCount = document.getElementById('register-charCount');
 
         textarea.addEventListener('input', () => {
             charCount.textContent = textarea.value.length;
+        });
+
+        // 가격 입력 필드 숫자만 허용 및 10억 제한
+        const priceInput = document.querySelector('.price-input');
+        priceInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/[^0-9]/g, ''); // 숫자만 허용
+            if (parseInt(value, 10) > 1000000000) { // 최대 10억
+                value = '1000000000';
+            }
+            e.target.value = value;
         });
     </script>
 
