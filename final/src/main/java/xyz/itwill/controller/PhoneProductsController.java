@@ -98,7 +98,7 @@ public class PhoneProductsController {
                 } catch (NumberFormatException e) {
                     // 변환 중 오류가 발생할 경우 처리
                     additionalSupport = 0.0;
-                    System.out.println("planAdditional 변환 중 오류 발생: " + e.getMessage());
+                   
                 }
             }
         }

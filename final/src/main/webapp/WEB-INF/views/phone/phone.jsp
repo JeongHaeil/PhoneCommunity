@@ -36,7 +36,7 @@
                     <td>
                         <ul class="plans-list">
                             <c:forEach var="manufacturer" items="${manufacturersList}">
-                                <li><button type="button" class="plans-filter-btn" data-manufacturer="${manufacturer.manufacturerId}">
+                                <li><button type="button" class="plans-filter-btn" data-manufacturer="${manufacturer.manufacturerId}" >
                                     ${manufacturer.manufacturerName}</button></li>
                             </c:forEach>
                         </ul>
@@ -45,7 +45,7 @@
                         <ul class="plans-product-list">
                             <c:forEach var="product" items="${productsList}">
                                 <li style="display: none;" >
-                                    <span  class="plans-product-name"  data-manufacturer="${product.manufacturerId}">
+                                    <span  class="plans-product-name"  data-manufacturer="${product.manufacturerId}" >
                                     ${product.productName}</span>
                                 </li>
                             </c:forEach>
@@ -116,16 +116,16 @@
     <div class="plans-summary">
         <table class="plans-summary-table">
         <tr>
-        	<th style="width: 251px;">요금제 이름</th>
-        	<th style="width: 180px;">약정 구분</th>
-        	<th style="width: 148px;">데이터 용량</th>
-        	<th style="width: 104px;">추가 지원금</th>
-        	<th style="width: 190px;">월 할부금</th>
-        	<th style="width: 104px;">할부 이자</th>
-        	<th style="width: 190px;"	>총 월 요금</th>
+        	<th >요금제 이름</th>
+        	<th >약정 구분</th>
+        	<th >데이터 용량</th>
+        	<th >추가 지원금</th>
+        	<th>월 할부금</th>
+        	<th >할부 이자</th>
+        	<th>총 월 요금</th>
         </tr>	
         </table>
-        <table class="plans-summary-table plans-summary-body " id="plans-summary-body">
+        <table class="plans-summary-table   " id="plans-summary-body">
         
        
         </table>
