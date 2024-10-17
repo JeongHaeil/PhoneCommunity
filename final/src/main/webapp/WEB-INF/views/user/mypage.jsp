@@ -17,15 +17,15 @@
             
             
         }
-        .mypage-container.custom-container {
-            max-width: 900px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color:#f9f9f9;
-            border-radius: 10px;
-            font-size: 25px; /* 전체 기본 글씨 크기를 키움 */
-          
-        }
+       .mypage-container.custom-container {
+    max-width: 900px;
+    margin: 50px auto; /* 가로 방향 중앙 정렬 (위아래 50px, 양쪽 자동) */
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    font-size: 20px; /* 전체 기본 글씨 크기 */
+    display: block; /* 블록 요소로 설정 */
+}
         .mypage-header.custom-header {
             font-weight: bold;
             margin-bottom: 15px;
