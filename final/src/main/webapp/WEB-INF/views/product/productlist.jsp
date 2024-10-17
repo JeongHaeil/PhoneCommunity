@@ -53,11 +53,9 @@ body {
 }
 
 .btn:hover {
-    ttransform: scale(1.05);
+    transform: scale(1.05);
 	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
-
-
 
 .popular-list ul {
 	list-style-type: none; /* 리스트 점 제거 */
@@ -120,7 +118,7 @@ body {
 	background-color: #fff;
 	transition: transform 0.3s ease, box-shadow 0.3s ease;
 	height: auto;
-	max-width: 220px;
+   width: 230px;
 }
 
 .img-fluid {
@@ -223,7 +221,13 @@ body {
 	color: blue;
 }
 
-
+/* 리스트 페이지에서 이미지 크기 고정 */
+.product-list img {
+    width: 200px; /* 원하는 고정 너비 */
+    height: 200px; /* 원하는 고정 높이 */
+    object-fit: cover; /* 이미지가 고정된 크기에 맞게 자르기 */
+    border-radius: 5px; /* 모서리를 둥글게 */
+}
 
 </style>
 
@@ -231,11 +235,9 @@ body {
 <body>
 	<div class="container my-4">
 		<!-- 상단 네비게이션 탭 -->
-		
 
 		<!-- 필터 및 버튼 -->
-		<div
-			class="d-flex justify-content-between align-items-center filter-buttons mt-3">
+		<div class="d-flex justify-content-between align-items-center filter-buttons mt-3">
 			<div class="dropdown">
 				<button class="btn btn-dark btn-sm dropdown-toggle" type="button"
 					id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -365,12 +367,6 @@ body {
 				</div>
 			</div>
 
-			<!-- 오른쪽 사이드바 (오늘의 인기글) -->
-			<div class="sidebar popular-list">
-				<h5>오늘의 인기글</h5>
-				<ul id="popularSideBoard"></ul> <!-- 인기글 목록을 출력할 영역 -->
-			</div>
-
 		</div>
 
 		<!-- Pagination -->
@@ -422,32 +418,7 @@ body {
 			$('#search-btn').click(function() {
 				$('#search-bar').toggle();
 			});
-
-			// 사이드바에 인기글 출력
-		    popularSideBoard(); 
 		});
-		
-		function popularSideBoard() {
-		    $.ajax({
-		        type: "get",
-		        url: "<c:url value='/rest/popular_side_board'/>",
-		        dataType: "json",
-		        success: function(result) {
-		            var html = "";
-		            if (result.popularBoardList.length === 0) {
-		                html += "<li>인기글이 없습니다.</li>";
-		            } else {
-		                $(result.popularBoardList).each(function(index) {
-		                    html += "<li><a href='<c:url value='/board/boarddetail/" + this.boardCode + "/" + this.boardPostIdx + "'/>'>" + this.boardTitle + "</a> <span> " + this.boardCount + "</span></li>";
-		                });
-		            }
-		            $("#popularSideBoard").html(html);
-		        },
-		        error: function(xhr) {
-		            alert("에러코드(게시글 검색) = " + xhr.status);
-		        }
-		    });
-		}
 	</script>
 </body>
 </html>

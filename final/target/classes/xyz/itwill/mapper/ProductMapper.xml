@@ -131,30 +131,26 @@
 		product_idx = #{productIdx}
 	</update>
 
-	<!-- 조회수 기준으로 인기글 상위 5개를 가져오는 쿼리 -->
-	<select id="selectPopularProducts" resultType="Product">
-		SELECT * FROM (
-		SELECT rownum rn, popular.*
-		FROM (
-		SELECT product_idx, product_user_id, product_subject, product_image,
-		product_register_date, product_count, product_price,
-		product_mode, product_category, product_sold,
-		users.user_nickname
-		FROM product
-		JOIN users ON product_user_id = user_id
-		WHERE product_status = 1
-		ORDER BY product_count DESC
-		) popular
-		)
-		WHERE rn BETWEEN 1 AND 10;
+	
+
+
+	<!-- 사용자별 상품 조회 (마이페이지) -->
+	<select id="selectProductsByUserId" parameterType="String"
+		resultType="Product">
+		SELECT * FROM product
+		WHERE product_user_id = #{userId} AND product_status = 1
+		ORDER BY product_idx DESC
 	</select>
-
-
- <!-- 사용자별 상품 조회 (마이페이지)-->
-<select id="selectProductsByUserId" parameterType="String" resultType="Product">
-    SELECT * FROM product
-    WHERE product_user_id = #{userId} AND product_status = 1
-    ORDER BY product_idx DESC
+	
+	<select id="selectLatestProducts" resultType="Product">
+    SELECT product_idx AS productIdx, product_subject AS productSubject, product_image AS productImage 
+    FROM product
+    WHERE product_status = 1 
+    ORDER BY product_register_date DESC 
+    FETCH FIRST 4 ROWS ONLY
 </select>
+	
+
+
 
 </mapper>

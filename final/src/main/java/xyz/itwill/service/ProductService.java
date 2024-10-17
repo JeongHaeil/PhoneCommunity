@@ -22,7 +22,9 @@ public interface ProductService {
     // 판매 상태 업데이트 메서드 추가
     void updateProductSoldStatus(int productIdx, int status);
     
-    List<Product> getPopularProducts(); // 인기 게시글을 가져오는 메소드
+    List<Product> getLatestProducts();
+
     
     List<Product> getProductsByUserId(String userId);//마이페이지
+
 }

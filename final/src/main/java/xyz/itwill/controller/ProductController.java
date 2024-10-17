@@ -240,6 +240,14 @@ public class ProductController {
 	    
 	    return "success";
 	}
+	
+	@RequestMapping("/latest")
+	public String getLatestProducts(Model model) {
+	    List<Product> latestProducts = productService.getLatestProducts();
+	    model.addAttribute("latestProducts", latestProducts);
+	    return "product/latestProductList";
+	}
+
 
 
 	// 상품 등록 처리
@@ -264,12 +272,6 @@ public class ProductController {
 		return "product/productdetail"; // JSP 파일 이름
 	}
 	
-	// 인기글 목록을 조회해서 화면에 전달
-    @RequestMapping("/popular")
-    public String getPopularProducts(Model model) {
-        List<Product> popularProducts = productService.getPopularProducts();
-        model.addAttribute("popularProducts", popularProducts);
-        return "product/productlist"; // 인기글 리스트 페이지로 이동
-    }
+	
 
 }
