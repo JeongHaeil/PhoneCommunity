@@ -610,7 +610,7 @@
       		        buyerId = "tempBuyer" + roomId;  // 임시 값 설정 (예시로 방 번호와 연동)
       		    }
       		  
-      		  
+      		   
               $.ajax({
                   url: "${pageContext.request.contextPath}/chatroom/start",  // 채팅 시작 URL
                   type: "POST",
