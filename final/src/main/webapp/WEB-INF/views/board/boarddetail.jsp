@@ -537,7 +537,7 @@ text-decoration: none !important;
 
 			<!-- 사이드 광고 및 인기글  -->
 			<div class="sideHotboardList">
-	            <h2><i class="fas fa-fire" style="font-size: 50px; color: orange;"></i>오늘의 인기글</h2>
+	            <h5><i class="fas fa-fire" style="color: #B70000;"></i>최신 핫글</h5>
 	            <ul class="" id="popularSideBoard">
 	            </ul>
 	        </div>   
@@ -574,6 +574,11 @@ text-decoration: none !important;
 		            if (result.commentList.length == 0) {
 		                var html = "<p>검색된 댓글이 없습니다.</p>";
 		                $("#commentsListDiv").html(html);
+		              	//추천 비추천 숫차 출력
+			            var upstar=result.board.boardStarup;
+			            $("#boardup").html(upstar);
+			            var downstar=result.board.boardStardown;
+			            $("#boarddown").html(downstar);
 		                return;
 		            }
 
@@ -1006,7 +1011,8 @@ text-decoration: none !important;
 			    return;
 			}else{
 				$(result.popularBoardList).each(function(index) {
-					html += "<li><a href='<c:url value='/board/boarddetail/" + this.boardCode + "/" + this.boardPostIdx + "'/>'>" + this.boardTitle + "</a> <span> " + this.boardCount + "</span></li>";
+					var num = index + 1;
+					html += "<li><a href='<c:url value='/board/boarddetail/" + this.boardCode + "/" + this.boardPostIdx + "'/>'><span> " + num + "&nbsp;</span>" + this.boardTitle + "</a> </li>";
 				});
 			}
 			$("#popularSideBoard").html(html);

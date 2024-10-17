@@ -137,8 +137,7 @@ public class BoardJsonController {
 	    // 댓글 작성 후 경험치 추가
 	    if (user != null) {
 	        userService.increaseExperience(user.getUserId(), 5);
-	        // 로그 기록
-	        System.out.println("User " + user.getUserId() + " has gained 5 experience points for commenting.");
+	       
 	    }
 
 	    return "success";

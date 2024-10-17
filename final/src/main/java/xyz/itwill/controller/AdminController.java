@@ -44,7 +44,7 @@ public class AdminController {
 		return "admin/super_admin";
 	}
 	
-
+	//신고된 (블라인드된) 게시물 출력
 	@GetMapping("/admin")
     public String spamBoardList(@RequestParam(defaultValue = "1") int pageNum,
                             @RequestParam(defaultValue = "10") int pageSize,
@@ -69,7 +69,8 @@ public class AdminController {
 
         return "admin/admin_page"; // admin_page.jsp 페이지로 이동
     }
-	
+	/*
+	//신고된 (블라인드된) 게시글 디테일 페이지
 	@GetMapping("/admin/view")
 	public String spamBoardView(@RequestParam("boardPostIdx") int boardPostIdx,
 								Model model) {
@@ -85,7 +86,20 @@ public class AdminController {
 	    
 	    return "admin/view_post"; // view_post.jsp 페이지로 이동
 	}
-	
+	*/
+	@GetMapping("/admin/view")
+	public String spamBoardView(@RequestParam("boardPostIdx") int boardPostIdx,
+	                            @RequestParam(value = "prevPage", required = false) String prevPage,
+	                            Model model) {
+	    Admin post = adminService.getSpamBoardByNum(boardPostIdx);
+	    if (post == null) {
+	        throw new RuntimeException("게시글을 찾을 수 없습니다.");
+	    }
+	    model.addAttribute("post", post);
+	    model.addAttribute("prevPage", prevPage);
+	    return "admin/view_post";
+	}
+	//유저 제제 상태 부여 및 기한 설정
 	@PutMapping("/admin/userStatus")
 	public ResponseEntity<String> updateUserStatus(@RequestBody Admin request) {
 	    try {
@@ -100,19 +114,8 @@ public class AdminController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating user status");
 	    }
 	}
-	/*
-	@PutMapping("/admin/boardStatus")
-	public ResponseEntity<String> updateBoardStatus(@RequestBody Admin request) {
-	    
-		try {
-	        adminService.updateBoardStatusByBoardPostIdx(request.getBoardPostIdx(), request.getBoardStatus());
-	        return ResponseEntity.ok("success");
-	    } catch (Exception e) {
-	        // 예외 처리: 적절한 오류 메시지와 상태 코드를 반환
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating board status");
-	    }
-	}
-	*/
+	
+	//게시글 제제 상태 부여 및 기한 설정
 	@PutMapping("/admin/boardStatus")
 	public ResponseEntity<String> updateBoardStatus(@RequestBody Admin request) {
 	    try {
@@ -127,6 +130,8 @@ public class AdminController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating board status");
 	    }
 	}
+	
+	//유저 리스트 출력
 	@GetMapping("/userList")
 	public String userListBoard(@RequestParam(defaultValue = "1") int pageNum,
 				            @RequestParam(defaultValue = "10") int pageSize,
@@ -148,12 +153,14 @@ public class AdminController {
 		return "admin/user_list";
 	}
 	
+	//대시보드 이동
 	@GetMapping("/dashboard")
 	public String adminDashboard(Model model) {
 		model.addAttribute("standalone", true);
 		return "admin/admin_dashboard";
 	}
-
+	
+	//신고된 (블라인드된) 게시물 출력 - 템플릿 적용 X
 	@GetMapping("/admin/ajax")
 	public String spamBoardListAjax(@RequestParam(defaultValue = "1") int pageNum,
 							@RequestParam(defaultValue = "10") int pageSize,
@@ -170,6 +177,7 @@ public class AdminController {
 		return "forward:/WEB-INF/views/admin/admin_page_content.jsp";
 	}
 
+	//유저 리스트 출력 - 템플릿 적용 X
 	@GetMapping("/userList/ajax")
 	public String userListBoardAjax(@RequestParam(defaultValue = "1") int pageNum,
 							@RequestParam(defaultValue = "10") int pageSize,

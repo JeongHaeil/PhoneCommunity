@@ -55,7 +55,6 @@ public class NaverController {
 		String phone=(String)response.get("mobile");
 		String email=(String)response.get("email");
 		String nickname=(String)response.get("nickname");
-		System.out.println("name="+name+", nickna,e="+nickname);
 		
 		
 		SecurityAuth auth=new SecurityAuth();
