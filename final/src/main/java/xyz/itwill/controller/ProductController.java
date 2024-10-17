@@ -241,12 +241,7 @@ public class ProductController {
 	    return "success";
 	}
 	
-	@RequestMapping("/latest")
-	public String getLatestProducts(Model model) {
-	    List<Product> latestProducts = productService.getLatestProducts();
-	    model.addAttribute("latestProducts", latestProducts);
-	    return "product/latestProductList";
-	}
+	
 
 
 

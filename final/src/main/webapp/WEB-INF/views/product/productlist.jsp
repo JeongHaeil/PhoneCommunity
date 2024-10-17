@@ -118,13 +118,15 @@ body {
 	background-color: #fff;
 	transition: transform 0.3s ease, box-shadow 0.3s ease;
 	height: auto;
-   width: 230px;
+   
 }
 
 .img-fluid {
-	width: 100%; /* 가로 크기는 100%로 설정하여 카드의 전체 폭에 맞춤 */
-	height: 400px; /* 고정된 세로 크기 설정 */
-	object-fit: cover; /* 이미지 비율을 유지하면서 공간에 맞춤 */
+    width: 100%; /* 가로 크기는 100%로 설정하여 카드의 전체 폭에 맞춤 */
+    height: 300px; /* 고정된 세로 크기 설정 */
+    object-fit: cover; /* 이미지 비율을 유지하면서 공간에 맞춤 */
+    margin: 0; /* 여백 제거 */
+    padding: 0; /* 패딩 제거 */
 }
 
 .product-card:hover {
@@ -223,7 +225,7 @@ body {
 
 /* 리스트 페이지에서 이미지 크기 고정 */
 .product-list img {
-    width: 200px; /* 원하는 고정 너비 */
+    width: 300px; /* 원하는 고정 너비 */
     height: 200px; /* 원하는 고정 높이 */
     object-fit: cover; /* 이미지가 고정된 크기에 맞게 자르기 */
     border-radius: 5px; /* 모서리를 둥글게 */

@@ -188,8 +188,8 @@
 
     <!-- 제품상태 선택 -->
     <div class="mb-3 d-flex">
-        <div class="product-status-btn selected" id="usedBtn" data-value="중고">중고</div>
-        <div class="product-status-btn" id="newBtn" data-value="새상품">새상품</div>
+        <div class="product-status-btn selected" id="usedBtn" data-value="중고" style="background-color:#3C3D37; color:white;">중고</div>
+        <div class="product-status-btn" id="newBtn" data-value="새상품" style="background-color:#3C3D37; color:white;">새상품</div>
     </div>
     <input type="hidden" name="productModelStatus" id="productCondition" value="중고">
 
@@ -205,13 +205,11 @@
         <div class="text-end mt-2"><span id="charCount">0</span> / 1000</div>
     </div>
 
-    <!-- 거래방법 -->
-    <div class="mb-3 d-flex">
-        <div class="product-status-btn selected" id="deliveryBtn" data-value="택배">택배</div>
-        <div class="product-status-btn" id="safeBtn" data-value="안전">안전</div>
-        <div class="product-status-btn" id="directBtn" data-value="직거래">직거래</div>
-    </div>
-    <input type="hidden" name="productMode" id="dealMethod" value="택배">
+   <div class="mb-3 d-flex">
+    <div class="product-status-btn selected" id="deliveryBtn" data-value="택배" style="background-color:#3C3D37; color:white; ">택배</div>
+    <div class="product-status-btn" id="directBtn" data-value="직거래" style="background-color:#3C3D37; color:white;">직거래</div>
+</div>
+<input type="hidden" name="productMode" id="dealMethod" value="택배">
 
     <button type="submit" class="btn-submit">등록</button>
     <sec:csrfInput/>
