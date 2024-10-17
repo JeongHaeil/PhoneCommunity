@@ -103,7 +103,11 @@
         </table>
     </section>
     
-    <button id="downloadExcelBtn">엑셀 다운로드</button>
+    <div class="downloadExcel">
+   		<a id="downloadExcelBtn">
+   			<img src="<c:url value='/resources/images/download.png'/>" alt="엑셀 다운로드" class="download-image">
+   		</a>
+    </div>
     
     
     

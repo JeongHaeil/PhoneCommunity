@@ -94,8 +94,8 @@
                         <li class="nav-item"><a class="nav-link" href="<c:url value='/phone/phone'/>">요금제비교</a></li>
                         <li class="nav-item"><a class="nav-link" href="<c:url value='/product/list'/>">중고장터</a></li>
                         <li class="nav-item"><a class="nav-link" href="<c:url value='/board/boardlist/3'/>">1:1문의</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">서비스</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">운영관리</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">공지사항</a></li>
+                       
                     </ul>
 
                     <div class="dropdown">
