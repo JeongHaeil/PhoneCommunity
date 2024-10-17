@@ -25,6 +25,7 @@ public class CustomUserDetails implements UserDetails {
     private int userStatus;
     private int userLevel; // 사용자 레벨 추가
     private int userExperience; // 사용자 경험치 추가
+    private String statusExpiryDate; 
 
     // 인증된 사용자의 모든 권한 정보가 저장될 필드
     private List<GrantedAuthority> authorities;
@@ -39,6 +40,7 @@ public class CustomUserDetails implements UserDetails {
         this.userStatus = user.getUserStatus();
         this.userLevel = user.getUserLevel(); // 레벨 설정
         this.userExperience = user.getUserExperience(); // 경험치 초기화
+        this.statusExpiryDate = user.getStatusExpiryDate();//정지날
 
 
         this.authorities = new ArrayList<>();
@@ -74,6 +76,12 @@ public class CustomUserDetails implements UserDetails {
         return nickname;
     }
     
+    // 추가적으로 정지 날짜를 반환하는 메서드
+    public String getStatusExpiryDate() {
+        return statusExpiryDate;
+    }
+    
+    
     // 인증된 사용자의 유효기간 상태를 반환하는 메소드
 
     @Override
@@ -98,6 +106,6 @@ public class CustomUserDetails implements UserDetails {
     // => `userStatus`가 1이면 활성화된 사용자, 0이면 비활성화된 사용자로 처리
     @Override
     public boolean isEnabled() {
-        return userStatus == 1;
+        return userStatus >= 1;
     }
 }

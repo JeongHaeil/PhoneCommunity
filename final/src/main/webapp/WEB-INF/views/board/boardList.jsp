@@ -12,19 +12,20 @@
     <style type="text/css">
     #BoardTitleLabel {
       font-family: 'Arial', sans-serif;
-      font-size: 48px;
+      font-size: 12px;
       font-weight: bold;
       color: #f0f8ff; /* 연한 하늘색 글자 */
-      background: linear-gradient(45deg, #2c3e50, #34495e, #2f4050); /* 어두운 그라데이션 배경 */
-      padding: 20px 40px;
-      border-radius: 15px;
+      background: #333;
+      padding: 5px 5px;
+      border-radius: 4px;
       text-align: center;
       display: inline-block;
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6); /* 강한 배경 그림자 */
-      text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5), 0px 0px 15px rgba(255, 255, 255, 0.7); /* 입체적인 텍스트 그림자 */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6); /* 강한 배경 그림자 */
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5), 0px 0px 15px rgba(255, 255, 255, 0.7); /* 입체적인 텍스트 그림자 */
       transition: all 0.3s ease;
+      margin-bottom: 0px !important;
     }
-
+	
     .text-center {
       text-align: center;
     }
@@ -130,13 +131,41 @@
     .sideHotboardList {
         position: fixed;
         top: 190px; 
-        right: 40px; 
+        left: 71%;
         z-index: 1000;
         box-sizing: border-box;
         border: 1px solid #ddd;
-        padding: 4px;     
+        padding: 15px;
+        background-color: #fff;
+        width: 340px !important;     
     }
+	.sideHotboardList ul{
+		list-style-type: none; /* 리스트 점 제거 */
+		padding-left: 0;
+	}
+	.sideHotboardList ul li {
+	font-size: 14px;
+	line-height: 1.8;
+	color: #212529;
+	white-space: nowrap; /* 긴 제목이 줄바꿈 되지 않도록 설정 */
+	overflow: hidden; /* 넘치는 텍스트를 숨김 */
+	text-overflow: ellipsis; /* 긴 제목은 ...로 표시 */
+	}
+	
+	.sideHotboardList ul li a {
+	text-decoration: none; /* 밑줄 제거 */
+	color: #333; /* 텍스트 색상 변경 */
+	}
 
+	.sideHotboardList ul li a:hover {
+		font-weight: bold; /* 마우스를 올리면 글자 두껍게 */
+		color: #f85656; /* 마우스를 올리면 색상 변경 */
+	}
+
+	.sideHotboardList ul li span {
+		color: #f85656; /* 조회수 컬러 */
+	}
+	
     .sideHotboard {
         white-space: nowrap;       
         overflow: hidden;          
@@ -184,64 +213,70 @@
 a{
 text-decoration: none !important;
 }
+
 </style>
 </head>
 <body>
 <div class="container mt-5">
-	
-	<%-- =========타이틀 출력(시작)===== --%>
-	<div class="mt-10">
-	<c:choose>
-		<c:when test="${boardCode==1 }">
-			<c:choose>
-				<c:when test="${search=='user_nickname' }">
-					<h1 class=text-center id="BoardTitleLabel">${keyword}님의 작성글</h1>										
-				</c:when>
-				<c:otherwise>
-					<h1 class=text-center id="BoardTitleLabel">전체글</h1>						
-				</c:otherwise>
-			</c:choose>
-		</c:when>
-		<c:otherwise>
-			<h1 class=text-center id="BoardTitleLabel">${boardCodeTitle }</h1>		
-		</c:otherwise>
-	</c:choose>
-    </div>
-	<%-- =========타이틀 출력(끝)===== --%>
-    
+	<%-- redirect message --%>
+	<c:if test="${!empty message}">
+		<input type="hidden" id="message" value="${param.message}">
+		<input type="hidden" id="ExpiryDate" value="${param.userExpiryDate}">
+	</c:if> 
 	<input type="hidden" name="freeCode" value="${boardCode }" id="freeCodeValue">
 	<%-- <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNumValue"> --%>		
     <div class="row">	
         <div class="col-md-9" >   
              	<div class="row justify-content-between align-items-center m-1" >
-			        <div class="d-flex justify-content-end align-items-center">
-			        <%--검색버튼 --%>
-			        	<div class="row justify-content-center ">
-						    <div class="col-auto" style="margin: 5px;">  
-						        <form id="searchForm" method="get" class="d-flex "> 
-						            <input id="code" type="hidden" name="boardCode" value="${boardCode }" disabled="disabled">
-						            <select name="search" id="searchSelect" class="">
-						                <option value="user_nickname" <c:if test="${search =='user_nickname' }"> selected </c:if>>&nbsp;작성자&nbsp;</option>
-						                <option value="board_title" <c:if test="${search=='board_title' }"> selected </c:if>>&nbsp;제목&nbsp;</option>
-						                <option value="board_content" <c:if test="${search=='board_content' }"> selected </c:if>>&nbsp;내용&nbsp;</option>
-						            </select>
-						            <input type="text" name="keyword" value="${keyword }" id="keywordInput" placeholder="검색..">
-						            <button id="boardSearchBtn" class="btn btn-dark btn-sm"  type="submit" style="background: #3C3D37; color: #fff;">검색</button>
-						        </form>
-						    </div>
-						</div>
-					    <!-- <button type="button" class="btn btn-sm" onclick="hideAndShowSearch()" style="background: #3C3D37; color: #fff;">검색</button>&nbsp; -->
-					    <c:choose>
-					    	<c:when test="${boardCode >= 10 && boardCode <= 99 }">
-					    		<button type="button" class="btn btn-sm" onclick="window.location.href='<c:url value="/board/boardwrite/${boardCode }"/>'" style="background: #3C3D37; color: #fff;">글쓰기</button>					    	
-					    	</c:when>					    		
-					    	<c:otherwise>
-					    		<sec:authorize access="isAuthenticated()">
-					    			<sec:authorize access="hasRole('ROLE_BOARD_ADMIN')" var="admin"/>
-					    			<c:if test="${admin||boardCode==3}"><button type="button" class="btn btn-sm" onclick="window.location.href='<c:url value="/board/boardwrite/${boardCode }"/>'" style="background: #3C3D37; color: #fff;">글쓰기</button></c:if>
-					    		</sec:authorize>
-					    	</c:otherwise>
-					    </c:choose>					 					 
+			        <div class="d-flex align-items-center">  
+					    <%-- =========타이틀 출력(시작)===== --%>
+					    <div class="mt-10 text-left"> 
+					        <c:choose>
+					            <c:when test="${boardCode == 1}">
+					                <c:choose>
+					                    <c:when test="${search == 'user_nickname'}">
+					                        <p class="text-left" id="BoardTitleLabel">${keyword}님의 작성글</p>                                          
+					                    </c:when>
+					                    <c:otherwise>
+					                        <p class="text-left" id="BoardTitleLabel">전체글</p>                        
+					                    </c:otherwise>
+					                </c:choose>
+					            </c:when>
+					            <c:otherwise>
+					                <p class="text-left" id="BoardTitleLabel">${boardCodeTitle}</p>        
+					            </c:otherwise>
+					        </c:choose>
+					    </div>
+					    <%-- =========타이틀 출력(끝)===== --%>
+					
+					    <%-- 검색 버튼과 글쓰기 버튼 --%>
+					    <div class="ms-auto d-flex align-items-center">  
+					        <div class="col-auto" style="margin: 5px;">  
+					            <form id="searchForm" method="get" class="d-flex"> 
+					                <input id="code" type="hidden" name="boardCode" value="${boardCode}" disabled="disabled">
+					                <select name="search" id="searchSelect" class="">
+					                    <option value="user_nickname" <c:if test="${search == 'user_nickname'}"> selected </c:if>>&nbsp;작성자&nbsp;</option>
+					                    <option value="board_title" <c:if test="${search == 'board_title'}"> selected </c:if>>&nbsp;제목&nbsp;</option>
+					                    <option value="board_content" <c:if test="${search == 'board_content'}"> selected </c:if>>&nbsp;내용&nbsp;</option>
+					                </select>
+					                <input type="text" name="keyword" value="${keyword}" id="keywordInput" placeholder="검색..">
+					                <button id="boardSearchBtn" class="btn btn-dark btn-sm" type="submit" style="background: #3C3D37; color: #fff;">검색</button>
+					            </form>
+					        </div>
+					        <c:choose>
+					            <c:when test="${boardCode >= 10 && boardCode <= 99}">
+					                <button type="button" class="btn btn-sm" onclick="window.location.href='<c:url value="/board/boardwrite/${boardCode}"/>'" style="background: #3C3D37; color: #fff;">글쓰기</button>                     
+					            </c:when>                                  
+					            <c:otherwise>
+					                <sec:authorize access="isAuthenticated()">
+					                    <sec:authorize access="hasRole('ROLE_BOARD_ADMIN')" var="admin"/>
+					                    <c:if test="${admin || boardCode == 3}">
+					                        <button type="button" class="btn btn-sm" onclick="window.location.href='<c:url value="/board/boardwrite/${boardCode}"/>'" style="background: #3C3D37; color: #fff;">글쓰기</button>
+					                    </c:if>
+					                </sec:authorize>
+					            </c:otherwise>
+					        </c:choose>
+					    </div>
 					</div>
 				 </div>
 			
@@ -275,6 +310,7 @@ text-decoration: none !important;
 				                        <th class="boardNum">번호</th>
 				                        <th class="boardTitle">제목</th>
 				                        <th class="boardWriter">작성자</th>
+				                        <th style="width: 20px !important; overflow: hidden !important;">티어</th>
 				                        <th class="boardDate">날짜</th>
 				                        <th class="boardViewCount">조회수</th>
 				                    </tr>
@@ -300,9 +336,11 @@ text-decoration: none !important;
 													</td>
 				    								<td class="tdboardWriter">
 													    <div class="dropdown" id="WriterdropDiv">			  
-													            ${boards.userNickname}
-	
-													        <!-- 배지(아이콘) 로직을 바로 JSP에서 처리 -->
+													            ${boards.userNickname}    									        
+													    </div>
+													</td>
+													<td  style="width: 20px; overflow: hidden;">
+													<!-- 배지(아이콘) 로직을 바로 JSP에서 처리 -->
 													        <c:choose>
 													            <c:when test="${boards.auth == 'ROLE_SUPER_ADMIN'}">
 													                <img src="${pageContext.request.contextPath}/resources/images/crown.png" alt="Super Admin Badge" class="user-badge" />
@@ -329,8 +367,7 @@ text-decoration: none !important;
 													                    </c:when>
 													                </c:choose>
 													            </c:otherwise>
-													        </c:choose>										        
-													    </div>
+													        </c:choose>	
 													</td>
 				    								<td>${boards.boardRegisterDate }</td>
 				    								<td>${boards.boardCount }</td>
@@ -350,6 +387,7 @@ text-decoration: none !important;
 			                        <th class="boardNum">번호</th>
 			                        <th class="boardTitle">제목</th>
 			                        <th class="boardWriter">작성자</th>
+			                        <th style="width: 20px !important; overflow: hidden !important;">티어</th>
 			                        <th class="boardDate">날짜</th>
 			                        <th class="boardViewCount">조회수</th>
 			                    </tr>
@@ -379,7 +417,20 @@ text-decoration: none !important;
 												            ${boards.userNickname}
 												        </button>
 												
-												        <!-- 배지(아이콘) 로직을 바로 JSP에서 처리 -->
+												        
+												
+												        <!-- 드롭다운 메뉴 -->
+												        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-${boards.boardPostIdx}" id="WriterdropUl">
+												            <li>
+												                <a class="dropdown-item" href="<c:url value='/board/boardlist/1'/>?&search=user_nickname&keyword=${boards.userNickname}">
+												                    작성글 전체보기
+												                </a>
+												            </li>
+												        </ul>
+												    </div>
+												</td>
+												<td  style="width: 20px; overflow: hidden;">
+												<!-- 배지(아이콘) 로직을 바로 JSP에서 처리 -->
 												        <c:choose>
 												            <c:when test="${boards.auth == 'ROLE_SUPER_ADMIN'}">
 												                <img src="${pageContext.request.contextPath}/resources/images/crown.png" alt="Super Admin Badge" class="user-badge" />
@@ -407,16 +458,6 @@ text-decoration: none !important;
 												                </c:choose>
 												            </c:otherwise>
 												        </c:choose>
-												
-												        <!-- 드롭다운 메뉴 -->
-												        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-${boards.boardPostIdx}" id="WriterdropUl">
-												            <li>
-												                <a class="dropdown-item" href="<c:url value='/board/boardlist/1'/>?&search=user_nickname&keyword=${boards.userNickname}">
-												                    작성글 전체보기
-												                </a>
-												            </li>
-												        </ul>
-												    </div>
 												</td>
 			    								<td>${boards.boardRegisterDate }</td>
 			    								<td>${boards.boardCount }</td>
@@ -431,8 +472,8 @@ text-decoration: none !important;
 			 </c:choose>
             
 			 <div class="d-flex justify-content-end align-items-center">
-			 <div class="ms-auto m-3">
-			    <a href="#" class="link-height text-dark"><i class="fa-solid fa-angles-up"></i>맨위로</a>
+			 <div class="ms-auto mt-2 mr-1">
+			    <a href="#" class="link-height text-dark"><i class="fa-solid fa-angles-up"></i>&nbsp;맨위로</a>
 			 </div>
 			 <%-- <button type="button" class="btn btn-dark" onclick="window.location.href='<c:url value="/board/boardwrite/${freeCode }"/>'">글쓰기</button> --%>
 			 </div>
@@ -487,13 +528,11 @@ text-decoration: none !important;
 			</div> 		
         </div>
         <%-- 사이드  --%>
-        <div class="col-md-3 sideHotboardList">
+        <div class="sideHotboardList">
             <h2><i class="fas fa-fire" style="font-size: 50px; color: orange;"></i>오늘의 인기글</h2>
-            <div class="" id="popularSideBoard">
-            </div>
-        </div>
-		
-        
+            <ul class="" id="popularSideBoard">
+            </ul>
+        </div>     
     </div>
 </div>
 
@@ -521,11 +560,11 @@ function popularSideBoard() {
 	success : function(result) {
 		var html="";
 		if(result.popularBoardList.length==0){
-		    html += " <li class='list-group-item sideHotboard'>인기글이 없습니다.</li>";
+			html += "<li>인기글이 없습니다.</li>";
 		    return;
 		}else{
 			$(result.popularBoardList).each(function(index) {
-			html +="<li class='list-group-item sideHotboard'>"+(index+1)+". <a class='	' href='<c:url value='/board/boarddetail/"+this.boardCode+"/"+this.boardPostIdx+"'/>'>"+this.boardTitle+"</a> </li>";
+				html += "<li><a href='<c:url value='/board/boarddetail/" + this.boardCode + "/" + this.boardPostIdx + "'/>'>" + this.boardTitle + "</a> <span> " + this.boardCount + "</span></li>";
 			});
 		}
 		$("#popularSideBoard").html(html);
@@ -534,6 +573,22 @@ function popularSideBoard() {
 		alert("에러코드(게시글 검색) = " + xhr.status);
 	}
 });
+}
+messages();
+function messages() {
+	var message = document.getElementById("message").value; 
+    var Edate = document.getElementById("ExpiryDate").value; 
+
+    // alert로 값 출력
+    alert('Message: ' + message);
+    alert('Expiry Date: ' + Edate);
+
+    // 입력값이 null이 아니면 alert 실행
+    if (message !== null && message !== '') {
+        alert('입력값이 존재합니다: ' + message);
+    } else {
+        alert('입력값이 없습니다.');
+    }
 }
 </script>
 </body>

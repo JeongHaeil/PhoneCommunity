@@ -11,10 +11,9 @@
     select board_post_idx, board_user_id, board_title, board_content, 
            board_image, board_register_date, board_update_date, board_ip, 
            board_count, board_starup, board_stardown, board_status, board_code, 
-           board_spam, user_nickname, user_level, auth
+           board_spam, user_nickname, user_level
     from Board 
     join users on board_user_id = user_id  
-    left join security_auth on user_id = auth_user_id  <!-- 권한 정보 가져오기 -->
     where board_post_idx=#{boardPostIdx}
 </select>
 
@@ -58,10 +57,10 @@
                             select board_post_idx, board_user_id, board_title, board_content, 
                                    board_image, board_register_date, board_update_date, board_ip, 
                                    board_count, board_starup, board_stardown, board_status, 
-                                   board_code, board_spam, user_nickname, user_level, auth
+                                   board_code, board_spam, user_nickname, user_level
                             from Board
                             join users on board_user_id = user_id
-                            left join security_auth on user_id = auth_user_id
+                            
                             where board_status=1 
                             order by board_post_idx desc
                         ) uxb
@@ -77,10 +76,10 @@
                             select board_post_idx, board_user_id, board_title, board_content, 
                                    board_image, board_register_date, board_update_date, board_ip, 
                                    board_count, board_starup, board_stardown, board_status, 
-                                   board_code, board_spam, user_nickname, user_level, auth
+                                   board_code, board_spam, user_nickname, user_level
                             from Board
                             join users on board_user_id = user_id
-                            left join security_auth on user_id = auth_user_id
+                            
                             where board_code=#{boardCode} and board_status=1 
                             order by board_post_idx desc
                         ) uxb
@@ -102,10 +101,10 @@
                                     select board_post_idx, board_user_id, board_title, board_content, 
                                            board_image, board_register_date, board_update_date, board_ip, 
                                            board_count, board_starup, board_stardown, board_status, 
-                                           board_code, board_spam, user_nickname, user_level, auth
+                                           board_code, board_spam, user_nickname, user_level
                                     from Board
                                     join users on board_user_id = user_id
-                                    left join security_auth on user_id = auth_user_id
+                                   
                                     where ${search}=#{keyword} and board_status=1 
                                     order by board_post_idx desc
                                 ) uxb
@@ -121,10 +120,10 @@
                                     select board_post_idx, board_user_id, board_title, board_content, 
                                            board_image, board_register_date, board_update_date, board_ip, 
                                            board_count, board_starup, board_stardown, board_status, 
-                                           board_code, board_spam, user_nickname, user_level, auth
+                                           board_code, board_spam, user_nickname, user_level
                                     from Board
                                     join users on board_user_id = user_id
-                                    left join security_auth on user_id = auth_user_id
+                                   
                                     where ${search} like '%'||#{keyword}||'%' and board_status=1 
                                     order by board_post_idx desc
                                 ) uxb
@@ -142,10 +141,10 @@
                             select board_post_idx, board_user_id, board_title, board_content, 
                                    board_image, board_register_date, board_update_date, board_ip, 
                                    board_count, board_starup, board_stardown, board_status, 
-                                   board_code, board_spam, user_nickname, user_level, auth
+                                   board_code, board_spam, user_nickname, user_level
                             from Board
                             join users on board_user_id = user_id
-                            left join security_auth on user_id = auth_user_id
+                           
                             where ${search} like '%'||#{keyword}||'%' and board_code=#{boardCode} and board_status=1 
                             order by board_post_idx desc
                         ) uxb
@@ -162,7 +161,7 @@
 			<selectKey resultType="int" keyProperty="boardPostIdx" order="BEFORE">
 			select Board_seq.nextval from dual
 			</selectKey>
-			insert into Board values(#{boardPostIdx},#{boardUserId},#{boardTitle},#{boardContent},#{boardImage},sysdate,null,#{boardIp},0,0,0,1,#{boardCode},0)
+			insert into Board values(#{boardPostIdx},#{boardUserId},#{boardTitle},#{boardContent},#{boardImage},sysdate,null,#{boardIp},0,0,0,1,#{boardCode},0,null)
 	</insert>	
 	
 	<update id="deleteboard">

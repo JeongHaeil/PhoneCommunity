@@ -2,8 +2,11 @@ package xyz.itwill.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -213,9 +216,33 @@ public class BoardController {
 	
 	
 	@RequestMapping(value ="/boardwrite/{boardCode}", method = RequestMethod.GET)
-	public String boardwrite(@PathVariable int boardCode, Model model,Authentication authentication) {
+	public String boardwrite(@PathVariable int boardCode, Model model,Authentication authentication,RedirectAttributes redirectAttributes) throws ParseException {
 		if(authentication == null) {
 			return "redirect:/user/login";	
+		}
+		if(boardCode==3){
+			CustomUserDetails details=(CustomUserDetails)authentication.getPrincipal();
+			if(details.getUserStatus()<=4&&details.getUserStatus()>=1) {
+				
+			}else {
+				return "redirect:/user/login";
+			}
+		}else if(boardCode>=10) {
+			CustomUserDetails details=(CustomUserDetails)authentication.getPrincipal();
+			if(details.getUserStatus()!=1) {
+				CustomUserDetails userDetails=(CustomUserDetails)authentication.getPrincipal();
+				if(userDetails.getStatusExpiryDate()!=null) {
+					String rExpiryDate=userDetails.getStatusExpiryDate();
+					SimpleDateFormat in=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+					SimpleDateFormat out=new SimpleDateFormat("yyyy년 MM월 dd일");
+					Date date=in.parse(rExpiryDate);
+					String userExpiryDate=out.format(date);
+					redirectAttributes.addAttribute("userExpiryDate",userExpiryDate);
+					System.out.println("정지일="+userExpiryDate);					
+				}
+				redirectAttributes.addAttribute("message","정지된 사용자 입니다.");
+				return "redirect:/board/boardlist/3";
+			}
 		}
 		model.addAttribute("boardCode", boardCode);				
 		return "board/boardwrite";

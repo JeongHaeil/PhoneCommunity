@@ -26,6 +26,7 @@ public class Board {
 	private int boardCode;
 	private int boardSpam;
 	private String userNickname;
+	private String statusExpiryDate;
 	private int rn;
 	private int cocain;
 	

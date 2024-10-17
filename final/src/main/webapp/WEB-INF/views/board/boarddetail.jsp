@@ -15,19 +15,19 @@
     <style type="text/css">
     #BoardTitleLabel {
       font-family: 'Arial', sans-serif;
-      font-size: 48px;
+      font-size: 12px;
       font-weight: bold;
       color: #f0f8ff; /* 연한 하늘색 글자 */
-      background: linear-gradient(45deg, #2c3e50, #34495e, #2f4050); /* 어두운 그라데이션 배경 */
-      padding: 20px 40px;
-      border-radius: 15px;
+      background: #333;
+      padding: 5px 5px;
+      border-radius: 4px;
       text-align: center;
       display: inline-block;
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6); /* 강한 배경 그림자 */
-      text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5), 0px 0px 15px rgba(255, 255, 255, 0.7); /* 입체적인 텍스트 그림자 */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6); /* 강한 배경 그림자 */
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5), 0px 0px 15px rgba(255, 255, 255, 0.7); /* 입체적인 텍스트 그림자 */
       transition: all 0.3s ease;
+      margin: 5px;
     }
-
     .text-center {
       text-align: center;
     }
@@ -143,11 +143,39 @@
 	.sideHotboardList {
     position: fixed;
     top: 190px; 
-    right: 40px; 
+  	left: 71%;
     z-index: 1000;
     box-sizing: border-box;
     border: 1px solid #ddd;
-    padding: 4px;   
+    padding: 15px;
+    background-color: #fff;
+    width: 340px !important;    
+	}
+	.sideHotboardList ul{
+		list-style-type: none; /* 리스트 점 제거 */
+		padding-left: 0;
+	}
+	.sideHotboardList ul li {
+	font-size: 14px;
+	line-height: 1.8;
+	color: #212529;
+	white-space: nowrap; /* 긴 제목이 줄바꿈 되지 않도록 설정 */
+	overflow: hidden; /* 넘치는 텍스트를 숨김 */
+	text-overflow: ellipsis; /* 긴 제목은 ...로 표시 */
+	}
+	
+	.sideHotboardList ul li a {
+	text-decoration: none; /* 밑줄 제거 */
+	color: #333; /* 텍스트 색상 변경 */
+	}
+
+	.sideHotboardList ul li a:hover {
+		font-weight: bold; /* 마우스를 올리면 글자 두껍게 */
+		color: #f85656; /* 마우스를 올리면 색상 변경 */
+	}
+
+	.sideHotboardList ul li span {
+		color: #f85656; /* 조회수 컬러 */
 	}
 	.sideHotboard{
 	white-space: nowrap;       
@@ -211,11 +239,15 @@ padding: 0 0px;
 }
 a{
 text-decoration: none !important;
+
 }
 
 #SearchFromDiv{
 	margin-left: 5px; 
 	margin-top: 7px;
+}
+.user-badge{
+	margin: 0 0px !important;
 }
     </style>
 
@@ -358,7 +390,7 @@ text-decoration: none !important;
 			                        <th class="boardNum">번호</th>
 			                        <th class="boardTitle">제목</th>
 			                        <th class="boardWriter">작성자</th>			                        
-			                        <th style="width: 20px !important; overflow: hidden !important;"></th>		                        
+			                        <th style="width: 20px !important; overflow: hidden !important;">티어</th>		                        
 			                        <th class="boardDate">날짜</th>
 			                        <th class="boardViewCount">조회수</th>
 			                    </tr>
@@ -465,9 +497,9 @@ text-decoration: none !important;
     </div>
 
     <!-- '맨위로' 버튼을 우측 끝으로 배치 -->
-    <div class="ms-auto m-3">
-        <a href="#" class="link-height text-dark"><i class="fa-solid fa-angles-up"></i>맨위로</a>
-    </div>
+    <div class="ms-auto mt-2 mr-1">
+		<a href="#" class="link-height text-dark"><i class="fa-solid fa-angles-up"></i>&nbsp;맨위로</a>
+	</div>
 </div>
 						
 					</div>					
@@ -505,11 +537,11 @@ text-decoration: none !important;
 
 
 			<!-- 사이드 광고 및 인기글  -->
-			<div class="col-md-3 sideHotboardList">
-		            <h2><i class="fas fa-fire" style="font-size: 50px; color: orange;"></i>오늘의 인기글</h2>
-		            <div class="" id="popularSideBoard">
-	            </div>
-	        </div>
+			<div class="sideHotboardList">
+	            <h2><i class="fas fa-fire" style="font-size: 50px; color: orange;"></i>오늘의 인기글</h2>
+	            <ul class="" id="popularSideBoard">
+	            </ul>
+	        </div>   
 		</div>
 	</div>
 
@@ -969,11 +1001,11 @@ text-decoration: none !important;
 		success : function(result) {
 			var html="";
 			if(result.popularBoardList.length==0){
-			    html += " <li class='list-group-item sideHotboard'>인기글이 없습니다.</li>";
+				html += "<li>인기글이 없습니다.</li>";
 			    return;
 			}else{
 				$(result.popularBoardList).each(function(index) {
-				html +="<li class='list-group-item sideHotboard'>"+(index+1)+". <a href='<c:url value='/board/boarddetail/"+this.boardCode+"/"+this.boardPostIdx+"'/>'>"+this.boardTitle+"</a> </li>";
+					html += "<li><a href='<c:url value='/board/boarddetail/" + this.boardCode + "/" + this.boardPostIdx + "'/>'>" + this.boardTitle + "</a> <span> " + this.boardCount + "</span></li>";
 				});
 			}
 			$("#popularSideBoard").html(html);
