@@ -78,19 +78,19 @@
                     <div class="main-card-body">
                         <div class="main-image-grid">
                             <div class="main-image-item">
-                                <img src=""  class="main-image">
+                                <img src="<c:url value="resources/images/crown.png"/>"  class="main-image">
                                 <p class="main-image-title">상품 1</p>
                             </div>
                             <div class="main-image-item">
-                                <img src=""  class="main-image">
+                                <img src="<c:url value="resources/images/gold.png"/>"  class="main-image">
                                 <p class="main-image-title">상품 2</p>
                             </div>
                             <div class="main-image-item">
-                                <img src=""  class="main-image">
+                                <img src="<c:url value="resources/images/rainbow.png"/>"  class="main-image">
                                 <p class="main-image-title">상품 3</p>
                             </div>
                             <div class="main-image-item">
-                                <img src="" class="main-image">
+                                <img src="<c:url value="resources/images/silver.png"/>" class="main-image">
                                 <p class="main-image-title">상품 4</p>
                             </div>
                         </div>

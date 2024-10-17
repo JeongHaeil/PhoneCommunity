@@ -1,15 +1,13 @@
 /* 기본 스타일 */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-}
-h3{
-    font-size: 16px;
-    margin: 20px;
-}
 
+.plans-tltle{
+	text-align: center;
+	width: 150px !important;
+}
+.plans-h3{
+	margin: 0;
+	font-size: 20px;
+}
 
 .plans-filter {
     margin: 20px auto;
@@ -32,8 +30,7 @@ h3{
 
 .plans-list {
     list-style: none;
-    padding: 0;
-    margin: 0;
+
     align-items: flex-start;
 }
 
@@ -48,7 +45,7 @@ h3{
     text-align: center;
     cursor: pointer;
     display: block;
-    width: 100%; /* 버튼들이 전체 폭을 차지하도록 */
+    
     font-size: 14px;
     color: black; /* 기본 글자색 */
     
@@ -77,9 +74,8 @@ h3{
 
 .plans-product-list {
     list-style: none;
-    padding: 0;
-    margin: 0;
-   
+ 
+   	width:200px;
     max-height: 200px;
     overflow-y: auto;
 }
@@ -120,43 +116,62 @@ h3{
 
 .plans-btn-group {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
 }
 
 .plans-btn {
-    background-color: #007bff;
-    color: white;
-    padding: 10px;
+    background-color: white;
+    color: #333;
+    padding: 7px;
     border: none;
     cursor: pointer;
-    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
     margin-bottom: 8px;
-    width: 48%;
-    font-size: 12px;
+    width: 92px;
+    font-size: 13px;
     text-align: center;
+    border: 1px solid #333;
+}
+.plans-btn.active {
+    background-color: #333;
+    color: white;
+   
 }
 
 .plans-btn:hover {
     background-color: #0056b3;
+    color: white;
+}
+.plans-btn-separate {
+   background-color: #333;
+    color: white;
+    padding: 7px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    margin-bottom: 8px;
+    width: 92px;
+    font-size: 13px;
+    text-align: center;
 }
 
 .plans-calculate-btn {
-    background-color: #007bff;
+    background-color: #333;
     color: white;
     padding: 10px;
     border: none;
     cursor: pointer;
     border-radius: 4px;
     margin-top: 8px;
-    width: 100%;
+    
     font-size: 12px;
 }
 
 .plans-option-group {
     display: flex;
-   
-    gap: 10px;
+    
     justify-content: space-between;
+    align-items: center;
 }
 
 .plans-buttons {
@@ -166,11 +181,19 @@ h3{
 
 .plans-select, .plans-input {
     
-    padding: 10px;
+    padding: 4px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    margin: 18px;
+    text-align: center;
+    width: 185px;
 }
+.plans-calculate{
+	display: flex;
+	justify-content: flex-end;
+    align-items: baseline;
+	
+}
+
 
 .dropdown-toggle {
     background-color: #f8f9fa;

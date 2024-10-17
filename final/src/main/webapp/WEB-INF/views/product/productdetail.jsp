@@ -1,7 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -33,9 +34,10 @@ body {
 }
 
 .product-title {
-	font-size: 2.2rem;
+	font-size: 45px;
 	font-weight: bold;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
+	color: #333;
 }
 
 .price {
@@ -52,12 +54,6 @@ body {
 	padding: 5px 10px;
 	border-radius: 5px;
 	margin-left: 15px;
-}
-
-.time-info {
-	font-size: 0.85rem;
-	color: #888;
-	margin-bottom: 30px;
 }
 
 .product-details {
@@ -227,20 +223,12 @@ body {
 	margin-left: 40px;
 }
 
-/* 가게 정보 스타일 수정 */
-.store-info-right .store-name-container {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	margin-bottom: 15px;
-}
-
-.store-info-right .store-name-container img {
+.store-name-container img {
 	margin-right: 10px;
 	border-radius: 50%;
 }
 
-.store-info-right .store-name {
+.store-name {
 	font-size: 1.4rem;
 	font-weight: bold;
 	margin-bottom: 15px;
@@ -272,7 +260,6 @@ body {
 	left: 0;
 }
 
-/* 하단 정보 */
 .posted-product {
 	display: flex;
 	gap: 15px;
@@ -300,7 +287,7 @@ body {
 .status-button {
 	padding: 10px 20px;
 	margin-left: 10px;
-	font-size: 1rem;
+	font-size: 0.9rem;
 	font-weight: bold;
 	border: 1px solid #333;
 	border-radius: 5px;
@@ -315,29 +302,12 @@ body {
 	cursor: pointer;
 }
 
-/* 버튼 크기 조절 */
-.status-button {
-	min-width: 100px;
-	text-align: center;
-}
-
-/* 반응형 디자인 */
-@media ( max-width : 768px) {
-	.status-buttons {
-		justify-content: center;
-	}
-}
-
 @media ( max-width : 768px) {
 	.product-details {
 		flex-direction: column;
 	}
 	.product-store-info {
 		flex-direction: column;
-	}
-	.product-image, .product-info {
-		margin-right: 0;
-		margin-left: 0;
 	}
 	.btn {
 		width: 100%;
@@ -346,6 +316,17 @@ body {
 	.buttons {
 		flex-direction: column;
 	}
+}
+
+.custom-btn {
+    padding: 5px 10px !important; /* 버튼 크기 줄임 */
+    font-size: 1rem !important; /* 폰트 크기 조정 */
+    border: none !important; /* 테두리 제거 */
+    box-shadow: none !important; /* 버튼의 그림자 제거 */
+}
+
+.button-container a {
+    white-space: nowrap; /* 텍스트가 한 줄로 유지되게 함 */
 }
 </style>
 </head>
@@ -369,7 +350,13 @@ body {
 			</span>
 		</div>
 
-		<div class="price"> ₩ <fmt:formatNumber value="${product.productPrice}" type="number" pattern="#,###"/>원</div>
+		<div class="price" style="font-size: 35px;">
+			<fmt:formatNumber value="${product.productPrice}" type="number"
+				pattern="#,###" />
+			원
+			<div style="font-size: 17px; font-size: 0.85rem; color: #888;">
+				${product.productRegisterdate}·조회 ${product.productCount}</div>
+		</div>
 
 		<div class="status-buttons">
 			<c:if test="${currentUserId eq product.productUserid}">
@@ -382,20 +369,17 @@ body {
 			</c:if>
 		</div>
 
-
-		<!-- 시간 정보 -->
-		<div class="time-info" style="font-size: 15px;">${product.productRegisterdate}·조회
-			${product.productCount}</div>
-
 		<!-- 제품 이미지와 정보 -->
 		<div class="product-details">
 			<div class="wrapwrap">
 				<div class="swiper mySwiper">
 					<div class="swiper-wrapper">
-						<c:forEach var="image" items="${productImages}">
+						<!-- 모든 이미지 표시 -->
+						<c:forEach var="image"
+							items="${fn:split(product.productImage, ',')}">
 							<div class="swiper-slide">
 								<img
-									src="${pageContext.request.contextPath}/resources/images/${product.productImage != null ? fn:split(product.productImage, ',')[0] : '150.png'}"
+									src="${pageContext.request.contextPath}/resources/images/${image}"
 									alt="상품 이미지" class="img-fluid">
 							</div>
 						</c:forEach>
@@ -405,6 +389,7 @@ body {
 					<div class="swiper-pagination"></div>
 				</div>
 			</div>
+
 			<!-- 상품 정보 -->
 			<div class="product-info">
 				<table class="info-table">
@@ -429,15 +414,19 @@ body {
 						</tr>
 					</tbody>
 				</table>
+
 				<div class="extra-info">
 					<ul>
-						<li>결제혜택: 페이코 최대 4만원 즉시할인, KB국민카드 18개월 6% 특별 할부 수수료</li>
-						<li>무이자혜택: 1만원 이상 무이자 할부</li>
+						<li style="color: #f9f9f9;">결제혜택: 페이코 최대 4만원 즉시할인, KB국민카드
+							18개월 6% 특별 할부 수수료</li>
+						<li style="color: #f9f9f9;">무이자혜택: 1만원 이상 무이자 할부</li>
 					</ul>
 				</div>
+
 				<div class="buttons" style="display: flex; justify-content: center;">
 					<button id="openChatRoomBtn" class="btn btn-chat"
-						onclick="startChat('${product.productUserid}', '${loginUser.userId}')">채팅하기</button>
+						onclick="startChat('${product.productUserid}', '${loginUser.userId}')"
+						style="max-width: 130px; max-height: 70px; margin-top: -90px;">채팅하기</button>
 					<div id="chatRoomContainer"></div>
 				</div>
 			</div>
@@ -446,7 +435,28 @@ body {
 		<!-- 상품 정보 및 가게 정보 -->
 		<div class="product-store-info">
 			<div class="product-info-left">
-				<h4 class="info-header" style="font-weight: bold;">상품 정보</h4>
+				<!-- 상품 정보 제목과 수정/삭제 버튼을 동일한 줄에 배치 -->
+				<div
+					style="display: flex; justify-content: space-between; align-items: center;">
+					<h4 class="info-header" style="font-weight: bold;">상품 정보</h4>
+					<!-- 수정 및 삭제 버튼 -->
+					<div class="button-container"
+						style="display: flex; justify-content: flex-end; align-items: center;">
+						<c:if test="${currentUserId eq product.productUserid}">
+							<a
+								href="${pageContext.request.contextPath}/product/modify?productIdx=${product.productIdx}"
+								class="btn btn-outline-secondary btn-sm custom-btn"
+								style="margin-right: 10px;">게시글 수정</a>
+							<a
+								href="${pageContext.request.contextPath}/product/remove?productIdx=${product.productIdx}&productUserid=${product.productUserid}"
+								class="btn btn-outline-danger btn-sm custom-btn"
+								style="white-space: nowrap;"
+								onclick="return confirm('정말로 이 글을 삭제하시겠습니까?');">게시글 삭제</a>
+						</c:if>
+					</div>
+				</div>
+
+
 				<div class="left-wrap"
 					style="border-top: 1px solid #e1e1e1; margin-top: 25px; padding: 20px; background-color: #f9f9f9; border-radius: 8px;">
 					<ul style="margin-top: 25px; list-style: none; padding: 0;">
@@ -455,20 +465,6 @@ body {
 						</li>
 					</ul>
 				</div>
-
-				<!-- 수정 및 삭제 버튼 배치 -->
-				<c:if test="${currentUserId eq product.productUserid}">
-					<a
-						href="${pageContext.request.contextPath}/product/modify?productIdx=${product.productIdx}"
-						class="btn btn-outline-secondary btn-sm"
-						style="display: inline-block; margin-top: 20px; padding: 10px 20px; font-size: 1rem;">게시글
-						수정 </a>
-					<a
-						href="${pageContext.request.contextPath}/product/remove?productIdx=${product.productIdx}&productUserid=${product.productUserid}"
-						class="btn btn-outline-danger btn-sm"
-						style="display: inline-block; margin-top: 20px; margin-left: 10px; padding: 10px 20px; font-size: 1rem;"
-						onclick="return confirm('정말로 이 글을 삭제하시겠습니까?');">게시글 삭제</a>
-				</c:if>
 			</div>
 
 			<!-- 가게 정보 -->
@@ -478,30 +474,13 @@ body {
 					style="border-top: 1px solid #e1e1e1; margin-top: 25px;">
 					<div class="store-name-container" style="margin-top: 30px;">
 						<div class="store-name">${product.productUsernickname}</div>
-						<img src="https://via.placeholder.com/50" alt="프로필 사진"
-							width="70px;">
-					</div>
-
-					<table class="info-table-2">
-						<thead>
-							<tr>
-								<th>안전거래</th>
-								<th>거래후기</th>
-								<th>단골</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>1</td>
-								<td>0</td>
-								<td>2</td>
-							</tr>
-						</tbody>
-					</table>
-					<div class="posted-product">
-						<img src="https://via.placeholder.com/60" alt="아이폰 13미니">
-						<div class="posted-product-info">${product.productSubject}<br>
-							${product.productPrice}원
+						<div class="level-bar text-center mt-2">
+							<p id="userLevel">Loading...</p>
+							<div class="progress">
+								<div class="progress-bar" role="progressbar" style="width: 0%;"
+									aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+							</div>
+							<p class="level-text mt-2" id="experienceText">Loading...</p>
 						</div>
 					</div>
 				</div>
@@ -524,57 +503,18 @@ body {
                 clickable: true,
             },
         });
-   
-        
-        $(document).ready(function () {
-   		 var loggedInUserId = "${loginUser.userId}";   //"${loginUser.userId}";  // 로그인한 사용자 (구매자) ID
-   		 var sellerId = "${product.productUserid}";  // 판매자 ID (상품의 소유자)
-   		 var roomId = "${roomId}";  // 채팅방 ID (이미 생성된 채팅방의 ID)
-   		 var buyerId = loggedInUserId;
-   		 var newRoomId;
-   		 
-   		 
-   		 
-   		    console.log("buyerId: " + loggedInUserId);
-   		    console.log("sellerId: " + sellerId);
-   		    console.log("roomId: " + roomId);	
-   		    console.log("loggedInUserId: " + loggedInUserId);	
-   		 
-   	
-   			 $("#openChatRoomBtn").click(function () {
-   				 
-   				 //alert("sellerId before sending request: " + sellerId);  // sellerId 값 확인
-   				   // alert("buyerId before sending request: " + loggedInUserId);  // buyerId 값 확인
-   				    console.log("Creating room with buyerId: " + loggedInUserId + ", sellerId: " + sellerId);  // 로그로 값 확인
-   				 
-   			        $.ajax({
-   			            url: "${pageContext.request.contextPath}/chatroom/createRoom",   // 방 번호를 생성하는 서버 URL
-   			            type: "POST",             // 새로운 방 번호 생성은 POST 방식으로 요청
-   			            contentType: "application/json",
-   			            data: JSON.stringify({
-   			               
-   			                buyerId: loggedInUserId,
-   			                sellerId: sellerId,
-   			              
-   			            }),
-   			            
-   			            beforeSend: function(xhr) {
-   			                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");  // CSRF 토큰 설정
-   			            },
-   			            success: function (newRoomId) {
-   			                // 새로운 방 번호를 받아온 후, 채팅방으로 이동
-   			                console.log("Created roomId: " + newRoomId);  // 방 번호 확인
-   			                startChat(newRoomId);  // startChat 호출
-   			            },
-   			            error: function (xhr, status, error) {
-   			                console.error('Error creating chat room:', error);
-   			            }
-   			        });
-   			    });
 
+        $(document).ready(function () {
+            var loggedInUserId = "${loginUser.userId}";
+            var sellerId = "${product.productUserid}";
+            var roomId = "${roomId}";
+            var buyerId = loggedInUserId;
+            var newRoomId;
+
+<<<<<<< HEAD
    				
    		//function startChat(roomId) {
-   		function startChat(roomId) {
+   		function startChat(roomId) {	
    			var roomId= "${product.productIdx}"
    			var buyerId = loggedInUserId;  // 이미 상단에서 설정된 buyerId 값 사용
    		    var sellerId = "${product.productUserid}";  // 판매자 ID (서버에서 전달된 값 확인)
@@ -599,7 +539,30 @@ body {
             	   //var chatUrl = "${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId;
                    //window.open(chatUrl, '_blank', 'width=600,height=700,scrollbars=yes');
             	   window.open("${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId, "_blank", "width=400,height=600");
+=======
+            $("#openChatRoomBtn").click(function () {
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/chatroom/createRoom",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        buyerId: loggedInUserId,
+                        sellerId: sellerId,
+                    }),
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+                    },
+                    success: function (newRoomId) {
+                        startChat(newRoomId);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error creating chat room:', error);
+                    }
+                });
+            });
+>>>>>>> branch 'dev' of https://github.com/JeongHaeil/final.git
 
+<<<<<<< HEAD
                },
                beforeSend: function(xhr) {
                    xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");  // CSRF 토큰 설정
@@ -608,7 +571,7 @@ body {
                    console.error("Error starting chat:", error);
                }
            });
-       }
+      }
         });			 
   
    	        // 방 번호를 받아 해당 방의 채팅방 UI를 로드하는 함수
@@ -631,29 +594,52 @@ body {
    	     
    	        var csrfHeaderName = "${_csrf.headerName}";
    	        var csrfToken = "${_csrf.token}";
+=======
+            function startChat(roomId) {
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/chatroom/start",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        roomId: roomId,
+                        buyerId: loggedInUserId,
+                        sellerId: sellerId,
+                    }),
+                    success: function () {
+                        window.open("${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + loggedInUserId + "&sellerId=" + sellerId, "_blank", "width=400,height=600");
+                    },
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error starting chat:", error);
+                    }
+                });
+            }
+        });
+>>>>>>> branch 'dev' of https://github.com/JeongHaeil/final.git
 
- 
-   	        function updateProductStatus(productIdx, status) {
-   	            $.ajax({
-   	                url: '${pageContext.request.contextPath}/product/updateStatus',
-   	                type: 'POST',
-   	                contentType: 'application/json',
-   	                data: JSON.stringify({ productIdx: productIdx, productSold: status }),
-   	                beforeSend: function(xhr) {
-   	                    xhr.setRequestHeader(csrfHeaderName, csrfToken);  // CSRF 토큰을 헤더에 포함
-   	                },
-   	                success: function(response) {
-   	                    location.reload();  // 성공 시 페이지를 새로고침
-   	                },
-   	                error: function(xhr, status, error) {
-   	                    console.error('Error:', error);  // 콘솔에 오류 출력
-   	                    alert('상태 변경에 실패했습니다.');
-   	                }
-   	            });
-   	        }
-   	
-   	   
+        function updateProductStatus(productIdx, status) {
+            $.ajax({
+                url: '${pageContext.request.contextPath}/product/updateStatus',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ productIdx: productIdx, productSold: status }),
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+                },
+                success: function () {
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                    alert('상태 변경에 실패했습니다.');
+                }
+            });
+        }
     </script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
