@@ -422,34 +422,33 @@ text-decoration: none !important;
 					                                </div>
 					                            </td>
 			    								<td  style="width: 20px; overflow: hidden;">
-			    								<!-- 작성자 아이콘 표시 -->
-                                                        <c:choose>
-                                                            <c:when test="${boards.auth == 'ROLE_SUPER_ADMIN'}">
-                                                                <img src="${pageContext.request.contextPath}/resources/images/crown.png" alt="Super Admin Badge" class="user-badge" />
-                                                            </c:when>
-                                                            <c:when test="${boards.auth == 'ROLE_BOARD_ADMIN'}">
-                                                                <img src="${pageContext.request.contextPath}/resources/images/rainbow.png" alt="Board Admin Badge" class="user-badge" />
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <c:choose>
-                                                                    <c:when test="${boards.userLevel >= 1 && boards.userLevel <= 5}">
-                                                                        <img src="${pageContext.request.contextPath}/resources/images/bronze.png" alt="Bronze Badge" class="user-badge" />
-                                                                    </c:when>
-                                                                    <c:when test="${boards.userLevel >= 6 && boards.userLevel <= 10}">
-                                                                        <img src="${pageContext.request.contextPath}/resources/images/silver.png" alt="Silver Badge" class="user-badge" />
-                                                                    </c:when>
-                                                                    <c:when test="${boards.userLevel >= 11 && boards.userLevel <= 15}">
-                                                                        <img src="${pageContext.request.contextPath}/resources/images/gold.png" alt="Gold Badge" class="user-badge" />
-                                                                    </c:when>
-                                                                    <c:when test="${boards.userLevel >= 16 && boards.userLevel <= 19}">
-                                                                        <img src="${pageContext.request.contextPath}/resources/images/emerald.png" alt="Emerald Badge" class="user-badge" />
-                                                                    </c:when>
-                                                                    <c:when test="${boards.userLevel >= 20}">
-                                                                        <img src="${pageContext.request.contextPath}/resources/images/diamond.png" alt="Diamond Badge" class="user-badge" />
-                                                                    </c:when>
-                                                                </c:choose>
-                                                            </c:otherwise>
-                                                        </c:choose>
+											<c:choose>
+											    <c:when test="${boards.userLevel == 9999}">
+											        <img src="${pageContext.request.contextPath}/resources/images/crown.png" alt="Super Admin Badge" class="user-badge" />
+											    </c:when>
+											    <c:when test="${boards.userLevel >= 1 && boards.userLevel <= 5}">
+											        <img src="${pageContext.request.contextPath}/resources/images/bronze.png" alt="Bronze Badge" class="user-badge" />
+											    </c:when>
+											    <c:when test="${boards.userLevel >= 6 && boards.userLevel <= 10}">
+											        <img src="${pageContext.request.contextPath}/resources/images/silver.png" alt="Silver Badge" class="user-badge" />
+											    </c:when>
+											    <c:when test="${boards.userLevel >= 11 && boards.userLevel <= 15}">
+											        <img src="${pageContext.request.contextPath}/resources/images/gold.png" alt="Gold Badge" class="user-badge" />
+											    </c:when>
+											    <c:when test="${boards.userLevel >= 16 && boards.userLevel <= 19}">
+											        <img src="${pageContext.request.contextPath}/resources/images/emerald.png" alt="Emerald Badge" class="user-badge" />
+											    </c:when>
+											    <c:when test="${boards.userLevel >= 20 && boards.userLevel <= 9998}">
+											        <img src="${pageContext.request.contextPath}/resources/images/diamond.png" alt="Diamond Badge" class="user-badge" />
+											    </c:when>
+											    <c:when test="${boards.userLevel >= 10000}">
+											        <img src="${pageContext.request.contextPath}/resources/images/default.png" alt="Default Badge" class="user-badge" />
+											    </c:when>
+											</c:choose>
+
+
+
+
 			    								</td>
 			    								<td>${boards.boardRegisterDate }</td>
 			    								<td>${boards.boardCount }</td>
@@ -602,24 +601,26 @@ text-decoration: none !important;
 		                        html += "<strong>" + this.userNickname;
 		                    }
 
-		                    // 뱃지 추가
-		                    if (this.auth === 'ROLE_SUPER_ADMIN') {
-		                        html += "<img src='" + contextPath + "/resources/images/crown.png' alt='Super Admin Badge' class='user-badge' style='margin-left: 5px;'/>";
-		                    } else if (this.auth === 'ROLE_BOARD_ADMIN') {
-		                        html += "<img src='" + contextPath + "/resources/images/rainbow.png' alt='Board Admin Badge' class='user-badge' style='margin-left: 5px;'/>";
-		                    } else {
-		                        if (this.userLevel >= 1 && this.userLevel <= 5) {
-		                            html += "<img src='" + contextPath + "/resources/images/bronze.png' alt='Bronze Badge' class='user-badge' style='margin-left: 5px;'/>";
-		                        } else if (this.userLevel >= 6 && this.userLevel <= 10) {
-		                            html += "<img src='" + contextPath + "/resources/images/silver.png' alt='Silver Badge' class='user-badge' style='margin-left: 5px;'/>";
-		                        } else if (this.userLevel >= 11 && this.userLevel <= 15) {
-		                            html += "<img src='" + contextPath + "/resources/images/gold.png' alt='Gold Badge' class='user-badge' style='margin-left: 5px;'/>";
-		                        } else if (this.userLevel >= 16 && this.userLevel <= 19) {
-		                            html += "<img src='" + contextPath + "/resources/images/emerald.png' alt='Emerald Badge' class='user-badge' style='margin-left: 5px;'/>";
-		                        } else if (this.userLevel >= 20) {
-		                            html += "<img src='" + contextPath + "/resources/images/diamond.png' alt='Diamond Badge' class='user-badge' style='margin-left: 5px;'/>";
-		                        }
-		                    }
+		                   
+		                 // 뱃지 추가
+		                  if (this.userLevel === 9999) {
+							    html += "<img src='" + contextPath + "/resources/images/crown.png' alt='Super Admin Badge' class='user-badge'/>";
+							} else if (this.userLevel >= 1 && this.userLevel <= 5) {
+							    html += "<img src='" + contextPath + "/resources/images/bronze.png' alt='Bronze Badge' class='user-badge'/>";
+							} else if (this.userLevel >= 6 && this.userLevel <= 10) {
+							    html += "<img src='" + contextPath + "/resources/images/silver.png' alt='Silver Badge' class='user-badge'/>";
+							} else if (this.userLevel >= 11 && this.userLevel <= 15) {
+							    html += "<img src='" + contextPath + "/resources/images/gold.png' alt='Gold Badge' class='user-badge'/>";
+							} else if (this.userLevel >= 16 && this.userLevel <= 19) {
+							    html += "<img src='" + contextPath + "/resources/images/emerald.png' alt='Emerald Badge' class='user-badge'/>";
+							} else if (this.userLevel >= 20 && this.userLevel <= 9998) {
+							    html += "<img src='" + contextPath + "/resources/images/diamond.png' alt='Diamond Badge' class='user-badge'/>";
+							} else if (this.userLevel >= 10000) {
+							    html += "<img src='" + contextPath + "/resources/images/default.png' alt='Default Badge' class='user-badge'/>";
+							}
+
+
+
 
 		                    html += "</strong> <small class='text-muted'>" + this.commentRegDate + "</small>";
 

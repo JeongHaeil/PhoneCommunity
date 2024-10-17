@@ -341,33 +341,32 @@ text-decoration: none !important;
 													</td>
 													<td  style="width: 20px; overflow: hidden;">
 													<!-- 배지(아이콘) 로직을 바로 JSP에서 처리 -->
-													        <c:choose>
-													            <c:when test="${boards.auth == 'ROLE_SUPER_ADMIN'}">
-													                <img src="${pageContext.request.contextPath}/resources/images/crown.png" alt="Super Admin Badge" class="user-badge" />
-													            </c:when>
-													            <c:when test="${boards.auth == 'ROLE_BOARD_ADMIN'}">
-													                <img src="${pageContext.request.contextPath}/resources/images/rainbow.png" alt="Board Admin Badge" class="user-badge" />
-													            </c:when>
-													            <c:otherwise>
-													                <c:choose>
-													                    <c:when test="${boards.userLevel >= 1 && boards.userLevel <= 5}">
-													                        <img src="${pageContext.request.contextPath}/resources/images/bronze.png" alt="Bronze Badge" class="user-badge" />
-													                    </c:when>
-													                    <c:when test="${boards.userLevel >= 6 && boards.userLevel <= 10}">
-													                        <img src="${pageContext.request.contextPath}/resources/images/silver.png" alt="Silver Badge" class="user-badge" />
-													                    </c:when>
-													                    <c:when test="${boards.userLevel >= 11 && boards.userLevel <= 15}">
-													                        <img src="${pageContext.request.contextPath}/resources/images/gold.png" alt="Gold Badge" class="user-badge" />
-													                    </c:when>
-													                    <c:when test="${boards.userLevel >= 16 && boards.userLevel <= 19}">
-													                        <img src="${pageContext.request.contextPath}/resources/images/emerald.png" alt="Emerald Badge" class="user-badge" />
-													                    </c:when>
-													                    <c:when test="${boards.userLevel >= 20}">
-													                        <img src="${pageContext.request.contextPath}/resources/images/diamond.png" alt="Diamond Badge" class="user-badge" />
-													                    </c:when>
-													                </c:choose>
-													            </c:otherwise>
-													        </c:choose>	
+													       <c:choose>
+														    <c:when test="${boards.userLevel == 9999}">
+														        <img src="${pageContext.request.contextPath}/resources/images/crown.png" alt="Super Admin Badge" class="user-badge" />
+														    </c:when>
+														    <c:when test="${boards.userLevel >= 1 && boards.userLevel <= 5}">
+														        <img src="${pageContext.request.contextPath}/resources/images/bronze.png" alt="Bronze Badge" class="user-badge" />
+														    </c:when>
+														    <c:when test="${boards.userLevel >= 6 && boards.userLevel <= 10}">
+														        <img src="${pageContext.request.contextPath}/resources/images/silver.png" alt="Silver Badge" class="user-badge" />
+														    </c:when>
+														    <c:when test="${boards.userLevel >= 11 && boards.userLevel <= 15}">
+														        <img src="${pageContext.request.contextPath}/resources/images/gold.png" alt="Gold Badge" class="user-badge" />
+														    </c:when>
+														    <c:when test="${boards.userLevel >= 16 && boards.userLevel <= 19}">
+														        <img src="${pageContext.request.contextPath}/resources/images/emerald.png" alt="Emerald Badge" class="user-badge" />
+														    </c:when>
+														    <c:when test="${boards.userLevel >= 20 && boards.userLevel <= 9998}">
+														        <img src="${pageContext.request.contextPath}/resources/images/diamond.png" alt="Diamond Badge" class="user-badge" />
+														    </c:when>
+														    <c:when test="${boards.userLevel >= 10000}">
+														        <img src="${pageContext.request.contextPath}/resources/images/default.png" alt="Default Badge" class="user-badge" />
+														    </c:when>
+														</c:choose>
+
+
+
 													</td>
 				    								<td>${boards.boardRegisterDate }</td>
 				    								<td>${boards.boardCount }</td>
@@ -432,32 +431,29 @@ text-decoration: none !important;
 												<td  style="width: 20px; overflow: hidden;">
 												<!-- 배지(아이콘) 로직을 바로 JSP에서 처리 -->
 												        <c:choose>
-												            <c:when test="${boards.auth == 'ROLE_SUPER_ADMIN'}">
-												                <img src="${pageContext.request.contextPath}/resources/images/crown.png" alt="Super Admin Badge" class="user-badge" />
-												            </c:when>
-												            <c:when test="${boards.auth == 'ROLE_BOARD_ADMIN'}">
-												                <img src="${pageContext.request.contextPath}/resources/images/rainbow.png" alt="Board Admin Badge" class="user-badge" />
-												            </c:when>
-												            <c:otherwise>
-												                <c:choose>
-												                    <c:when test="${boards.userLevel >= 1 && boards.userLevel <= 5}">
-												                        <img src="${pageContext.request.contextPath}/resources/images/bronze.png" alt="Bronze Badge" class="user-badge" />
-												                    </c:when>
-												                    <c:when test="${boards.userLevel >= 6 && boards.userLevel <= 10}">
-												                        <img src="${pageContext.request.contextPath}/resources/images/silver.png" alt="Silver Badge" class="user-badge" />
-												                    </c:when>
-												                    <c:when test="${boards.userLevel >= 11 && boards.userLevel <= 15}">
-												                        <img src="${pageContext.request.contextPath}/resources/images/gold.png" alt="Gold Badge" class="user-badge" />
-												                    </c:when>
-												                    <c:when test="${boards.userLevel >= 16 && boards.userLevel <= 19}">
-												                        <img src="${pageContext.request.contextPath}/resources/images/emerald.png" alt="Emerald Badge" class="user-badge" />
-												                    </c:when>
-												                    <c:when test="${boards.userLevel >= 20}">
-												                        <img src="${pageContext.request.contextPath}/resources/images/diamond.png" alt="Diamond Badge" class="user-badge" />
-												                    </c:when>
-												                </c:choose>
-												            </c:otherwise>
-												        </c:choose>
+														    <c:when test="${boards.userLevel == 9999}">
+														        <img src="${pageContext.request.contextPath}/resources/images/crown.png" alt="Super Admin Badge" class="user-badge" />
+														    </c:when>
+														    <c:when test="${boards.userLevel >= 1 && boards.userLevel <= 5}">
+														        <img src="${pageContext.request.contextPath}/resources/images/bronze.png" alt="Bronze Badge" class="user-badge" />
+														    </c:when>
+														    <c:when test="${boards.userLevel >= 6 && boards.userLevel <= 10}">
+														        <img src="${pageContext.request.contextPath}/resources/images/silver.png" alt="Silver Badge" class="user-badge" />
+														    </c:when>
+														    <c:when test="${boards.userLevel >= 11 && boards.userLevel <= 15}">
+														        <img src="${pageContext.request.contextPath}/resources/images/gold.png" alt="Gold Badge" class="user-badge" />
+														    </c:when>
+														    <c:when test="${boards.userLevel >= 16 && boards.userLevel <= 19}">
+														        <img src="${pageContext.request.contextPath}/resources/images/emerald.png" alt="Emerald Badge" class="user-badge" />
+														    </c:when>
+														    <c:when test="${boards.userLevel >= 20 && boards.userLevel <= 9998}">
+														        <img src="${pageContext.request.contextPath}/resources/images/diamond.png" alt="Diamond Badge" class="user-badge" />
+														    </c:when>
+														    <c:when test="${boards.userLevel >= 10000}">
+														        <img src="${pageContext.request.contextPath}/resources/images/default.png" alt="Default Badge" class="user-badge" />
+														    </c:when>
+														</c:choose>
+
 												</td>
 			    								<td>${boards.boardRegisterDate }</td>
 			    								<td>${boards.boardCount }</td>
