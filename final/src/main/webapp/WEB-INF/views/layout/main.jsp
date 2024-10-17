@@ -114,14 +114,57 @@
                             <li class="main-list-item">5. </li>
                         </ul>
                     </div>
+                    
                 </div>
+                
+            </div>  
+           
+         <div class="main-ad-section">
+        <div class="main-card">
+            <div class="main-card-header">
+                광고 배너
+            </div>
+            <div class="main-card-body">
+                <div class="ad-item">
+                    <img id="ad-image" src="<c:url value="/resources/images/phoneph.png"/>" class="ad-image">
+                </div>
+               
             </div>
         </div>
+    </div>
+</div> 
+        
+        
+        
+        
     </div>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="<c:url value='/js/jquery-3.7.1.min.js'/>"></script>
 	<script type="text/javascript">
+	 document.addEventListener('DOMContentLoaded', function() {
+	const images = [
+	    "<c:url value="/resources/images/phoneph.png"/>",
+	    "<c:url value="/resources/images/phoneph2.png"/>",
+	    "<c:url value="/resources/images/phoneph4.png"/>"
+	];
+
+	// 이미지 변경 함수
+	function changeAdImage() {
+	    const randomIndex = Math.floor(Math.random() * images.length); // 랜덤 인덱스 생성
+	    const adImageElement = document.getElementById('ad-image'); // 이미지 엘리먼트 선택
+	    adImageElement.src = images[randomIndex]; // 랜덤 이미지로 변경
+	}
+
+	// 페이지 로드 시 한 번 실행
+	window.onload = changeAdImage;
+
+	// 주기적으로 이미지 변경 (5초마다)
+	setInterval(changeAdImage, 3000);
+	});
+	
+	
+	
     $(document).ready(function() {
         popularBoardList();
         NoticeBoardList();

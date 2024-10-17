@@ -4,7 +4,7 @@
   
  <mapper namespace="xyz.itwill.mapper.ProductsMapper">
  	<select id="selectProductById" resultType="Products">
-       select 
+       select distinct 
         products.product_id, 
         products.product_name, 
         products.manufacturer_id, 
@@ -12,7 +12,8 @@
     from 
         products
     join manufacturers on
-        products.manufacturer_id = manufacturers.manufacturer_id 
+        products.manufacturer_id = manufacturers.manufacturer_id
+        
     </select>
     
     
