@@ -31,14 +31,19 @@
 
 <script>
 $(document).ready(function() {
-	// 페이지 로드 시 현재 페이지 번호를 세션에 저장
-	sessionStorage.setItem('currentSpamBoardPage', '${resultMap.pager.pageNum}');
+	// 페이지 로드 시 현재 페이지 번호를 로컬 스토리지에 저장
+	localStorage.setItem('currentSpamBoardPage', '${resultMap.pager.pageNum}');
 	
-	// 게시물 클릭을 할 경우 이벤트 발생
-	$('tr[onclick]').on('click', function(e) {
-		e.preventDefault();
-		var href = $(this).attr('onclick').match(/'([^']+)'/)[1];
-		location.href = href + '&prevPage=' + sessionStorage.getItem('currentSpamBoardPage');
+	// 게시물 클릭 시 이벤트
+	$('tr[onclick]').each(function() {
+		var $this = $(this);
+		var originalOnclick = $this.attr('onclick');
+		$this.removeAttr('onclick');
+		$this.on('click', function(e) {
+			e.preventDefault();
+			var href = originalOnclick.match(/'([^']+)'/)[1];
+			location.href = href + '&prevPage=' + localStorage.getItem('currentSpamBoardPage');
+		});
 	});
 });
 </script>

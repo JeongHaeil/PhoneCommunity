@@ -93,8 +93,8 @@
 
         function loadSpamBoard(page, search, keyword) {
             loadContent('<c:url value="/super_admin/admin/ajax"/>', 'spam', page, search, keyword);
-            // 현재 페이지 번호를 세션 스토리지에 저장
-            sessionStorage.setItem('currentSpamBoardPage', page);
+            // 현재 페이지 번호를 로컬 스토리지에 저장
+            localStorage.setItem('currentSpamBoardPage', page);
         }
 
         function loadUserList(page, search, keyword) {
@@ -104,9 +104,10 @@
         // URL 해시가 변경될 때 실행되는 함수
         $(window).on('hashchange', function() {
             var hash = window.location.hash;
-            if (hash === '#spam') {
+            if (hash.startsWith('#spam')) {
                 $('#spam-tab').tab('show');
-                var prevPage = sessionStorage.getItem('currentSpamPage') || 1;
+                var params = new URLSearchParams(hash.split('?')[1]);
+                var prevPage = params.get('page') || localStorage.getItem('currentSpamBoardPage') || 1;
                 loadSpamBoard(prevPage, '', '');
             }
         });
@@ -130,9 +131,10 @@
             });
             
         	// URL에 #spam이 있으면 스팸 탭을 보여주고 이전 페이지를 로드
-            if (window.location.hash === '#spam') {
+            if (window.location.hash.startsWith('#spam')) {
                 $('#spam-tab').tab('show');
-                var prevPage = sessionStorage.getItem('currentSpamPage') || 1;
+                var params = new URLSearchParams(window.location.hash.split('?')[1]);
+                var prevPage = params.get('page') || localStorage.getItem('currentSpamBoardPage') || 1;
                 loadSpamBoard(prevPage, '', '');
             }
         });
