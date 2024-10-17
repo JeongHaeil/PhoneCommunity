@@ -147,4 +147,42 @@ public class AdminController {
 		
 		return "admin/user_list";
 	}
+	
+	@GetMapping("/dashboard")
+	public String adminDashboard(Model model) {
+		model.addAttribute("standalone", true);
+		return "admin/admin_dashboard";
+	}
+
+	@GetMapping("/admin/ajax")
+	public String spamBoardListAjax(@RequestParam(defaultValue = "1") int pageNum,
+							@RequestParam(defaultValue = "10") int pageSize,
+							@RequestParam(defaultValue = "5") int blockSize,
+							@RequestParam(required = false) String search,
+							@RequestParam(required = false) String keyword,
+							Model model) {
+		int totalSize = 0;
+		Map<String, Object> resultMap = adminService.getSpamBoardList(pageNum, pageSize, totalSize, blockSize, search, keyword);
+		model.addAttribute("resultMap", resultMap);
+		model.addAttribute("search", search);
+		model.addAttribute("keyword", keyword);
+		//return "admin/admin_page_content";
+		return "forward:/WEB-INF/views/admin/admin_page_content.jsp";
+	}
+
+	@GetMapping("/userList/ajax")
+	public String userListBoardAjax(@RequestParam(defaultValue = "1") int pageNum,
+							@RequestParam(defaultValue = "10") int pageSize,
+							@RequestParam(defaultValue = "5") int blockSize,
+							@RequestParam(required = false) String search,
+							@RequestParam(required = false) String keyword,
+							Model model) {
+		int totalSize = 0;
+		Map<String, Object> resultMap = adminService.gettotalUserBoardList(pageNum, pageSize, totalSize, blockSize, search, keyword);
+		model.addAttribute("resultMap", resultMap);
+		model.addAttribute("search", search);
+		model.addAttribute("keyword", keyword);
+		//return "admin/user_list_content";
+		return "forward:/WEB-INF/views/admin/user_list_content.jsp"; 
+	}
 }
