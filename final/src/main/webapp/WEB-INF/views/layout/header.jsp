@@ -106,7 +106,7 @@
 									    <sec:authentication property="principal.nickname"/> 님
 									    <jsp:include page="/WEB-INF/views/user/icon.jsp" />
 									</a>
-
+ 
                                 <!-- 최고관리자일 경우 -->
                                 <sec:authorize access="hasRole('ROLE_SUPER_ADMIN')">
                                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">

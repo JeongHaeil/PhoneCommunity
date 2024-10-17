@@ -188,3 +188,192 @@ a{
      border: none; /* 테두리 제거 */
     box-shadow: none; /* 그림자도 제거 */
 }
+
+/* 전체 컨테이너 */
+.main-container {
+    width: 100%;
+   
+    max-width: 1400px;
+    margin: 10px auto;
+    margin-top: 80px;
+    margin-bottom: 80px;
+    font-family: 'Noto Sans KR', Arial, sans-serif;
+    color: #333;
+    font-size: 18px;
+
+}
+
+/* 행 레이아웃 */
+.main-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: baseline; 
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* 각 카드 섹션 */
+.main-card {
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    height: auto;
+    min-height: 250px;
+    background-color: #fff;
+}
+
+/* 카드 헤더 스타일 */
+.main-card-header {
+    font-weight: bold;
+    font-size: 16px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    align-items: center; 
+}
+
+/* 더보기 버튼 스타일 */
+.main-more-btn {
+    color: #ff4d4d !important;
+    font-weight: bold;
+    
+    font-size: 14px;  /* 버튼 텍스트 크기 */
+    border: 1px solid #ff4d4d;  /* 버튼에 테두리 추가 */
+    padding: 5px 10px;  /* 버튼 패딩 */
+    border-radius: 5px;  /* 버튼 모서리 둥글게 */
+    transition: background-color 0.3s, color 0.3s;  /* 애니메이션 */
+}
+
+.main-more-btn:hover {
+    background-color: #ff4d4d;  /* 버튼 배경색 변경 */
+    color: #fff !important;  /* 버튼 텍스트 색상 변경 */
+    text-decoration: none;  /* 마우스 오버 시 밑줄 제거 */
+}
+
+/* 카드 본문 스타일 */
+.main-card-body {
+    padding: 15px;
+    
+    
+}
+
+/* 리스트 스타일 */
+.main-list-group {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+   
+     
+}
+
+/* 리스트 아이템 스타일 */
+.main-list-item {
+    padding: 15px 0;
+    font-size:16px;
+    border-bottom: 1px solid #eee;
+    color: red !important ;
+    
+    
+	white-space: nowrap;         /* 텍스트를 한 줄로 표시 */
+    overflow: hidden;            /* 넘치는 텍스트를 숨김 */
+    text-overflow: ellipsis; 
+	
+}
+
+a{
+	text-decoration: none !important;	
+	color: #333 !important;
+	
+}
+	
+
+
+.main-list-item:last-child {
+    border-bottom: none;
+}
+
+/* 각 섹션별 칼럼 */
+.main-shopping-info, .main-community, .main-popular-posts, .main-new-board, .main-ad-section {
+    flex-basis: calc(32% - 0px); /* 최신글, 인기글, 공지사항의 너비를 30%로 설정 */
+    
+    width: 500px;
+    min-width: 400px;
+}
+
+
+
+
+/* 자유게시판 위의 간격 */
+.main-popular-posts {
+    margin-top: 12px;
+}
+
+/* 오른쪽에 추가되는 새로운 섹션 간격 */
+.main-new-board {
+    margin-top: 30px;
+}
+
+.main-notice {
+    flex-basis: calc(25% - 10px);
+    order: 2; 
+    
+}
+
+.main-image-grid {
+    display: flex;
+    flex-wrap: wrap; /* 여러 줄로 나누기 */
+    justify-content: space-between; /* 항목들 사이에 간격 유지 */
+    gap: 20px; /* 이미지 간 간격 */
+}
+
+/* 각 이미지 아이템 설정 */
+.main-image-item {
+    flex-basis: calc(48% - 20px); /* 각 이미지가 한 줄에 4개 들어가도록 설정 */
+    box-sizing: border-box;
+    text-align: center;
+    
+    width: 300px;
+}
+
+/* 이미지 크기 조정 */
+.main-image {
+    width: 100%; /* 이미지가 부모 컨테이너에 맞게 조정됨 */
+    
+    
+    
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    
+}
+
+/* 이미지 제목 */
+.main-image-title {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.main-card-body{
+    font-size: 14px;
+}
+
+
+
+
+
+
+/* 광고 배너 섹션 */
+.main-ad-section {
+    margin-top: 30px;
+}
+
+
+/* 광고 이미지 스타일 */
+.ad-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+     border: none; /* 테두리 제거 */
+    box-shadow: none; /* 그림자도 제거 */
+}

@@ -31,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 import xyz.itwill.auth.CustomUserDetails;
 import xyz.itwill.dto.Product;
 import xyz.itwill.dto.User;
+import xyz.itwill.service.ChatRoomsService;
 import xyz.itwill.service.ProductService;
 import xyz.itwill.service.UserService;
 
@@ -42,6 +43,7 @@ public class ProductController {
     private final ProductService productService;
     private final UserService userService;
     private final WebApplicationContext context;
+    private final ChatRoomsService chatRoomsService;
 
     private static final String UPLOAD_DIR = "/resources/images/";
 
@@ -71,7 +73,7 @@ public class ProductController {
 	    if (productSold != null) {
 	        map.put("productSold", productSold); // 드랍다운에서 선택된 판매 상태에 따른 필터링
 	    }
-
+ 
 	    // 상품 목록을 서비스에서 가져옴
 	    Map<String, Object> resultMap = productService.getProductList(map);
 	    model.addAttribute("result", resultMap);
@@ -118,9 +120,14 @@ public class ProductController {
 		if (filenameList.isEmpty()) {
 			filenameList.add("150.png"); // 기본 이미지 파일명
 		}
-
+        
+		
 		product.setProductImage(String.join(",", filenameList)); // 여러 이미지 파일명을 콤마로 연결해서 저장
-		productService.addProduct(product);
+		
+		
+		int productIdx = productService.createProductAndChatRoom(product);
+		//productService.addProduct(product);
+		System.out.println("Generated Product ID: " + productIdx); 
 		return "redirect:/product/list";
 	}
 

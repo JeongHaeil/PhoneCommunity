@@ -93,23 +93,11 @@ var socket;
 var reconnectAttempts = 0;
 var maxReconnectAttempts = 5;  // 최대 재연결 시도 횟수
 
-
-
 $(document).ready(function () {
-	
-    if (socket && socket.readyState === WebSocket.OPEN) {
-        socket.close();
-        console.log("기존 WebSocket 연결을 닫습니다.");
-    }
-
     var loggedInUserId = "${loginUser.userId}";
     var sellerId = "${sellerId}";
     var buyerId = loggedInUserId;
     var roomId = "${roomId}";
-
-    console.log("Buyer ID: " + buyerId);
-    console.log("Seller ID: " + sellerId);
-    console.log("Room ID: " + roomId);
 
     // WebSocket 연결 설정
     connectWebSocket(roomId, buyerId, sellerId, loggedInUserId);
@@ -141,10 +129,10 @@ $(document).ready(function () {
         });
     }
 });
- 
+
 // WebSocket 연결 함수
 function connectWebSocket(roomId, buyerId, sellerId, loggedInUserId) {
-    socket = new WebSocket("ws://www.itwill.xyz/final/ws/chat/" + roomId + "?roomId=" + roomId + "&buyerId=" + buyerId + "&sellerId=" + sellerId + "&userId=" + loggedInUserId);
+	socket = new WebSocket("ws://localhost:8000/final/ws/chat/" + roomId + "?roomId=" + roomId +  "&buyerId=" + buyerId + "&sellerId=" + sellerId + "&userId=" + loggedInUserId);
     
     socket.onopen = function () {
         console.log("WebSocket connection established.");
@@ -181,6 +169,14 @@ function connectWebSocket(roomId, buyerId, sellerId, loggedInUserId) {
     };
 }
 
+// WebSocket 재연결 함수
+function reconnectWebSocket() {
+    if (socket.readyState === WebSocket.CLOSED || socket.readyState === WebSocket.CLOSING) {
+        console.log("WebSocket 재연결을 시도합니다.");
+        connectWebSocket(roomId, buyerId, sellerId, loggedInUserId);
+    }
+}
+
 // 메시지 전송 함수
 function sendMessage() {
     var message = document.getElementById("messageInput").value;
@@ -190,24 +186,23 @@ function sendMessage() {
             message: message,
             senderId: "${loginUser.userId}"
         };
-        socket.send(JSON.stringify(payload));  // 메시지를 JSON 형식으로 전송
+        socket.send(JSON.stringify(payload));  // 메시지를 WebSocket으로 전송
         console.log("Message sent via WebSocket: " + message);
         displayMessage(message, 'self');  // 내가 보낸 메시지는 화면에 표시
         document.getElementById("messageInput").value = "";  // 입력란 초기화
     } else {
         console.error("WebSocket is not connected. 재연결 시도 중...");
-        // 재연결 시도
+        // WebSocket 재연결 시도
         reconnectWebSocket();
     }
 }
 
 // 메시지를 화면에 표시하는 함수
 function displayMessage(message, senderId) {
-	
-	var loggedInUserId = "${loginUser.userId}";  // 서버에서 전달된 로그인 사용자 ID
+    var loggedInUserId = "${loginUser.userId}";  // 서버에서 전달된 로그인 사용자 ID
     var sellerId = "${sellerId}";  // 서버에서 전달된 판매자 ID
-	var buyerId=loggedInUserId;
     var chatWindow = document.getElementById("chatWindow");
+    
     // 새로운 div 태그 생성
     var messageElement = document.createElement("div");
     var messageText = document.createElement("span");
@@ -217,21 +212,17 @@ function displayMessage(message, senderId) {
     messageText.style.borderRadius = '10px';
 
     // 메시지 스타일 적용
-   if (senderId === "${sellerId}") {
-        // 현재 로그인한 사용자가 메시지를 보낸 경우 (구매자 또는 판매자 본인)
-        messageElement.style.textAlign = 'right';  // 내 메시지는 오른쪽 정렬
-        messageText.style.backgroundColor = '#dcf8c6';  // 내 메시지 색상
-    } else if (senderId === "${sellerId}" && buyerId !== sellerId) {
+    if (senderId === "${sellerId}") {
         // 판매자가 메시지를 보낸 경우
         messageElement.style.textAlign = 'left';  // 판매자의 메시지는 왼쪽 정렬
         messageText.style.backgroundColor = '#f1f0f0';  // 판매자 메시지 색상
-    } else if (senderId === buyerId && loggedInUserId !== buyerId) {
+    } else if (senderId === loggedInUserId) {
         // 구매자가 메시지를 보낸 경우
-        messageElement.style.textAlign = 'left';  // 구매자의 메시지는 왼쪽 정렬
-        messageText.style.backgroundColor = '#f1f0f0';  // 구매자 메시지 색상
+        messageElement.style.textAlign = 'right';  // 내 메시지는 오른쪽 정렬
+        messageText.style.backgroundColor = '#dcf8c6';  // 내 메시지 색상
     }
+    
     messageElement.style.margin = '25px 0';
-
     messageElement.appendChild(messageText);
     
     // 메시지를 chatWindow에 추가
@@ -241,22 +232,6 @@ function displayMessage(message, senderId) {
     chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
-
-document.getElementById('sendButton').addEventListener('click', function() {
-    var messageInput = document.getElementById("messageInput").value;
-    if (messageInput.trim() !== '') {
-        var chatWindow = document.getElementById("chatWindow");
-
-        // 메시지 엘리먼트 생성
-        var messageElement = document.createElement("div");
-        messageElement.classList.add('chat-message', 'self'); // 본인 메시지 스타일
-        messageElement.textContent = messageInput;
-
-        chatWindow.appendChild(messageElement); // 메시지 추가
-        document.getElementById("messageInput").value = ''; // 입력란 초기화
-        chatWindow.scrollTop = chatWindow.scrollHeight; // 최신 메시지로 스크롤 이동
-    }
-});
 
 
 
