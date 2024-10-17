@@ -40,8 +40,8 @@ public class ChatController  {
 	    public String startChat(@RequestBody Map<String, Object> requestData, Model model) {
 	    
 	    	 try {
-	    	        // 요청 데이터 출력
-	    	        System.out.println("Request Data: " + requestData);
+	    	        
+	    	        
 
 	    	        // 데이터 추출
 	    	        String buyerId = requestData.get("buyerId").toString();
@@ -89,10 +89,7 @@ public class ChatController  {
 		    	    model.addAttribute("roomId", roomId);
 		    	    model.addAttribute("sellerId", sellerId);
 		    	    
-		    	    System.out.println("Loaded2323123 roomId: " + roomId); // 디버그 출력
-		    	    System.out.println("Buyer 123213ID: " + buyerId);
-		    	    System.out.println("Seller12312312 ID: " + sellerId);   
-		       
+		    	  
 		         return "chat";  // 채팅방 JSP로 이동
 		    }
 
@@ -109,12 +106,7 @@ public class ChatController  {
 			    newRoom.setSellerId(sellerId);
 			    int roomId = chatRoomsService.createChatRooms(newRoom);  // 방을 생성하고 방 번호 반환
 			  
-			   // int roomId = chatRoomsService.createChatRooms(chatRoom);
-			   // Map<String, Object> response = new HashMap<>();
-			   // response.put("roomId", roomId);
-			   // return response;
-		
-			    //return chatRoomsService.createChatRooms(chatRoom);  // 방 번호 반환
+			  
 			    return roomId;
 	    }
 

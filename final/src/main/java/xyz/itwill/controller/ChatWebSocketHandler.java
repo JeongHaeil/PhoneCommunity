@@ -44,9 +44,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
          session.getAttributes().put("sellerId", sellerId);
          session.getAttributes().put("roomId", roomId);
         // 메시지 전송 후 로그 출력
-        System.out.println("메시지 전송: roomId = " + roomId + ", sellerId = " + sellerId);
-        System.out.println("Buyer ID: " + buyerId);
-        System.out.println("Seller ID: " + sellerId);
+       
         
         String payload = message.getPayload();
         Map<String, Object> messageData = new HashMap<>();
@@ -75,7 +73,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             for (WebSocketSession s : roomSessionMap.get(roomId).values()) {
                 s.sendMessage(new TextMessage(message.getPayload()));
             }
-            System.out.println("메시지 전송: roomId = " + roomId + ", sellerId = " + sellerId);
+           
         }
     }
 
@@ -92,16 +90,12 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         String senderId = extractQueryParam(session.getUri().toString(), "userId");
         // 필수 값 확인
         
-        System.out.println("WebSocketSession URI: " + session.getUri().toString());
-        System.out.println("Buyer ID: " + buyerId);
-        System.out.println("Seller ID: " + sellerId);
-        System.out.println("Room ID: " + roomId);
-        System.out.println("userId ID: " + senderId);
+       
         //System.out.println("User ID: " + userId);
         
         
         if (buyerId == null || sellerId == null || roomId == null || senderId == null) {
-            System.out.println("Buyer ID, Seller ID 또는 Sender ID가 누락되었습니다.");
+           
             return;
         }
 
@@ -121,8 +115,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             sellerSessions.put(sellerId, session);
         }
 
-        System.out.println("WebSocket 연결 시 URL: " + session.getUri().toString());
-        System.out.println("roomId: " + roomId + ", buyerId: " + buyerId + ", sellerId: " + sellerId + ", senderId: " + senderId);
+       
     }
 	
     private String extractQueryParam(String uri, String paramName) {
