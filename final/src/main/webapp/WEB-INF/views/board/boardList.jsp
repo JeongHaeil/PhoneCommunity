@@ -560,7 +560,8 @@ function popularSideBoard() {
 		    return;
 		}else{
 			$(result.popularBoardList).each(function(index) {
-				html += "<li><a href='<c:url value='/board/boarddetail/" + this.boardCode + "/" + this.boardPostIdx + "'/>'>" + this.boardTitle + "</a> <span> " + this.boardCount + "</span></li>";
+				var num = index + 1;
+				html += "<li><a href='<c:url value='/board/boarddetail/" + this.boardCode + "/" + this.boardPostIdx + "'/>'><span> " + num + "&nbsp;</span>" + this.boardTitle + "</a> </li>";
 			});
 		}
 		$("#popularSideBoard").html(html);
