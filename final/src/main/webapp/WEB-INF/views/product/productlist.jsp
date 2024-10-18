@@ -1,7 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!-- functions 라이브러리 추가 -->
 <!DOCTYPE html>
 <html lang="ko">
@@ -47,13 +46,13 @@ body {
 }
 
 .btn {
-    background-color: #3C3D37 !important; /* 버튼 배경색을 강제로 #3C3D37로 설정 */
-    color: white !important; /* 글씨 색을 하얀색으로 강제 설정 */
-    border-color: #3C3D37 !important; /* 버튼 테두리도 같은 색상으로 강제 설정 */
+	background-color: #3C3D37 !important; /* 버튼 배경색을 강제로 #3C3D37로 설정 */
+	color: white !important; /* 글씨 색을 하얀색으로 강제 설정 */
+	border-color: #3C3D37 !important; /* 버튼 테두리도 같은 색상으로 강제 설정 */
 }
 
 .btn:hover {
-    transform: scale(1.05);
+	transform: scale(1.05);
 	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
@@ -118,15 +117,14 @@ body {
 	background-color: #fff;
 	transition: transform 0.3s ease, box-shadow 0.3s ease;
 	height: auto;
-   
 }
 
 .img-fluid {
-    width: 100%; /* 가로 크기는 100%로 설정하여 카드의 전체 폭에 맞춤 */
-    height: 300px; /* 고정된 세로 크기 설정 */
-    object-fit: cover; /* 이미지 비율을 유지하면서 공간에 맞춤 */
-    margin: 0; /* 여백 제거 */
-    padding: 0; /* 패딩 제거 */
+	width: 100%; /* 가로 크기는 100%로 설정하여 카드의 전체 폭에 맞춤 */
+	height: 300px; /* 고정된 세로 크기 설정 */
+	object-fit: cover; /* 이미지 비율을 유지하면서 공간에 맞춤 */
+	margin: 0; /* 여백 제거 */
+	padding: 0; /* 패딩 제거 */
 }
 
 .product-card:hover {
@@ -179,61 +177,63 @@ body {
 
 /* Pagination 스타일 */
 .pagination-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
+	display: flex;
+	justify-content: center;
+	margin-top: 20px;
 }
 
 .pagination {
-    list-style: none;
-    padding-left: 0;
-    display: flex;
-    gap: 8px;
+	list-style: none;
+	padding-left: 0;
+	display: flex;
+	gap: 8px;
 }
 
 .pagination li {
-    cursor: pointer;
+	cursor: pointer;
 }
 
-.pagination li a,
-.pagination li span {
-    color: #333;
-    text-decoration: none;
-    padding: 6px 12px;
-    border: 1px solid #ddd;
-    transition: background-color 0.3s ease, color 0.3s ease;
+.pagination li a, .pagination li span {
+	color: #333;
+	text-decoration: none;
+	padding: 6px 12px;
+	border: 1px solid #ddd;
+	transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .pagination li.active span {
-    background-color: #333;
-    color: white;
+	background-color: #333;
+	color: white;
 }
 
 .pagination li a:hover {
-    background-color: #f0f0f0;
-    color: #333;
+	background-color: #f0f0f0;
+	color: #333;
 }
 
-
 .text-muted span {
-	color: blue;
+	color: blue !important;
 }
 
 /* 리스트 페이지에서 이미지 크기 고정 */
 .product-list img {
-    width: 300px; /* 원하는 고정 너비 */
-    height: 200px; /* 원하는 고정 높이 */
-    object-fit: cover; /* 이미지가 고정된 크기에 맞게 자르기 */
-    border-radius: 5px; /* 모서리를 둥글게 */
+	width: 300px; /* 원하는 고정 너비 */
+	height: 200px; /* 원하는 고정 높이 */
+	object-fit: cover; /* 이미지가 고정된 크기에 맞게 자르기 */
+	border-radius: 5px; /* 모서리를 둥글게 */
 }
 
+.wow{
+	font-weight: bold;
+}
 </style>
 
 </head>
 <body>
 	<div class="container my-4">
 		<!-- 필터 및 버튼 -->
-		<div class="d-flex justify-content-between align-items-center filter-buttons mt-3">
+		<div
+			class="d-flex justify-content-between align-items-center filter-buttons mt-3">
 			<div class="dropdown">
 				<button class="btn btn-dark btn-sm dropdown-toggle" type="button"
 					id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -271,8 +271,7 @@ body {
 							style="max-width: 150px; border-radius: 8px 0 0 8px;">
 							<option value="product_subject">제목</option>
 							<option value="product_content">내용</option>
-						</select> 
-						<input type="text" name="keyword" class="form-control"
+						</select> <input type="text" name="keyword" class="form-control"
 							placeholder="검색어를 입력하세요." value="${searchMap.keyword}">
 						<button type="submit" class="btn btn-outline-secondary"
 							style="border-radius: 0 8px 8px 0;">검색</button>
@@ -293,7 +292,7 @@ body {
 									<a
 										href="${pageContext.request.contextPath}/product/details?productIdx=${product.productIdx}"
 										class="text-decoration-none">
-											<div class="product-card">
+										<div class="product-card">
 											<!-- 글 번호 표시 -->
 											<div class="product-meta text-muted"
 												style="font-size: 12px; margin-bottom: 5px;">글 번호:
@@ -303,25 +302,26 @@ body {
 												alt="상품 이미지" class="img-fluid">
 
 											<div class="product-meta">
-												<!-- 판매 상태 표시 -->
 												<span class="text-muted"
-													style="font-size: 14px; font-weight: bold; color: 
-                        <c:choose>
-                            <c:when test="${product.productSold == 1}">
-                                blue;">판매중
-													</c:when>
-													<c:when test="${product.productSold == 2}">
-                                orange;">예약중
-													</c:when>
-													<c:when test="${product.productSold == 3}">
-                                red;">판매완료
-													</c:when>
-													<c:otherwise>
-                                black;">대기중
-													</c:otherwise>
-												</c:choose>
+													style="font-size: 14px; font-weight: bold; color: blue !important;">
+													<c:choose>
+														<c:when test="${product.productSold == 1}">
+                판매중
+            </c:when>
+														<c:when test="${product.productSold == 2}">
+                예약중
+            </c:when>
+														<c:when test="${product.productSold == 3}">
+                판매완료
+            </c:when>
+														<c:otherwise>
+                대기중
+            </c:otherwise>
+													</c:choose>
 												</span>, <span>${product.productRegisterdate}</span>
 											</div>
+
+
 
 											<p class="product-title">${product.productSubject}</p>
 
@@ -334,15 +334,16 @@ body {
 														<c:otherwise>택배</c:otherwise>
 													</c:choose>
 												</p>
-												<p>
+												<p class="wow">
 													· 판매 가격: ₩
-													<fmt:formatNumber value="${product.productPrice}" type="number"
-														pattern="#,###" />
+													<fmt:formatNumber value="${product.productPrice}"
+														type="number" pattern="#,###" />
 													원
 												</p>
 											</div>
 
-											<div class="product-footer d-flex align-items-center justify-content-between">
+											<div
+												class="product-footer d-flex align-items-center justify-content-between">
 												<div class="profile-info">
 													<span> 작성자 : ${product.productUsernickname}</span>
 												</div>
@@ -361,43 +362,50 @@ body {
 							</div>
 						</c:otherwise>
 					</c:choose>
-				</div> <!-- row product-list 종료 -->
-			</div> <!-- main-content 종료 -->
-		</div> <!-- content-wrapper 종료 -->
+				</div>
+				<!-- row product-list 종료 -->
+			</div>
+			<!-- main-content 종료 -->
+		</div>
+		<!-- content-wrapper 종료 -->
 
 		<!-- Pagination -->
 		<div class="pagination-wrapper">
-    <ul class="pagination">
-        <c:choose>
-            <c:when test="${result.pager.startPage > result.pager.blockSize}">
-                <li><a href="<c:url value='/product/list'/>?pageNum=${result.pager.prevPage}&pageSize=${result.pager.pageSize}">이전</a></li>
-            </c:when>
-            <c:otherwise>
-                <li class="disabled"><span>이전</span></li>
-            </c:otherwise>
-        </c:choose>
+			<ul class="pagination">
+				<c:choose>
+					<c:when test="${result.pager.startPage > result.pager.blockSize}">
+						<li><a
+							href="<c:url value='/product/list'/>?pageNum=${result.pager.prevPage}&pageSize=${result.pager.pageSize}">이전</a></li>
+					</c:when>
+					<c:otherwise>
+						<li class="disabled"><span>이전</span></li>
+					</c:otherwise>
+				</c:choose>
 
-        <c:forEach var="i" begin="${result.pager.startPage}" end="${result.pager.endPage}" step="1">
-            <c:choose>
-                <c:when test="${result.pager.pageNum != i}">
-                    <li><a href="<c:url value='/product/list'/>?pageNum=${i}&pageSize=${result.pager.pageSize}">${i}</a></li>
-                </c:when>
-                <c:otherwise>
-                    <li class="active"><span>${i}</span></li>
-                </c:otherwise>
-            </c:choose>
-        </c:forEach>
+				<c:forEach var="i" begin="${result.pager.startPage}"
+					end="${result.pager.endPage}" step="1">
+					<c:choose>
+						<c:when test="${result.pager.pageNum != i}">
+							<li><a
+								href="<c:url value='/product/list'/>?pageNum=${i}&pageSize=${result.pager.pageSize}">${i}</a></li>
+						</c:when>
+						<c:otherwise>
+							<li class="active"><span>${i}</span></li>
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>
 
-        <c:choose>
-            <c:when test="${result.pager.endPage != result.pager.totalPage}">
-                <li><a href="<c:url value='/product/list'/>?pageNum=${result.pager.nextPage}&pageSize=${result.pager.pageSize}">다음</a></li>
-            </c:when>
-            <c:otherwise>
-                <li class="disabled"><span>다음</span></li>
-            </c:otherwise>
-        </c:choose>
-    </ul>
-</div>
+				<c:choose>
+					<c:when test="${result.pager.endPage != result.pager.totalPage}">
+						<li><a
+							href="<c:url value='/product/list'/>?pageNum=${result.pager.nextPage}&pageSize=${result.pager.pageSize}">다음</a></li>
+					</c:when>
+					<c:otherwise>
+						<li class="disabled"><span>다음</span></li>
+					</c:otherwise>
+				</c:choose>
+			</ul>
+		</div>
 
 	</div>
 

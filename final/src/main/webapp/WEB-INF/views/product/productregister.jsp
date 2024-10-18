@@ -198,7 +198,7 @@ body {
 			<div class="mb-3">
 				<textarea class="form-control notice-box" name="productContent"
 					id="register-noticeBox" rows="4" maxlength="200"
-					onclick="register-clearPlaceholder(this)">
+					onclick="registerclearPlaceholder(this)">
 - 상품명(브랜드)
 - 구매 시기
 - 사용 기간
@@ -226,85 +226,93 @@ body {
 	</div>
 
 	<script>
-        const uploadContainer = document.getElementById('register-uploadContainer');
-        const fileInput = document.getElementById('register-fileInput');
+	// DOM이 완전히 로드된 후에 실행되도록 설정
+	document.addEventListener('DOMContentLoaded', function () {
+	    const uploadContainer = document.getElementById('register-uploadContainer');
+	    const fileInput = document.getElementById('register-fileInput');
 
-        uploadContainer.addEventListener('click', () => {
-            fileInput.click();
-        });
+	    // 이미지 업로드 컨테이너 클릭 시 파일 선택 창 열기
+	    uploadContainer.addEventListener('click', function () {
+	        fileInput.click();
+	    });
 
-        fileInput.addEventListener('change', function () {
-            uploadContainer.innerHTML = ''; // Clear previous images
-            const files = Array.from(this.files);
-            if (files.length > 10) {
-                alert('이미지는 최대 10장까지 선택할 수 있습니다.');
-                return;
-            }
+	    // 파일이 변경되었을 때 이미지 미리보기 표시
+	    fileInput.addEventListener('change', function () {
+	        uploadContainer.innerHTML = ''; // 기존 이미지 제거
+	        const files = Array.from(this.files);
+	        
+	        if (files.length > 10) {
+	            alert('이미지는 최대 10장까지 선택할 수 있습니다.');
+	            return;
+	        }
 
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    uploadContainer.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            });
+	        files.forEach(function (file) {
+	            const reader = new FileReader();
+	            reader.onload = function (e) {
+	                const img = document.createElement('img');
+	                img.src = e.target.result;
+	                img.alt = '미리보기 이미지';
+	                uploadContainer.appendChild(img);
+	            };
+	            reader.readAsDataURL(file);
+	        });
 
-            // Add the upload text again if no images are selected
-            if (files.length === 0) {
-                uploadContainer.innerHTML = '<span class="register-upload-text">이미지 선택 (최대 10장)</span>';
-            }
-        });
+	        // 선택된 파일이 없을 때 기본 텍스트 표시
+	        if (files.length === 0) {
+	            uploadContainer.innerHTML = '<span class="register-upload-text">이미지 선택 (최대 10장)</span>';
+	        }
+	    });
 
-        // 유의사항 박스 클릭 시 placeholder처럼 동작
-        function register-clearPlaceholder(element) {
-            if (element.value.startsWith('- 상품명')) {
-                element.value = '';
-            }
-        }
+	    // 유의사항 박스 클릭 시 placeholder처럼 동작
+	    function registerclearPlaceholder(element) {
+	        if (element.value.startsWith('- 상품명')) {
+	            element.value = '';
+	        }
+	    }
 
-        // 제품상태 버튼 클릭 시 색상 변경 및 선택 값 저장
-        const productConditionInput = document.getElementById('register-productCondition');
-        const conditionButtons = document.querySelectorAll('.register-product-status-btn[data-value="중고"], .register-product-status-btn[data-value="새상품"]');
+	    // 제품상태 버튼 클릭 시 색상 변경 및 선택 값 저장
+	    const productConditionInput = document.getElementById('register-productCondition');
+	    const conditionButtons = document.querySelectorAll('.register-product-status-btn[data-value="중고"], .register-product-status-btn[data-value="새상품"]');
 
-        conditionButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                conditionButtons.forEach(btn => btn.classList.remove('register-selected'));
-                button.classList.add('register-selected');
-                productConditionInput.value = button.getAttribute('data-value');
-            });
-        });
+	    conditionButtons.forEach(button => {
+	        button.addEventListener('click', () => {
+	            conditionButtons.forEach(btn => btn.classList.remove('register-selected'));
+	            button.classList.add('register-selected');
+	            productConditionInput.value = button.getAttribute('data-value');
+	        });
+	    });
 
-        // 거래방법 버튼 클릭 시 색상 변경 및 선택 값 저장
-        const dealMethodInput = document.getElementById('register-dealMethod');
-        const dealButtons = document.querySelectorAll('.register-product-status-btn[data-value="택배"], .register-product-status-btn[data-value="직거래"]');
+	    // 거래방법 버튼 클릭 시 색상 변경 및 선택 값 저장
+	    const dealMethodInput = document.getElementById('register-dealMethod');
+	    const dealButtons = document.querySelectorAll('.register-product-status-btn[data-value="택배"], .register-product-status-btn[data-value="직거래"]');
 
-        dealButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                dealButtons.forEach(btn => btn.classList.remove('register-selected'));
-                button.classList.add('register-selected');
-                dealMethodInput.value = button.getAttribute('data-value');
-            });
-        });
+	    dealButtons.forEach(button => {
+	        button.addEventListener('click', () => {
+	            dealButtons.forEach(btn => btn.classList.remove('register-selected'));
+	            button.classList.add('register-selected');
+	            dealMethodInput.value = button.getAttribute('data-value');
+	        });
+	    });
 
-        // 문자수 카운터
-        const textarea = document.getElementById('register-noticeBox');
-        const charCount = document.getElementById('register-charCount');
+	    // 문자수 카운터
+	    const textarea = document.getElementById('register-noticeBox');
+	    const charCount = document.getElementById('register-charCount');
 
-        textarea.addEventListener('input', () => {
-            charCount.textContent = textarea.value.length;
-        });
+	    textarea.addEventListener('input', () => {
+	        charCount.textContent = textarea.value.length;
+	    });
 
-        // 가격 입력 필드 숫자만 허용 및 10억 제한
-        const priceInput = document.querySelector('.price-input');
-        priceInput.addEventListener('input', (e) => {
-            let value = e.target.value.replace(/[^0-9]/g, ''); // 숫자만 허용
-            if (parseInt(value, 10) > 1000000000) { // 최대 10억
-                value = '1000000000';
-            }
-            e.target.value = value;
-        });
+	    // 가격 입력 필드 숫자만 허용 및 10억 제한
+	    const priceInput = document.querySelector('.price-input');
+	    priceInput.addEventListener('input', (e) => {
+	        let value = e.target.value.replace(/[^0-9]/g, ''); // 숫자만 허용
+	        if (parseInt(value, 10) > 1000000000) { // 최대 10억
+	            value = '1000000000';
+	        }
+	        e.target.value = value;
+	    });
+	});
+
     </script>
 
 </body>
