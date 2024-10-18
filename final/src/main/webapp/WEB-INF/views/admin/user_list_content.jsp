@@ -90,15 +90,15 @@
                             <td class="text-center">${user.expiryDate}</td>
                             <td class="text-center">
                                 <div class="user-list-btn-container">
-                                    <div class="user-list-btn-row">
-                                        <button class="btn btn-sm user-list-btn" onclick="changeUserStatus(${user.userNum}, 1, 0)">제제 해제</button>
-                                        <button class="btn btn-sm user-list-btn" onclick="changeUserStatus(${user.userNum}, 3, 60)">1분 벤</button>
-                                        <button class="btn btn-sm user-list-btn" onclick="changeUserStatus(${user.userNum}, 3, 86400)">1일 벤</button>
+                                    <div class="user-list-btn-row ">
+                                        <button class=" user-list-btn" onclick="changeUserStatus(${user.userNum}, 1, 0)">제제 해제</button>
+                                        <button class=" user-list-btn" onclick="changeUserStatus(${user.userNum}, 3, 60)">1분 벤</button>
+                                        <button class=" user-list-btn" onclick="changeUserStatus(${user.userNum}, 3, 86400)">1일 벤</button>
                                     </div>
                                     <div class="user-list-btn-row">
-                                        <button class="btn btn-sm user-list-btn" onclick="changeUserStatus(${user.userNum}, 3, 259200)">3일 벤</button>
-                                        <button class="btn btn-sm user-list-btn" onclick="changeUserStatus(${user.userNum}, 3, 432000)">5일 벤</button>
-                                        <button class="btn btn-sm user-list-btn" onclick="changeUserStatus(${user.userNum}, 3, 604800)">7일 벤</button>
+                                        <button class=" user-list-btn" onclick="changeUserStatus(${user.userNum}, 3, 259200)">3일 벤</button>
+                                        <button class="user-list-btn" onclick="changeUserStatus(${user.userNum}, 3, 432000)">5일 벤</button>
+                                        <button class="user-list-btn" onclick="changeUserStatus(${user.userNum}, 3, 604800)">7일 벤</button>
                                     </div>
                                 </div>
                             </td>
