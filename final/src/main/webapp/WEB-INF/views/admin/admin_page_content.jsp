@@ -5,7 +5,7 @@
 <style>
     .admin-page-bg { background-color: #f8f9fa; }
     .admin-page-container { max-width: 1200px; }
-    .admin-page-card { border: none; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+    .admin-page-card { border: none; box-shadow: 0 0 15px rgba(0,0,0,0.0); }
     .admin-page-table { border-collapse: separate; border-spacing: 0; }
     .admin-page-table th, .admin-page-table td { white-space: nowrap; padding: 15px; vertical-align: middle; }
     .admin-page-table thead th { background-color: #343a40; color: white; font-weight: 600; text-transform: uppercase; }
@@ -27,6 +27,7 @@
     .admin-page-primary-btn:hover { background-color: #23272b; border-color: #23272b; }
     .admin-page-form-focus:focus { border-color: #343a40; box-shadow: 0 0 0 0.2rem rgba(52, 58, 64, 0.25); }
     .admin-page-title { color: #343a40; font-weight: bold; }
+    
 </style>
 
 <script>
@@ -51,7 +52,7 @@ $(document).ready(function() {
 	<div class="card admin-page-card">
 		<div class="card-body">
 			<h2 class="mb-4 admin-page-title">스팸 게시판</h2>
-			<div class="table-responsive">
+			<div class="admin-page-table-container">
 				<table class="table admin-page-table">
 					<thead>
 						<tr>
@@ -64,12 +65,12 @@ $(document).ready(function() {
 					<tbody>
 						<c:forEach var="article" items="${resultMap.spamBoardList}">
 							<tr
-								style="cursor: pointer; <c:if test='${article.boardStatus == 4}'>background-color: #333333;</c:if>'"
+								style="cursor: pointer; <c:if test='${article.boardStatus == 4}'>background-color: #6E6E6E; opacity : 0.5;</c:if>'"
 								onclick="location.href='admin/view?boardPostIdx=${article.boardPostIdx}'">
 								<td>${article.boardPostIdx}</td>
 								<td>${article.boardTitle}</td>
 								<td>${article.userNickname}</td>
-								<td>${article.boardRegisterDate}</td>
+								<td>${fn:substring(article.boardRegisterDate, 0, 10)}</td>
 							</tr>
 						</c:forEach>
 					</tbody>

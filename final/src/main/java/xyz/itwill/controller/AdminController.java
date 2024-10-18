@@ -41,7 +41,7 @@ public class AdminController {
 	@RequestMapping(value = "/")
 	public String superAdminPage() {
 		
-		return "admin/super_admin";
+		return "admin/admin_dashboard";
 	}
 	
 	//신고된 (블라인드된) 게시물 출력
@@ -155,8 +155,8 @@ public class AdminController {
 	
 	//대시보드 이동
 	@GetMapping("/dashboard")
-	public String adminDashboard(Model model) {
-		model.addAttribute("standalone", true);
+	public String adminDashboard() {
+		//model.addAttribute("standalone", true);
 		return "admin/admin_dashboard";
 	}
 	
@@ -193,4 +193,6 @@ public class AdminController {
 		//return "admin/user_list_content";
 		return "forward:/WEB-INF/views/admin/user_list_content.jsp"; 
 	}
+	
+	
 }
