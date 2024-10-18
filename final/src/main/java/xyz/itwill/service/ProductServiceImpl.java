@@ -126,4 +126,9 @@ public class ProductServiceImpl implements ProductService {
 		return productDAO.selectLatestProducts();
 	}
 
+	@Override
+	public List<Product> getLatestCountProducts() {
+		return productDAO.selectLatestCountProducts();
+	}
+
 }

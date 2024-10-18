@@ -15,11 +15,14 @@ public class TilesController {
 	private final ProductService productService;
 		@RequestMapping("/")
 		public String tiles(Model model) {
-			System.out.println("작동?");
 		    List<Product> latestProducts = productService.getLatestProducts();
+		    List<Product> latestCountProducts = productService.getLatestCountProducts();
 		    model.addAttribute("latestProducts", latestProducts);
+		    model.addAttribute("latestCountProducts", latestCountProducts);
 		    return "main";
 		}
+		
+		
 		
 	
 		

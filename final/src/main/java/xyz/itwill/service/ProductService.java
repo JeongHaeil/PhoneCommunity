@@ -23,7 +23,8 @@ public interface ProductService {
     void updateProductSoldStatus(int productIdx, int status);
     
     List<Product> getLatestProducts();
-
+    
+    List<Product> getLatestCountProducts();
     
     List<Product> getProductsByUserId(String userId);//마이페이지
 

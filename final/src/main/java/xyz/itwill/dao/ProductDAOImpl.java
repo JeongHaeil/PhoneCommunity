@@ -66,4 +66,9 @@ public class ProductDAOImpl implements ProductDAO {
     public List<Product> selectLatestProducts() {
         return sqlSession.getMapper(ProductMapper.class).selectLatestProducts();
     }
+
+	@Override
+	public List<Product> selectLatestCountProducts() {
+			return sqlSession.getMapper(ProductMapper.class).selectLatestCountProducts();
+	}
 }
