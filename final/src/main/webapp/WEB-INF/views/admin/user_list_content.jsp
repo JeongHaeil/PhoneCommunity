@@ -8,7 +8,9 @@
     .user-list-table { border-collapse: separate; border-spacing: 0; }
     .user-list-table th, .user-list-table td { white-space: nowrap; padding: 15px; vertical-align: middle; }
     .user-list-table thead th { background-color: #f05d5e; color: white; font-weight: 600; text-transform: uppercase; }
-    .user-list-table tbody tr:nth-child(even) { background-color: #f8f9fa; }
+    .user-hoverable:hover {
+	    background-color: #F8E0E0; opacity : 0.8;
+	}
     .user-list-btn {
         white-space: nowrap;
         border: 1px solid #f05d5e;
@@ -17,13 +19,23 @@
         transition: all 0.3s ease;
         margin: 2px;
         padding: 5px 10px;
+        border-radius: 0.25rem;
     }
     .user-list-btn:hover { background-color: #f05d5e; color: white; }
     .user-list-pagination .page-item.active .page-link { background-color: #f05d5e; border-color: #f05d5e; }
     .user-list-pagination .page-link { color: #f05d5e; }
     .user-list-pagination .page-link:hover { background-color: #f05d5e; color: white; }
-    .user-list-primary-btn { background-color: #f05d5e; border-color: #f05d5e; }
-    .user-list-primary-btn:hover { background-color: #d04d4e; border-color: #d04d4e; }
+    .user-list-primary-btn { 
+		white-space: nowrap;
+        border: 1px solid #f05d5e;
+        color: #f05d5e;
+        background-color: transparent;
+        transition: all 0.3s ease;
+        margin: 2px;
+        padding: 5px 10px;	
+        border-radius: 0.25rem;
+	 }
+    .user-list-primary-btn:hover { background-color: #f05d5e; color: white; }
     .user-list-form-focus:focus { border-color: #f05d5e; box-shadow: 0 0 0 0.2rem rgba(240, 93, 94, 0.25); }
     .user-list-title { color: #f05d5e; font-weight: bold; }
     .user-list-ellipsis {
@@ -37,6 +49,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        
     }
     .user-list-btn-row {
         display: flex;
@@ -64,7 +77,7 @@
                 </thead>
                 <tbody>
                     <c:forEach var="user" items="${resultMap.totalUserBoardList}">
-                        <tr>
+                        <tr class="<c:if test='${article.boardStatus != 4}'>user-hoverable</c:if>">
                             <td class="text-center">${user.userNum}</td>
                             <td class="text-center user-list-ellipsis">${user.userId}</td>
                             <td class="text-center">${user.userEmail}</td>
@@ -136,7 +149,7 @@
             <option value="userNickname" ${search == 'userNickname' ? 'selected' : ''}>닉네임</option>
         </select>
         <input type="text" name="keyword" placeholder="검색어 입력" value="${keyword}" class="form-control me-2 user-list-form-focus">
-        <button type="submit" class="btn user-list-primary-btn">검색</button>
+        <button type="submit" class=" user-list-primary-btn">검색</button>
     </form>
 </div>
 

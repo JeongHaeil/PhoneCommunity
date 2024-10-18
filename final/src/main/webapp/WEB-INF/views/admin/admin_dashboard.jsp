@@ -40,7 +40,6 @@
         .nav-tabs .nav-link { color: #343a40; }
         .nav-tabs .nav-link.active { color: #343a40; font-weight: bold; }
         
-        /* 새로 추가된 스타일 */
         html, body {
             height: 100%;
             margin: 0;
@@ -108,10 +107,6 @@
     </div>
 
     <script>
-	    function openSuggestBoardList() {
-	        // '/board/boardlist/3' 경로로 이동
-	        window.open('<c:url value="/board/boardlist/3"/>', '_blank');
-	    }
 	    
         function loadContent(url, targetId, page, search, keyword) {
             $.ajax({
@@ -141,6 +136,11 @@
             loadContent('<c:url value="/super_admin/userList/ajax"/>', 'users', page, search, keyword);
         }
 
+	    function openSuggestBoardList() {
+	        // '/board/boardlist/3' 경로로 이동
+	        window.open('<c:url value="/board/boardlist/3"/>', '_blank');
+	    }
+	    
         // URL 해시가 변경될 때 실행되는 함수
         $(window).on('hashchange', function() {
             var hash = window.location.hash;
