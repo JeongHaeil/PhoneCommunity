@@ -66,6 +66,25 @@
     <session-timeout>30</session-timeout> <!-- 세션 타임아웃을 30분으로 설정 -->
 </session-config>
 
+<error-page>
+    <error-code>403</error-code>
+    <location>/WEB-INF/views/error.jsp</location>
+</error-page>
+
+<error-page>
+    <error-code>404</error-code>
+    <location>/WEB-INF/views/error.jsp</location>
+</error-page>
+
+<error-page>
+    <error-code>405</error-code>
+    <location>/WEB-INF/views/error.jsp</location>
+</error-page>
+
+<error-page>
+    <exception-type>java.lang.Exception</exception-type>
+    <location>/WEB-INF/views/error.jsp</location>
+</error-page>
 
 	 
     
