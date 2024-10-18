@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.HtmlUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -58,31 +60,54 @@ public class ProductController {
             }
         });
     }
-	// 상품 목록과 검색 처리
-	@RequestMapping("/list")
-	public String list(@RequestParam Map<String, Object> map, @RequestParam(required = false) Integer productSold, Model model) {
-	    map.put("productStatus", 1); // 기본적으로 상태가 1인 상품만 보여줌
+    
+    
+ // 상품 목록과 검색 처리
+    @RequestMapping("/list")
+    public String list(@RequestParam Map<String, Object> map, 
+                       @RequestParam(required = false) Integer productSold, 
+                       @RequestParam(defaultValue = "1") int pageNum, 
+                       @RequestParam(defaultValue = "12") int pageSize, // 한 페이지에 12개의 상품 표시
+                       Model model, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
-	    // 검색 키워드 처리
-	    String keyword = (String) map.get("keyword");
-	    if (keyword != null && !keyword.isEmpty()) {
-	        map.put("keyword", keyword); // 검색어가 있으면 검색 조건에 추가
-	    }
+        map.put("productStatus", 1); // 기본적으로 상태가 1인 상품만 보여줌
+        if(map.get("column")!=null) {
+	        if(!map.get("column").equals("product_subject")&&!map.get("column").equals("product_content")&&!map.get("column").equals("")){
+	        	return "redirect:/";
+	        }
+        }
+        // 검색 키워드 처리
+        String keyword = (String) map.get("keyword");
+        if (keyword != null && !keyword.isEmpty()) {
+            map.put("keyword", keyword); // 검색어가 있으면 검색 조건에 추가
+        }
 
-	    // 상품 판매 상태 필터링
-	    if (productSold != null) {
-	        map.put("productSold", productSold); // 드랍다운에서 선택된 판매 상태에 따른 필터링
-	    }
- 
-	    // 상품 목록을 서비스에서 가져옴
-	    Map<String, Object> resultMap = productService.getProductList(map);
-	    model.addAttribute("result", resultMap);
-	    model.addAttribute("searchMap", map); // 검색 조건도 뷰에 전달
-	    
-	    
+        // 상품 판매 상태 필터링
+        if (productSold != null) {
+            map.put("productSold", productSold); // 드랍다운에서 선택된 판매 상태에 따른 필터링
+        }
 
-	    return "product/productlist"; // 상품 목록 JSP로 이동
-	}
+        // 상품 목록을 서비스에서 가져옴
+        Map<String, Object> resultMap = productService.getProductList(map);
+        List<Product> productList = (List<Product>) resultMap.get("productList");
+
+        // 페이지에 상품이 없을 경우 처리
+        if (productList.isEmpty()) {
+            // 리다이렉트에 메시지 추가
+            redirectAttributes.addFlashAttribute("errorMessage", "상품 목록이 없습니다.");
+
+            // Referer 헤더를 통해 전 페이지로 리다이렉트
+            String referer = request.getHeader("Referer");
+            return "redirect:" + (referer != null ? referer : "/product/list"); // 전 페이지가 없으면 기본적으로 목록으로 리다이렉트
+        }
+
+        model.addAttribute("result", resultMap);
+        model.addAttribute("searchMap", map); // 검색 조건도 뷰에 전달
+
+        return "product/productlist"; // 상품 목록 JSP로 이동
+    }
+
+
 
 
 	// 상품 등록 페이지로 이동

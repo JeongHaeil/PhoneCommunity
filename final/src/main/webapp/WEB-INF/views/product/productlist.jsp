@@ -6,7 +6,7 @@
 <!-- functions 라이브러리 추가 -->
 <!DOCTYPE html>
 <html lang="ko">
-<head> 
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>쇼핑 정보</title>
@@ -15,7 +15,7 @@
 	rel="stylesheet">
 <style>
 /* 기존 스타일 유지 */
-body {  
+body {
 	background-color: #f8f9fa;
 }
 
@@ -225,7 +225,7 @@ body {
 	border-radius: 5px; /* 모서리를 둥글게 */
 }
 
-.wow{
+.wow {
 	font-weight: bold;
 }
 </style>
@@ -281,6 +281,10 @@ body {
 				</form>
 			</div>
 		</div>
+
+		<c:if test="${not empty errorMessage}">
+			<div class="alert alert-warning mb-3">${errorMessage}</div>
+		</c:if>
 
 		<div class="content-wrapper mt-4 sidebar-fixed">
 			<!-- 메인 콘텐츠 -->
@@ -415,12 +419,19 @@ body {
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script>
-		$(document).ready(function() {
-			// 검색 버튼 클릭 시 검색창 표시/숨기기
-			$('#search-btn').click(function() {
-				$('#search-bar').toggle();
-			});
-		});
+	  $(document).ready(function() {
+	        // 검색 버튼 클릭 시 검색창 표시/숨기기
+	        $('#search-btn').click(function() {
+	            $('#search-bar').toggle();
+	        });
+
+	        // 경고 메시지를 1초 후에 서서히 사라지게 설정
+	        setTimeout(function() {
+	            $(".alert").fadeOut("slow");
+	        }, 1000);
+	    });
+		
+		
 	</script>
 </body>
 </html>
