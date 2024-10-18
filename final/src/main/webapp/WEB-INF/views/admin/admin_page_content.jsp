@@ -5,11 +5,13 @@
 <style>
     .admin-page-bg { background-color: #f8f9fa; }
     .admin-page-container { max-width: 1200px; }
-    .admin-page-card { border: none; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+    .admin-page-card { border: none; box-shadow: 0 0 15px rgba(0,0,0,0.0); }
     .admin-page-table { border-collapse: separate; border-spacing: 0; }
     .admin-page-table th, .admin-page-table td { white-space: nowrap; padding: 15px; vertical-align: middle; }
     .admin-page-table thead th { background-color: #343a40; color: white; font-weight: 600; text-transform: uppercase; }
-    .admin-page-table tbody tr:nth-child(even) { background-color: #f8f9fa; }
+    .admin-hoverable:hover {
+	    background-color: #343a40; opacity : 0.8; 
+	}
     .admin-page-btn {
         white-space: nowrap;
         border: 1px solid #343a40;
@@ -18,15 +20,26 @@
         transition: all 0.3s ease;
         margin: 2px;
         padding: 5px 10px;
+        border-radius: 0.25rem;
     }
     .admin-page-btn:hover { background-color: #343a40; color: white; }
     .admin-page-pagination .page-item.active .page-link { background-color: #343a40; border-color: #343a40; }
     .admin-page-pagination .page-link { color: #343a40; }
     .admin-page-pagination .page-link:hover { background-color: #343a40; color: white; }
-    .admin-page-primary-btn { background-color: #343a40; border-color: #343a40; color: white; }
-    .admin-page-primary-btn:hover { background-color: #23272b; border-color: #23272b; }
+    .admin-page-primary-btn { 
+		white-space: nowrap;
+        border: 1px solid #343a40;
+        color: #343a40;
+        background-color: transparent;
+        transition: all 0.3s ease;
+        margin: 2px;
+        padding: 5px 10px;
+        border-radius: 0.25rem;
+	 }
+    .admin-page-primary-btn:hover { background-color: #343a40; color: white; }
     .admin-page-form-focus:focus { border-color: #343a40; box-shadow: 0 0 0 0.2rem rgba(52, 58, 64, 0.25); }
     .admin-page-title { color: #343a40; font-weight: bold; }
+    
 </style>
 
 <script>
@@ -51,7 +64,7 @@ $(document).ready(function() {
 	<div class="card admin-page-card">
 		<div class="card-body">
 			<h2 class="mb-4 admin-page-title">스팸 게시판</h2>
-			<div class="table-responsive">
+			<div class="admin-page-table-container">
 				<table class="table admin-page-table">
 					<thead>
 						<tr>
@@ -63,14 +76,15 @@ $(document).ready(function() {
 					</thead>
 					<tbody>
 						<c:forEach var="article" items="${resultMap.spamBoardList}">
-							<tr
-								style="cursor: pointer; <c:if test='${article.boardStatus == 4}'>background-color: #333333;</c:if>'"
-								onclick="location.href='admin/view?boardPostIdx=${article.boardPostIdx}'">
-								<td>${article.boardPostIdx}</td>
-								<td>${article.boardTitle}</td>
-								<td>${article.userNickname}</td>
-								<td>${article.boardRegisterDate}</td>
-							</tr>
+						    <tr
+						        style="cursor: pointer; <c:if test='${article.boardStatus == 4}'>background-color: #D8D8D8; opacity : 0.8;</c:if>'"
+						        onclick="location.href='admin/view?boardPostIdx=${article.boardPostIdx}'"
+						        class="<c:if test='${article.boardStatus != 4}'>admin-hoverable</c:if>">
+						        <td>${article.boardPostIdx}</td>
+						        <td>${article.boardTitle}</td>
+						        <td>${article.userNickname}</td>
+						        <td>${fn:substring(article.boardRegisterDate, 0, 10)}</td>
+						    </tr>
 						</c:forEach>
 					</tbody>
 				</table>
@@ -109,7 +123,7 @@ $(document).ready(function() {
 						${searchType == 'userNickname' ? 'selected' : ''}>작성자</option>
 				</select> <input type="text" name="keyword" placeholder="검색어 입력"
 					value="${keyword}" class="form-control me-2 admin-page-form-focus">
-				<button type="submit" class="btn admin-page-primary-btn">검색</button>
+				<button type="submit" class=" admin-page-primary-btn">검색</button>
 			</form>
 		</div>
 	</div>

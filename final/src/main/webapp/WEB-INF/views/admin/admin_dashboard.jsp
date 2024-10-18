@@ -39,40 +39,75 @@
         }
         .nav-tabs .nav-link { color: #343a40; }
         .nav-tabs .nav-link.active { color: #343a40; font-weight: bold; }
+        
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .dashboard-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .dashboard-header {
+            flex: 0 0 auto;
+            padding: 20px 0;
+        }
+        .dashboard-content {
+            flex: 1 1 auto;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .tab-content {
+            flex: 1;
+            overflow: hidden;
+        }
+        .tab-pane {
+            height: 100%;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body class="custom-bg">
-    <div class="container custom-container mt-5">
-        <h1 class="mb-4 custom-title text-center">관리자 대시보드</h1>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1 class="mb-4 custom-title text-center">관리자 대시보드</h1>
+            
+            <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="spam-tab" data-bs-toggle="tab" data-bs-target="#spam" type="button" role="tab" aria-controls="spam" aria-selected="true">스팸 게시판</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="false">사용자 목록</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="suggestions-tab" data-bs-toggle="tab" data-bs-target="#suggestions" type="button" role="tab" aria-controls="suggestions" aria-selected="false">건의 게시글</button>
+                </li>
+            </ul>
+        </div>
         
-        <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="spam-tab" data-bs-toggle="tab" data-bs-target="#spam" type="button" role="tab" aria-controls="spam" aria-selected="true">스팸 게시판</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="false">사용자 목록</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="suggestions-tab" data-bs-toggle="tab" data-bs-target="#suggestions" type="button" role="tab" aria-controls="suggestions" aria-selected="false">건의 게시글</button>
-            </li>
-        </ul>
-        
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="spam" role="tabpanel" aria-labelledby="spam-tab">
-                <!-- 스팸 게시판 내용 -->
-            </div>
-            <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
-                <!-- 사용자 목록 내용 -->
-            </div>
-            <div class="tab-pane fade" id="suggestions" role="tabpanel" aria-labelledby="suggestions-tab">
-                <!-- 건의 게시글 내용 -->
-                <a href="<c:url value='/board/boardlist/3'/>">건의 게시글</a>
-                <a href="<c:url value='/board/boardlist/3'/>" target="_blank">건의 게시글</a>
+        <div class="dashboard-content">
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="spam" role="tabpanel" aria-labelledby="spam-tab">
+                    <!-- 스팸 게시판 내용 -->
+                </div>
+                <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
+                    <!-- 사용자 목록 내용 -->
+                </div>
+                <div class="tab-pane fade" id="suggestions" role="tabpanel" aria-labelledby="suggestions-tab">
+                    <!-- 건의 게시글 내용 -->
+                    <p>새로운 탭을 확인해 주세요</p>
+                    <p>만약 탭이 생기지 않는다면 팝업 차단을 해제하세요</p>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
+	    
         function loadContent(url, targetId, page, search, keyword) {
             $.ajax({
                 url: url,
@@ -101,6 +136,11 @@
             loadContent('<c:url value="/super_admin/userList/ajax"/>', 'users', page, search, keyword);
         }
 
+	    function openSuggestBoardList() {
+	        // '/board/boardlist/3' 경로로 이동
+	        window.open('<c:url value="/board/boardlist/3"/>', '_blank');
+	    }
+	    
         // URL 해시가 변경될 때 실행되는 함수
         $(window).on('hashchange', function() {
             var hash = window.location.hash;
@@ -126,7 +166,7 @@
                 } else if (target === '#users') {
                     loadUserList(1, '', '');
                 } else if (target === '#suggestions') {
-                    // 건의사항 로드 로직
+                	openSuggestBoardList();
                 }
             });
             
@@ -166,5 +206,6 @@
             }
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

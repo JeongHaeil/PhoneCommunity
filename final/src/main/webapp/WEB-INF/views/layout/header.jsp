@@ -83,7 +83,10 @@
     <div class="eomisae-navbar">
         <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container">
-                <a class="navbar-brand" href="/final">EOMISAE</a>
+                <a class="navbar-brand" href="/final">
+				    <img src="<c:url value='/resources/images/logo.png'/>" alt="EOMISAE Logo" style="height: 40px;">
+				 <span>니폰내폰</span>
+				</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>

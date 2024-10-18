@@ -72,54 +72,46 @@
 		 <!-- 자유게시판과 새로운 섹션을 같은 행에 배치 -->
         <div class="main-row main-new-section">
             <div class="main-popular-posts">
-                <div class="main-card">
-                    <div class="main-card-header">
-                        중고장터
-                        <a class="main-more-btn" href="<c:url value='/product/list'/>">더보기</a>
+    <div class="main-card">
+        <div class="main-card-header">
+            중고장터(최신글)
+            <a class="main-more-btn" href="<c:url value='/product/list'/>">더보기</a>
+        </div>
+        <div class="main-card-body">
+            <div class="main-image-grid">
+                <c:forEach var="product" items="${latestProducts}">
+                    <div class="main-image-item">
+                        <img src="${pageContext.request.contextPath}/resources/images/${fn:split(product.productImage, ',')[0]}" alt="${product.productSubject}" class="main-image">
+                        <p class="main-image-title">${product.productSubject}</p>
                     </div>
-                    <div class="main-card-body">
-                        <div class="main-image-grid">
-                            <div class="main-image-item">
-                                <img src="<c:url value="resources/images/crown.png"/>"  class="main-image">
-                                <p class="main-image-title">상품 1</p>
-                            </div>
-                            <div class="main-image-item">
-                                <img src="<c:url value="resources/images/gold.png"/>"  class="main-image">
-                                <p class="main-image-title">상품 2</p>
-                            </div>
-                            <div class="main-image-item">
-                                <img src="<c:url value="resources/images/rainbow.png"/>"  class="main-image">
-                                <p class="main-image-title">상품 3</p>
-                            </div>
-                            <div class="main-image-item">
-                                <img src="<c:url value="resources/images/silver.png"/>" class="main-image">
-                                <p class="main-image-title">상품 4</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </c:forEach>
             </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="main-popular-posts">
+    <div class="main-card">
+        <div class="main-card-header">
+            중고장터(인기글)
+            <a class="main-more-btn" href="<c:url value='/product/list'/>">더보기</a>
+        </div>
+        <div class="main-card-body">
+            <div class="main-image-grid">
+                <c:forEach var="product" items="${latestCountProducts}">
+                    <div class="main-image-item">
+                        <img src="${pageContext.request.contextPath}/resources/images/${fn:split(product.productImage, ',')[0]}" alt="${product.productSubject}" class="main-image">
+                        <p class="main-image-title">${product.productSubject}</p>
+                    </div>
+                </c:forEach>
+            </div>
+        </div>
+    </div>
+</div>
+
     
-            <!-- 오른쪽에 추가될 새로운 섹션 -->
-            <div class="main-new-board">
-                <div class="main-card">
-                    <div class="main-card-header">
-                        새 게시판
-                        <a href="#" class="main-more-btn">더보기</a>
-                    </div>
-                    <div class="main-card-body">
-                        <ul class="main-list-group">
-                            <li class="main-list-item">1. </li>
-                            <li class="main-list-item">2. </li>
-                            <li class="main-list-item">3. </li>
-                            <li class="main-list-item">4. </li>
-                            <li class="main-list-item">5. </li>
-                        </ul>
-                    </div>
-                    
-                </div>
-                
-            </div>  
+    
            
          <div class="main-ad-section">
         <div class="main-card">

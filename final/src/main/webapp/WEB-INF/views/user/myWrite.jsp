@@ -150,7 +150,7 @@
                             <td>
                                 <c:choose>
                                     <c:when test="${post.boardStatus == 1}">
-                                        <a href="${pageContext.request.contextPath}/board/boarddetail/${post.boardCode != 0 ? post.boardCode : 10}/${post.boardPostIdx}?pageNum=${pager.pageNum}&search=board_user_id&keyword=">
+                                        <a href="${pageContext.request.contextPath}/board/boarddetail/${post.boardCode != 0 ? post.boardCode : 10}/${post.boardPostIdx}?pageNum=${pager.pageNum}&search=user_nickname&keyword=">
                                             ${post.boardTitle}
                                         </a>
                                     </c:when>

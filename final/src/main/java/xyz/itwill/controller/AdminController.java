@@ -41,7 +41,7 @@ public class AdminController {
 	@RequestMapping(value = "/")
 	public String superAdminPage() {
 		
-		return "admin/super_admin";
+		return "admin/admin_dashboard";
 	}
 	
 	//신고된 (블라인드된) 게시물 출력
@@ -69,24 +69,7 @@ public class AdminController {
 
         return "admin/admin_page"; // admin_page.jsp 페이지로 이동
     }
-	/*
-	//신고된 (블라인드된) 게시글 디테일 페이지
-	@GetMapping("/admin/view")
-	public String spamBoardView(@RequestParam("boardPostIdx") int boardPostIdx,
-								Model model) {
-		
-		//파라미터로 받은 boardPostIdx 를 사용해 해당 boardPostIdx 게시글을 가져옴 
-		Admin post = adminService.getSpamBoardByNum(boardPostIdx);
-	    
-	    if (post == null) {
-	        throw new RuntimeException("게시글을 찾을 수 없습니다.");
-	    }
-	    
-	    model.addAttribute("post", post);
-	    
-	    return "admin/view_post"; // view_post.jsp 페이지로 이동
-	}
-	*/
+	
 	@GetMapping("/admin/view")
 	public String spamBoardView(@RequestParam("boardPostIdx") int boardPostIdx,
 	                            @RequestParam(value = "prevPage", required = false) String prevPage,
@@ -155,8 +138,8 @@ public class AdminController {
 	
 	//대시보드 이동
 	@GetMapping("/dashboard")
-	public String adminDashboard(Model model) {
-		model.addAttribute("standalone", true);
+	public String adminDashboard() {
+		//model.addAttribute("standalone", true);
 		return "admin/admin_dashboard";
 	}
 	
@@ -193,4 +176,6 @@ public class AdminController {
 		//return "admin/user_list_content";
 		return "forward:/WEB-INF/views/admin/user_list_content.jsp"; 
 	}
+	
+	
 }
