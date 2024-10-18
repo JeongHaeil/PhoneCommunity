@@ -221,6 +221,12 @@ body {
 		</div>
 		<input type="hidden" name="productModelStatus" id="modify-productCondition"
 			value="${product != null ? product.productModelStatus : '중고'}">
+			
+				<!-- 게시글 내용 추가 -->
+		<div class="mb-3">
+			<textarea class="form-control" name="productContent" rows="5"
+				placeholder="상품 설명을 입력하세요" maxlength="200">${product != null ? product.productContent : ''}</textarea>
+		</div>
 
 		<!-- 거래방법 -->
 		<div class="mb-3 d-flex">
@@ -234,11 +240,7 @@ body {
 		<input type="hidden" name="productMode" id="modify-dealMethod"
 			value="${product != null ? product.productMode : '택배'}">
 
-		<!-- 게시글 내용 추가 -->
-		<div class="mb-3">
-			<textarea class="form-control" name="productContent" rows="5"
-				placeholder="상품 설명을 입력하세요" maxlength="200">${product != null ? product.productContent : ''}</textarea>
-		</div>
+	
 
 		<button type="submit" class="modify-btn-submit">${product != null && product.productIdx != null ? '수정하기' : '등록하기'}</button>
 		<sec:csrfInput />
@@ -247,69 +249,87 @@ body {
 	</div>
 
 	<script>
-        const uploadContainer = document.getElementById('modify-uploadContainer');
-        const fileInput = document.getElementById('modify-fileInput');
+	 const uploadContainer = document.getElementById('modify-uploadContainer');
+	    const fileInput = document.getElementById('modify-fileInput');
 
-        uploadContainer.addEventListener('click', () => {
-            fileInput.click();
-        }); 
+	    // 이미지 업로드 컨테이너 클릭 시 파일 선택 창 열기
+	    uploadContainer.addEventListener('click', () => {
+	        fileInput.click();
+	    });
 
-        fileInput.addEventListener('change', function () {
-            uploadContainer.innerHTML = ''; // Clear previous images
-            const files = Array.from(this.files);
-            if (files.length > 10) {
-                alert('이미지는 최대 10장까지 선택할 수 있습니다.');
-                return;
-            }
+	    // 파일이 변경되었을 때 이미지 미리보기 및 파일 형식 제한 적용
+	    fileInput.addEventListener('change', function () {
+	        uploadContainer.innerHTML = ''; // 기존 이미지 제거
+	        const files = Array.from(this.files);
+	        
+	        if (files.length > 10) {
+	            alert('이미지는 최대 10장까지 선택할 수 있습니다.');
+	            return;
+	        }
 
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    uploadContainer.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            });
+	        const validExtensions = ['jpg', 'jpeg', 'png']; // 허용되는 확장자
+	        let validFiles = [];
 
-            if (files.length === 0) {
-                uploadContainer.innerHTML = '<span class="modify-upload-text">이미지 선택 (최대 10장)</span>';
-            }
-        });
+	        files.forEach(file => {
+	            const fileExtension = file.name.split('.').pop().toLowerCase(); // 확장자 추출
+	            if (validExtensions.includes(fileExtension)) {
+	                validFiles.push(file); // 유효한 파일만 추가
+	            } else {
+	                alert(`${file.name}은(는) 지원하지 않는 파일 형식입니다. (jpg, png만 가능)`);
+	            }
+	        });
 
-        // 제품상태 버튼 클릭 시 색상 변경 및 선택 값 저장
-        const productConditionInput = document.getElementById('modify-productCondition');
-        const conditionButtons = document.querySelectorAll('.modify-product-status-btn[data-value="중고"], .modify-product-status-btn[data-value="새상품"]');
+	        // 유효한 파일만 이미지 미리보기로 추가
+	        validFiles.forEach(file => {
+	            const reader = new FileReader();
+	            reader.onload = function (e) {
+	                const img = document.createElement('img');
+	                img.src = e.target.result;
+	                img.alt = '미리보기 이미지';
+	                uploadContainer.appendChild(img);
+	            };
+	            reader.readAsDataURL(file);
+	        });
 
-        conditionButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                conditionButtons.forEach(btn => btn.classList.remove('modify-selected'));
-                button.classList.add('modify-selected');
-                productConditionInput.value = button.getAttribute('data-value');
-            });
-        });
+	        // 선택된 파일이 없을 때 기본 텍스트 표시
+	        if (validFiles.length === 0) {
+	            uploadContainer.innerHTML = '<span class="modify-upload-text">이미지 선택 (최대 10장)</span>';
+	        }
+	    });
 
-        // 거래방법 버튼 클릭 시 색상 변경 및 선택 값 저장
-        const dealMethodInput = document.getElementById('modify-dealMethod');
-        const dealButtons = document.querySelectorAll('.modify-product-status-btn[data-value="택배"], .modify-product-status-btn[data-value="직거래"]');
+	    // 제품상태 버튼 클릭 시 색상 변경 및 선택 값 저장
+	    const productConditionInput = document.getElementById('modify-productCondition');
+	    const conditionButtons = document.querySelectorAll('.modify-product-status-btn[data-value="중고"], .modify-product-status-btn[data-value="새상품"]');
 
-        dealButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                dealButtons.forEach(btn => btn.classList.remove('modify-selected'));
-                button.classList.add('modify-selected');
-                dealMethodInput.value = button.getAttribute('data-value');
-            });
-        });
+	    conditionButtons.forEach(button => {
+	        button.addEventListener('click', () => {
+	            conditionButtons.forEach(btn => btn.classList.remove('modify-selected'));
+	            button.classList.add('modify-selected');
+	            productConditionInput.value = button.getAttribute('data-value');
+	        });
+	    });
 
-        // 가격 입력 필드 숫자만 허용 및 10억 제한
-        const priceInput = document.querySelector('.modify-price-input');
-        priceInput.addEventListener('input', (e) => {
-            let value = e.target.value.replace(/[^0-9]/g, ''); // 숫자만 허용
-            if (parseInt(value, 10) > 1000000000) { // 최대 10억
-                value = '1000000000';
-            }
-            e.target.value = value;
-        });
+	    // 거래방법 버튼 클릭 시 색상 변경 및 선택 값 저장
+	    const dealMethodInput = document.getElementById('modify-dealMethod');
+	    const dealButtons = document.querySelectorAll('.modify-product-status-btn[data-value="택배"], .modify-product-status-btn[data-value="직거래"]');
+
+	    dealButtons.forEach(button => {
+	        button.addEventListener('click', () => {
+	            dealButtons.forEach(btn => btn.classList.remove('modify-selected'));
+	            button.classList.add('modify-selected');
+	            dealMethodInput.value = button.getAttribute('data-value');
+	        });
+	    });
+
+	    // 가격 입력 필드 숫자만 허용 및 10억 제한
+	    const priceInput = document.querySelector('.modify-price-input');
+	    priceInput.addEventListener('input', (e) => {
+	        let value = e.target.value.replace(/[^0-9]/g, ''); // 숫자만 허용
+	        if (parseInt(value, 10) > 1000000000) { // 최대 10억
+	            value = '1000000000';
+	        }
+	        e.target.value = value;
+	    });
     </script>
 
 </body>
