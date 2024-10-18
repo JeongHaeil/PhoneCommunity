@@ -176,7 +176,7 @@ body {
 		<div class="mb-3">
 			<input type="text" class="form-control" name="productSubject"
 				placeholder="상품명" maxlength="20"
-				value="${product != null ? product.productSubject : ''}">
+				value="${product != null ? product.productSubject : ''}" required>
 		</div>
 
 		<!-- 카테고리 선택 -->
@@ -197,7 +197,7 @@ body {
 		<div class="mb-3 modify-price-input-container">
 			<input type="text" class="form-control modify-price-input"
 				name="productPrice" placeholder="₩ 판매가격"
-				value="${product != null ? product.productPrice : ''}" maxlength="10" pattern="\d*">
+				value="${product != null ? product.productPrice : ''}" maxlength="10" pattern="\d*" required>
 		</div>
 
 		<!-- 배송비 선택 -->
