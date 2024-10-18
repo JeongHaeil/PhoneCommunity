@@ -33,52 +33,7 @@ public class ChatController  {
 		private final UserService userService;
 		private final PasswordEncoder passwordEncoder;
 		
-/*
-		@PostMapping("/start")
-		@ResponseBody
-		public Map<String, Object> startChat(@RequestBody Map<String, Object> requestData) {
-		    Map<String, Object> response = new HashMap<>();
-		    try {
-		        String buyerId = requestData.get("buyerId").toString();
-		        String sellerId = requestData.get("sellerId").toString();
-		        
-		        // 임시 구매자를 DB에서 확인 후 없으면 추가
-		        User tempUser = userService.findUserByIdNameAndEmail("phone123", "테스트용", "tosmreo11@naver.com");
-		        
-		        if (buyerId.equals(sellerId)) {
-		            buyerId = "phone123";  // 임시 구매자 ID 설정
-		            System.out.println("임시 구매자 ID가 설정되었습니다: " + buyerId);
-		        }
-		        
-		        if (tempUser == null) {
-		            response.put("error", "임시 구매자 정보를 찾을 수 없습니다.");
-		            return response;  // 사용자 정보가 없으면 에러 응답
-		        }
 
-		        if (buyerId == null || buyerId.isEmpty() || buyerId.equals(sellerId)) {
-		            buyerId = tempUser.getUserId();
-		            System.out.println("임시 구매자 ID가 설정되었습니다: " + buyerId);
-		        }
-
-		        Integer roomId = chatRoomsService.findExistingRoom(buyerId, sellerId);
-
-		        if (roomId == null || roomId == 0) {
-		            ChatRooms chatRoom = new ChatRooms();
-		            chatRoom.setSellerId(sellerId);
-		            chatRoom.setBuyerId(buyerId);
-		            roomId = chatRoomsService.createChatRooms(chatRoom);
-		        }
-
-		        response.put("buyerId", buyerId);
-		        response.put("sellerId", sellerId);
-		        response.put("roomId", roomId);
-		    } catch (Exception e) {
-		        e.printStackTrace();
-		        response.put("error", "An error occurred.");
-		    }
-		    return response;
-		}
-*/
 		@PostMapping("/start")
 		@ResponseBody
 		public Map<String, Object> startChat(@RequestBody Map<String, Object> requestData) {
@@ -97,7 +52,7 @@ public class ChatController  {
 		            } else {
 		                buyerId = "phone123";  // fallback 임시 구매자 ID 설정
 		            }
-		            System.out.println("임시 구매자 ID가 설정되었습니다: " + buyerId);
+		           
 		        }
 
 		             
@@ -152,9 +107,7 @@ public class ChatController  {
 		@PostMapping("/createRoom")
 		@ResponseBody
 	    public int createRoom(@RequestBody Map<String, Object> requestData) {
-		//public Map<String, Object> createChatRoom(@RequestBody Map<String, Object> requestData) {
-	    	//int newRoomId = chatRoomsService.generateNewRoomId();  // 서비스에서 새로운 방 번호 생성
-	    	//return newRoomId;  // 생성된 방 번호를 클라이언트로 반환
+		
 			 String buyerId = requestData.get("buyerId").toString();
 			 String sellerId = requestData.get("sellerId").toString();
 			 ChatRooms newRoom = new ChatRooms();

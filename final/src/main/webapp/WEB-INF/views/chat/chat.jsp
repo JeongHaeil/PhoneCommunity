@@ -159,7 +159,7 @@ function connectWebSocket(roomId, buyerId, sellerId, loggedInUserId) {
         
         console.log("Message from senderId: " + senderId + ", buyerId: " + receivedBuyerId + ", sellerId: " + receivedSellerId);
         
-        // 자신이 보낸 메시지를 다시 수신하면 무시
+       
         if (senderId !== loggedInUserId) {
             displayMessage(message, senderId, receivedBuyerId, receivedSellerId);
         }
