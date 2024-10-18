@@ -100,7 +100,7 @@
 		
         <div class="form-group">
             <label for="image">이미지 업로드:</label>
-            <input type="file" class="form-control-file" name=uploaderFileList accept="image/*"  multiple="multiple">
+            <input type="file" class="form-control-file" name="uploaderFileList" multiple="multiple" accept="image/jpeg, image/png, image/gif" id="fileInput">
             
         </div>
         <div class="mt-2">
@@ -123,6 +123,21 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 
 <script type="text/javascript">
+document.getElementById("fileInput").addEventListener('change', function(event) {
+    const files = event.target.files; // 사용자가 선택한 파일들
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']; // 허용할 MIME 타입
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        // MIME 타입이 허용된 이미지 형식인지 확인
+        if (!allowedTypes.includes(file.type)) {
+            alert(file.name + " 은(는) 지원되지 않는 파일 형식입니다. JPEG, PNG, GIF 파일만 업로드 가능합니다.");
+            event.target.value = ''; // 잘못된 파일이 선택되면 입력 필드를 초기화
+            break; // 한 파일이라도 잘못된 형식이면 업로드를 중단
+        }
+    }
+});
 getgetmessage();
 CKEDITOR.replace('boardContent', {
     removePlugins: 'sourcearea',
@@ -179,6 +194,23 @@ function enableSubmitButton() {
         submitButton.disabled = false;
     }
 }
+
+document.getElementById("fileInput").addEventListener('change', function(event) {
+    const files = event.target.files; // 사용자가 선택한 파일들
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']; // 허용할 MIME 타입
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+
+      // MIME 타입이 허용된 이미지 형식인지 확인
+      if (!allowedTypes.includes(file.type)) {
+        alert("지원되지 않는 파일 형식입니다.");
+        event.target.value = ''; // 잘못된 파일이 선택되면 입력 필드를 초기화
+        break; // 한 파일이라도 잘못된 형식이면 업로드를 중단
+      }
+    }
+ });
+
 </script>
 </body>
 </html>

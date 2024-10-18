@@ -366,7 +366,7 @@ text-decoration: none !important;
 				    <!-- 이미지 업로드 버튼을 카드의 우측 상단에 배치 -->
 				    <div style="position: absolute; top: 5px; right: 3px;">
 				        <div class="custom-file">
-				            <input type="file" class="form-control-file" id="commentImage_0" name="commentImage" style="display: none;">
+				            <input type="file" class="form-control-file" id="commentImage_0" name="commentImage" style="display: none;" accept="image/jpeg, image/png, image/gif">
 				            <label for="commentImage_0" class="btn btn-sm" style="background: #3C3D37; color: #fff; cursor: pointer; padding: 0; width: 24px; height: 22px; border-radius: 5px; transition: background 0.3s; display: flex; justify-content: center; align-items: center;">
 				                <i class="fa-regular fa-images" style="font-size: 16px;"></i>
 				            </label>
@@ -696,7 +696,7 @@ text-decoration: none !important;
 		                html += "</form>";
 		                html += "<div style='position: absolute; top: 5px; right: 3px;'>";
 		                html += "<div class='custom-file'>";
-		                html += "<input type='file' class='form-control-file' id='commentImage_" + this.commentIdx + "' name='commentImage' style='display: none;'>";
+		                html += "<input type='file' class='form-control-file' id='commentImage_" + this.commentIdx + "' name='commentImage' style='display: none;' accept='image/jpeg, image/png, image/gif'>";
 		                html += "<label for='commentImage_0' class='btn btn-sm' style='background: #3C3D37; color: #fff; cursor: pointer; padding: 0; width: 24px; height: 22px; border-radius: 5px; transition: background 0.3s; display: flex; justify-content: center; align-items: center;'><i class='fa-regular fa-images' style='font-size: 16px;'></i></label>";
 		                html += "</div>"; 
 		                html += "</div>"; // cocoment 끝
@@ -766,6 +766,24 @@ text-decoration: none !important;
 		
 		//=========댓글 추가
 		function insertComment(commentIdx) {
+			//이미지 추가 끝
+			document.getElementById("commentImage_"+commentIdx).addEventListener('change', function(event) {
+			    const files = event.target.files; // 사용자가 선택한 파일들
+			    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']; // 허용할 MIME 타입
+		
+			    for (let i = 0; i < files.length; i++) {
+			      const file = files[i];
+		
+			      // MIME 타입이 허용된 이미지 형식인지 확인
+			      if (!allowedTypes.includes(file.type)) {
+			        alert("지원되지 않는 파일 형식입니다.");
+			        event.target.value = ''; // 잘못된 파일이 선택되면 입력 필드를 초기화
+			        break; // 한 파일이라도 잘못된 형식이면 업로드를 중단
+			      }
+			    }
+			  });			
+			
+			//이미지 추가 끝
 			checkLogin();
 			var formData = new FormData(); // FormData 객체 생성
 			 // 텍스트 필드 값 가져오기
@@ -1027,6 +1045,24 @@ text-decoration: none !important;
 		}
 	});
 	}
+	
+	
+	document.getElementById('commentImage_0').addEventListener('change', function(event) {
+	    const files = event.target.files; // 사용자가 선택한 파일들
+	    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']; // 허용할 MIME 타입
+
+	    for (let i = 0; i < files.length; i++) {
+	      const file = files[i];
+
+	      // MIME 타입이 허용된 이미지 형식인지 확인
+	      if (!allowedTypes.includes(file.type)) {
+	        alert("지원되지 않는 파일 형식입니다.");
+	        event.target.value = ''; // 잘못된 파일이 선택되면 입력 필드를 초기화
+	        break; // 한 파일이라도 잘못된 형식이면 업로드를 중단
+	      }
+	    }
+	  });
+	
 	</script>
 </body>
 </html>
