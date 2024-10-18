@@ -29,13 +29,13 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         
         
        
-    	 //String userId = (String) session.getAttributes().get("userId");
+    	 //
     	 String buyerId = (String) session.getAttributes().get("buyerId");
     	 String sellerId = (String) session.getAttributes().get("sellerId");
     	 String roomId = (String) session.getAttributes().get("roomId");
     	 String senderId = (String) session.getAttributes().get("userId");
     	if (buyerId == null || sellerId == null || roomId == null) {
-            System.out.println("Buyer ID 또는 Seller ID가 누락되었습니다.");
+         
             return;
         }
 
@@ -44,9 +44,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
          session.getAttributes().put("sellerId", sellerId);
          session.getAttributes().put("roomId", roomId);
         // 메시지 전송 후 로그 출력
-        System.out.println("메시지 전송: roomId = " + roomId + ", sellerId = " + sellerId);
-        System.out.println("Buyer ID: " + buyerId);
-        System.out.println("Seller ID: " + sellerId);
+        
         
         String payload = message.getPayload();
         Map<String, Object> messageData = new HashMap<>();
@@ -83,21 +81,14 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
     	System.out.println("WebSocket 연결이 성공적으로 수립되었습니다.");
-        // URL 쿼리 파라미터에서 buyerId와 sellerId를 추출
-    	//String userId = (String) session.getAttributes().get("userId");
-    	//String userId = extractQueryParam(session.getUri().toString(), "userId");
+       
         String buyerId = extractQueryParam(session.getUri().toString(), "buyerId");
         String sellerId = extractQueryParam(session.getUri().toString(), "sellerId");
         String roomId = extractQueryParam(session.getUri().toString(), "roomId");  // roomId 추가
         String senderId = extractQueryParam(session.getUri().toString(), "userId");
         // 필수 값 확인
         
-        System.out.println("WebSocketSession URI: " + session.getUri().toString());
-        System.out.println("Buyer ID: " + buyerId);
-        System.out.println("Seller ID: " + sellerId);
-        System.out.println("Room ID: " + roomId);
-        System.out.println("userId ID: " + senderId);
-        //System.out.println("User ID: " + userId);
+     
         
         
         if (buyerId == null || sellerId == null || roomId == null || senderId == null) {
@@ -121,8 +112,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             sellerSessions.put(sellerId, session);
         }
 
-        System.out.println("WebSocket 연결 시 URL: " + session.getUri().toString());
-        System.out.println("roomId: " + roomId + ", buyerId: " + buyerId + ", sellerId: " + sellerId + ", senderId: " + senderId);
+ 
     }
 	
     private String extractQueryParam(String uri, String paramName) {

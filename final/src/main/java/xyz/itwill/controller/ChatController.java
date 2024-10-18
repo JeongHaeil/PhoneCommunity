@@ -1,12 +1,12 @@
 package xyz.itwill.controller;
 
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import xyz.itwill.dto.ChatRooms;
+import xyz.itwill.dto.User;
 import xyz.itwill.service.ChatRoomsService;
-import xyz.itwill.service.ChatService;
-import xyz.itwill.service.ProductService;
+import xyz.itwill.service.UserService;
 
 
 
@@ -30,46 +30,106 @@ import xyz.itwill.service.ProductService;
 @RequiredArgsConstructor
 public class ChatController  {
 		private final ChatRoomsService chatRoomsService;
-		//private final ProductService productService;
-		//private final ChatService chatService;
+		private final UserService userService;
+		private final PasswordEncoder passwordEncoder;
 		
-	
-		// 채팅 시작 버튼을 클릭하면 호출되는 메서드
-		
-	    @PostMapping("/start")
-	    public String startChat(@RequestBody Map<String, Object> requestData, Model model) {
-	    	 try {
-	    	        // 데이터 추출
-	    	        String buyerId = requestData.get("buyerId").toString();
-	    	        String sellerId = requestData.get("sellerId").toString();
-	    	        //Integer roomId = requestData.containsKey("roomId") ? Integer.parseInt(requestData.get("roomId").toString()) : null;
-	    	        Integer  roomId = chatRoomsService.findExistingRoom(buyerId, sellerId);
-	    	        //Integer roomId = 100;
-	    	        System.out.println("buyerId: " + buyerId);
-	    	        System.out.println("sellerId: " + sellerId);
-	    	        System.out.println("roomId: " + roomId);
-	    	        if (roomId == null || roomId == 0) {
-	    	            // ChatRooms 객체를 생성하고 buyerId, sellerId 설정
-	    	            ChatRooms chatRoom = new ChatRooms();
-	    	            chatRoom.setSellerId(sellerId);  // String으로 설정
-	    	            chatRoom.setBuyerId(buyerId);  // String으로 설정
-	    	            //roomId = chatRoomsService.createChatRooms(chatRoom);  // ChatRooms 객체를 사용하여 생성
-	    	            roomId = chatRoomsService.createChatRooms(chatRoom);  // ChatRooms 객체를 사용하여 생성
-	    	        }
+/*
+		@PostMapping("/start")
+		@ResponseBody
+		public Map<String, Object> startChat(@RequestBody Map<String, Object> requestData) {
+		    Map<String, Object> response = new HashMap<>();
+		    try {
+		        String buyerId = requestData.get("buyerId").toString();
+		        String sellerId = requestData.get("sellerId").toString();
+		        
+		        // 임시 구매자를 DB에서 확인 후 없으면 추가
+		        User tempUser = userService.findUserByIdNameAndEmail("phone123", "테스트용", "tosmreo11@naver.com");
+		        
+		        if (buyerId.equals(sellerId)) {
+		            buyerId = "phone123";  // 임시 구매자 ID 설정
+		            System.out.println("임시 구매자 ID가 설정되었습니다: " + buyerId);
+		        }
+		        
+		        if (tempUser == null) {
+		            response.put("error", "임시 구매자 정보를 찾을 수 없습니다.");
+		            return response;  // 사용자 정보가 없으면 에러 응답
+		        }
 
-	    	        // Model에 데이터 추가
-	    	        model.addAttribute("buyerId", buyerId);
-	    	        model.addAttribute("sellerId", sellerId);
-	    	        model.addAttribute("roomId", roomId);
-	    	        //return "redirect:/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId;
-	    	       return "chat";  // JSP로 이동
+		        if (buyerId == null || buyerId.isEmpty() || buyerId.equals(sellerId)) {
+		            buyerId = tempUser.getUserId();
+		            System.out.println("임시 구매자 ID가 설정되었습니다: " + buyerId);
+		        }
 
-	    	    } catch (NumberFormatException e) {
-	    	        e.printStackTrace();
-	    	        return "error";
-	    	    }
-	    }	
-	    	
+		        Integer roomId = chatRoomsService.findExistingRoom(buyerId, sellerId);
+
+		        if (roomId == null || roomId == 0) {
+		            ChatRooms chatRoom = new ChatRooms();
+		            chatRoom.setSellerId(sellerId);
+		            chatRoom.setBuyerId(buyerId);
+		            roomId = chatRoomsService.createChatRooms(chatRoom);
+		        }
+
+		        response.put("buyerId", buyerId);
+		        response.put("sellerId", sellerId);
+		        response.put("roomId", roomId);
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        response.put("error", "An error occurred.");
+		    }
+		    return response;
+		}
+*/
+		@PostMapping("/start")
+		@ResponseBody
+		public Map<String, Object> startChat(@RequestBody Map<String, Object> requestData) {
+		    Map<String, Object> response = new HashMap<>();
+		    try {
+		        String buyerId = requestData.get("buyerId").toString();
+		        String sellerId = requestData.get("sellerId").toString();
+
+		       
+		        User tempUser = userService.findUserByIdNameAndEmail("phone123", "테스트용", "tosmreo11@naver.com");
+
+
+		        if (buyerId == null || buyerId.isEmpty() || buyerId.equals(sellerId)) {
+		            if (tempUser != null) {
+		                buyerId = tempUser.getUserId();  // 임시 구매자 ID 설정
+		            } else {
+		                buyerId = "phone123";  // fallback 임시 구매자 ID 설정
+		            }
+		            System.out.println("임시 구매자 ID가 설정되었습니다: " + buyerId);
+		        }
+
+		             
+		        
+		        if (tempUser == null) {
+		            response.put("error", "임시 구매자 정보를 찾을 수 없습니다.");
+		            return response;  // 사용자 정보가 없으면 에러 응답
+		        }
+		       
+
+		        // DB에서 이미 존재하는 방이 있는지 확인
+		        Integer roomId = chatRoomsService.findExistingRoom(buyerId, sellerId);
+
+		        // 방이 없으면 새로 생성
+		        if (roomId == null || roomId == 0) {
+		            ChatRooms chatRoom = new ChatRooms();
+		            chatRoom.setSellerId(sellerId);
+		            chatRoom.setBuyerId(buyerId);
+		            roomId = chatRoomsService.createChatRooms(chatRoom);  // 방 생성
+		        }
+
+		        // 응답 데이터 설정
+		        response.put("buyerId", buyerId != null ? buyerId : "unknown");
+		        response.put("sellerId", sellerId != null ? sellerId : "unknown");
+		        response.put("roomId", roomId);
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        response.put("error", "An error occurred.");
+		    }
+		    return response;
+		}
+
 	    	
 	    	
 		// 채팅방으로 이동
