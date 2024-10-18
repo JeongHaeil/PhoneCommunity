@@ -15,7 +15,7 @@
 	rel="stylesheet">
 <style>
 /* 기존 스타일 유지 */
-body {
+body { 
 	background-color: #f8f9fa;
 }
 
