@@ -255,8 +255,11 @@ body {
 			</div>
 
 			<div>
-				<button class="btn btn-primary btn-sm"
-					onclick="location.href='${pageContext.request.contextPath}/product/register'">쓰기</button>
+				<!-- user_level이 9999가 아닌 경우에만 글쓰기 버튼을 표시 (최고관리자는 글을 쓸 수 없게 막아둠) -->
+				<c:if test="${sessionScope.userLevel != 9999}">
+				    <button class="btn btn-primary btn-sm"
+				        onclick="location.href='${pageContext.request.contextPath}/product/register'">쓰기</button>
+				</c:if>
 				<button class="btn btn-outline-secondary btn-sm" id="search-btn">검색</button>
 				<button class="btn btn-outline-secondary btn-sm"
 					onclick="location.href='${pageContext.request.contextPath}/product/list'">목록</button>
