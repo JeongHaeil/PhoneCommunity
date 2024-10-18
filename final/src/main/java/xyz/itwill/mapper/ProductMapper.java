@@ -18,6 +18,7 @@ public interface ProductMapper {
 	int updateProductSoldStatus(@Param("productIdx") int productIdx, @Param("status") int status);
 	List<Product> selectProductsByUserId(String userId);//마이페이지
 	List<Product> selectLatestProducts();
+    List<Product> selectLatestCountProducts();
 
 
 }

@@ -159,5 +159,23 @@
 </select>
 
 
+<select id="selectLatestCountProducts" resultType="Product">
+   SELECT product_idx AS productIdx, 
+           product_subject AS productSubject, 
+           product_image AS productImage
+    FROM (
+        SELECT product_idx, 
+               product_subject, 
+               product_image
+        FROM product
+        WHERE product_status = 1
+        ORDER BY product_count DESC
+    )
+    WHERE ROWNUM &lt;= 4
+    
+</select>
+
+
+
 
 </mapper>
