@@ -232,6 +232,11 @@ public class BoardController {
 			}else {
 				return "redirect:/user/login";
 			}
+		}else if(boardCode==2) {
+			CustomUserDetails details=(CustomUserDetails)authentication.getPrincipal();
+			if(!details.getAuthorities().contains("ROLE_BOARD_ADMIN")) {
+				return "redirect:/user/login";				
+			}
 		}else if(boardCode>=10) {
 			CustomUserDetails details=(CustomUserDetails)authentication.getPrincipal();
 			if(details.getUserStatus()!=1) {
