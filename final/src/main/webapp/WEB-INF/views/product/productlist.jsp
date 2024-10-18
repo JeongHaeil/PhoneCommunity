@@ -1,10 +1,12 @@
-%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!-- functions 라이브러리 추가 -->
 <!DOCTYPE html>
 <html lang="ko">
-<head>
+<head> 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>쇼핑 정보</title>
@@ -13,7 +15,7 @@
 	rel="stylesheet">
 <style>
 /* 기존 스타일 유지 */
-body {
+body {  
 	background-color: #f8f9fa;
 }
 
