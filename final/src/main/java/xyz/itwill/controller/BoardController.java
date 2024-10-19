@@ -364,8 +364,8 @@ public class BoardController {
 			Board board=boardService.getboard(boardPostIdx);
 			if(board.getBoardUserId().toString().equals(user.getUserId().toString())) {
 				boardService.deleteFreeboard(boardPostIdx);						
-			}else {
-				//관리자 일때 처리										
+			}else if(user.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_BOARD_ADMIN"))){
+				boardService.deleteFreeboard(boardPostIdx);									
 			}
 		}else {
 			return "redirect:/user/login";		
