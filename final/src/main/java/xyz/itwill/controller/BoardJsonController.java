@@ -147,16 +147,18 @@ public class BoardJsonController {
 	
 	@PreAuthorize("isAuthenticated()")
 	@PutMapping("/comment_delete/{commentIdx}")
-	public String commentDelete(@PathVariable int commentIdx) {
+	public String commentDelete(@PathVariable int commentIdx,Authentication authentication) {
+		CustomUserDetails user=(CustomUserDetails)authentication.getPrincipal();
 		Comments getComment=new Comments();
 		getComment=commentsService.getCommentByNum(commentIdx);
-		
-		int refcount=commentsService.gerCommentCountByRef(getComment.getCommentRef());
-		if(refcount>1) {
-			commentsService.deleterrComment(commentIdx);
-		}else {
-			commentsService.deleteComment(commentIdx);			
-		}
+		if(user.getUserId().equals(getComment.getCommentUserId())||user.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_BOARD_ADMIN"))) {
+			int refcount=commentsService.gerCommentCountByRef(getComment.getCommentRef());
+			if(refcount>1) {
+				commentsService.deleterrComment(commentIdx);
+			}else {
+				commentsService.deleteComment(commentIdx);			
+			}			
+		}		
 		return "success";
 	}
 	
