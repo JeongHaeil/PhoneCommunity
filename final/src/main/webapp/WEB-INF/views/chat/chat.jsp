@@ -208,13 +208,14 @@ function displayMessage(message, senderId, sellerId, buyerId) {
     messageText.textContent = message;
     messageText.style.padding = '10px';
     messageText.style.borderRadius = '10px';
-
+    messageText.style.fontWeight = 'bold';
+    
     console.log("Message from senderId: " + senderId + ", buyerId: " + buyerId + ", sellerId: " + sellerId);
     
     if (senderId === buyerId || senderId.startsWith("phone123")) {
         // 판매자가 보낸 메시지일 경우 (왼쪽 정렬)
         messageElement.style.textAlign = 'left';  
-        messageText.style.backgroundColor = '#f1f0f0';  // 판매자 메시지 색상
+        messageText.style.backgroundColor = '#c7e5ee';  // 판매자 메시지 색상
     } else if (senderId === sellerId) {
         // 구매자나 임시 구매자가 보낸 메시지일 경우 (오른쪽 정렬)
         messageElement.style.textAlign = 'right';  
