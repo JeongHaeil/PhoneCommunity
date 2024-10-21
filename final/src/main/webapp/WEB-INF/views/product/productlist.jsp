@@ -304,8 +304,8 @@ body {
 										<div class="product-card">
 											<!-- 글 번호 표시 -->
 											<div class="product-meta text-muted"
-												style="font-size: 12px; margin-bottom: 5px;">글 번호:
-												${product.productIdx}</div>
+												style="font-size: 12px; margin-bottom: 5px;">
+											</div>
 											<img
 												src="${pageContext.request.contextPath}/resources/images/${fn:split(product.productImage, ',')[0] != null ? fn:split(product.productImage, ',')[0] : '150.png'}"
 												alt="상품 이미지" class="img-fluid">
