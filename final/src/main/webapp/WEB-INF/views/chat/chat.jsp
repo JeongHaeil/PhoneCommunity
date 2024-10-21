@@ -221,7 +221,7 @@ function displayMessage(message, senderId, sellerId, buyerId) {
         messageElement.style.textAlign = 'right';  
         messageText.style.backgroundColor = '#dcf8c6';  // 구매자 메시지 색상
     }
-
+ 
 
     messageElement.style.margin = '25px 0';
     messageElement.appendChild(messageText);
