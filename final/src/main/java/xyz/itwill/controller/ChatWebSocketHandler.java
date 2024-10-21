@@ -39,11 +39,11 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             return;
         }
 
-    	 //session.getAttributes().put("userId", userId);
+    	 
          session.getAttributes().put("buyerId", buyerId);
          session.getAttributes().put("sellerId", sellerId);
          session.getAttributes().put("roomId", roomId);
-        // 메시지 전송 후 로그 출력
+        
         
         
         String payload = message.getPayload();
@@ -57,7 +57,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         ChatMessages chatMessage = new ChatMessages();
         chatMessage.setRoomId(Integer.parseInt(roomId));
         try {
-            // senderId가 숫자인지 확인하고 변환, 예외가 발생하면 저장 안함
+           
             chatMessage.setSenderId(senderId); 
         } catch (NumberFormatException e) {
             System.out.println("Error converting senderId: " + senderId);
