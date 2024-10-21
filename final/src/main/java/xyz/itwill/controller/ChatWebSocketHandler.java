@@ -29,7 +29,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         
         
        
-    	 //
+    	 
     	 String buyerId = (String) session.getAttributes().get("buyerId");
     	 String sellerId = (String) session.getAttributes().get("sellerId");
     	 String roomId = (String) session.getAttributes().get("roomId");
@@ -73,14 +73,14 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             for (WebSocketSession s : roomSessionMap.get(roomId).values()) {
                 s.sendMessage(new TextMessage(message.getPayload()));
             }
-            System.out.println("메시지 전송: roomId = " + roomId + ", sellerId = " + sellerId);
+            
         }
     }
 
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-    	System.out.println("WebSocket 연결이 성공적으로 수립되었습니다.");
+    	
        
         String buyerId = extractQueryParam(session.getUri().toString(), "buyerId");
         String sellerId = extractQueryParam(session.getUri().toString(), "sellerId");

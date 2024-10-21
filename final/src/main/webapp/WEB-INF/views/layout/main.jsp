@@ -115,11 +115,11 @@
            
          <div class="main-ad-section">
         <div class="main-card">
-            <div class="main-card-header">
-                광고 배너
+            <div class="main-card-header" style="border: none;">
+                 &nbsp;&nbsp;
             </div>
             <div class="main-card-body">
-                <div class="ad-item">
+                <div class="ad-item" style="border: none;">
                     <img id="ad-image" src="<c:url value="/resources/images/phoneph.png"/>" class="ad-image">
                 </div>
                

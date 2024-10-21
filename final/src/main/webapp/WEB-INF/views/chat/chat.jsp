@@ -143,7 +143,7 @@ $(document).ready(function () {
 // WebSocket 연결
 function connectWebSocket(roomId, buyerId, sellerId, loggedInUserId) {
     socket = new WebSocket("ws://localhost:8000/final/ws/chat/" + roomId + "?roomId=" + roomId +  "&buyerId=" + buyerId + "&sellerId=" + sellerId + "&userId=" + loggedInUserId);
-
+  	  //socket = new WebSocket("wss://itwill.xyz/final/ws/chat/" + roomId + "?roomId=" + roomId + "&buyerId=" + buyerId + "&sellerId=" + sellerId + "&userId=" + loggedInUserId);
     socket.onopen = function () {
         console.log("WebSocket connection established.");
         document.getElementById("sendButton").disabled = false;
@@ -236,75 +236,7 @@ function displayMessage(message, senderId, sellerId, buyerId) {
 
 
 
-/*
-//메시지를 화면에 표시하는 함수
-function displayMessage(message, senderId) {
-  var loggedInUserId = "${loginUser.userId}";  // 서버에서 전달된 로그인 사용자 ID
-  var sellerId = "${sellerId}";  // 서버에서 전달된 판매자 ID
-  var buyerId = "${buyerId}";
-  var chatWindow = document.getElementById("chatWindow");
-  if (sellerId === buyerId) {
-  	sellerId = "tempBuyer_" + roomId;
-  }
-  
-  var messageElement = document.createElement("div");
-  var messageText = document.createElement("span");
 
-  messageText.textContent = message;
-  messageText.style.padding = "10px";
-  messageText.style.borderRadius = "10px";
-
-  if (senderId === sellerId|| senderId.startsWith("tempBuyer_")) {
-      // 판매자가 보낸 메시지일 경우 (왼쪽 정렬)
-      messageElement.style.textAlign = 'left';  
-      messageText.style.backgroundColor = '#f1f0f0';  // 판매자 메시지 색상
-  } else if (senderId === buyerId ) {
-      // 구매자나 임시 구매자가 보낸 메시지일 경우 (오른쪽 정렬)
-      messageElement.style.textAlign = 'right';  
-      messageText.style.backgroundColor = '#dcf8c6';  // 구매자 메시지 색상
-  }
-  
-  messageElement.style.margin = "20px 0";
-  messageElement.appendChild(messageText);
-
-
-  chatWindow.appendChild(messageElement);
-
-  
-  chatWindow.scrollTop = chatWindow.scrollHeight;
-}
-*/
-/* function displayMessage(message, senderId) {
-  var loggedInUserId = "${loginUser.userId}";  // 서버에서 전달된 로그인 사용자 ID
-  var sellerId = "${sellerId}";  // 서버에서 전달된 판매자 ID
-  var buyerId = "${buyerId}";  // 서버에서 전달된 구매자 ID (임시 구매자 ID 포함)
-
-  var chatWindow = document.getElementById("chatWindow");
-  var messageElement = document.createElement("div");
-  var messageText = document.createElement("span");
-
-  messageText.textContent = message;
-  messageText.style.padding = '10px';
-  messageText.style.borderRadius = '10px';
-
-  // 메시지 스타일 적용
-  if (senderId === sellerId) {
-      // 판매자가 보낸 메시지일 경우 (왼쪽 정렬)
-      messageElement.style.textAlign = 'left';
-      messageText.style.backgroundColor = '#f1f0f0';
-  } else if (senderId === buyerId) {
-      // 구매자가 보낸 메시지일 경우 (오른쪽 정렬)
-      messageElement.style.textAlign = 'right';
-      messageText.style.backgroundColor = '#dcf8c6';
-  }
-
-  messageElement.style.margin = '10px 0';
-  messageElement.appendChild(messageText);
-  chatWindow.appendChild(messageElement);
-
-  // 스크롤을 최신 메시지로 이동
-  chatWindow.scrollTop = chatWindow.scrollHeight;
-} */
 </script>
 
 		
