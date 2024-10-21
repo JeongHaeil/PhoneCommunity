@@ -573,78 +573,78 @@
       		    console.log("loggedInUserId: " + loggedInUserId);	
       		 
       	 
-      			 $("#openChatRoomBtn").click(function () {
-      				 
-      			
-      			        
-      			        $.ajax({
-      			            url: "${pageContext.request.contextPath}/chatroom/createRoom",   // 방 번호를 생성하는 서버 URL
-      			            type: "POST",             // 새로운 방 번호 생성은 POST 방식으로 요청
-      			            contentType: "application/json",
-      			            data: JSON.stringify({
-      			            	 buyerId: loggedInUserId,   // 전달된 buyerId
-      			                 sellerId: sellerId,        // 전달된 sellerId
-      			                
-      			            }),
-      			            beforeSend: function(xhr) {
-      			                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");  // CSRF 토큰 설정
-      			            },
-      			            success: function (newRoomId) {
-      			                // 새로운 방 번호를 받아온 후, 채팅방으로 이동
-      			                console.log("Created roomId: " + newRoomId);  // 방 번호 확인
-      			                startChat(newRoomId);  // startChat 호출
-      			            },
-      			            error: function (xhr, status, error) {
-      			                console.error('Error creating chat room:', error);
-      			            }
-      			        });
-      			    });
+      		  $("#openChatRoomBtn").click(function () {
+      	        $.ajax({
+      	            url: "${pageContext.request.contextPath}/chatroom/createRoom",   
+      	            type: "POST",  
+      	            contentType: "application/json",
+      	            data: JSON.stringify({
+      	                buyerId: loggedInUserId,  
+      	                sellerId: sellerId       
+      	            }),
+      	            beforeSend: function(xhr) {
+      	                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}"); 
+      	            },
+      	            success: function (newRoomId) {
+      	              
+      	                console.log("Created roomId: " + newRoomId);
+      	                startChat(newRoomId); 
+      	            },
+      	            error: function (xhr, status, error) {
+      	                console.error('Error creating chat room:', error);
+      	            }
+      	        });
+      	    });
 
-      				// startChat() 함수로 채팅 시작 요청
-      		function startChat(roomId) {
-      			var buyerId = loggedInUserId;  // 이미 상단에서 설정된 buyerId 값 사용
-      		    var sellerId = "${product.productUserid}";  // 판매자 ID (서버에서 전달된 값 확인)
-      		  var roomId= "${product.productIdx}"
-      			 if (buyerId === sellerId) {
-      		        // 현재 사용자가 판매자라면 buyerId를 임시 구매자 ID로 설정
-      		        buyerId = "tempBuyer" + roomId;  // 임시 값 설정 (예시로 방 번호와 연동)
-      		    }
-      		  
-      		   
-              $.ajax({
-                  url: "${pageContext.request.contextPath}/chatroom/start",  // 채팅 시작 URL
-                  type: "POST",
-                  contentType: "application/json",
-                  data: JSON.stringify({
-                      roomId: roomId,
-                      buyerId: loggedInUserId,
-                      sellerId: sellerId,
-                    
-                  }),
-
-                  success: function (response) {
-                  	
-                      // 생성된 채팅방으로 이동
-                      //window.location.href = "${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId;
-                      window.open("${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId, "_blank", "width=400,height=600");
-                  },
-                  beforeSend: function(xhr) {
-                      xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");  // CSRF 토큰 설정
-                  },
-                  error: function (xhr, status, error) {
-                      console.error("Error starting chat:", error);
-                  }
-              });
-          }
       			 
-           // 방 번호를 받아 해당 방의 채팅방 UI를 로드하는 함수
+      				
+      		  function startChat(roomId) {
+      	        var buyerId = loggedInUserId; 
+      	        var sellerId = "${product.productUserid}"; 
+      	        
+		      	      if (buyerId === sellerId) {
+		      	        buyerId = "phone123";  
+		      	        console.log("임시 구매자 ID가 설정되었습니다: " + buyerId);
+		      	    }
+      	        $.ajax({
+      	            url: "${pageContext.request.contextPath}/chatroom/start",
+      	            type: "POST",
+      	            contentType: "application/json",
+      	            data: JSON.stringify({
+      	                roomId: roomId,
+      	                buyerId: buyerId,
+      	                sellerId: sellerId
+      	            }),
+      	            success: function (response) {
+      	                if (response.error) {
+      	                    console.error("Error starting chat:", response.error);
+      	                    return;
+      	                }
+
+      	             
+      	                buyerId = response.buyerId;
+      	                roomId = response.roomId;
+      	                console.log("Starting chat with roomId: " + roomId + ", buyerId: " + buyerId + ", sellerId: " + sellerId);
+
+      	                window.open("${pageContext.request.contextPath}/chatroom/room/" + roomId + "?buyerId=" + buyerId + "&sellerId=" + sellerId, "_blank", "width=400,height=600");
+      	            },
+      	            beforeSend: function(xhr) {
+      	                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");  // CSRF 토큰 설정
+      	            },
+      	            error: function (xhr, status, error) {
+      	                console.error("Error starting chat:", error);
+      	            }
+      	        });
+      	    }
+      			 
+          
            function loadChatRoom(newRoomId) {
            
                $.ajax({
-                   url: "${pageContext.request.contextPath}/chatroom/room/" + newRoomId,  // 생성된 방 번호로 채팅방 UI를 요청
+                   url: "${pageContext.request.contextPath}/chatroom/room/" + newRoomId, 
                    type: "GET",
                    success: function (data) {
-                       $("#chatRoomContainer").html(data);  // 성공 시 채팅방 UI 로드
+                       $("#chatRoomContainer").html(data);  
                    },
                    error: function (xhr, status, error) {
                        console.error("Error loading chat room:", error);
