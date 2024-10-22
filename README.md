@@ -1,2 +1,2 @@
 # final
-finalfinal
+휴대폰 커뮤니티 사이트 프로젝트 
